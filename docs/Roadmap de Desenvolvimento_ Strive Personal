@@ -1,0 +1,53 @@
+# Roadmap de Desenvolvimento: Strive Personal
+
+O desenvolvimento da plataforma **Strive Personal** (anteriormente chamada de forma provisória de FitCoach Pro) deve ser conduzido de maneira estruturada e incremental. Considerando a arquitetura baseada em Schema-Driven Development (SDD) e a necessidade de entregar valor contínuo tanto para o personal trainer quanto para o aluno, o planejamento foi dividido em quatro fases lógicas de implementação.
+
+A abordagem prioriza a consolidação da infraestrutura técnica e do fluxo principal de prescrição de treinos antes de expandir para módulos periféricos de gestão e monetização.
+
+## Fase 1: Fundação e Infraestrutura Técnica
+
+A primeira etapa do projeto concentra-se em estabelecer uma base técnica robustza e segura. O foco principal é garantir que a estrutura de banco de dados e a arquitetura multi-tenant estejam perfeitamente configuradas antes da construção das interfaces finais.
+
+Nesta fase, a equipe deve modelar o banco de dados no Supabase, definindo as tabelas essenciais para personais, alunos e exercícios. É fundamental implementar rigorosamente as políticas de Row Level Security (RLS) para garantir o isolamento completo dos dados de cada personal trainer. Simultaneamente, devem ser construídos os fluxos de autenticação e onboarding, permitindo que os profissionais criem suas contas, configurem seus perfis básicos e comecem a cadastrar seus primeiros alunos no dashboard web.
+
+| Componente | Descrição da Entrega | Tecnologia Envolvida |
+|------------|----------------------|----------------------|
+| **Banco de Dados** | Modelagem inicial e políticas RLS para isolamento de tenants. | Supabase (PostgreSQL) |
+| **Autenticação** | Fluxos de login e cadastro seguro para personais e alunos. | Supabase Auth |
+| **Dashboard Base** | Estruturação do repositório web e CRUD inicial de alunos. | Next.js 14 |
+
+## Fase 2: Prescrição e Execução de Treinos
+
+Com a fundação estabelecida, a segunda fase foca na principal proposta de valor da plataforma: a conexão técnica entre o personal e o aluno por meio do treinamento.
+
+O desenvolvimento no dashboard web deve contemplar a criação de um banco de exercícios reutilizável, com suporte a vídeos de execução. A partir desse banco, o personal trainer terá a interface necessária para montar treinos detalhados, definindo séries, repetições, cargas e intervalos de descanso. No lado do aluno, o aplicativo móvel deve ganhar vida, apresentando a lista de treinos atribuídos e oferecendo uma interface interativa para a execução do treino em tempo real, permitindo o registro de cargas e a marcação de séries concluídas.
+
+| Componente | Descrição da Entrega | Tecnologia Envolvida |
+|------------|----------------------|----------------------|
+| **Banco de Exercícios** | Gestão do catálogo de exercícios com upload de vídeos. | Supabase Storage |
+| **Gestão de Treinos** | Interface web para montagem e atribuição de planos de treino. | Next.js 14 |
+| **App do Aluno** | Interface móvel para visualização e execução interativa do treino. | React Native (Expo) |
+
+## Fase 3: Acompanhamento e Comunicação
+
+A terceira fase visa aumentar a retenção de alunos ao oferecer ferramentas claras de acompanhamento de progresso e canais estruturados de feedback.
+
+Nesta etapa, o sistema deve incorporar o módulo de avaliações físicas, permitindo que o personal registre medidas corporais, dobras cutâneas e fotos de evolução. O aluno, por sua vez, ganha uma área no aplicativo para registrar seu peso e fotos de progresso manualmente. Além disso, devem ser implementados os relatórios de frequência de treino e o sistema de feedback pós-treino, onde o aluno avalia a dificuldade da sessão, gerando dados valiosos para o ajuste contínuo da prescrição pelo profissional. O módulo de arquivos também entra nesta fase, facilitando o envio de dietas e laudos.
+
+| Componente | Descrição da Entrega | Tecnologia Envolvida |
+|------------|----------------------|----------------------|
+| **Avaliações Físicas** | Registro técnico de medidas e visualização de histórico. | Next.js / React Native |
+| **Progresso do Aluno** | Área para auto-registro de peso e fotos de evolução. | React Native (Expo) |
+| **Frequência e Feedback** | Relatórios de aderência e avaliações de dificuldade pós-treino. | Next.js / Supabase |
+
+## Fase 4: Gestão Comercial e Personalização
+
+A fase final transforma a ferramenta técnica em uma plataforma completa de gestão de negócios para o personal trainer, consolidando o aspecto white-label do produto.
+
+O desenvolvimento deve focar na criação do módulo financeiro, permitindo a geração de faturas, controle de status de pagamento e envio de lembretes. Paralelamente, as configurações white-label devem ser finalizadas, permitindo que o personal personalize cores, logotipo e links institucionais, refletindo essas escolhas dinamicamente no aplicativo do aluno. A implementação de notificações push e o polimento final de performance preparam a plataforma para o lançamento oficial.
+
+| Componente | Descrição da Entrega | Tecnologia Envolvida |
+|------------|----------------------|----------------------|
+| **Gestão Financeira** | Controle de faturas, pagamentos e lembretes de cobrança. | Next.js / Supabase |
+| **White-label** | Personalização visual dinâmica do aplicativo do aluno. | Next.js / React Native |
+| **Notificações** | Alertas operacionais via push para treinos e faturas. | Expo Push Notifications |
