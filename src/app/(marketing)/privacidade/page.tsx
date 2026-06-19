@@ -37,7 +37,7 @@ export default function PrivacidadePage() {
 
           <Section title="1. Introdução">
             <p>
-              A <strong className="text-text-primary">Strive Personal</strong> ("nós", "nosso" ou "Plataforma")
+              A <strong className="text-text-primary">Strive Personal</strong> (&ldquo;nós&rdquo;, &ldquo;nosso&rdquo; ou &ldquo;Plataforma&rdquo;)
               está comprometida com a proteção da privacidade dos seus dados pessoais. Esta Política de
               Privacidade explica como coletamos, usamos, compartilhamos e protegemos suas informações,
               em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018).

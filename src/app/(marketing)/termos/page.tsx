@@ -37,7 +37,7 @@ export default function TermosPage() {
 
           <Section title="1. Aceitação dos Termos">
             <p>
-              Ao acessar e utilizar a plataforma <strong className="text-text-primary">Strive Personal</strong> ("Plataforma"),
+              Ao acessar e utilizar a plataforma <strong className="text-text-primary">Strive Personal</strong> (&ldquo;Plataforma&rdquo;),
               você concorda com estes Termos de Uso. Caso não concorde com qualquer parte destes termos,
               não utilize a Plataforma.
             </p>
