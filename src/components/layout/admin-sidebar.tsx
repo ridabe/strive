@@ -49,5 +49,3 @@ export function AdminSidebarNav() {
     </nav>
   )
 }
-)
-}
