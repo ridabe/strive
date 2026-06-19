@@ -181,7 +181,7 @@ export function LogsTable({ logs, total, page, pageSize, filters }: LogsTablePro
                     <td className="px-4 py-3">
                       <span
                         className={`inline-flex items-center text-xs font-body font-semibold px-2 py-0.5 rounded-full border ${
-                          CATEGORY_COLORS[log.category] ?? CATEGORY_COLORS.system
+                          CATEGORY_COLORS[log.category as keyof typeof CATEGORY_COLORS] ?? CATEGORY_COLORS.system
                         }`}
                       >
                         {CATEGORIES.find((c) => c.value === log.category)?.label ?? log.category}

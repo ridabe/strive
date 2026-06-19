@@ -79,21 +79,24 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // ── 4. Autenticado em rota pública → área correta ──────────────────────
-  const isNavigationalPublic =
-    isPublicPath &&
-    pathname !== '/termos' &&
-    pathname !== '/privacidade' &&
-    pathname !== '/'
-
-  if (isNavigationalPublic) {
+  // ── 4. Roteamento por role ──────────────────────────────────────────────
+  if (isPublicPath && user) {
     const url = request.nextUrl.clone()
     url.pathname = allowedPrefix
     return NextResponse.redirect(url)
   }
 
-  // ── 5. Proteção por role ───────────────────────────────────────────────
-  if (!isPublicPath && !isChangePasswordPath) {
+  // Verifica se está acessando área do role correto
+  const isInCorrectArea = pathname.startsWith(allowedPrefix)
+  if (!isInCorrectArea && !isPublicPath) {
+    const url = request.nextUrl.clone()
+    url.pathname = allowedPrefix
+    return NextResponse.redirect(url)
+  }
+
+  return supabaseResponse
+}
+asswordPath) {
     // global_admin pode acessar qualquer rota protegida
     if (role === 'global_admin') return supabaseResponse
 

@@ -10,13 +10,17 @@ const CATEGORY_LABELS: Record<string, string> = {
   tenant: 'Tenant',
   user:   'Usuário',
   system: 'Sistema',
+  users:  'Usuários',
+  modules: 'Módulos',
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  auth:   'text-brand-lime   bg-brand-lime/10   border-brand-lime/20',
-  tenant: 'text-status-warning bg-status-warning/10 border-status-warning/20',
-  user:   'text-blue-400      bg-blue-400/10     border-blue-400/20',
-  system: 'text-text-secondary bg-surface-border/30 border-surface-border',
+  auth:    'text-brand-lime    bg-brand-lime/10    border-brand-lime/20',
+  tenant:  'text-status-warning bg-status-warning/10 border-status-warning/20',
+  user:    'text-blue-400      bg-blue-400/10      border-blue-400/20',
+  users:   'text-blue-400      bg-blue-400/10      border-blue-400/20',
+  system:  'text-text-secondary bg-surface-border/30 border-surface-border',
+  modules: 'text-purple-400    bg-purple-400/10    border-purple-400/20',
 }
 
 export default async function AdminPage() {
@@ -58,104 +62,91 @@ export default async function AdminPage() {
     { label: 'Ações auditadas', value: totalActions ?? 0, icon: Activity,  href: '/admin/logs' },
   ]
 
-  return (
-    <div className="p-6 md:p-8 space-y-8">
+  const lastSignIn: string | null = Array.isArray(lastSignInRow)
+    ? lastSignInRow[0]?.last_sign_in_at ?? null
+    : (lastSignInRow as { last_sign_in_at: string } | null)?.last_sign_in_at ?? null
 
-      {/* Título */}
+  return (
+    <div className="p-6 md:p-8 space-y-6">
+
+      {/* Boas-vindas */}
       <div>
         <h1 className="font-display text-2xl font-bold text-text-primary uppercase tracking-widest">
-          Painel Admin
+          Dashboard
         </h1>
         <p className="text-text-secondary text-sm mt-1">
-          Visão geral de toda a plataforma Strive Personal.
+          Bem-vindo, {profile?.full_name ?? profile?.email ?? 'Admin'}.
+          {lastSignIn && (
+            <span className="ml-1 text-text-secondary/60">
+              Último acesso{' '}
+              {formatDistanceToNow(new Date(lastSignIn), { addSuffix: true, locale: ptBR })}.
+            </span>
+          )}
         </p>
       </div>
 
-      {/* Card do admin logado */}
-      <AdminProfileCard
-        fullName={profile?.full_name ?? null}
-        email={profile?.email ?? user!.email!}
-        lastSignIn={lastSignInRow as string | null}
-        totalActions={totalActions ?? 0}
-      />
+      {/* Cards de perfil + métricas */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <AdminProfileCard
+          name={profile?.full_name ?? null}
+          email={profile?.email ?? ''}
+        />
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {stats.map((stat) => {
-          const Icon = stat.icon
-          return (
-            <Link
-              key={stat.label}
-              href={stat.href}
-              className="group bg-surface border border-surface-border rounded-xl p-5 hover:border-status-error/30 transition-all space-y-3"
-            >
-              <Icon size={20} className="text-status-error" />
-              <div>
-                <div className="font-display font-bold text-3xl text-text-primary">
-                  {stat.value}
-                </div>
-                <div className="text-text-secondary text-xs mt-0.5 flex items-center gap-1">
-                  {stat.label}
-                  <ArrowRight size={11} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                </div>
-              </div>
-            </Link>
-          )
-        })}
+        {stats.map((s) => (
+          <Link
+            key={s.label}
+            href={s.href}
+            className="bg-surface border border-surface-border rounded-xl p-5 flex items-center gap-4 hover:border-brand-lime/30 transition-colors group"
+          >
+            <div className="w-12 h-12 rounded-xl bg-brand-lime/10 border border-brand-lime/20 flex items-center justify-center flex-shrink-0">
+              <s.icon size={22} className="text-brand-lime" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-display text-2xl font-bold text-text-primary">{s.value}</p>
+              <p className="text-xs text-text-secondary mt-0.5">{s.label}</p>
+            </div>
+            <ArrowRight size={16} className="text-text-secondary/30 group-hover:text-brand-lime transition-colors" />
+          </Link>
+        ))}
       </div>
 
-      {/* Últimas ações */}
+      {/* Atividade recente */}
       <div className="bg-surface border border-surface-border rounded-xl overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-surface-border">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-surface-border">
           <div className="flex items-center gap-2">
             <FileText size={16} className="text-text-secondary" />
-            <h2 className="font-body font-semibold text-text-primary text-sm">
-              Últimas ações registradas
-            </h2>
+            <h2 className="font-body font-semibold text-text-primary text-sm">Atividade recente</h2>
           </div>
           <Link
             href="/admin/logs"
-            className="text-xs text-brand-lime hover:text-brand-dark transition-colors flex items-center gap-1"
+            className="text-xs text-text-secondary hover:text-brand-lime transition-colors"
           >
-            Ver todos <ArrowRight size={12} />
+            Ver todos →
           </Link>
         </div>
 
-        {!recentLogs || recentLogs.length === 0 ? (
-          <div className="px-6 py-10 text-center text-text-secondary text-sm">
+        {(!recentLogs || recentLogs.length === 0) ? (
+          <p className="text-center text-text-secondary text-sm py-10">
             Nenhuma ação registrada ainda.
-          </div>
+          </p>
         ) : (
-          <ul className="divide-y divide-surface-border">
+          <div className="divide-y divide-surface-border">
             {recentLogs.map((log) => (
-              <li key={log.id} className="flex items-start gap-4 px-6 py-4">
-                {/* Badge categoria */}
-                <span
-                  className={`mt-0.5 inline-flex items-center text-xs font-body font-semibold px-2 py-0.5 rounded-full border flex-shrink-0 ${
-                    CATEGORY_COLORS[log.category] ?? CATEGORY_COLORS.system
-                  }`}
-                >
-                  {CATEGORY_LABELS[log.category] ?? log.category}
+              <div key={log.id} className="flex items-start gap-3 px-5 py-3.5">
+                <span className={`inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full border flex-shrink-0 mt-0.5 ${
+                  CATEGORY_COLORS[log.category as keyof typeof CATEGORY_COLORS] ?? CATEGORY_COLORS.system
+                }`}>
+                  {CATEGORY_LABELS[log.category as keyof typeof CATEGORY_LABELS] ?? log.category}
                 </span>
-
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-text-primary font-body">
-                    {log.description}
-                  </p>
-                  <p className="text-xs text-text-secondary mt-0.5">
-                    {formatDistanceToNow(new Date(log.created_at), {
-                      addSuffix: true,
-                      locale: ptBR,
-                    })}
+                  <p className="text-sm text-text-primary truncate">{log.description}</p>
+                  <p className="text-xs text-text-secondary/60 mt-0.5">
+                    {formatDistanceToNow(new Date(log.created_at), { addSuffix: true, locale: ptBR })}
                   </p>
                 </div>
-
-                <span className="text-xs font-mono text-text-secondary/60 flex-shrink-0 mt-0.5">
-                  {log.action}
-                </span>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </div>
     </div>

@@ -80,8 +80,7 @@ export async function signUpPersonal(formData: FormData) {
 
   if (tenantError) redirect('/register?error=' + encodeURIComponent('Conta criada, mas erro ao configurar tenant.'))
 
-  const { error: profileError } = await supabase
-    .from('profiles')
+  const { error: profileError } = await supabase    .from('profiles')
     .update({ tenant_id: tenant!.id })
     .eq('id', authData.user!.id)
 
@@ -114,3 +113,4 @@ export async function signOut() {
   await supabase.auth.signOut()
   redirect('/login')
 }
+

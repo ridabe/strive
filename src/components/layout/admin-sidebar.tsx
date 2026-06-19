@@ -40,7 +40,7 @@ export function AdminSidebarNav() {
             )}
           >
             <Icon size={18} />
-            {item.label}
+                  {item.label}
           </Link>
         )
       })}

@@ -121,11 +121,11 @@ export default async function ClientesPage() {
 
                   {/* Badges */}
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className={`inline-flex items-center text-xs font-body font-semibold px-2 py-0.5 rounded-full border ${PLAN_COLORS[tenant.plan]}`}>
-                      {PLAN_LABELS[tenant.plan]}
+                    <span className={`inline-flex items-center text-xs font-body font-semibold px-2 py-0.5 rounded-full border ${PLAN_COLORS[tenant.plan as keyof typeof PLAN_COLORS] ?? ''}`}>
+                      {PLAN_LABELS[tenant.plan as keyof typeof PLAN_LABELS]}
                     </span>
-                    <span className={`inline-flex items-center text-xs font-body font-semibold px-2 py-0.5 rounded-full border ${STATUS_COLORS[tenant.status]}`}>
-                      {STATUS_LABELS[tenant.status]}
+                    <span className={`inline-flex items-center text-xs font-body font-semibold px-2 py-0.5 rounded-full border ${STATUS_COLORS[tenant.status as keyof typeof STATUS_COLORS] ?? ''}`}>
+                      {STATUS_LABELS[tenant.status as keyof typeof STATUS_LABELS]}
                     </span>
                   </div>
 

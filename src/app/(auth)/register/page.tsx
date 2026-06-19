@@ -25,7 +25,7 @@ export default async function RegisterPage({
             </h1>
             <p className="text-text-secondary text-sm">
               Comece grátis — sem cartão de crédito
-            </p>
+        </p>
           </div>
 
           {params.error && (
@@ -117,7 +117,7 @@ export default async function RegisterPage({
                 Política de Privacidade
               </Link>
               .
-            </p>
+        </p>
 
             <AuthSubmitButton label="Criar minha conta" loadingLabel="Criando conta..." />
           </form>

@@ -251,33 +251,38 @@ export type Database = {
           tenant_id: string
           module_id: string
           enabled: boolean
-          enabled_at: string
+          enabled_at: string | null
+          created_at: string
         }
         Insert: {
           id?: string
           tenant_id: string
           module_id: string
           enabled?: boolean
-          enabled_at?: string
+          enabled_at?: string | null
+          created_at?: string
         }
         Update: Partial<Database['public']['Tables']['tenant_modules']['Insert']>
       }
-      admin_audit_logs: {
-        Row: {
-          id: string
-          admin_id: string
-          action: string
-          category: audit_category
-          description: string
-          target_type: string | null
-          target_id: string | null
-          metadata: Record<string, unknown> | null
-          ip_address: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          admin_id: string
+    }
+    Functions: {
+      generate_tenant_slug: {
+        Args: { name: string }
+        Returns: string
+      }
+      get_admin_last_sign_in: {
+        Args: { p_user_id: string }
+        Returns: { last_sign_in_at: string }[]
+      }
+    }
+    Enums: {
+      app_role: AppRole
+      profile_status: ProfileStatus
+      audit_category: audit_category
+    }
+  }
+}
+ing
           action: string
           category: audit_category
           description: string

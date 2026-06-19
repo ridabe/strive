@@ -78,7 +78,7 @@ export function ClientEditForm({ tenant, profile }: Props) {
           <Field label="E-mail de acesso" value={profile.email} />
           <Field label="E-mail de contato" value={tenant.contact_email ?? '—'} />
           <Field label="Telefone" value={tenant.contact_phone ?? '—'} />
-          <Field label="Plano" value={PLAN_LABELS[tenant.plan]} />
+          <Field label="Plano" value={PLAN_LABELS[tenant.plan as keyof typeof PLAN_LABELS]} />
           <div className="space-y-1 sm:col-span-2">
             <p className="text-xs text-text-secondary uppercase tracking-wide font-medium">Cor primária</p>
             <div className="flex items-center gap-2">

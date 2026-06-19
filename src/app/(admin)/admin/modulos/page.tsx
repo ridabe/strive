@@ -100,7 +100,7 @@ export default async function ModulosPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {mods.map((mod) => {
                   const IconComp = ICONS[mod.icon ?? ''] ?? Puzzle
-                  const stCfg   = STATUS_CONFIG[mod.status] ?? STATUS_CONFIG.active
+                  const stCfg   = STATUS_CONFIG[mod.status as keyof typeof STATUS_CONFIG] ?? STATUS_CONFIG.active
 
                   return (
                     <div
@@ -149,8 +149,7 @@ export default async function ModulosPage() {
             </section>
           )
         })}
-      </div>
-
+       </div>
     </div>
   )
 }
