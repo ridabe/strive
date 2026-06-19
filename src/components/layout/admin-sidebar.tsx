@@ -10,11 +10,13 @@ import {
   BarChart2,
   ScrollText,
   Puzzle,
+  CreditCard,
 } from 'lucide-react'
 
 const NAV_ITEMS = [
   { label: 'Painel',    href: '/admin',           icon: LayoutDashboard },
   { label: 'Clientes',  href: '/admin/clientes',  icon: Building2 },
+  { label: 'Planos',    href: '/admin/planos',    icon: CreditCard },
   { label: 'Módulos',   href: '/admin/modulos',   icon: Puzzle },
   { label: 'Usuários',  href: '/admin/usuarios',  icon: Users },
   { label: 'Métricas',  href: '/admin/metricas',  icon: BarChart2 },

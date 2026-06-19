@@ -23,7 +23,13 @@ export async function createClient_action(formData: FormData) {
   if (!businessName) redirect('/admin/clientes/novo?error=' + encodeURIComponent('Nome do negócio é obrigatório.'))
   if (!accessEmail)  redirect('/admin/clientes/novo?error=' + encodeURIComponent('E-mail de acesso é obrigatório.'))
 
-  const maxStudents = plan === 'premium' ? 9999 : plan === 'pro' ? 30 : 5
+  // Busca max_students da tabela plans (fonte de verdade)
+  const { data: planRow } = await supabase
+    .from('plans')
+    .select('max_students')
+    .eq('slug', plan)
+    .single()
+  const maxStudents = planRow?.max_students ?? (plan === 'premium' ? 9999 : plan === 'pro' ? 30 : 5)
   const tempPassword = generateTempPassword()
 
   // ── 1. Criar usuário no Supabase Auth (service role) ──────────────────
@@ -209,7 +215,13 @@ export async function updateClient(tenantId: string, formData: FormData) {
 
   if (!businessName) return { error: 'Nome do negócio é obrigatório.' }
 
-  const maxStudents = plan === 'premium' ? 9999 : plan === 'pro' ? 30 : 5
+  // Busca max_students da tabela plans (fonte de verdade)
+  const { data: planRow2 } = await supabase
+    .from('plans')
+    .select('max_students')
+    .eq('slug', plan)
+    .single()
+  const maxStudents = planRow2?.max_students ?? (plan === 'premium' ? 9999 : plan === 'pro' ? 30 : 5)
 
   // Busca tenant atual
   const { data: current } = await adminSupabase

@@ -10,6 +10,7 @@ import {
   TrendingUp,
   DollarSign,
   Settings,
+  CreditCard,
 } from 'lucide-react'
 
 const NAV_ITEMS = [
@@ -18,7 +19,8 @@ const NAV_ITEMS = [
   { label: 'Treinos',    href: '/dashboard/treinos',    icon: Dumbbell },
   { label: 'Evolução',   href: '/dashboard/evolucao',   icon: TrendingUp },
   { label: 'Financeiro', href: '/dashboard/financeiro', icon: DollarSign },
-  { label: 'Ajustes',   href: '/dashboard/ajustes',    icon: Settings },
+  { label: 'Planos',     href: '/dashboard/planos',     icon: CreditCard },
+  { label: 'Ajustes',    href: '/dashboard/ajustes',    icon: Settings },
 ]
 
 export function DashboardSidebarNav() {
