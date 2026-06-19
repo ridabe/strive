@@ -6,6 +6,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import AppLayout from "./components/AppLayout";
 
 // Pages
+import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Alunos from "./pages/Alunos";
 import Treinos from "./pages/Treinos";
@@ -17,20 +18,28 @@ import NotFound from "./pages/NotFound";
 
 function Router() {
   return (
-    <AppLayout>
-      <Switch>
-        <Route path="/"              component={Dashboard} />
-        <Route path="/alunos"        component={Alunos} />
-        <Route path="/alunos/:id"    component={Alunos} />
-        <Route path="/treinos"       component={Treinos} />
-        <Route path="/treinos/:id"   component={Treinos} />
-        <Route path="/avaliacoes"    component={Avaliacoes} />
-        <Route path="/frequencia"    component={Frequencia} />
-        <Route path="/financeiro"    component={Financeiro} />
-        <Route path="/relatorios"    component={Relatorios} />
-        <Route component={NotFound} />
-      </Switch>
-    </AppLayout>
+    <Switch>
+      {/* Rota pública de login */}
+      <Route path="/login" component={Login} />
+
+      {/* Todas as demais rotas passam pelo AppLayout (que faz a proteção) */}
+      <Route>
+        <AppLayout>
+          <Switch>
+            <Route path="/"              component={Dashboard} />
+            <Route path="/alunos"        component={Alunos} />
+            <Route path="/alunos/:id"    component={Alunos} />
+            <Route path="/treinos"       component={Treinos} />
+            <Route path="/treinos/:id"   component={Treinos} />
+            <Route path="/avaliacoes"    component={Avaliacoes} />
+            <Route path="/frequencia"    component={Frequencia} />
+            <Route path="/financeiro"    component={Financeiro} />
+            <Route path="/relatorios"    component={Relatorios} />
+            <Route component={NotFound} />
+          </Switch>
+        </AppLayout>
+      </Route>
+    </Switch>
   );
 }
 
