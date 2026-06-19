@@ -1,4 +1,5 @@
 import { createAdminClient } from '@/lib/supabase/admin'
+import type { AppRole, ProfileStatus } from '@/types/database'
 import { UserPlus, Users, ShieldCheck, Dumbbell, GraduationCap } from 'lucide-react'
 import { UsersTable } from '@/components/admin/users-table'
 import { CreateAdminDialog } from '@/components/admin/create-admin-dialog'
@@ -56,8 +57,8 @@ export default async function UsuariosPage({
     .order('created_at', { ascending: false })
     .range(offset, offset + pageSize - 1)
 
-  if (roleFilter)   query = query.eq('role', roleFilter)
-  if (statusFilter) query = query.eq('status', statusFilter)
+  if (roleFilter)   query = query.eq('role', roleFilter as AppRole)
+  if (statusFilter) query = query.eq('status', statusFilter as ProfileStatus)
   if (tenantFilter) query = query.eq('tenant_id', tenantFilter)
   if (search) {
     query = query.or(`full_name.ilike.%${search}%,email.ilike.%${search}%`)
