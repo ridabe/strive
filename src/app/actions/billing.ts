@@ -6,11 +6,37 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { createSubscriptionCheckout, createAbacateProduct } from '@/lib/abacatepay'
 import { logAdminAction } from '@/lib/admin/audit'
 
-// ─── Garante que o plano tem um produto no AbacatePay ────────────────────────
-// Chamado automaticamente ao iniciar checkout. Se o produto não existe, cria.
-async function ensureAbacateProduct(planSlug: string) {
-  const adminSupabase = createAdminClient()
+// ─── IDs dos produtos AbacatePay por plano (definidos no .env) ───────────────
+const ABACATE_PRODUCT_IDS: Record<string, string | undefined> = {
+  pro:     process.env.ABACATE_PRO,
+  premium: process.env.ABACATE_PREMIUM,
+}
 
+// ─── Garante que o plano tem um produto no AbacatePay ────────────────────────
+// Prioridade: env var → DB → cria via API (fallback)
+async function ensureAbacateProduct(planSlug: string) {
+  // 1. Env var tem prioridade (IDs criados manualmente no painel AbacatePay)
+  const envProductId = ABACATE_PRODUCT_IDS[planSlug]
+  if (envProductId) {
+    // Persiste no DB se ainda não estiver salvo
+    const adminSupabase = createAdminClient()
+    const { data: plan } = await adminSupabase
+      .from('plans')
+      .select('id, abacatepay_product_id')
+      .eq('slug', planSlug)
+      .single()
+
+    if (plan && plan.abacatepay_product_id !== envProductId) {
+      await adminSupabase
+        .from('plans')
+        .update({ abacatepay_product_id: envProductId })
+        .eq('id', plan.id)
+    }
+
+    return envProductId
+  }
+
+  const adminSupabase = createAdminClient()
   const { data: plan } = await adminSupabase
     .from('plans')
     .select('id, name, description, price_brl, abacatepay_product_id')
@@ -18,9 +44,11 @@ async function ensureAbacateProduct(planSlug: string) {
     .single()
 
   if (!plan || plan.price_brl === 0) return null // Free não precisa
+
+  // 2. Já salvo no DB
   if (plan.abacatepay_product_id) return plan.abacatepay_product_id
 
-  // Cria o produto no AbacatePay
+  // 3. Fallback: cria o produto via API
   const result = await createAbacateProduct({
     externalId:  `strive-${planSlug}`,
     name:        `Strive Personal — Plano ${plan.name}`,
@@ -34,7 +62,6 @@ async function ensureAbacateProduct(planSlug: string) {
     return null
   }
 
-  // Salva o ID do produto
   await adminSupabase
     .from('plans')
     .update({ abacatepay_product_id: result.data.id })
