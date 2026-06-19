@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { joinOne } from '@/lib/supabase/join'
 import Link from 'next/link'
 import {
   Users, Dumbbell, TrendingUp, Receipt,
@@ -64,7 +65,7 @@ export default async function DashboardPage() {
   const enabledSlugs = new Set(
     (tenantModuleRows ?? [])
       .filter((r) => r.enabled)
-      .map((r) => (r.system_modules as { slug: string } | null)?.slug)
+      .map((r) => joinOne<{ slug: string }>(r.system_modules)?.slug)
       .filter(Boolean) as string[]
   )
 

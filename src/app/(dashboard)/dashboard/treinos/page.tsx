@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { joinOne } from '@/lib/supabase/join'
 import Link from 'next/link'
 import { ClipboardList, Plus, Users } from 'lucide-react'
 
@@ -63,8 +64,7 @@ export default async function TreinosPage() {
         <div className="bg-surface border border-surface-border rounded-xl overflow-hidden">
           <div className="divide-y divide-surface-border">
             {plans?.map((plan) => {
-              const studentRaw = plan.students as { full_name: string }[] | { full_name: string } | null
-              const student = Array.isArray(studentRaw) ? studentRaw[0] : studentRaw
+              const student = joinOne<{ full_name: string }>(plan.students)
               return (
                 <div key={plan.id} className="flex items-center gap-4 px-5 py-4">
                   <div className="w-9 h-9 rounded-lg bg-blue-400/10 border border-blue-400/20 flex items-center justify-center flex-shrink-0">

@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { joinOne } from '@/lib/supabase/join'
 import { LogoHorizontal } from '@/components/logo'
 import { DashboardSidebarNav, type EnabledModule } from '@/components/layout/dashboard-sidebar'
 import { UserMenu } from '@/components/layout/user-menu'
@@ -44,10 +45,10 @@ export default async function DashboardLayout({
 
     enabledModules = (tenantModules ?? [])
       .flatMap((tm) => {
-        const mod = tm.system_modules as {
+        const mod = joinOne<{
           slug: string; name: string; icon: string | null;
           sort_order: number; available: boolean; status: string
-        } | null
+        }>(tm.system_modules)
         if (!mod || !mod.available || mod.status === 'coming_soon') return []
         return [{ slug: mod.slug, name: mod.name, icon: mod.icon }]
       })

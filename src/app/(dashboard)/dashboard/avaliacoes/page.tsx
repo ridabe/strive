@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { joinOne } from '@/lib/supabase/join'
 import { Ruler, TrendingUp } from 'lucide-react'
 
 export default async function AvaliacoesPage() {
@@ -49,8 +50,7 @@ export default async function AvaliacoesPage() {
             </thead>
             <tbody className="divide-y divide-surface-border">
               {assessments?.map((a) => {
-                const studentRaw = a.students as { full_name: string }[] | { full_name: string } | null
-                const student = Array.isArray(studentRaw) ? studentRaw[0] : studentRaw
+                const student = joinOne<{ full_name: string }>(a.students)
                 return (
                   <tr key={a.id} className="hover:bg-surface-border/10">
                     <td className="px-5 py-3.5">

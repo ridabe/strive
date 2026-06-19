@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { Receipt, CheckCircle2, Clock, AlertCircle } from 'lucide-react'
+import { joinOne } from '@/lib/supabase/join'
 
 const STATUS_CONFIG: Record<string, { label: string; icon: typeof CheckCircle2; color: string }> = {
   paid:      { label: 'Pago',      icon: CheckCircle2, color: 'text-status-success bg-status-success/10 border-status-success/20' },
@@ -80,8 +81,7 @@ export default async function FinanceiroPage() {
             </thead>
             <tbody className="divide-y divide-surface-border">
               {invoices?.map((inv) => {
-                const studentRaw = inv.students as { full_name: string }[] | { full_name: string } | null
-                const student = Array.isArray(studentRaw) ? studentRaw[0] : studentRaw
+                const student = joinOne<{ full_name: string }>(inv.students)
                 const cfg     = STATUS_CONFIG[inv.status] ?? STATUS_CONFIG.pending
                 const Icon    = cfg.icon
                 return (
