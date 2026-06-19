@@ -186,7 +186,7 @@ export async function POST(req: NextRequest) {
 
         // Faz downgrade para Free
         if (affectedTenantId) {
-          const downgradeTo = (cancelledSlug && PLAN_DOWNGRADE[cancelledSlug]) ?? 'free'
+          const downgradeTo: 'free' | 'pro' | 'premium' = (cancelledSlug ? PLAN_DOWNGRADE[cancelledSlug] : undefined) ?? 'free'
 
           const { data: freePlan } = await adminSupabase
             .from('plans')
