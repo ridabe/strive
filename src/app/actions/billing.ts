@@ -154,7 +154,7 @@ export async function startSubscriptionCheckout(planSlug: 'pro' | 'premium') {
 
 // ─── Sincronizar produto de um plano com o AbacatePay (chamado pelo admin) ───
 export async function syncPlanToAbacatePay(planId: string) {
-  const adminSupabase = createAdminClient()
+  const adminSupabase = await createAdminClient()
 
   const { data: plan } = await adminSupabase
     .from('plans')
@@ -162,24 +162,31 @@ export async function syncPlanToAbacatePay(planId: string) {
     .eq('id', planId)
     .single()
 
-  if (!plan || plan.price_brl === 0) return { info: 'Plano gratuito não precisa de produto no AbacatePay' }
+  if (!plan) return { error: 'Plano não encontrado' }
 
-  // Sempre cria um novo produto (AbacatePay não tem endpoint de atualização)
-  const result = await createAbacateProduct({
-    externalId:  `strive-${plan.slug}-${Date.now()}`,
-    name:        `Strive Personal — Plano ${plan.name}`,
-    description: plan.description ?? undefined,
-    price:       plan.price_brl,
-    cycle:       'MONTHLY',
-  })
+  const abacate = createAbacatePay()
 
-  if (!result.success || !result.data) {
-    return { error: result.error ?? 'Falha ao criar produto no AbacatePay' }
+  try {
+    const result = await abacate.post('/billing/product/create', {
+      externalId: plan.id,
+      name: plan.name,
+      description: plan.description ?? plan.name,
+      price: Math.round(plan.price_brl * 100),
+    })
+
+    if (!result.data?.data?.id) return { error: 'Falha ao criar produto no AbacatePay' }
+
+    await adminSupabase
+      .from('plans')
+      .update({ abacatepay_product_id: result.data.data.id })
+      .eq('id', planId)
+
+    return { success: true, productId: result.data.data.id }
+  } catch (err) {
+    return { error: String(err) }
   }
-
-  await adminSupabase
-    .from('plans')
-    .update({ abacatepay_product_id: result.data.id })
+}
+t.data.id })
     .eq('id', planId)
 
   await logAdminAction({

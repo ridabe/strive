@@ -52,8 +52,6 @@ export default async function DashboardLayout({
         if (!mod || !mod.available || mod.status === 'coming_soon') return []
         return [{ slug: mod.slug, name: mod.name, icon: mod.icon }]
       })
-      // mantém ordem já vinda da query (sort_order definido na tabela)
-
   }
 
   return (
@@ -75,6 +73,12 @@ export default async function DashboardLayout({
 
       {/* Conteúdo principal */}
       <main className="flex-1 overflow-auto">
+        {children}
+      </main>
+    </div>
+  )
+}
+="flex-1 overflow-auto">
         {children}
       </main>
     </div>

@@ -185,7 +185,7 @@ export default async function DashboardPage() {
         </section>
       )}
 
-      {/* Estado vazio — nenhum módulo habilitado */}
+      {/* Estado vazio */}
       {enabledModules.length === 0 && lockedModules.length === 0 && (
         <div className="bg-surface border border-surface-border rounded-xl p-8 text-center space-y-2">
           <p className="text-text-primary font-body font-medium">Nenhum módulo configurado ainda</p>
@@ -193,6 +193,11 @@ export default async function DashboardPage() {
             Entre em contato com o suporte para habilitar os módulos do seu plano.
           </p>
         </div>
+      )}
+    </div>
+  )
+}
+iv>
       )}
     </div>
   )

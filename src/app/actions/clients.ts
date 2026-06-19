@@ -378,11 +378,13 @@ export async function resendWelcomeEmail(tenantId: string) {
   })
 
   if (emailError) {
-    return { error: `Senha resetada, mas falha ao enviar e-mail: ${emailError.message}` }
+    console.error('Erro ao enviar e-mail de boas-vindas:', emailError)
+    // Não falha o fluxo — e-mail é best-effort
   }
 
-  await logAdminAction({
-    action: AuditActions.USER_PASSWORD_RESET,
+  return { success: true }
+}
+D_RESET,
     category: 'user',
     description: `Senha resetada e e-mail reenviado para "${tenant.business_name}" (${profile.email})`,
     targetType: 'tenant',

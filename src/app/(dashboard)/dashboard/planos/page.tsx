@@ -240,18 +240,17 @@ export default async function PlanosDashboardPage({
         })}
       </div>
 
-      {/* Aviso de pagamento seguro */}
-      <p className="text-center text-xs text-text-secondary/50">
-        Pagamentos processados com segurança via{' '}
-        <a
-          href="https://abacatepay.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:text-text-secondary transition-colors"
-        >
-          AbacatePay
-        </a>
-        {' '}· Cancele a qualquer momento.
+      {/* FAQ / info */}
+      <div className="bg-surface border border-surface-border rounded-xl p-6 space-y-3">
+        <p className="text-sm font-body font-semibold text-text-primary">Dúvidas sobre planos?</p>
+        <p className="text-sm text-text-secondary">
+          Entre em contato com o suporte ou acesse nossa central de ajuda para saber mais sobre cada plano.
+        </p>
+      </div>
+    </div>
+  )
+}
+ momento.
       </p>
     </div>
   )

@@ -72,13 +72,15 @@ export async function updatePlan(planId: string, formData: FormData) {
   await logAdminAction({
     action: 'PLAN_UPDATED',
     category: 'system',
-    description: `Plano "${plan.name}" atualizado — limite: ${max_students === 9999 ? 'ilimitado' : max_students} alunos, preço: R$${price_brl}/mês`,
-    targetType: 'plan',
-    targetId: planId,
-    metadata: { price_brl, max_students },
+    description: `Plano "${plan.name}" atualizado — limite: ${max_students === 9999 ? 'ilimitado' : max_students} alunos, preço: R$ ${price_brl}`,
+    target_id: planId,
+    target_type: 'plan',
   })
 
   revalidatePath('/admin/planos')
+  return { success: true }
+}
+/admin/planos')
   return { success: true }
 }
 

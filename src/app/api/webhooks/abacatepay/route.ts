@@ -233,5 +233,6 @@ async function recordEvent(supabase: any, event: WebhookEvent, rawBody: string) 
       id:      event.id,
       event:   event.event,
       payload: JSON.parse(rawBody),
-    }, { onConflict: 'id' })
+      processed_at: new Date().toISOString(),
+    })
 }

@@ -105,12 +105,25 @@ export default async function AlterarSenhaPage({
                 type="password"
                 required
                 minLength={8}
-                placeholder="Repita a nova senha"
-                className="w-full bg-background border border-surface-border rounded-lg px-4 py-3 text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-lime/60 focus:ring-1 focus:ring-brand-lime/30 transition-colors"
+                placeholder="••••••••"
+                className="mt-1 w-full bg-background border border-surface-border rounded-lg px-3 py-2.5 text-sm text-text-primary focus:outline-none focus:border-brand-lime/50 transition-colors"
               />
             </div>
 
-            <AuthSubmitButton label="Salvar nova senha" loadingLabel="Salvando..." />
+            <button
+              type="submit"
+              className="w-full bg-brand-lime text-background font-body font-semibold py-2.5 rounded-lg hover:bg-brand-lime/90 transition-colors"
+            >
+              Alterar senha
+            </button>
+
+            {!isFirstAccess && (
+              <div className="text-center">
+                <Link href="/dashboard" className="text-sm text-text-secondary hover:text-text-primary transition-colors">
+                  ← Voltar ao painel
+                </Link>
+              </div>
+            )}
           </form>
         </div>
       </div>

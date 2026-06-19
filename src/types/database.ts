@@ -64,6 +64,101 @@ export type Database = {
           },
         ]
       }
+      anamnese_responses: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          responses: Json
+          student_id: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          responses?: Json
+          student_id: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          responses?: Json
+          student_id?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "anamnese_responses_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "anamnese_responses_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      anamnese_templates: {
+        Row: {
+          category: string
+          created_at: string
+          field_key: string
+          field_type: string
+          id: string
+          is_active: boolean
+          label: string
+          options: Json | null
+          required: boolean
+          sort_order: number
+          tenant_id: string | null
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          field_key: string
+          field_type?: string
+          id?: string
+          is_active?: boolean
+          label: string
+          options?: Json | null
+          required?: boolean
+          sort_order?: number
+          tenant_id?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          field_key?: string
+          field_type?: string
+          id?: string
+          is_active?: boolean
+          label?: string
+          options?: Json | null
+          required?: boolean
+          sort_order?: number
+          tenant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "anamnese_templates_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       attendance: {
         Row: {
           attended_at: string
@@ -553,40 +648,6 @@ export type Database = {
           status: Database["public"]["Enums"]["tenant_status"]
           updated_at: string
         }
-        Insert: {
-          abacatepay_customer_id?: string | null
-          app_name?: string | null
-          business_name: string
-          contact_email?: string | null
-          contact_phone?: string | null
-          created_at?: string
-          id?: string
-          logo_url?: string | null
-          max_students?: number
-          notes?: string | null
-          plan?: Database["public"]["Enums"]["tenant_plan"]
-          primary_color?: string | null
-          slug?: string | null
-          status?: Database["public"]["Enums"]["tenant_status"]
-          updated_at?: string
-        }
-        Update: {
-          abacatepay_customer_id?: string | null
-          app_name?: string | null
-          business_name?: string
-          contact_email?: string | null
-          contact_phone?: string | null
-          created_at?: string
-          id?: string
-          logo_url?: string | null
-          max_students?: number
-          notes?: string | null
-          plan?: Database["public"]["Enums"]["tenant_plan"]
-          primary_color?: string | null
-          slug?: string | null
-          status?: Database["public"]["Enums"]["tenant_status"]
-          updated_at?: string
-        }
         Relationships: []
       }
       webhook_events: {
@@ -869,6 +930,33 @@ export type CompositeTypes<
   ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
   ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+  : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      app_role: ["global_admin", "personal", "student"],
+      audit_category: ["auth", "tenant", "user", "system"],
+      financial_plan_status: ["pending", "paid", "overdue", "cancelled"],
+      profile_status: ["active", "inactive", "suspended"],
+      student_status: ["active", "inactive"],
+      tenant_plan: ["free", "pro", "premium"],
+      tenant_status: ["active", "inactive", "suspended"],
+      workout_plan_status: ["active", "inactive"],
+    },
+  },
+} as const
+
+// Aliases para compatibilidade com o restante do projeto
+export type AppRole = Database["public"]["Enums"]["app_role"]
+export type audit_category = Database["public"]["Enums"]["audit_category"]
+export type TenantPlan = Database["public"]["Enums"]["tenant_plan"]
+export type TenantStatus = Database["public"]["Enums"]["tenant_status"]
+export type ProfileStatus = Database["public"]["Enums"]["profile_status"]
+export type StudentStatus = Database["public"]["Enums"]["student_status"]
+export type WorkoutPlanStatus = Database["public"]["Enums"]["workout_plan_status"]
+export type FinancialPlanStatus = Database["public"]["Enums"]["financial_plan_status"]
+Options]
   : never
 
 export const Constants = {
