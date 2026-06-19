@@ -38,7 +38,7 @@ export async function suspendUser(userId: string): Promise<{ error?: string }> {
 
     await logAdminAction({
       action: AuditActions.USER_SUSPENDED,
-      category: 'users',
+      category: 'user',
       description: `Usuário ${profile?.full_name ?? userId} suspenso`,
       targetId: userId,
       metadata: { role: profile?.role },
@@ -79,7 +79,7 @@ export async function activateUser(userId: string): Promise<{ error?: string }> 
 
     await logAdminAction({
       action: AuditActions.USER_ACTIVATED,
-      category: 'users',
+      category: 'user',
       description: `Usuário ${profile?.full_name ?? userId} reativado`,
       targetId: userId,
       metadata: { role: profile?.role },
@@ -121,7 +121,7 @@ export async function resetUserPassword(userId: string): Promise<{ error?: strin
 
     await logAdminAction({
       action: AuditActions.PASSWORD_RESET,
-      category: 'users',
+      category: 'user',
       description: `Senha resetada para ${profile?.full_name ?? userId}`,
       targetId: userId,
       metadata: { role: profile?.role },
@@ -154,7 +154,7 @@ export async function deleteUser(userId: string): Promise<{ error?: string }> {
 
     await logAdminAction({
       action: AuditActions.USER_DELETED,
-      category: 'users',
+      category: 'user',
       description: `Usuário ${profile?.full_name ?? userId} deletado`,
       targetId: userId,
       metadata: { role: profile?.role },
@@ -205,7 +205,7 @@ export async function createGlobalAdmin(formData: FormData): Promise<{ error?: s
 
     await logAdminAction({
       action: AuditActions.CLIENT_CREATED,
-      category: 'users',
+      category: 'user',
       description: `Admin global criado: ${fullName} (${email})`,
       targetId: userData.user.id,
     })
