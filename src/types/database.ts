@@ -282,3 +282,76 @@ export type Database = {
     }
   }
 }
+ing
+          action: string
+          category: audit_category
+          description: string
+          target_type?: string | null
+          target_id?: string | null
+          metadata?: Record<string, unknown> | null
+          ip_address?: string | null
+          created_at?: string
+        }
+        Update: never
+      }
+      financial_plans: {
+        Row: {
+          id: string
+          tenant_id: string
+          student_id: string
+          plan_name: string
+          amount: number
+          due_date: string
+          paid_at: string | null
+          status: FinancialPlanStatus
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          tenant_id: string
+          student_id: string
+          plan_name: string
+          amount: number
+          due_date: string
+          paid_at?: string | null
+          status?: FinancialPlanStatus
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: Partial<Omit<Database['public']['Tables']['financial_plans']['Insert'], 'id' | 'tenant_id'>>
+      }
+    }
+    Views: Record<string, never>
+    Functions: {
+      get_admin_last_sign_in: {
+        Args: { p_user_id: string }
+        Returns: string | null
+      }
+      get_my_role: {
+        Args: Record<string, never>
+        Returns: AppRole
+      }
+      get_my_tenant_id: {
+        Args: Record<string, never>
+        Returns: string
+      }
+      generate_tenant_slug: {
+        Args: { p_name: string }
+        Returns: string
+      }
+    }
+    Enums: {
+      app_role: AppRole
+      audit_category: audit_category
+      tenant_plan: TenantPlan
+      tenant_status: TenantStatus
+      profile_status: ProfileStatus
+      student_status: StudentStatus
+      workout_plan_status: WorkoutPlanStatus
+      financial_plan_status: FinancialPlanStatus
+    }
+  }
+}
