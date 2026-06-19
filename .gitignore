@@ -7,12 +7,17 @@ dist/
 build/
 *.dist
 
-# Environment variables
+# Environment variables — NUNCA commitar arquivos de ambiente
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
+!.env.template
+*.env
+*.env.local
+*.env.development*
+*.env.test*
+*.env.production*
+*.env.staging*
 
 # IDE and editor files
 .vscode/

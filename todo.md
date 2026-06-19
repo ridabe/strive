@@ -24,12 +24,19 @@
 - [ ] Routers tRPC: financial (CRUD)
 
 ## Fase 3: Dashboard Home
+- [ ] Tela de Login com identidade visual completa (logo, headline, CTA)
+- [ ] Schema: tabela `students` com campos essenciais
+- [ ] Schema: tabela `financial_plans` com vencimento e status
+- [ ] Schema: tabela `attendance` para frequência
+- [ ] Router tRPC: dashboard.kpis (alunos ativos, treinos semana, aniversariantes, planos vencendo)
+- [ ] Router tRPC: dashboard.recentActivity
 - [ ] Card KPI: total de alunos ativos
 - [ ] Card KPI: treinos executados na semana
 - [ ] Card KPI: aniversariantes do mês
 - [ ] Card KPI: alertas de planos vencendo em 7 dias
+- [ ] Seção de alertas de planos vencendo
+- [ ] Seção de aniversariantes do mês
 - [ ] Lista de atividade recente
-- [ ] Lista de aniversariantes do mês
 
 ## Fase 4: Módulo de Alunos
 - [ ] Listagem de alunos com busca e filtro

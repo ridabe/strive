@@ -56,7 +56,6 @@
   --radius:    12px;
 
   /* Tipografia */
-  --font-display: "Syncopate", sans-serif;
   --font-sans:    "DM Sans", sans-serif;
   --font-mono:    "DM Sans", monospace;
 }
@@ -75,11 +74,11 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* Apenas elementos com .font-display usam Syncopate explicitamente */
   h1, h2, h3, h4 {
-    font-family: "Syncopate", sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.15;
+    line-height: 1.2;
   }
 
   /* Scrollbar customizada */
@@ -106,9 +105,9 @@
     border-radius: var(--radius-xl);
   }
 
-  /* Texto display (Syncopate) */
+  /* Texto display (Syncopate) — use APENAS para títulos e labels de marca */
   .font-display {
-    font-family: "Syncopate", sans-serif;
+    font-family: "Syncopate", sans-serif !important;
   }
 
   /* Gradiente de fundo sutil */
