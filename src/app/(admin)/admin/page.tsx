@@ -88,8 +88,10 @@ export default async function AdminPage() {
       {/* Cards de perfil + métricas */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <AdminProfileCard
-          name={profile?.full_name ?? null}
+          fullName={profile?.full_name ?? null}
           email={profile?.email ?? ''}
+          lastSignIn={lastSignIn}
+          totalActions={totalActions ?? 0}
         />
 
         {stats.map((s) => (
