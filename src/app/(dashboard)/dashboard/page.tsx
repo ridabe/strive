@@ -197,8 +197,3 @@ export default async function DashboardPage() {
     </div>
   )
 }
-iv>
-      )}
-    </div>
-  )
-}

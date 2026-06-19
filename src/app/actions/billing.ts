@@ -186,7 +186,6 @@ export async function syncPlanToAbacatePay(planId: string) {
     return { error: String(err) }
   }
 }
-t.data.id })
     .eq('id', planId)
 
   await logAdminAction({

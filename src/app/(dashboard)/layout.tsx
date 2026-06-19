@@ -78,9 +78,3 @@ export default async function DashboardLayout({
     </div>
   )
 }
-="flex-1 overflow-auto">
-        {children}
-      </main>
-    </div>
-  )
-}

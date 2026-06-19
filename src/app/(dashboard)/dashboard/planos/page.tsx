@@ -250,8 +250,3 @@ export default async function PlanosDashboardPage({
     </div>
   )
 }
- momento.
-      </p>
-    </div>
-  )
-}

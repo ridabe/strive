@@ -80,9 +80,6 @@ export async function updatePlan(planId: string, formData: FormData) {
   revalidatePath('/admin/planos')
   return { success: true }
 }
-/admin/planos')
-  return { success: true }
-}
 
 // ── Ativar / desativar plano ─────────────────────────────────────────────────
 export async function togglePlanActive(planId: string, is_active: boolean) {
