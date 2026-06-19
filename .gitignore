@@ -114,3 +114,11 @@ temp/
 # Webdev artifacts (checkpoint zips, migrations, etc.)
 .webdev/
 .project-config.json
+
+# Supabase local dev
+supabase/.temp/
+supabase/.branches/
+
+# Next.js
+out/
+next-env.d.ts
