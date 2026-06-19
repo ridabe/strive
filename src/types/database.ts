@@ -11,6 +11,9 @@ export type WorkoutPlanStatus = 'active' | 'inactive'
 export type FinancialPlanStatus = 'pending' | 'paid' | 'overdue' | 'cancelled'
 
 export type Database = {
+  __InternalSupabase: {
+    PostgrestVersion: "14.5"
+  }
   public: {
     Tables: {
       tenants: {
