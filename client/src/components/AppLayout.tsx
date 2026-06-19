@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import { trpc } from "@/lib/trpc";
 
 const NAV_ITEMS = [
   { icon: LayoutDashboard, label: "Dashboard",   href: "/" },
@@ -31,12 +30,9 @@ interface AppLayoutProps {
 }
 
 export default function AppLayout({ children }: AppLayoutProps) {
-  const { user, loading, isAuthenticated } = useAuth();
+  const { user, loading, isAuthenticated, logout } = useAuth();
   const [location] = useLocation();
   const [collapsed, setCollapsed] = useState(false);
-  const logout = trpc.auth.logout.useMutation({
-    onSuccess: () => { window.location.href = "/"; },
-  });
 
   if (loading) {
     return (
@@ -141,7 +137,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
             </div>
           )}
           <button
-            onClick={() => logout.mutate()}
+            onClick={() => { logout().then(() => { window.location.href = "/login"; }); }}
             className={`
               flex items-center gap-2 px-3 py-2 rounded-xl text-[#B0B0C3] hover:text-[#EF4444] hover:bg-[#EF4444]/10
               transition-colors duration-150 text-sm w-full

@@ -12,43 +12,36 @@ export const dashboardRouter = router({
     const weekAgo = new Date(now);
     weekAgo.setDate(weekAgo.getDate() - 7);
 
-    const sevenDaysLater = new Date(now);
-    sevenDaysLater.setDate(sevenDaysLater.getDate() + 7);
-
     const currentMonth = now.getMonth() + 1;
 
-    // Alunos ativos
     const [activeResult] = await db
       .select({ count: count() })
       .from(students)
       .where(eq(students.status, "active"));
 
-    // Treinos executados na semana (registros de frequência)
     const [weekResult] = await db
       .select({ count: count() })
       .from(attendance)
       .where(gte(attendance.attendedAt, weekAgo));
 
-    // Aniversariantes do mês
     const [birthdayResult] = await db
       .select({ count: count() })
       .from(students)
       .where(
         and(
           eq(students.status, "active"),
-          sql`MONTH(${students.birthDate}) = ${currentMonth}`
+          sql`EXTRACT(MONTH FROM ${students.birthDate}) = ${currentMonth}`
         )
       );
 
-    // Planos vencendo em 7 dias
     const [expiringResult] = await db
       .select({ count: count() })
       .from(financialPlans)
       .where(
         and(
           eq(financialPlans.status, "pending"),
-          gte(financialPlans.dueDate, sql`CURDATE()`),
-          lte(financialPlans.dueDate, sql`DATE_ADD(CURDATE(), INTERVAL 7 DAY)`)
+          gte(financialPlans.dueDate, sql`CURRENT_DATE`),
+          lte(financialPlans.dueDate, sql`CURRENT_DATE + INTERVAL '7 days'`)
         )
       );
 
@@ -78,7 +71,8 @@ export const dashboardRouter = router({
       .where(
         and(
           eq(financialPlans.status, "pending"),
-          lte(financialPlans.dueDate, sql`DATE_ADD(CURDATE(), INTERVAL 7 DAY)`)
+          gte(financialPlans.dueDate, sql`CURRENT_DATE`),
+          lte(financialPlans.dueDate, sql`CURRENT_DATE + INTERVAL '7 days'`)
         )
       )
       .orderBy(financialPlans.dueDate)
@@ -105,10 +99,10 @@ export const dashboardRouter = router({
       .where(
         and(
           eq(students.status, "active"),
-          sql`MONTH(${students.birthDate}) = ${currentMonth}`
+          sql`EXTRACT(MONTH FROM ${students.birthDate}) = ${currentMonth}`
         )
       )
-      .orderBy(sql`DAY(${students.birthDate})`);
+      .orderBy(sql`EXTRACT(DAY FROM ${students.birthDate})`);
 
     return rows;
   }),

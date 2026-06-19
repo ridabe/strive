@@ -1,8 +1,8 @@
-import { getLoginUrl } from "@/const";
+import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { Dumbbell, Zap, BarChart3, Users } from "lucide-react";
+import { Dumbbell, Zap, BarChart3, Users, Loader2 } from "lucide-react";
 
 const FEATURES = [
   { icon: Users,    label: "Gestão completa de alunos" },
@@ -14,10 +14,31 @@ const FEATURES = [
 export default function Login() {
   const { isAuthenticated, loading } = useAuth();
   const [, navigate] = useLocation();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (!loading && isAuthenticated) navigate("/");
   }, [isAuthenticated, loading, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setSubmitting(true);
+    try {
+      const { error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (authError) {
+        setError("E-mail ou senha inválidos. Tente novamente.");
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#0E0E1A] flex">
@@ -32,7 +53,7 @@ export default function Login() {
             backgroundSize: "40px 40px",
           }}
         />
-        {/* Círculo de brilho */}
+        {/* Círculos de brilho */}
         <div className="absolute top-[-10%] left-[-5%] w-[500px] h-[500px] rounded-full bg-[#E8FF47]/5 blur-[120px] pointer-events-none" />
         <div className="absolute bottom-[-10%] right-[-5%] w-[400px] h-[400px] rounded-full bg-[#E8FF47]/4 blur-[100px] pointer-events-none" />
 
@@ -104,26 +125,72 @@ export default function Login() {
               </p>
             </div>
 
-            {/* Divisor */}
             <div className="h-px bg-[#2A2A45]" />
 
-            {/* CTA principal */}
-            <div className="flex flex-col gap-3">
-              <a
-                href={getLoginUrl()}
+            {/* Formulário */}
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[#B0B0C3] text-xs font-medium" htmlFor="email">
+                  E-mail
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="seuemail@exemplo.com"
+                  className="
+                    w-full px-4 py-3 rounded-xl bg-[#1A1A2E] border border-[#2A2A45]
+                    text-white text-sm placeholder:text-[#B0B0C3]/40
+                    focus:outline-none focus:border-[#E8FF47]/50 transition-colors
+                  "
+                />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[#B0B0C3] text-xs font-medium" htmlFor="password">
+                  Senha
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  required
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="
+                    w-full px-4 py-3 rounded-xl bg-[#1A1A2E] border border-[#2A2A45]
+                    text-white text-sm placeholder:text-[#B0B0C3]/40
+                    focus:outline-none focus:border-[#E8FF47]/50 transition-colors
+                  "
+                />
+              </div>
+
+              {error && (
+                <div className="flex items-start gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20">
+                  <p className="text-red-400 text-xs leading-relaxed">{error}</p>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={submitting}
                 className="
                   w-full py-3.5 rounded-full bg-[#E8FF47] text-black font-bold text-sm text-center
                   hover:bg-[#C8E600] transition-all duration-150 active:scale-[0.97]
                   lime-glow-sm flex items-center justify-center gap-2
+                  disabled:opacity-60 disabled:cursor-not-allowed
                 "
               >
-                <Zap className="w-4 h-4" />
-                Entrar com Manus
-              </a>
-              <p className="text-[#B0B0C3]/60 text-xs text-center leading-relaxed">
-                Ao entrar, você concorda com os termos de uso da plataforma.
-              </p>
-            </div>
+                {submitting ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Zap className="w-4 h-4" />
+                )}
+                {submitting ? "Entrando..." : "Entrar"}
+              </button>
+            </form>
 
             {/* Info de acesso restrito */}
             <div className="flex items-start gap-3 p-3 rounded-xl bg-[#E8FF47]/5 border border-[#E8FF47]/15">
