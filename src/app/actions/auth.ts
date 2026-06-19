@@ -6,14 +6,12 @@ import { createClient } from '@/lib/supabase/server'
 import { logAdminAction, AuditActions } from '@/lib/admin/audit'
 import type { AppRole } from '@/types/database'
 
-// Redireciona para a área correta por role
 function redirectByRole(role: AppRole): never {
   if (role === 'global_admin') redirect('/admin')
   if (role === 'student') redirect('/student')
   redirect('/dashboard')
 }
 
-// Extrai IP do request
 async function getClientIp(): Promise<string> {
   const headersList = await headers()
   return (
@@ -25,15 +23,14 @@ async function getClientIp(): Promise<string> {
 
 // ── Login ────────────────────────────────────────────────────────
 export async function signIn(formData: FormData) {
-  const email = formData.get('email') as string
+  const email    = formData.get('email') as string
   const password = formData.get('password') as string
 
   const supabase = await createClient()
-
   const { error } = await supabase.auth.signInWithPassword({ email, password })
 
   if (error) {
-    return { error: error.message }
+    redirect('/login?error=' + encodeURIComponent(error.message))
   }
 
   const { data: profile } = await supabase
@@ -43,7 +40,6 @@ export async function signIn(formData: FormData) {
 
   const role: AppRole = profile?.role ?? 'personal'
 
-  // Registra login do admin global no audit log
   if (role === 'global_admin') {
     const ip = await getClientIp()
     await logAdminAction({
@@ -60,9 +56,9 @@ export async function signIn(formData: FormData) {
 
 // ── Registro de Personal Trainer ─────────────────────────────────
 export async function signUpPersonal(formData: FormData) {
-  const email = formData.get('email') as string
-  const password = formData.get('password') as string
-  const fullName = formData.get('full_name') as string
+  const email        = formData.get('email') as string
+  const password     = formData.get('password') as string
+  const fullName     = formData.get('full_name') as string
   const businessName = (formData.get('business_name') as string) || fullName
 
   const supabase = await createClient()
@@ -70,28 +66,26 @@ export async function signUpPersonal(formData: FormData) {
   const { data: authData, error: authError } = await supabase.auth.signUp({
     email,
     password,
-    options: {
-      data: { full_name: fullName, role: 'personal' },
-    },
+    options: { data: { full_name: fullName, role: 'personal' } },
   })
 
-  if (authError) return { error: authError.message }
-  if (!authData.user) return { error: 'Erro ao criar conta. Tente novamente.' }
+  if (authError) redirect('/register?error=' + encodeURIComponent(authError.message))
+  if (!authData.user) redirect('/register?error=' + encodeURIComponent('Erro ao criar conta. Tente novamente.'))
 
   const { data: tenant, error: tenantError } = await supabase
     .from('tenants')
-    .insert({ business_name: businessName, plan: 'free', max_students: 5 })
+    .insert({ business_name: businessName, slug: email.split('@')[0], plan: 'free', max_students: 5 })
     .select('id')
     .single()
 
-  if (tenantError) return { error: 'Conta criada, mas erro ao configurar tenant.' }
+  if (tenantError) redirect('/register?error=' + encodeURIComponent('Conta criada, mas erro ao configurar tenant.'))
 
   const { error: profileError } = await supabase
     .from('profiles')
-    .update({ tenant_id: tenant.id })
-    .eq('id', authData.user.id)
+    .update({ tenant_id: tenant!.id })
+    .eq('id', authData.user!.id)
 
-  if (profileError) return { error: 'Conta criada, mas erro ao vincular tenant.' }
+  if (profileError) redirect('/register?error=' + encodeURIComponent('Conta criada, mas erro ao vincular tenant.'))
 
   redirect('/dashboard')
 }

@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import {
-  ArrowLeft, CalendarDays, Users, Crown, CheckCircle2, XCircle, PauseCircle,
+  ArrowLeft, CalendarDays, Users, Crown, CheckCircle2, XCircle, PauseCircle, Puzzle,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { ClientDetailActions } from '@/components/admin/client-detail-actions'
@@ -126,12 +126,20 @@ export default async function ClientDetailPage({
         </div>
       </div>
 
-      {/* Ações */}
-      <ClientDetailActions
-        tenantId={tenant.id}
-        tenantName={tenant.business_name}
-        status={tenant.status as 'active' | 'inactive' | 'suspended'}
-      />
+      {/* Ações + link de módulos */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <ClientDetailActions
+          tenantId={tenant.id}
+          tenantName={tenant.business_name}
+          status={tenant.status as 'active' | 'inactive' | 'suspended'}
+        />
+        <Link
+          href={`/admin/clientes/${tenant.id}/modulos`}
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-brand-lime text-black font-semibold text-sm hover:bg-brand-lime/90 transition-colors"
+        >
+          <Puzzle size={15} /> Gerenciar módulos
+        </Link>
+      </div>
 
       {/* Cards de métricas */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">

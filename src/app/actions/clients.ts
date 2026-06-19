@@ -20,8 +20,8 @@ export async function createClient_action(formData: FormData) {
   const notes         = (formData.get('notes') as string)?.trim() || null
   const logoFile      = formData.get('logo') as File | null
 
-  if (!businessName) return { error: 'Nome do negócio é obrigatório.' }
-  if (!accessEmail)  return { error: 'E-mail de acesso é obrigatório.' }
+  if (!businessName) redirect('/admin/clientes/novo?error=' + encodeURIComponent('Nome do negócio é obrigatório.'))
+  if (!accessEmail)  redirect('/admin/clientes/novo?error=' + encodeURIComponent('E-mail de acesso é obrigatório.'))
 
   const maxStudents = plan === 'premium' ? 9999 : plan === 'pro' ? 30 : 5
   const tempPassword = generateTempPassword()
@@ -38,7 +38,7 @@ export async function createClient_action(formData: FormData) {
   })
 
   if (authError || !authData.user) {
-    return { error: `Erro ao criar usuário: ${authError?.message ?? 'desconhecido'}` }
+    redirect('/admin/clientes/novo?error=' + encodeURIComponent(`Erro ao criar usuário: ${authError?.message ?? 'desconhecido'}`))
   }
 
   const userId = authData.user.id
@@ -64,9 +64,8 @@ export async function createClient_action(formData: FormData) {
     .single()
 
   if (tenantError || !tenant) {
-    // Rollback: remove usuário criado
     await adminSupabase.auth.admin.deleteUser(userId)
-    return { error: `Erro ao criar tenant: ${tenantError?.message}` }
+    redirect('/admin/clientes/novo?error=' + encodeURIComponent(`Erro ao criar tenant: ${tenantError?.message}`))
   }
 
   // ── 3. Atualizar profile: vincular tenant + marcar must_change_password ──
@@ -81,7 +80,7 @@ export async function createClient_action(formData: FormData) {
   if (profileError) {
     await adminSupabase.auth.admin.deleteUser(userId)
     await adminSupabase.from('tenants').delete().eq('id', tenant.id)
-    return { error: `Erro ao configurar perfil: ${profileError.message}` }
+    redirect('/admin/clientes/novo?error=' + encodeURIComponent(`Erro ao configurar perfil: ${profileError.message}`))
   }
 
   // ── 4. Upload do logo ──────────────────────────────────────────────────

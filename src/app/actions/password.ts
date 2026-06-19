@@ -8,11 +8,11 @@ export async function changePassword(formData: FormData) {
   const confirmPassword = formData.get('confirm_password') as string
 
   if (!newPassword || newPassword.length < 8) {
-    return { error: 'A senha deve ter pelo menos 8 caracteres.' }
+    redirect('/alterar-senha?error=' + encodeURIComponent('A senha deve ter pelo menos 8 caracteres.'))
   }
 
   if (newPassword !== confirmPassword) {
-    return { error: 'As senhas não coincidem.' }
+    redirect('/alterar-senha?error=' + encodeURIComponent('As senhas não coincidem.'))
   }
 
   const supabase = await createClient()
@@ -20,24 +20,21 @@ export async function changePassword(formData: FormData) {
 
   if (!user) redirect('/login')
 
-  // Atualiza a senha via Supabase Auth
   const { error: pwError } = await supabase.auth.updateUser({ password: newPassword })
 
   if (pwError) {
-    return { error: `Erro ao atualizar senha: ${pwError.message}` }
+    redirect('/alterar-senha?error=' + encodeURIComponent(`Erro ao atualizar senha: ${pwError.message}`))
   }
 
-  // Marca must_change_password como false
   const { error: profileError } = await supabase
     .from('profiles')
     .update({ must_change_password: false })
     .eq('id', user.id)
 
   if (profileError) {
-    return { error: 'Senha alterada, mas erro ao atualizar perfil. Tente novamente.' }
+    redirect('/alterar-senha?error=' + encodeURIComponent('Senha alterada, mas erro ao atualizar perfil. Tente novamente.'))
   }
 
-  // Redireciona para a área correta
   const { data: profile } = await supabase
     .from('profiles')
     .select('role')

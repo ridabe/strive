@@ -216,6 +216,52 @@ export type Database = {
         }
         Update: Partial<Omit<Database['public']['Tables']['attendance']['Insert'], 'id' | 'tenant_id'>>
       }
+      system_modules: {
+        Row: {
+          id: string
+          name: string
+          slug: string
+          description: string | null
+          category: 'treinos' | 'acompanhamento' | 'financeiro' | 'comunicacao' | 'whitelabel' | 'futuro'
+          icon: string | null
+          status: 'active' | 'beta' | 'coming_soon'
+          available: boolean
+          sort_order: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          slug: string
+          description?: string | null
+          category: 'treinos' | 'acompanhamento' | 'financeiro' | 'comunicacao' | 'whitelabel' | 'futuro'
+          icon?: string | null
+          status?: 'active' | 'beta' | 'coming_soon'
+          available?: boolean
+          sort_order?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: Partial<Database['public']['Tables']['system_modules']['Insert']>
+      }
+      tenant_modules: {
+        Row: {
+          id: string
+          tenant_id: string
+          module_id: string
+          enabled: boolean
+          enabled_at: string
+        }
+        Insert: {
+          id?: string
+          tenant_id: string
+          module_id: string
+          enabled?: boolean
+          enabled_at?: string
+        }
+        Update: Partial<Database['public']['Tables']['tenant_modules']['Insert']>
+      }
       admin_audit_logs: {
         Row: {
           id: string

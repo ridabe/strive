@@ -4,7 +4,12 @@ import { createClient_action } from '@/app/actions/clients'
 import { AuthSubmitButton } from '@/components/auth/submit-button'
 import { LogoUpload } from '@/components/admin/logo-upload'
 
-export default function NovoClientePage() {
+export default async function NovoClientePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>
+}) {
+  const { error } = await searchParams
   return (
     <div className="p-6 md:p-8 max-w-2xl space-y-6">
 
@@ -25,6 +30,12 @@ export default function NovoClientePage() {
       </div>
 
       {/* Formulário */}
+      {error && (
+        <div className="bg-status-error/10 border border-status-error/30 text-status-error text-sm px-4 py-3 rounded-lg">
+          {error}
+        </div>
+      )}
+
       <form action={createClient_action} className="space-y-6">
 
         {/* Logo */}

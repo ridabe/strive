@@ -9,11 +9,13 @@ import {
   Users,
   BarChart2,
   ScrollText,
+  Puzzle,
 } from 'lucide-react'
 
 const NAV_ITEMS = [
   { label: 'Painel',    href: '/admin',           icon: LayoutDashboard },
   { label: 'Clientes',  href: '/admin/clientes',  icon: Building2 },
+  { label: 'Módulos',   href: '/admin/modulos',   icon: Puzzle },
   { label: 'Usuários',  href: '/admin/usuarios',  icon: Users },
   { label: 'Métricas',  href: '/admin/metricas',  icon: BarChart2 },
   { label: 'Logs',      href: '/admin/logs',      icon: ScrollText },
