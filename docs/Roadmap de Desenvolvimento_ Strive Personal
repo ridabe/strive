@@ -9,6 +9,9 @@ A abordagem prioriza a consolidação da infraestrutura técnica e do fluxo prin
 A primeira etapa do projeto concentra-se em estabelecer uma base técnica robustza e segura. O foco principal é garantir que a estrutura de banco de dados e a arquitetura multi-tenant estejam perfeitamente configuradas antes da construção das interfaces finais.
 
 Nesta fase, a equipe deve modelar o banco de dados no Supabase, definindo as tabelas essenciais para personais, alunos e exercícios. É fundamental implementar rigorosamente as políticas de Row Level Security (RLS) para garantir o isolamento completo dos dados de cada personal trainer. Simultaneamente, devem ser construídos os fluxos de autenticação e onboarding, permitindo que os profissionais criem suas contas, configurem seus perfis básicos e comecem a cadastrar seus primeiros alunos no dashboard web.
+Nesta fase sera criada a tela home do sistema, seguindo o desing system, juntamente com a area de acesso.
+TEremos um acesso admin global para o "dono do tenant" e um acesso admin cliente, e tmbem acesso para os alunos de cada cliente. Ja oense na estrutura da base neste caminho proposto de acesso.
+TEmos os dados de acesso ao supabase no arquivo .env.local e um script de acesso ao supabase via cli dentro da pasta scripts do projeto
 
 | Componente | Descrição da Entrega | Tecnologia Envolvida |
 |------------|----------------------|----------------------|
@@ -16,7 +19,7 @@ Nesta fase, a equipe deve modelar o banco de dados no Supabase, definindo as tab
 | **Autenticação** | Fluxos de login e cadastro seguro para personais e alunos. | Supabase Auth |
 | **Dashboard Base** | Estruturação do repositório web e CRUD inicial de alunos. | Next.js 14 |
 
-## Fase 2: Prescrição e Execução de Treinos
+## Fase 2b: Prescrição e Execução de Treinos
 
 Com a fundação estabelecida, a segunda fase foca na principal proposta de valor da plataforma: a conexão técnica entre o personal e o aluno por meio do treinamento.
 
