@@ -382,9 +382,8 @@ export async function resendWelcomeEmail(tenantId: string) {
     // Não falha o fluxo — e-mail é best-effort
   }
 
-  return { success: true }
-}
-D_RESET,
+  await logAdminAction({
+    action: 'PASSWORD_RESET',
     category: 'user',
     description: `Senha resetada e e-mail reenviado para "${tenant.business_name}" (${profile.email})`,
     targetType: 'tenant',
