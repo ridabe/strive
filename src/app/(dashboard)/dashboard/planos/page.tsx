@@ -95,11 +95,19 @@ export default async function PlanosDashboardPage({
         <div className="flex items-start gap-3 bg-status-error/10 border border-status-error/20 rounded-xl px-4 py-3">
           <AlertCircle size={16} className="text-status-error flex-shrink-0 mt-0.5" />
           <p className="text-sm text-status-error">
-            {params.error === 'checkout_failed'
+            {params.error === 'checkout_failed' || params.error?.startsWith('checkout_failed:')
               ? 'Não foi possível iniciar o pagamento. Tente novamente ou entre em contato com o suporte.'
               : params.error === 'product_unavailable'
               ? 'Produto não disponível no momento. Entre em contato com o suporte.'
+              : params.error === 'already_active'
+              ? 'Você já possui este plano ativo.'
               : 'Ocorreu um erro. Tente novamente.'}
+            {/* Detalhe técnico visível apenas em dev */}
+            {params.error?.startsWith('checkout_failed:') && (
+              <span className="block mt-1 text-xs opacity-70 font-mono">
+                {params.error.replace('checkout_failed: ', '')}
+              </span>
+            )}
           </p>
         </div>
       )}

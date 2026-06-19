@@ -72,12 +72,8 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // Já trocou mas está tentando acessar /alterar-senha → redireciona para área
-  if (!mustChange && isChangePasswordPath) {
-    const url = request.nextUrl.clone()
-    url.pathname = allowedPrefix
-    return NextResponse.redirect(url)
-  }
+  // Já trocou mas está tentando acessar /alterar-senha → permite (acesso voluntário)
+  // Só bloqueia se não estiver autenticado (tratado acima)
 
   // ── 4. Roteamento por role ──────────────────────────────────────────────
   if (isPublicPath && user) {
@@ -90,8 +86,9 @@ export async function updateSession(request: NextRequest) {
   if (role === 'global_admin') return supabaseResponse
 
   // Verifica se está acessando área do role correto
+  // isChangePasswordPath é sempre permitido para qualquer role autenticado
   const isInCorrectArea = pathname.startsWith(allowedPrefix)
-  if (!isInCorrectArea && !isPublicPath) {
+  if (!isInCorrectArea && !isPublicPath && !isChangePasswordPath) {
     const url = request.nextUrl.clone()
     url.pathname = allowedPrefix
     return NextResponse.redirect(url)

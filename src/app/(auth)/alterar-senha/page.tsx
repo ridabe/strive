@@ -1,9 +1,10 @@
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { changePassword } from '@/app/actions/password'
 import { LogoVertical } from '@/components/logo'
 import { AuthSubmitButton } from '@/components/auth/submit-button'
-import { ShieldCheck } from 'lucide-react'
+import { ShieldCheck, ArrowLeft } from 'lucide-react'
 
 export default async function AlterarSenhaPage({
   searchParams,
@@ -16,18 +17,13 @@ export default async function AlterarSenhaPage({
 
   if (!user) redirect('/login')
 
-  // Se não precisa mais trocar, redireciona para área correta
   const { data: profile } = await supabase
     .from('profiles')
     .select('must_change_password, role')
     .eq('id', user.id)
     .single()
 
-  if (!profile?.must_change_password) {
-    if (profile?.role === 'global_admin') redirect('/admin')
-    if (profile?.role === 'student')      redirect('/student')
-    redirect('/dashboard')
-  }
+  const isFirstAccess = profile?.must_change_password === true
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-base">
@@ -45,20 +41,24 @@ export default async function AlterarSenhaPage({
             </div>
             <div>
               <h1 className="font-body font-semibold text-text-primary text-lg">
-                Crie sua nova senha
+                {isFirstAccess ? 'Crie sua nova senha' : 'Alterar senha'}
               </h1>
               <p className="text-text-secondary text-sm mt-0.5">
-                Este é seu primeiro acesso. Defina uma senha pessoal para continuar.
+                {isFirstAccess
+                  ? 'Este é seu primeiro acesso. Defina uma senha pessoal para continuar.'
+                  : 'Escolha uma nova senha para sua conta.'}
               </p>
             </div>
           </div>
 
-          {/* Aviso */}
-          <div className="bg-brand-lime/5 border border-brand-lime/20 rounded-lg px-4 py-3">
-            <p className="text-xs text-brand-lime font-medium">
-              Sua senha provisória será invalidada após esta etapa.
-            </p>
-          </div>
+          {/* Aviso — só no primeiro acesso */}
+          {isFirstAccess && (
+            <div className="bg-brand-lime/5 border border-brand-lime/20 rounded-lg px-4 py-3">
+              <p className="text-xs text-brand-lime font-medium">
+                Sua senha provisória será invalidada após esta etapa.
+              </p>
+            </div>
+          )}
 
           {/* Erro */}
           {params.error && (
@@ -68,6 +68,17 @@ export default async function AlterarSenhaPage({
           )}
 
           {/* Formulário */}
+          {/* Botão voltar — só para quem não está em primeiro acesso */}
+          {!isFirstAccess && (
+            <Link
+              href="/dashboard/ajustes"
+              className="inline-flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary transition-colors"
+            >
+              <ArrowLeft size={14} />
+              Voltar para Ajustes
+            </Link>
+          )}
+
           <form action={changePassword} className="space-y-4">
             <div className="space-y-1.5">
               <label htmlFor="new_password" className="block text-sm font-body font-medium text-text-secondary">

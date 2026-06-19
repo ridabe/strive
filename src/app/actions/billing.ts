@@ -114,12 +114,13 @@ export async function startSubscriptionCheckout(planSlug: 'pro' | 'premium') {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
 
   // Cria checkout no AbacatePay
+  // Nota: assinaturas AbacatePay aceitam apenas CARD (não PIX)
   const checkoutResult = await createSubscriptionCheckout({
     productId,
     externalId:    `tenant_${tenantId}_${planSlug}_${Date.now()}`,
     completionUrl: `${appUrl}/dashboard/planos?success=1&plan=${planSlug}`,
     returnUrl:     `${appUrl}/dashboard/planos`,
-    methods:       ['CARD', 'PIX'],
+    methods:       ['CARD'],
     metadata: {
       tenant_id: tenantId,
       plan_slug: planSlug,
@@ -128,8 +129,13 @@ export async function startSubscriptionCheckout(planSlug: 'pro' | 'premium') {
   })
 
   if (!checkoutResult.success || !checkoutResult.data?.url) {
-    console.error('[billing] Erro ao criar checkout:', checkoutResult.error)
-    redirect('/dashboard/planos?error=checkout_failed')
+    const errMsg = checkoutResult.error ?? 'Resposta inválida da AbacatePay'
+    console.error('[billing] Erro ao criar checkout:', errMsg)
+    // Em desenvolvimento, expõe o erro real para facilitar debug
+    const isDev = process.env.NODE_ENV === 'development'
+    redirect(
+      `/dashboard/planos?error=${encodeURIComponent(isDev ? `checkout_failed: ${errMsg}` : 'checkout_failed')}`
+    )
   }
 
   // Registra checkout pendente
