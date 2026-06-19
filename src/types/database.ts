@@ -264,25 +264,22 @@ export type Database = {
         }
         Update: Partial<Database['public']['Tables']['tenant_modules']['Insert']>
       }
-    }
-    Functions: {
-      generate_tenant_slug: {
-        Args: { name: string }
-        Returns: string
-      }
-      get_admin_last_sign_in: {
-        Args: { p_user_id: string }
-        Returns: { last_sign_in_at: string }[]
-      }
-    }
-    Enums: {
-      app_role: AppRole
-      profile_status: ProfileStatus
-      audit_category: audit_category
-    }
-  }
-}
-ing
+      admin_audit_logs: {
+        Row: {
+          id: string
+          admin_id: string
+          action: string
+          category: audit_category
+          description: string
+          target_type: string | null
+          target_id: string | null
+          metadata: Record<string, unknown> | null
+          ip_address: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          admin_id: string
           action: string
           category: audit_category
           description: string
@@ -292,43 +289,18 @@ ing
           ip_address?: string | null
           created_at?: string
         }
-        Update: never
-      }
-      financial_plans: {
-        Row: {
-          id: string
-          tenant_id: string
-          student_id: string
-          plan_name: string
-          amount: number
-          due_date: string
-          paid_at: string | null
-          status: FinancialPlanStatus
-          notes: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          tenant_id: string
-          student_id: string
-          plan_name: string
-          amount: number
-          due_date: string
-          paid_at?: string | null
-          status?: FinancialPlanStatus
-          notes?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: Partial<Omit<Database['public']['Tables']['financial_plans']['Insert'], 'id' | 'tenant_id'>>
+        Update: Partial<Database['public']['Tables']['admin_audit_logs']['Insert']>
       }
     }
     Views: Record<string, never>
     Functions: {
+      generate_tenant_slug: {
+        Args: { name: string }
+        Returns: string
+      }
       get_admin_last_sign_in: {
         Args: { p_user_id: string }
-        Returns: string | null
+        Returns: { last_sign_in_at: string }[]
       }
       get_my_role: {
         Args: Record<string, never>
@@ -338,17 +310,13 @@ ing
         Args: Record<string, never>
         Returns: string
       }
-      generate_tenant_slug: {
-        Args: { p_name: string }
-        Returns: string
-      }
     }
     Enums: {
       app_role: AppRole
+      profile_status: ProfileStatus
       audit_category: audit_category
       tenant_plan: TenantPlan
       tenant_status: TenantStatus
-      profile_status: ProfileStatus
       student_status: StudentStatus
       workout_plan_status: WorkoutPlanStatus
       financial_plan_status: FinancialPlanStatus
