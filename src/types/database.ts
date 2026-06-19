@@ -1,14 +1,13 @@
-// Gerado manualmente — sincronizar com schema após migrations
-// Run: supabase gen types typescript --project-id lodetzmtsymvnjffmvat
+// Auto-gerado via: supabase gen types typescript --project-id lodetzmtsymvnjffmvat
+// Atualizar apos migrations: pnpm supabase gen types typescript --project-id lodetzmtsymvnjffmvat > src/types/database.ts
 
-export type AppRole = 'global_admin' | 'personal' | 'student'
-export type audit_category = 'auth' | 'tenant' | 'user' | 'system'
-export type TenantPlan = 'free' | 'pro' | 'premium'
-export type TenantStatus = 'active' | 'inactive' | 'suspended'
-export type ProfileStatus = 'active' | 'inactive' | 'suspended'
-export type StudentStatus = 'active' | 'inactive'
-export type WorkoutPlanStatus = 'active' | 'inactive'
-export type FinancialPlanStatus = 'pending' | 'paid' | 'overdue' | 'cancelled'
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export type Database = {
   __InternalSupabase: {
@@ -16,313 +15,610 @@ export type Database = {
   }
   public: {
     Tables: {
-      tenants: {
+      admin_audit_logs: {
         Row: {
-          id: string
-          business_name: string
-          slug: string
-          plan: TenantPlan
-          status: TenantStatus
-          app_name: string | null
-          primary_color: string | null
-          logo_url: string | null
-          max_students: number
-          contact_email: string | null
-          contact_phone: string | null
-          notes: string | null
+          action: string
+          admin_id: string
+          category: Database["public"]["Enums"]["audit_category"]
           created_at: string
-          updated_at: string
+          description: string
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          target_id: string | null
+          target_type: string | null
         }
         Insert: {
+          action: string
+          admin_id: string
+          category?: Database["public"]["Enums"]["audit_category"]
+          created_at?: string
+          description: string
           id?: string
-          business_name: string
-          slug: string
-          plan?: TenantPlan
-          status?: TenantStatus
-          app_name?: string | null
-          primary_color?: string | null
-          logo_url?: string | null
-          max_students?: number
-          contact_email?: string | null
-          contact_phone?: string | null
-          notes?: string | null
+          ip_address?: string | null
+          metadata?: Json | null
+          target_id?: string | null
+          target_type?: string | null
+        }
+        Update: {
+          action?: string
+          admin_id?: string
+          category?: Database["public"]["Enums"]["audit_category"]
           created_at?: string
-          updated_at?: string
-        }
-        Update: Partial<Database['public']['Tables']['tenants']['Insert']>
-      }
-      profiles: {
-        Row: {
-          id: string
-          email: string
-          full_name: string | null
-          role: AppRole
-          status: ProfileStatus
-          avatar_url: string | null
-          tenant_id: string | null
-          must_change_password: boolean
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id: string
-          email: string
-          full_name?: string | null
-          role?: AppRole
-          status?: ProfileStatus
-          avatar_url?: string | null
-          tenant_id?: string | null
-          must_change_password?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-        Update: Partial<Omit<Database['public']['Tables']['profiles']['Insert'], 'id'>>
-      }
-      students: {
-        Row: {
-          id: string
-          tenant_id: string
-          user_id: string | null
-          full_name: string
-          email: string | null
-          phone: string | null
-          birth_date: string | null
-          goal: string | null
-          status: StudentStatus
-          avatar_url: string | null
-          notes: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
+          description?: string
           id?: string
-          tenant_id: string
-          user_id?: string | null
-          full_name: string
-          email?: string | null
-          phone?: string | null
-          birth_date?: string | null
-          goal?: string | null
-          status?: StudentStatus
-          avatar_url?: string | null
-          notes?: string | null
-          created_at?: string
-          updated_at?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          target_id?: string | null
+          target_type?: string | null
         }
-        Update: Partial<Omit<Database['public']['Tables']['students']['Insert'], 'id' | 'tenant_id'>>
-      }
-      workout_plans: {
-        Row: {
-          id: string
-          tenant_id: string
-          student_id: string
-          name: string
-          description: string | null
-          status: WorkoutPlanStatus
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          tenant_id: string
-          student_id: string
-          name: string
-          description?: string | null
-          status?: WorkoutPlanStatus
-          created_at?: string
-          updated_at?: string
-        }
-        Update: Partial<Omit<Database['public']['Tables']['workout_plans']['Insert'], 'id' | 'tenant_id'>>
-      }
-      workout_exercises: {
-        Row: {
-          id: string
-          tenant_id: string
-          workout_plan_id: string
-          name: string
-          sets: number | null
-          reps: string | null
-          load: string | null
-          rest_seconds: number | null
-          notes: string | null
-          sort_order: number
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          tenant_id: string
-          workout_plan_id: string
-          name: string
-          sets?: number | null
-          reps?: string | null
-          load?: string | null
-          rest_seconds?: number | null
-          notes?: string | null
-          sort_order?: number
-          created_at?: string
-        }
-        Update: Partial<Omit<Database['public']['Tables']['workout_exercises']['Insert'], 'id' | 'tenant_id'>>
-      }
-      physical_assessments: {
-        Row: {
-          id: string
-          tenant_id: string
-          student_id: string
-          assessed_at: string
-          weight: number | null
-          height: number | null
-          body_fat: number | null
-          chest: number | null
-          waist: number | null
-          hip: number | null
-          thigh: number | null
-          arm: number | null
-          notes: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          tenant_id: string
-          student_id: string
-          assessed_at?: string
-          weight?: number | null
-          height?: number | null
-          body_fat?: number | null
-          chest?: number | null
-          waist?: number | null
-          hip?: number | null
-          thigh?: number | null
-          arm?: number | null
-          notes?: string | null
-          created_at?: string
-        }
-        Update: Partial<Omit<Database['public']['Tables']['physical_assessments']['Insert'], 'id' | 'tenant_id'>>
+        Relationships: [
+          {
+            foreignKeyName: "admin_audit_logs_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       attendance: {
         Row: {
-          id: string
-          tenant_id: string
-          student_id: string
-          workout_plan_id: string | null
           attended_at: string
-          notes: string | null
           created_at: string
+          id: string
+          notes: string | null
+          student_id: string
+          tenant_id: string
+          workout_plan_id: string | null
         }
         Insert: {
-          id?: string
-          tenant_id: string
-          student_id: string
-          workout_plan_id?: string | null
           attended_at?: string
-          notes?: string | null
           created_at?: string
+          id?: string
+          notes?: string | null
+          student_id: string
+          tenant_id: string
+          workout_plan_id?: string | null
         }
-        Update: Partial<Omit<Database['public']['Tables']['attendance']['Insert'], 'id' | 'tenant_id'>>
+        Update: {
+          attended_at?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          student_id?: string
+          tenant_id?: string
+          workout_plan_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attendance_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attendance_workout_plan_id_fkey"
+            columns: ["workout_plan_id"]
+            isOneToOne: false
+            referencedRelation: "workout_plans"
+            referencedColumns: ["id"]
+          },
+        ]
       }
-      system_modules: {
+      financial_plans: {
         Row: {
-          id: string
-          name: string
-          slug: string
-          description: string | null
-          category: 'treinos' | 'acompanhamento' | 'financeiro' | 'comunicacao' | 'whitelabel' | 'futuro'
-          icon: string | null
-          status: 'active' | 'beta' | 'coming_soon'
-          available: boolean
-          sort_order: number
+          amount: number
           created_at: string
+          due_date: string
+          id: string
+          notes: string | null
+          paid_at: string | null
+          plan_name: string
+          status: Database["public"]["Enums"]["financial_plan_status"]
+          student_id: string
+          tenant_id: string
           updated_at: string
         }
         Insert: {
+          amount: number
+          created_at?: string
+          due_date: string
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          plan_name: string
+          status?: Database["public"]["Enums"]["financial_plan_status"]
+          student_id: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          due_date?: string
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          plan_name?: string
+          status?: Database["public"]["Enums"]["financial_plan_status"]
+          student_id?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financial_plans_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_plans_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      physical_assessments: {
+        Row: {
+          arm: number | null
+          assessed_at: string
+          body_fat: number | null
+          chest: number | null
+          created_at: string
+          height: number | null
+          hip: number | null
+          id: string
+          notes: string | null
+          student_id: string
+          tenant_id: string
+          thigh: number | null
+          waist: number | null
+          weight: number | null
+        }
+        Insert: {
+          arm?: number | null
+          assessed_at?: string
+          body_fat?: number | null
+          chest?: number | null
+          created_at?: string
+          height?: number | null
+          hip?: number | null
+          id?: string
+          notes?: string | null
+          student_id: string
+          tenant_id: string
+          thigh?: number | null
+          waist?: number | null
+          weight?: number | null
+        }
+        Update: {
+          arm?: number | null
+          assessed_at?: string
+          body_fat?: number | null
+          chest?: number | null
+          created_at?: string
+          height?: number | null
+          hip?: number | null
+          id?: string
+          notes?: string | null
+          student_id?: string
+          tenant_id?: string
+          thigh?: number | null
+          waist?: number | null
+          weight?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "physical_assessments_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "physical_assessments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          must_change_password: boolean
+          role: Database["public"]["Enums"]["app_role"]
+          status: Database["public"]["Enums"]["profile_status"]
+          tenant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id: string
+          must_change_password?: boolean
+          role?: Database["public"]["Enums"]["app_role"]
+          status?: Database["public"]["Enums"]["profile_status"]
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          must_change_password?: boolean
+          role?: Database["public"]["Enums"]["app_role"]
+          status?: Database["public"]["Enums"]["profile_status"]
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      students: {
+        Row: {
+          avatar_url: string | null
+          birth_date: string | null
+          created_at: string
+          email: string | null
+          full_name: string
+          goal: string | null
+          id: string
+          notes: string | null
+          phone: string | null
+          status: Database["public"]["Enums"]["student_status"]
+          tenant_id: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          birth_date?: string | null
+          created_at?: string
+          email?: string | null
+          full_name: string
+          goal?: string | null
+          id?: string
+          notes?: string | null
+          phone?: string | null
+          status?: Database["public"]["Enums"]["student_status"]
+          tenant_id: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          birth_date?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          goal?: string | null
+          id?: string
+          notes?: string | null
+          phone?: string | null
+          status?: Database["public"]["Enums"]["student_status"]
+          tenant_id?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "students_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "students_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      system_modules: {
+        Row: {
+          available: boolean
+          category: string
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+          slug: string
+          sort_order: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          available?: boolean
+          category: string
+          created_at?: string
+          description?: string | null
+          icon?: string | null
           id?: string
           name: string
           slug: string
-          description?: string | null
-          category: 'treinos' | 'acompanhamento' | 'financeiro' | 'comunicacao' | 'whitelabel' | 'futuro'
-          icon?: string | null
-          status?: 'active' | 'beta' | 'coming_soon'
-          available?: boolean
           sort_order?: number
-          created_at?: string
+          status?: string
           updated_at?: string
         }
-        Update: Partial<Database['public']['Tables']['system_modules']['Insert']>
+        Update: {
+          available?: boolean
+          category?: string
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          slug?: string
+          sort_order?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       tenant_modules: {
         Row: {
-          id: string
-          tenant_id: string
-          module_id: string
           enabled: boolean
-          enabled_at: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          tenant_id: string
-          module_id: string
-          enabled?: boolean
-          enabled_at?: string | null
-          created_at?: string
-        }
-        Update: Partial<Database['public']['Tables']['tenant_modules']['Insert']>
-      }
-      admin_audit_logs: {
-        Row: {
+          enabled_at: string
           id: string
-          admin_id: string
-          action: string
-          category: audit_category
-          description: string
-          target_type: string | null
-          target_id: string | null
-          metadata: Record<string, unknown> | null
-          ip_address: string | null
-          created_at: string
+          module_id: string
+          tenant_id: string
         }
         Insert: {
+          enabled?: boolean
+          enabled_at?: string
           id?: string
-          admin_id: string
-          action: string
-          category: audit_category
-          description: string
-          target_type?: string | null
-          target_id?: string | null
-          metadata?: Record<string, unknown> | null
-          ip_address?: string | null
-          created_at?: string
+          module_id: string
+          tenant_id: string
         }
-        Update: Partial<Database['public']['Tables']['admin_audit_logs']['Insert']>
+        Update: {
+          enabled?: boolean
+          enabled_at?: string
+          id?: string
+          module_id?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_modules_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "system_modules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_modules_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenants: {
+        Row: {
+          app_name: string | null
+          business_name: string
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string
+          id: string
+          logo_url: string | null
+          max_students: number
+          notes: string | null
+          plan: Database["public"]["Enums"]["tenant_plan"]
+          primary_color: string | null
+          slug: string | null
+          status: Database["public"]["Enums"]["tenant_status"]
+          updated_at: string
+        }
+        Insert: {
+          app_name?: string | null
+          business_name: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          max_students?: number
+          notes?: string | null
+          plan?: Database["public"]["Enums"]["tenant_plan"]
+          primary_color?: string | null
+          slug?: string | null
+          status?: Database["public"]["Enums"]["tenant_status"]
+          updated_at?: string
+        }
+        Update: {
+          app_name?: string | null
+          business_name?: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          max_students?: number
+          notes?: string | null
+          plan?: Database["public"]["Enums"]["tenant_plan"]
+          primary_color?: string | null
+          slug?: string | null
+          status?: Database["public"]["Enums"]["tenant_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      workout_exercises: {
+        Row: {
+          created_at: string
+          id: string
+          load: string | null
+          name: string
+          notes: string | null
+          reps: string | null
+          rest_seconds: number | null
+          sets: number | null
+          sort_order: number
+          tenant_id: string
+          workout_plan_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          load?: string | null
+          name: string
+          notes?: string | null
+          reps?: string | null
+          rest_seconds?: number | null
+          sets?: number | null
+          sort_order?: number
+          tenant_id: string
+          workout_plan_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          load?: string | null
+          name?: string
+          notes?: string | null
+          reps?: string | null
+          rest_seconds?: number | null
+          sets?: number | null
+          sort_order?: number
+          tenant_id?: string
+          workout_plan_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workout_exercises_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_exercises_workout_plan_id_fkey"
+            columns: ["workout_plan_id"]
+            isOneToOne: false
+            referencedRelation: "workout_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workout_plans: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          status: Database["public"]["Enums"]["workout_plan_status"]
+          student_id: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          status?: Database["public"]["Enums"]["workout_plan_status"]
+          student_id: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          status?: Database["public"]["Enums"]["workout_plan_status"]
+          student_id?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workout_plans_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_plans_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
-    Views: Record<string, never>
+    Views: {
+      [_ in never]: never
+    }
     Functions: {
-      generate_tenant_slug: {
-        Args: { name: string }
-        Returns: string
-      }
-      get_admin_last_sign_in: {
-        Args: { p_user_id: string }
-        Returns: { last_sign_in_at: string }[]
-      }
+      generate_tenant_slug: { Args: { p_name: string }; Returns: string }
+      get_admin_last_sign_in: { Args: { p_user_id: string }; Returns: string }
       get_my_role: {
-        Args: Record<string, never>
-        Returns: AppRole
+        Args: never
+        Returns: Database["public"]["Enums"]["app_role"]
       }
-      get_my_tenant_id: {
-        Args: Record<string, never>
-        Returns: string
-      }
+      get_my_tenant_id: { Args: never; Returns: string }
     }
     Enums: {
-      app_role: AppRole
-      profile_status: ProfileStatus
-      audit_category: audit_category
-      tenant_plan: TenantPlan
-      tenant_status: TenantStatus
-      student_status: StudentStatus
-      workout_plan_status: WorkoutPlanStatus
-      financial_plan_status: FinancialPlanStatus
+      app_role: "global_admin" | "personal" | "student"
+      audit_category: "auth" | "tenant" | "user" | "system"
+      financial_plan_status: "pending" | "paid" | "overdue" | "cancelled"
+      profile_status: "active" | "inactive" | "suspended"
+      student_status: "active" | "inactive"
+      tenant_plan: "free" | "pro" | "premium"
+      tenant_status: "active" | "inactive" | "suspended"
+      workout_plan_status: "active" | "inactive"
+    }
+    CompositeTypes: {
+      [_ in never]: never
     }
   }
 }
+
+// Aliases para compatibilidade com o restante do projeto
+export type AppRole = Database["public"]["Enums"]["app_role"]
+export type audit_category = Database["public"]["Enums"]["audit_category"]
+export type TenantPlan = Database["public"]["Enums"]["tenant_plan"]
+export type TenantStatus = Database["public"]["Enums"]["tenant_status"]
+export type ProfileStatus = Database["public"]["Enums"]["profile_status"]
+export type StudentStatus = Database["public"]["Enums"]["student_status"]
+export type WorkoutPlanStatus = Database["public"]["Enums"]["workout_plan_status"]
+export type FinancialPlanStatus = Database["public"]["Enums"]["financial_plan_status"]
