@@ -86,26 +86,15 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  // global_admin pode acessar qualquer rota protegida
+  if (role === 'global_admin') return supabaseResponse
+
   // Verifica se está acessando área do role correto
   const isInCorrectArea = pathname.startsWith(allowedPrefix)
   if (!isInCorrectArea && !isPublicPath) {
     const url = request.nextUrl.clone()
     url.pathname = allowedPrefix
     return NextResponse.redirect(url)
-  }
-
-  return supabaseResponse
-}
-asswordPath) {
-    // global_admin pode acessar qualquer rota protegida
-    if (role === 'global_admin') return supabaseResponse
-
-    // Outros roles só acessam sua área
-    if (!pathname.startsWith(allowedPrefix)) {
-      const url = request.nextUrl.clone()
-      url.pathname = allowedPrefix
-      return NextResponse.redirect(url)
-    }
   }
 
   return supabaseResponse

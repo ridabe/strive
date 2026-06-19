@@ -122,3 +122,4 @@ supabase/.branches/
 # Next.js
 out/
 next-env.d.ts
+.claude/
