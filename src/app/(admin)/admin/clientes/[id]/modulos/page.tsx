@@ -113,7 +113,7 @@ export default async function ClientModulosPage({
       {/* Ações em massa */}
       <div className="flex items-center justify-between">
         <p className="text-xs text-text-secondary">
-          Módulos marcados como "Em breve" não podem ser habilitados ainda.
+          Módulos marcados como &ldquo;Em breve&rdquo; não podem ser habilitados ainda.
         </p>
         <TenantModulesBulkActions tenantId={id} />
       </div>
