@@ -80,7 +80,8 @@ export default async function FinanceiroPage() {
             </thead>
             <tbody className="divide-y divide-surface-border">
               {invoices?.map((inv) => {
-                const student = inv.students as { full_name: string } | null
+                const studentRaw = inv.students as { full_name: string }[] | { full_name: string } | null
+                const student = Array.isArray(studentRaw) ? studentRaw[0] : studentRaw
                 const cfg     = STATUS_CONFIG[inv.status] ?? STATUS_CONFIG.pending
                 const Icon    = cfg.icon
                 return (

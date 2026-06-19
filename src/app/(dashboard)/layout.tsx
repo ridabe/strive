@@ -51,10 +51,8 @@ export default async function DashboardLayout({
         if (!mod || !mod.available || mod.status === 'coming_soon') return []
         return [{ slug: mod.slug, name: mod.name, icon: mod.icon }]
       })
-      .sort((a, b) => {
-        // mantém order relativa (slug order não garante sort_order, mas funciona pois já vem da query)
-        return 0
-      })
+      // mantém ordem já vinda da query (sort_order definido na tabela)
+
   }
 
   return (
