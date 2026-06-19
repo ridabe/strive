@@ -1,12 +1,12 @@
 import Link from 'next/link'
-import { signIn } from '@/app/actions/auth'
+import { signUpPersonal } from '@/app/actions/auth'
 import { LogoVertical } from '@/components/logo'
 import { AuthSubmitButton } from '@/components/auth/submit-button'
 
-export default async function LoginPage({
+export default async function RegisterPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; message?: string }>
+  searchParams: Promise<{ error?: string }>
 }) {
   const params = await searchParams
   return (
@@ -21,27 +21,55 @@ export default async function LoginPage({
         <div className="bg-surface rounded-xl border border-surface-border p-8 space-y-6">
           <div className="space-y-1">
             <h1 className="font-body font-semibold text-text-primary text-xl">
-              Entrar na plataforma
+              Criar conta de Personal
             </h1>
             <p className="text-text-secondary text-sm">
-              Acesse seu painel de gestão
+              Comece grátis — sem cartão de crédito
             </p>
           </div>
 
-          {/* Erros / mensagens */}
           {params.error && (
             <div className="bg-status-error/10 border border-status-error/30 text-status-error text-sm px-4 py-3 rounded-lg">
               {params.error}
             </div>
           )}
-          {params.message && (
-            <div className="bg-status-success/10 border border-status-success/30 text-status-success text-sm px-4 py-3 rounded-lg">
-              {params.message}
-            </div>
-          )}
 
-          {/* Formulário */}
-          <form action={signIn} className="space-y-4">
+          <form action={signUpPersonal} className="space-y-4">
+            <div className="space-y-1.5">
+              <label
+                htmlFor="full_name"
+                className="block text-sm font-body font-medium text-text-secondary"
+              >
+                Seu nome completo
+              </label>
+              <input
+                id="full_name"
+                name="full_name"
+                type="text"
+                autoComplete="name"
+                required
+                placeholder="João Silva"
+                className="w-full bg-background border border-surface-border rounded-lg px-4 py-3 text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-lime/60 focus:ring-1 focus:ring-brand-lime/30 transition-colors"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label
+                htmlFor="business_name"
+                className="block text-sm font-body font-medium text-text-secondary"
+              >
+                Nome do seu negócio{' '}
+                <span className="text-text-secondary/50">(opcional)</span>
+              </label>
+              <input
+                id="business_name"
+                name="business_name"
+                type="text"
+                placeholder="Ex: João Silva Personal"
+                className="w-full bg-background border border-surface-border rounded-lg px-4 py-3 text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-lime/60 focus:ring-1 focus:ring-brand-lime/30 transition-colors"
+              />
+            </div>
+
             <div className="space-y-1.5">
               <label
                 htmlFor="email"
@@ -61,51 +89,55 @@ export default async function LoginPage({
             </div>
 
             <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-body font-medium text-text-secondary"
-                >
-                  Senha
-                </label>
-                <Link
-                  href="/forgot-password"
-                  className="text-xs text-brand-lime hover:text-brand-dark transition-colors"
-                >
-                  Esqueci minha senha
-                </Link>
-              </div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-body font-medium text-text-secondary"
+              >
+                Senha
+              </label>
               <input
                 id="password"
                 name="password"
                 type="password"
-                autoComplete="current-password"
+                autoComplete="new-password"
                 required
-                placeholder="••••••••"
+                minLength={8}
+                placeholder="Mínimo 8 caracteres"
                 className="w-full bg-background border border-surface-border rounded-lg px-4 py-3 text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-lime/60 focus:ring-1 focus:ring-brand-lime/30 transition-colors"
               />
             </div>
 
-            <AuthSubmitButton label="Entrar" loadingLabel="Entrando..." />
+            <p className="text-xs text-text-secondary/60">
+              Ao criar sua conta você concorda com os{' '}
+              <Link href="/termos" className="text-brand-lime hover:underline">
+                Termos de Uso
+              </Link>{' '}
+              e a{' '}
+              <Link href="/privacidade" className="text-brand-lime hover:underline">
+                Política de Privacidade
+              </Link>
+              .
+            </p>
+
+            <AuthSubmitButton label="Criar minha conta" loadingLabel="Criando conta..." />
           </form>
 
-          {/* Divisor */}
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-surface-border" />
             </div>
             <div className="relative flex justify-center text-xs">
               <span className="bg-surface px-3 text-text-secondary">
-                Novo por aqui?
+                Já tem conta?
               </span>
             </div>
           </div>
 
           <Link
-            href="/register"
+            href="/login"
             className="block w-full text-center font-body font-medium text-sm text-text-primary border border-surface-border rounded-lg px-4 py-3 hover:border-brand-lime/40 hover:text-brand-lime transition-colors"
           >
-            Criar conta de Personal Trainer
+            Entrar
           </Link>
         </div>
 

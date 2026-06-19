@@ -1,10 +1,10 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { LogoHorizontal } from '@/components/logo'
-import { DashboardSidebarNav } from '@/components/layout/dashboard-sidebar'
+import { StudentSidebarNav } from '@/components/layout/student-sidebar'
 import { UserMenu } from '@/components/layout/user-menu'
 
-export default async function DashboardLayout({
+export default async function StudentLayout({
   children,
 }: {
   children: React.ReactNode
@@ -22,7 +22,7 @@ export default async function DashboardLayout({
     .eq('id', user.id)
     .single()
 
-  if (!profile || profile.role !== 'personal') {
+  if (!profile || profile.role !== 'student') {
     redirect('/login')
   }
 
@@ -32,7 +32,7 @@ export default async function DashboardLayout({
         <LogoHorizontal size="sm" />
 
         <div className="flex-1">
-          <DashboardSidebarNav />
+          <StudentSidebarNav />
         </div>
 
         <UserMenu

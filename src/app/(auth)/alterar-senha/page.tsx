@@ -1,0 +1,108 @@
+import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
+import { changePassword } from '@/app/actions/password'
+import { LogoVertical } from '@/components/logo'
+import { AuthSubmitButton } from '@/components/auth/submit-button'
+import { ShieldCheck } from 'lucide-react'
+
+export default async function AlterarSenhaPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>
+}) {
+  const params  = await searchParams
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) redirect('/login')
+
+  // Se não precisa mais trocar, redireciona para área correta
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('must_change_password, role')
+    .eq('id', user.id)
+    .single()
+
+  if (!profile?.must_change_password) {
+    if (profile?.role === 'global_admin') redirect('/admin')
+    if (profile?.role === 'student')      redirect('/student')
+    redirect('/dashboard')
+  }
+
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center p-base">
+      <div className="w-full max-w-md">
+        <div className="flex justify-center mb-8">
+          <LogoVertical size="md" glow />
+        </div>
+
+        <div className="bg-surface rounded-xl border border-surface-border p-8 space-y-6">
+
+          {/* Header */}
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-xl bg-brand-lime/10 border border-brand-lime/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <ShieldCheck size={18} className="text-brand-lime" />
+            </div>
+            <div>
+              <h1 className="font-body font-semibold text-text-primary text-lg">
+                Crie sua nova senha
+              </h1>
+              <p className="text-text-secondary text-sm mt-0.5">
+                Este é seu primeiro acesso. Defina uma senha pessoal para continuar.
+              </p>
+            </div>
+          </div>
+
+          {/* Aviso */}
+          <div className="bg-brand-lime/5 border border-brand-lime/20 rounded-lg px-4 py-3">
+            <p className="text-xs text-brand-lime font-medium">
+              Sua senha provisória será invalidada após esta etapa.
+            </p>
+          </div>
+
+          {/* Erro */}
+          {params.error && (
+            <div className="bg-status-error/10 border border-status-error/30 text-status-error text-sm px-4 py-3 rounded-lg">
+              {params.error}
+            </div>
+          )}
+
+          {/* Formulário */}
+          <form action={changePassword} className="space-y-4">
+            <div className="space-y-1.5">
+              <label htmlFor="new_password" className="block text-sm font-body font-medium text-text-secondary">
+                Nova senha
+              </label>
+              <input
+                id="new_password"
+                name="new_password"
+                type="password"
+                required
+                minLength={8}
+                placeholder="Mínimo 8 caracteres"
+                className="w-full bg-background border border-surface-border rounded-lg px-4 py-3 text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-lime/60 focus:ring-1 focus:ring-brand-lime/30 transition-colors"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label htmlFor="confirm_password" className="block text-sm font-body font-medium text-text-secondary">
+                Confirmar nova senha
+              </label>
+              <input
+                id="confirm_password"
+                name="confirm_password"
+                type="password"
+                required
+                minLength={8}
+                placeholder="Repita a nova senha"
+                className="w-full bg-background border border-surface-border rounded-lg px-4 py-3 text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-lime/60 focus:ring-1 focus:ring-brand-lime/30 transition-colors"
+              />
+            </div>
+
+            <AuthSubmitButton label="Salvar nova senha" loadingLabel="Salvando..." />
+          </form>
+        </div>
+      </div>
+    </div>
+  )
+}
