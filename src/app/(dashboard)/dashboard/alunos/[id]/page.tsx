@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import {
   ArrowLeft, User, Phone, Mail, CalendarDays,
-  ClipboardList, FileHeart, Receipt, TrendingUp,
+  ClipboardList, FileHeart, Receipt, TrendingUp, CalendarCheck,
 } from 'lucide-react'
 
 interface Props {
@@ -23,11 +23,12 @@ export default async function StudentDetailPage({ params }: Props) {
   if (!student) notFound()
 
   // Contagens rápidas
-  const [{ count: planCount }, { count: assessCount }, { count: invoiceCount }, { data: anamnese }] =
+  const [{ count: planCount }, { count: assessCount }, { count: invoiceCount }, { count: attendCount }, { data: anamnese }] =
     await Promise.all([
       supabase.from('workout_plans').select('*', { count: 'exact', head: true }).eq('student_id', id),
       supabase.from('physical_assessments').select('*', { count: 'exact', head: true }).eq('student_id', id),
       supabase.from('financial_plans').select('*', { count: 'exact', head: true }).eq('student_id', id),
+      supabase.from('attendance').select('*', { count: 'exact', head: true }).eq('student_id', id),
       supabase.from('anamnese_responses').select('completed_at, updated_at').eq('student_id', id).maybeSingle(),
     ])
 
@@ -70,6 +71,14 @@ export default async function StudentDetailPage({ params }: Props) {
       icon:  Receipt,
       color: 'text-green-400 bg-green-400/10 border-green-400/20',
       badge: `${invoiceCount ?? 0} fatura${invoiceCount !== 1 ? 's' : ''}`,
+      badgeColor: 'text-text-secondary bg-background border-surface-border',
+    },
+    {
+      href:  `/dashboard/alunos/${id}/frequencia`,
+      label: 'Frequência',
+      icon:  CalendarCheck,
+      color: 'text-orange-400 bg-orange-400/10 border-orange-400/20',
+      badge: `${attendCount ?? 0} treino${attendCount !== 1 ? 's' : ''}`,
       badgeColor: 'text-text-secondary bg-background border-surface-border',
     },
   ]
