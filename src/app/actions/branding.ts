@@ -27,7 +27,7 @@ export async function saveBranding(formData: FormData) {
   const logoFile     = formData.get('logo') as File | null
   const removeLogo   = formData.get('remove_logo') === '1'
 
-  const updates: Record<string, string | null> = {}
+  const updates: { primary_color?: string | null; logo_url?: string | null } = {}
 
   // ── Cor primária ─────────────────────────────────────────────────────────
   if (primaryColor) {
