@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 
-// ─── Registrar frequência ─────────────────────────────────────────────────────
+// ─── Registrar frequência (admin) ─────────────────────────────────────────────
 export async function registerAttendance(
   studentId: string,
   date: string,
@@ -11,14 +11,17 @@ export async function registerAttendance(
 ) {
   const supabase = await createClient()
 
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Não autenticado' }
+
   const { data: profile } = await supabase
     .from('profiles')
     .select('tenant_id')
+    .eq('id', user.id)
     .single()
 
   if (!profile?.tenant_id) return { error: 'Tenant não encontrado' }
 
-  // Evita duplicata no mesmo dia
   const { count } = await supabase
     .from('attendance')
     .select('*', { count: 'exact', head: true })
@@ -43,13 +46,17 @@ export async function registerAttendance(
   return { success: true }
 }
 
-// ─── Remover frequência ───────────────────────────────────────────────────────
+// ─── Remover frequência (admin) ───────────────────────────────────────────────
 export async function removeAttendance(attendanceId: string, studentId: string) {
   const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Não autenticado' }
 
   const { data: profile } = await supabase
     .from('profiles')
     .select('tenant_id')
+    .eq('id', user.id)
     .single()
 
   if (!profile?.tenant_id) return { error: 'Tenant não encontrado' }
