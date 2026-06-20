@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { createSubscriptionCheckout, createAbacateProduct } from '@/lib/abacatepay'
-import { logAdminAction } from '@/lib/admin/audit'
 
 // ─── IDs dos produtos AbacatePay por plano (definidos no .env) ───────────────
 const ABACATE_PRODUCT_IDS: Record<string, string | undefined> = {
@@ -152,37 +151,3 @@ export async function startSubscriptionCheckout(planSlug: 'pro' | 'premium') {
   redirect(checkoutResult.data.url)
 }
 
-// ─── Sincronizar produto de um plano com o AbacatePay (chamado pelo admin) ───
-export async function syncPlanToAbacatePay(planId: string) {
-  const adminSupabase = await createAdminClient()
-
-  const { data: plan } = await adminSupabase
-    .from('plans')
-    .select('*')
-    .eq('id', planId)
-    .single()
-
-  if (!plan) return { error: 'Plano não encontrado' }
-
-  const abacate = createAbacatePay()
-
-  try {
-    const result = await abacate.post('/billing/product/create', {
-      externalId: plan.id,
-      name: plan.name,
-      description: plan.description ?? plan.name,
-      price: Math.round(plan.price_brl * 100),
-    })
-
-    if (!result.data?.data?.id) return { error: 'Falha ao criar produto no AbacatePay' }
-
-    await adminSupabase
-      .from('plans')
-      .update({ abacatepay_product_id: result.data.data.id })
-      .eq('id', planId)
-
-    return { success: true, productId: result.data.data.id }
-  } catch (err) {
-    return { error: String(err) }
-  }
-}

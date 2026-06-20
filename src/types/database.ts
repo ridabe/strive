@@ -956,7 +956,6 @@ export type ProfileStatus = Database["public"]["Enums"]["profile_status"]
 export type StudentStatus = Database["public"]["Enums"]["student_status"]
 export type WorkoutPlanStatus = Database["public"]["Enums"]["workout_plan_status"]
 export type FinancialPlanStatus = Database["public"]["Enums"]["financial_plan_status"]
-Options]
   : never
 
 export const Constants = {
