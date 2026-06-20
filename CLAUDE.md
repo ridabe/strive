@@ -8,13 +8,34 @@ Sistema de gerenciamento para personal trainers. Next.js 15 App Router · Supaba
 
 **Sempre que editar, criar ou modificar qualquer arquivo `.ts` ou `.tsx` neste projeto, execute uma verificação de lint antes de reportar o trabalho como concluído.**
 
-### Verificação rápida obrigatória
+### Verificação rápida obrigatória (equivalente ao Vercel)
+
+O Vercel roda `tsc --noEmit` + ESLint + `next build`. No sandbox, usar:
 
 ```bash
-cd /sessions/gifted-modest-gauss/mnt/strivePersonal && pnpm exec next lint --max-warnings 0 2>&1 | head -40
+# 1. TypeScript (mesma verificação do Vercel — OBRIGATÓRIO)
+cd /sessions/gifted-modest-gauss/mnt/strivePersonal && \
+npx tsc --noEmit --skipLibCheck 2>&1 | grep "^src/" | head -20
+
+# 2. Verificações de integridade de arquivo (null bytes, código órfão)
+python3 -c "
+import glob, subprocess
+files = glob.glob('src/**/*.ts', recursive=True) + glob.glob('src/**/*.tsx', recursive=True)
+for f in files:
+    data = open(f,'rb').read()
+    if b'\x00' in data: print('NULL BYTES:', f)
+    text = data.decode('utf-8', errors='replace')
+    lines = text.splitlines()
+    if lines and lines[-1].strip() in ['/', '//', '{', '};']: print('ORPHAN END:', f, repr(lines[-1]))
+"
 ```
 
-Se retornar errors (não warnings), corrija antes de finalizar.
+Se `tsc` retornar erros com `^src/`, corrija antes de finalizar.
+
+#### ⚠️ Pasta `supabase/` DEVE estar excluída do tsconfig
+
+O `supabase/functions/` usa imports Deno (`https://deno.land/...`) — incompatíveis com tsc do Node.
+`tsconfig.json` deve ter `"supabase/**"` no array `exclude`. Nunca remover.
 
 ### Padrões que causaram falhas de build repetidas neste projeto
 
