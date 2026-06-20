@@ -21,9 +21,13 @@ export default async function AnamnesePage({ params }: Props) {
   const { id } = await params
   const supabase = await createClient()
 
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) notFound()
+
   const { data: profile } = await supabase
     .from('profiles')
     .select('tenant_id')
+    .eq('id', user.id)
     .single()
 
   if (!profile?.tenant_id) notFound()

@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState } from 'react'
 import { saveAnamneseResponse } from '@/app/actions/anamnese'
-import { CheckCircle2, Save } from 'lucide-react'
+import { CheckCircle2, Save, AlertTriangle } from 'lucide-react'
 
 type FieldType = 'text' | 'textarea' | 'boolean' | 'select' | 'number'
 
@@ -25,6 +25,13 @@ interface Props {
   completedAt: string | null
 }
 
+// Normaliza respostas boolean que o aluno salva como 'sim'/'nao'
+function normalizeValue(v: unknown): string {
+  if (v === 'sim') return 'Sim'
+  if (v === 'nao') return 'Não'
+  return String(v ?? '')
+}
+
 export function AnamneseForm({
   studentId,
   fields,
@@ -33,23 +40,50 @@ export function AnamneseForm({
   completedAt,
 }: Props) {
   const [responses, setResponses] = useState<Record<string, unknown>>(initialResponses)
-  const [saved, setSaved] = useState(false)
-  const [isPending, startTransition] = useTransition()
+  const [isPending, setIsPending] = useState(false)
+  const [banner, setBanner]       = useState<{ type: 'success' | 'error'; msg: string } | null>(null)
 
   function setValue(key: string, val: unknown) {
     setResponses((prev) => ({ ...prev, [key]: val }))
-    setSaved(false)
+    setBanner(null)
   }
 
-  function handleSave(complete: boolean) {
-    startTransition(async () => {
+  async function handleSave(complete: boolean) {
+    setIsPending(true)
+    setBanner(null)
+    try {
       const res = await saveAnamneseResponse(studentId, responses, complete)
-      if (!res?.error) setSaved(true)
-    })
+      if (res?.error) {
+        setBanner({ type: 'error', msg: res.error })
+      } else {
+        setBanner({ type: 'success', msg: complete ? 'Anamnese finalizada.' : 'Rascunho salvo.' })
+      }
+    } catch (err) {
+      console.error('[saveAnamneseResponse]', err)
+      setBanner({ type: 'error', msg: 'Erro ao salvar. Tente novamente.' })
+    } finally {
+      setIsPending(false)
+    }
   }
 
   return (
     <div className="space-y-8">
+
+      {/* Banner */}
+      {banner && (
+        <div className={`flex items-center gap-3 rounded-xl p-4 border ${
+          banner.type === 'success'
+            ? 'bg-status-success/10 border-status-success/20 text-status-success'
+            : 'bg-red-500/10 border-red-500/20 text-red-400'
+        }`}>
+          {banner.type === 'success'
+            ? <CheckCircle2 size={15} className="flex-shrink-0" />
+            : <AlertTriangle size={15} className="flex-shrink-0" />}
+          <p className="text-sm font-medium">{banner.msg}</p>
+        </div>
+      )}
+
+      {/* Campos por categoria */}
       {categories.map((cat) => {
         const catFields = fields.filter((f) => f.category === cat.key)
         if (catFields.length === 0) return null
@@ -75,7 +109,7 @@ export function AnamneseForm({
       {/* Botões */}
       <div className="flex flex-wrap gap-3 pt-2">
         <button
-          onClick={() => handleSave(false)}
+          onClick={() => void handleSave(false)}
           disabled={isPending}
           className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-surface-border text-sm font-body font-medium text-text-primary hover:border-brand-lime/30 hover:text-brand-lime transition-all disabled:opacity-50"
         >
@@ -83,25 +117,20 @@ export function AnamneseForm({
           {isPending ? 'Salvando…' : 'Salvar rascunho'}
         </button>
         <button
-          onClick={() => handleSave(true)}
+          onClick={() => void handleSave(true)}
           disabled={isPending || !!completedAt}
           className="flex items-center gap-2 bg-brand-lime text-background font-body font-semibold text-sm px-5 py-2.5 rounded-lg hover:bg-brand-lime/90 transition-colors disabled:opacity-50"
         >
           <CheckCircle2 size={15} />
           {completedAt ? 'Já finalizada' : isPending ? 'Salvando…' : 'Finalizar anamnese'}
         </button>
-
-        {saved && (
-          <span className="self-center text-sm text-status-success flex items-center gap-1">
-            <CheckCircle2 size={13} /> Salvo!
-          </span>
-        )}
       </div>
     </div>
   )
 }
 
-// ─── Componente de campo individual ──────────────────────────────────────────
+// ── Campo individual ───────────────────────────────────────────────────────────
+
 function FieldInput({
   field,
   value,
@@ -114,8 +143,10 @@ function FieldInput({
   const base =
     'w-full bg-background border border-surface-border rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-brand-lime/50 transition-colors'
 
+  const displayVal = normalizeValue(value)
+
   return (
-    <div className="space-y-1">
+    <div className="space-y-1.5">
       <label className="text-sm text-text-primary font-body">
         {field.label}
         {field.required && <span className="text-status-error ml-0.5">*</span>}
@@ -134,8 +165,8 @@ function FieldInput({
                 type="radio"
                 name={field.field_key}
                 value={opt}
-                checked={value === opt}
-                onChange={() => onChange(opt)}
+                checked={displayVal === opt}
+                onChange={() => onChange(opt === 'Sim' ? 'sim' : 'nao')}
                 className="accent-brand-lime"
               />
               <span className="text-sm text-text-primary">{opt}</span>
@@ -146,7 +177,7 @@ function FieldInput({
 
       {field.field_type === 'select' && field.options && (
         <select
-          value={String(value ?? '')}
+          value={displayVal}
           onChange={(e) => onChange(e.target.value)}
           className={base}
         >
@@ -160,7 +191,7 @@ function FieldInput({
       {field.field_type === 'text' && (
         <input
           type="text"
-          value={String(value ?? '')}
+          value={displayVal}
           onChange={(e) => onChange(e.target.value)}
           className={base}
           placeholder={field.label}
@@ -170,7 +201,7 @@ function FieldInput({
       {field.field_type === 'number' && (
         <input
           type="number"
-          value={String(value ?? '')}
+          value={displayVal}
           onChange={(e) => onChange(e.target.value ? Number(e.target.value) : '')}
           className={base}
           placeholder="0"
@@ -179,7 +210,7 @@ function FieldInput({
 
       {field.field_type === 'textarea' && (
         <textarea
-          value={String(value ?? '')}
+          value={displayVal}
           onChange={(e) => onChange(e.target.value)}
           rows={3}
           className={`${base} resize-none`}

@@ -11,9 +11,13 @@ export async function saveAnamneseResponse(
 ) {
   const supabase = await createClient()
 
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Não autenticado' }
+
   const { data: profile } = await supabase
     .from('profiles')
     .select('tenant_id')
+    .eq('id', user.id)
     .single()
 
   if (!profile?.tenant_id) return { error: 'Tenant não encontrado' }
@@ -44,9 +48,13 @@ export async function saveAnamneseResponse(
 export async function addCustomField(formData: FormData) {
   const supabase = await createClient()
 
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Não autenticado' }
+
   const { data: profile } = await supabase
     .from('profiles')
     .select('tenant_id')
+    .eq('id', user.id)
     .single()
 
   if (!profile?.tenant_id) return { error: 'Tenant não encontrado' }
@@ -89,9 +97,13 @@ export async function addCustomField(formData: FormData) {
 export async function toggleCustomField(fieldId: string, isActive: boolean) {
   const supabase = await createClient()
 
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Não autenticado' }
+
   const { data: profile } = await supabase
     .from('profiles')
     .select('tenant_id')
+    .eq('id', user.id)
     .single()
 
   if (!profile?.tenant_id) return { error: 'Tenant não encontrado' }
