@@ -7,9 +7,13 @@ import { createClient } from '@/lib/supabase/server'
 export async function createAssessment(studentId: string, formData: FormData) {
   const supabase = await createClient()
 
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Não autenticado' }
+
   const { data: profile } = await supabase
     .from('profiles')
     .select('tenant_id')
+    .eq('id', user.id)
     .single()
 
   if (!profile?.tenant_id) return { error: 'Tenant não encontrado' }
@@ -51,9 +55,13 @@ export async function createAssessment(studentId: string, formData: FormData) {
 export async function deleteAssessment(assessmentId: string, studentId: string) {
   const supabase = await createClient()
 
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Não autenticado' }
+
   const { data: profile } = await supabase
     .from('profiles')
     .select('tenant_id')
+    .eq('id', user.id)
     .single()
 
   if (!profile?.tenant_id) return { error: 'Tenant não encontrado' }
