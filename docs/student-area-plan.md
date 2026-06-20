@@ -253,7 +253,7 @@ CRÍTICA     VISUAL    ALTA VISIB.
 
 | Etapa | Status | Commit |
 |-------|--------|--------|
-| Etapa 1 — Cadastro + E-mail | ⏳ Aguardando | — |
+| Etapa 1 — Cadastro + E-mail | ✅ Concluída | c323209 → ver commit etapa-1 |
 | Etapa 2 — Layout Mobile-First | ⏳ Aguardando | — |
 | Etapa 3 — Anamnese | ⏳ Aguardando | — |
 | Etapa 4 — Avaliação Física | ⏳ Aguardando | — |
