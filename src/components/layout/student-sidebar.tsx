@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import {
   House, Dumbbell, Zap, TrendingUp, CalendarCheck,
-  ClipboardList, Activity, MessageSquare, Receipt, Utensils, Calendar,
+  ClipboardList, Activity, MessageSquare, Receipt, Utensils, Calendar, FolderOpen,
 } from 'lucide-react'
 
 const NAV_ITEMS = [
@@ -17,6 +17,7 @@ const NAV_ITEMS = [
   { label: 'Anamnese',       href: '/student/anamnese',       icon: ClipboardList, exact: false },
   { label: 'Avaliação',      href: '/student/avaliacao',      icon: Activity,      exact: false },
   { label: 'Feedback',       href: '/student/feedback',       icon: MessageSquare, exact: false },
+  { label: 'Arquivos',       href: '/student/arquivos',       icon: FolderOpen,    exact: false },
   { label: 'Financeiro',     href: '/student/financeiro',     icon: Receipt,       exact: false },
   { label: 'Nutrição',       href: '/student/nutricao',       icon: Utensils,      exact: false },
   { label: 'Agenda',         href: '/student/agenda',         icon: Calendar,      exact: false },
