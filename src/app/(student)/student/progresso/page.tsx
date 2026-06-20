@@ -27,7 +27,6 @@ export default async function ProgressoPage() {
 
   // Stats: peso mais recente e mais antigo (para delta)
   const latest  = list[0]
-  const oldest  = list.length > 1 ? list[list.length - 1] : null
   const withWeight = list.filter((e) => e.weight !== null)
 
   const weightDelta =

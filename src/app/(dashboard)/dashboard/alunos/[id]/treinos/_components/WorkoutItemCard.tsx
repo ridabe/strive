@@ -29,15 +29,22 @@ export type WorkoutItemData = {
   } | null
 }
 
+type ItemActions = {
+  update: (id: string, fields: Record<string, unknown>) => Promise<{ error?: string }>
+  remove: (id: string) => Promise<{ error?: string }>
+  ungroup: (comboGroupId: string) => Promise<{ error?: string }>
+}
+
 type Props = {
   item: WorkoutItemData
   selected: boolean
   onToggleSelect: (id: string) => void
   onRemove: (id: string) => void
   dragHandleProps?: React.HTMLAttributes<HTMLDivElement>
+  actions?: ItemActions
 }
 
-export function WorkoutItemCard({ item, selected, onToggleSelect, onRemove, dragHandleProps }: Props) {
+export function WorkoutItemCard({ item, selected, onToggleSelect, onRemove, dragHandleProps, actions }: Props) {
   const [isPending, startTransition] = useTransition()
   const [expanded, setExpanded] = useState(false)
   const [fields, setFields] = useState({
@@ -50,24 +57,37 @@ export function WorkoutItemCard({ item, selected, onToggleSelect, onRemove, drag
 
   function saveField(key: string, value: string) {
     startTransition(async () => {
-      await updateWorkoutItem(item.id, {
+      const payload: Record<string, unknown> = {
         [key]: key === 'sets' || key === 'rest_seconds'
           ? (parseInt(value) || null)
           : value || null,
-      })
+      }
+      if (actions) {
+        await actions.update(item.id, payload)
+      } else {
+        await updateWorkoutItem(item.id, payload as Parameters<typeof updateWorkoutItem>[1])
+      }
     })
   }
 
   function handleUngroup() {
     if (!item.combo_group_id) return
     startTransition(async () => {
-      await ungroupWorkoutItems(item.combo_group_id!)
+      if (actions) {
+        await actions.ungroup(item.combo_group_id!)
+      } else {
+        await ungroupWorkoutItems(item.combo_group_id!)
+      }
     })
   }
 
   function handleRemove() {
     startTransition(async () => {
-      await removeWorkoutItem(item.id)
+      if (actions) {
+        await actions.remove(item.id)
+      } else {
+        await removeWorkoutItem(item.id)
+      }
       onRemove(item.id)
     })
   }

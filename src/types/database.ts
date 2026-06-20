@@ -371,6 +371,136 @@ export type Database = {
           },
         ]
       }
+      extra_workout_items: {
+        Row: {
+          combo_group_id: string | null
+          combo_type: string | null
+          count_type: string
+          created_at: string
+          display_order: number
+          duration_secs: number | null
+          exercise_id: string
+          extra_workout_id: string
+          id: string
+          load: string | null
+          notes: string | null
+          reps: string | null
+          rest_seconds: number | null
+          sets: number | null
+          tenant_id: string
+        }
+        Insert: {
+          combo_group_id?: string | null
+          combo_type?: string | null
+          count_type?: string
+          created_at?: string
+          display_order?: number
+          duration_secs?: number | null
+          exercise_id: string
+          extra_workout_id: string
+          id?: string
+          load?: string | null
+          notes?: string | null
+          reps?: string | null
+          rest_seconds?: number | null
+          sets?: number | null
+          tenant_id: string
+        }
+        Update: {
+          combo_group_id?: string | null
+          combo_type?: string | null
+          count_type?: string
+          created_at?: string
+          display_order?: number
+          duration_secs?: number | null
+          exercise_id?: string
+          extra_workout_id?: string
+          id?: string
+          load?: string | null
+          notes?: string | null
+          reps?: string | null
+          rest_seconds?: number | null
+          sets?: number | null
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "extra_workout_items_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "extra_workout_items_extra_workout_id_fkey"
+            columns: ["extra_workout_id"]
+            isOneToOne: false
+            referencedRelation: "extra_workouts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "extra_workout_items_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      extra_workouts: {
+        Row: {
+          category: Database["public"]["Enums"]["extra_workout_category"]
+          created_at: string
+          description: string | null
+          id: string
+          is_template: boolean
+          name: string
+          student_id: string | null
+          tags: string[]
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          category?: Database["public"]["Enums"]["extra_workout_category"]
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_template?: boolean
+          name: string
+          student_id?: string | null
+          tags?: string[]
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["extra_workout_category"]
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_template?: boolean
+          name?: string
+          student_id?: string | null
+          tags?: string[]
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "extra_workouts_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "extra_workouts_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       financial_plans: {
         Row: {
           amount: number
@@ -1234,6 +1364,14 @@ export type Database = {
     Enums: {
       app_role: "global_admin" | "personal" | "student"
       audit_category: "auth" | "tenant" | "user" | "system"
+      extra_workout_category:
+        | "aquecimento"
+        | "hiit"
+        | "mobilidade"
+        | "cardio"
+        | "desafio"
+        | "forca"
+        | "outros"
       financial_plan_status: "pending" | "paid" | "overdue" | "cancelled"
       profile_status: "active" | "inactive" | "suspended"
       student_status: "active" | "inactive"
@@ -1364,16 +1502,20 @@ export type CompositeTypes<
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
-// Convenience re-exports usados em todo o projeto
-export type AppRole      = Database["public"]["Enums"]["app_role"]
-export type ProfileStatus= Database["public"]["Enums"]["profile_status"]
-export type audit_category = Database["public"]["Enums"]["audit_category"]
-
 export const Constants = {
   public: {
     Enums: {
       app_role: ["global_admin", "personal", "student"],
       audit_category: ["auth", "tenant", "user", "system"],
+      extra_workout_category: [
+        "aquecimento",
+        "hiit",
+        "mobilidade",
+        "cardio",
+        "desafio",
+        "forca",
+        "outros",
+      ],
       financial_plan_status: ["pending", "paid", "overdue", "cancelled"],
       profile_status: ["active", "inactive", "suspended"],
       student_status: ["active", "inactive"],
@@ -1383,3 +1525,9 @@ export const Constants = {
     },
   },
 } as const
+
+// Re-exports para compatibilidade com imports existentes
+export type AppRole       = Database["public"]["Enums"]["app_role"]
+export type ProfileStatus = Database["public"]["Enums"]["profile_status"]
+export type audit_category = Database["public"]["Enums"]["audit_category"]
+export type ExtraWorkoutCategory = Database["public"]["Enums"]["extra_workout_category"]

@@ -11,6 +11,7 @@ type Props = {
   selectedIds: string[]
   onClose: () => void
   onSuccess: () => void
+  onGroup?: (ids: string[], type: ComboType) => Promise<{ error?: string }>
 }
 
 const COMBO_OPTIONS: { value: ComboType; label: string; desc: string }[] = [
@@ -19,12 +20,13 @@ const COMBO_OPTIONS: { value: ComboType; label: string; desc: string }[] = [
   { value: 'circuit', label: 'Circuito', desc: '4+ exercícios em sequência' },
 ]
 
-export function CombineModal({ open, selectedIds, onClose, onSuccess }: Props) {
+export function CombineModal({ open, selectedIds, onClose, onSuccess, onGroup }: Props) {
   const [isPending, startTransition] = useTransition()
 
   function handleCombine(type: ComboType) {
     startTransition(async () => {
-      const result = await groupWorkoutItems(selectedIds, type)
+      const fn = onGroup ?? ((ids: string[], t: ComboType) => groupWorkoutItems(ids, t))
+      const result = await fn(selectedIds, type)
       if (!result.error) {
         onSuccess()
         onClose()

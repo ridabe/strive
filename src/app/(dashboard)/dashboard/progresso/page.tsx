@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { joinOne } from '@/lib/supabase/join'
-import { TrendingUp, ArrowRight, Scale, StickyNote, ImageIcon } from 'lucide-react'
+import { TrendingUp, ArrowRight, StickyNote, ImageIcon } from 'lucide-react'
 
 export default async function ProgressoDashboardPage() {
   const supabase = await createClient()
