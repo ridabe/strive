@@ -14,7 +14,7 @@ export const MODULE_ROUTES: Record<string, { href: string; label: string }> = {
   'faturas':             { href: '/dashboard/financeiro',          label: 'Financeiro'          },
   'arquivos':            { href: '/dashboard/arquivos',            label: 'Arquivos'            },
   'notificacoes':        { href: '/dashboard/notificacoes',        label: 'Notificações'        },
-  'white-label':         { href: '/dashboard/configuracoes',       label: 'White-label'         },
+  'white-label':         { href: '/dashboard/ajustes',             label: 'Identidade Visual'   },
 }
 
 // Módulos principais para a grid do dashboard home (ícone SVG path inline)
@@ -23,5 +23,5 @@ export const MODULE_CATEGORIES: Record<string, { label: string; color: string }>
   acompanhamento: { label: 'Acompanhamento', color: 'text-purple-400' },
   financeiro:     { label: 'Financeiro',     color: 'text-green-400'  },
   comunicacao:    { label: 'Comunicação',    color: 'text-orange-400' },
-  whitelabel:     { label: 'White-label',    color: 'text-pink-400'   },
+  whitelabel:     { label: 'Identidade Visual', color: 'text-pink-400' },
 }

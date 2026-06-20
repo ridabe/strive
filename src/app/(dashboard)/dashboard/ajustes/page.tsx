@@ -1,8 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { updateProfile } from '@/app/actions/profile'
-import { Settings, Building2, User, Lock, CheckCircle2, AlertCircle } from 'lucide-react'
+import { Settings, Building2, User, Lock, CheckCircle2, AlertCircle, Palette } from 'lucide-react'
 import { AuthSubmitButton } from '@/components/auth/submit-button'
+import { BrandingForm } from '@/components/dashboard/branding-form'
 
 export default async function AjustesPage({
   searchParams,
@@ -23,7 +24,7 @@ export default async function AjustesPage({
   const { data: tenant } = profile?.tenant_id
     ? await supabase
         .from('tenants')
-        .select('business_name, contact_email, contact_phone, primary_color, plan')
+        .select('business_name, contact_email, contact_phone, primary_color, logo_url, plan')
         .eq('id', profile.tenant_id)
         .single()
     : { data: null }
@@ -37,7 +38,7 @@ export default async function AjustesPage({
           Ajustes
         </h1>
         <p className="text-text-secondary text-sm mt-1">
-          Seus dados e configurações da conta.
+          Seus dados, identidade visual e configuracoes da conta.
         </p>
       </div>
 
@@ -55,11 +56,11 @@ export default async function AjustesPage({
         </div>
       )}
 
-      {/* ── Dados do negócio ──────────────────────────────────────────── */}
+      {/* -- Dados do negocio ------------------------------------------ */}
       <section className="bg-surface border border-surface-border rounded-xl overflow-hidden">
         <div className="flex items-center gap-2 px-5 py-4 border-b border-surface-border">
           <Building2 size={16} className="text-brand-lime" />
-          <h2 className="font-body font-semibold text-text-primary text-sm">Dados do negócio</h2>
+          <h2 className="font-body font-semibold text-text-primary text-sm">Dados do negocio</h2>
         </div>
 
         <form action={updateProfile} className="p-5 space-y-4">
@@ -67,7 +68,7 @@ export default async function AjustesPage({
 
           <div className="space-y-1.5">
             <label className="block text-xs font-body font-medium text-text-secondary uppercase tracking-wide">
-              Nome do negócio
+              Nome do negocio
             </label>
             <input
               name="business_name"
@@ -103,30 +104,31 @@ export default async function AjustesPage({
             </div>
           </div>
 
-          <div className="space-y-1.5">
-            <label className="block text-xs font-body font-medium text-text-secondary uppercase tracking-wide">
-              Cor principal (personalização)
-            </label>
-            <div className="flex items-center gap-3">
-              <input
-                name="primary_color"
-                type="color"
-                defaultValue={tenant?.primary_color ?? '#E8FF47'}
-                className="w-10 h-10 rounded-lg border border-surface-border bg-background cursor-pointer p-1"
-              />
-              <span className="text-xs text-text-secondary">
-                Cor usada na identidade visual do seu espaço.
-              </span>
-            </div>
-          </div>
-
           <div className="pt-2">
-            <AuthSubmitButton label="Salvar alterações" loadingLabel="Salvando..." />
+            <AuthSubmitButton label="Salvar alteracoes" loadingLabel="Salvando..." />
           </div>
         </form>
       </section>
 
-      {/* ── Dados pessoais ────────────────────────────────────────────── */}
+      {/* -- Identidade Visual ----------------------------------------- */}
+      <section id="identidade-visual" className="bg-surface border border-surface-border rounded-xl overflow-hidden">
+        <div className="flex items-center gap-2 px-5 py-4 border-b border-surface-border">
+          <Palette size={16} className="text-brand-lime" />
+          <div>
+            <h2 className="font-body font-semibold text-text-primary text-sm">Identidade Visual</h2>
+            <p className="text-xs text-text-secondary mt-0.5">Logo e cores do seu painel e portal dos alunos.</p>
+          </div>
+        </div>
+        <div className="p-5">
+          <BrandingForm
+            initialLogoUrl={tenant?.logo_url ?? null}
+            initialColor={tenant?.primary_color ?? '#E8FF47'}
+            businessName={tenant?.business_name ?? 'Meu Negocio'}
+          />
+        </div>
+      </section>
+
+      {/* -- Dados pessoais -------------------------------------------- */}
       <section className="bg-surface border border-surface-border rounded-xl overflow-hidden">
         <div className="flex items-center gap-2 px-5 py-4 border-b border-surface-border">
           <User size={16} className="text-brand-lime" />
@@ -157,7 +159,7 @@ export default async function AjustesPage({
               disabled
               className="w-full bg-background/50 border border-surface-border/50 rounded-lg px-4 py-3 text-sm text-text-secondary cursor-not-allowed"
             />
-            <p className="text-xs text-text-secondary/60">O e-mail de acesso não pode ser alterado.</p>
+            <p className="text-xs text-text-secondary/60">O e-mail de acesso nao pode ser alterado.</p>
           </div>
 
           <div className="pt-2">
@@ -166,11 +168,11 @@ export default async function AjustesPage({
         </form>
       </section>
 
-      {/* ── Segurança ─────────────────────────────────────────────────── */}
+      {/* -- Seguranca ------------------------------------------------- */}
       <section className="bg-surface border border-surface-border rounded-xl overflow-hidden">
         <div className="flex items-center gap-2 px-5 py-4 border-b border-surface-border">
           <Lock size={16} className="text-brand-lime" />
-          <h2 className="font-body font-semibold text-text-primary text-sm">Segurança</h2>
+          <h2 className="font-body font-semibold text-text-primary text-sm">Seguranca</h2>
         </div>
         <div className="p-5 flex items-center justify-between gap-4">
           <div>
@@ -189,7 +191,7 @@ export default async function AjustesPage({
         </div>
       </section>
 
-      {/* ── Plano atual ───────────────────────────────────────────────── */}
+      {/* -- Plano atual ----------------------------------------------- */}
       <section className="bg-surface border border-surface-border rounded-xl overflow-hidden">
         <div className="flex items-center gap-2 px-5 py-4 border-b border-surface-border">
           <Settings size={16} className="text-brand-lime" />
@@ -201,7 +203,7 @@ export default async function AjustesPage({
               Plano {tenant?.plan ?? 'Free'}
             </p>
             <p className="text-xs text-text-secondary mt-0.5">
-              Gerencie sua assinatura na página de planos.
+              Gerencie sua assinatura na pagina de planos.
             </p>
           </div>
           <a
