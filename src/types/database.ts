@@ -427,6 +427,54 @@ export type Database = {
           },
         ]
       }
+      student_progress: {
+        Row: {
+          created_at: string
+          id: string
+          notes: string | null
+          photo_urls: string[]
+          recorded_at: string
+          student_id: string
+          tenant_id: string
+          weight: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          photo_urls?: string[]
+          recorded_at?: string
+          student_id: string
+          tenant_id: string
+          weight?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          photo_urls?: string[]
+          recorded_at?: string
+          student_id?: string
+          tenant_id?: string
+          weight?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_progress_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_progress_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       students: {
         Row: {
           avatar_url: string | null
@@ -982,12 +1030,7 @@ export const Constants = {
   },
 } as const
 
-// Aliases para compatibilidade com o restante do projeto
-export type AppRole = Database["public"]["Enums"]["app_role"]
-export type audit_category = Database["public"]["Enums"]["audit_category"]
-export type TenantPlan = Database["public"]["Enums"]["tenant_plan"]
-export type TenantStatus = Database["public"]["Enums"]["tenant_status"]
+// ─── Aliases usados pelo projeto ──────────────────────────────────────────────
+export type AppRole       = Database["public"]["Enums"]["app_role"]
 export type ProfileStatus = Database["public"]["Enums"]["profile_status"]
-export type StudentStatus = Database["public"]["Enums"]["student_status"]
-export type WorkoutPlanStatus = Database["public"]["Enums"]["workout_plan_status"]
-export type FinancialPlanStatus = Database["public"]["Enums"]["financial_plan_status"]
+export type audit_category = Database["public"]["Enums"]["audit_category"]
