@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState } from 'react'
 import { saveAnamnese } from '@/actions/anamnese'
 import { CheckCircle, Loader2, AlertTriangle, Pencil, Check, X } from 'lucide-react'
 
@@ -34,15 +34,16 @@ export function AnamneseForm({ fields, initialValues, existingId, completedAt }:
   const [currentId, setCurrentId]   = useState<string | null>(existingId)
   const [isCompleted, setIsCompleted] = useState(!!completedAt)
   const [savedAt, setSavedAt]       = useState<string | null>(completedAt)
-  const [banner, setBanner]         = useState<{ type: 'success' | 'error'; msg: string } | null>(null)
-  const [isPending, startTransition] = useTransition()
+  const [banner, setBanner]   = useState<{ type: 'success' | 'error'; msg: string } | null>(null)
+  const [isPending, setIsPending] = useState(false)
 
   const setValue = (key: string, val: string) =>
     setValues((prev) => ({ ...prev, [key]: val }))
 
-  const handleSubmit = (complete: boolean) => {
+  const handleSubmit = async (complete: boolean) => {
+    setIsPending(true)
     setBanner(null)
-    startTransition(async () => {
+    try {
       const res = await saveAnamnese({ values, complete, existingId: currentId })
       if (res.error) {
         setBanner({ type: 'error', msg: res.error })
@@ -57,7 +58,12 @@ export function AnamneseForm({ fields, initialValues, existingId, completedAt }:
         type: 'success',
         msg: complete ? 'Anamnese enviada! Seu personal já pode visualizá-la.' : 'Rascunho salvo.',
       })
-    })
+    } catch (err) {
+      console.error('[saveAnamnese]', err)
+      setBanner({ type: 'error', msg: 'Erro ao salvar. Verifique sua conexão e tente novamente.' })
+    } finally {
+      setIsPending(false)
+    }
   }
 
   const grouped = Object.entries(CATEGORIES)
@@ -127,7 +133,7 @@ export function AnamneseForm({ fields, initialValues, existingId, completedAt }:
       ) : (
         <div className="flex flex-col sm:flex-row gap-3 pt-2">
           <button
-            onClick={() => handleSubmit(false)}
+            onClick={() => void handleSubmit(false)}
             disabled={isPending}
             className="flex-1 py-3 rounded-xl border border-surface-border text-sm font-display font-bold uppercase tracking-widest text-text-secondary hover:text-text-primary hover:border-text-secondary/30 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
           >
@@ -135,7 +141,7 @@ export function AnamneseForm({ fields, initialValues, existingId, completedAt }:
             Salvar rascunho
           </button>
           <button
-            onClick={() => handleSubmit(true)}
+            onClick={() => void handleSubmit(true)}
             disabled={isPending}
             className="flex-1 py-3 rounded-xl bg-brand-lime text-background text-sm font-display font-bold uppercase tracking-widest hover:bg-brand-lime/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
           >
