@@ -811,6 +811,58 @@ export type Database = {
           },
         ]
       }
+      workout_feedbacks: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          rating: number
+          student_id: string
+          tenant_id: string
+          workout_plan_id: string | null
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rating: number
+          student_id: string
+          tenant_id: string
+          workout_plan_id?: string | null
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rating?: number
+          student_id?: string
+          tenant_id?: string
+          workout_plan_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workout_feedbacks_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_feedbacks_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_feedbacks_workout_plan_id_fkey"
+            columns: ["workout_plan_id"]
+            isOneToOne: false
+            referencedRelation: "workout_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       workout_plans: {
         Row: {
           created_at: string
@@ -1015,6 +1067,11 @@ export type CompositeTypes<
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
+// Aliases de conveniência para enums usados pelo código da aplicação
+export type AppRole      = Database["public"]["Enums"]["app_role"]
+export type ProfileStatus = Database["public"]["Enums"]["profile_status"]
+export type audit_category = Database["public"]["Enums"]["audit_category"]
+
 export const Constants = {
   public: {
     Enums: {
@@ -1029,8 +1086,3 @@ export const Constants = {
     },
   },
 } as const
-
-// ─── Aliases usados pelo projeto ──────────────────────────────────────────────
-export type AppRole       = Database["public"]["Enums"]["app_role"]
-export type ProfileStatus = Database["public"]["Enums"]["profile_status"]
-export type audit_category = Database["public"]["Enums"]["audit_category"]
