@@ -150,4 +150,3 @@ export async function startSubscriptionCheckout(planSlug: 'pro' | 'premium') {
   // Redireciona para a página de pagamento do AbacatePay
   redirect(checkoutResult.data.url)
 }
-

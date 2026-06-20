@@ -381,11 +381,10 @@ export async function resendWelcomeEmail(tenantId: string) {
     console.error('Erro ao enviar e-mail de boas-vindas:', emailError)
     // Não falha o fluxo — e-mail é best-effort
   }
-
   await logAdminAction({
-    action: 'PASSWORD_RESET',
-    category: 'user',
-    description: `Senha resetada e e-mail reenviado para "${tenant.business_name}" (${profile.email})`,
+    action: 'TENANT_EMAIL_RESENT',
+    category: 'tenant',
+    description: `E-mail de boas-vindas reenviado para "${tenant.business_name}"`,
     targetType: 'tenant',
     targetId: tenantId,
   })

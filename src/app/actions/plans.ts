@@ -73,15 +73,15 @@ export async function updatePlan(planId: string, formData: FormData) {
     action: 'PLAN_UPDATED',
     category: 'system',
     description: `Plano "${plan.name}" atualizado — limite: ${max_students === 9999 ? 'ilimitado' : max_students} alunos, preço: R$ ${price_brl}`,
-    target_id: planId,
-    target_type: 'plan',
+    targetId: planId,
+    targetType: 'plan',
   })
 
   revalidatePath('/admin/planos')
   return { success: true }
 }
 
-// ── Ativar / desativar plano ─────────────────────────────────────────────────
+// ── Ativar / desativar plano ──────────────────────────────────────────────
 export async function togglePlanActive(planId: string, is_active: boolean) {
   const supabase = await createClient()
 
