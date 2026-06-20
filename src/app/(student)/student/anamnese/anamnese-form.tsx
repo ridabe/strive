@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { saveAnamnese } from '@/actions/anamnese'
-import { CheckCircle, Loader2, AlertTriangle, Pencil } from 'lucide-react'
+import { CheckCircle, Loader2, AlertTriangle, Pencil, Check, X } from 'lucide-react'
 
 interface AnamneseField {
   id: string
@@ -176,21 +176,32 @@ function FieldRow({
       <div className="space-y-2">
         {label}
         <div className="flex gap-3">
-          {(['sim', 'nao'] as const).map((opt) => (
-            <button
-              key={opt}
-              type="button"
-              disabled={disabled}
-              onClick={() => onChange(value === opt ? '' : opt)}
-              className={`flex-1 py-2.5 rounded-xl border text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
-                value === opt
-                  ? 'bg-brand-lime/10 border-brand-lime/40 text-brand-lime'
-                  : 'border-surface-border text-text-secondary hover:text-text-primary hover:border-text-secondary/30'
-              }`}
-            >
-              {opt === 'sim' ? 'Sim' : 'Não'}
-            </button>
-          ))}
+          {(['sim', 'nao'] as const).map((opt) => {
+            const isSelected = value === opt
+            const isSim = opt === 'sim'
+            return (
+              <button
+                key={opt}
+                type="button"
+                disabled={disabled}
+                onClick={() => onChange(isSelected ? '' : opt)}
+                className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border text-sm font-semibold transition-all disabled:cursor-not-allowed ${
+                  isSelected
+                    ? isSim
+                      ? 'bg-brand-lime border-brand-lime text-black'
+                      : 'bg-red-500 border-red-500 text-white'
+                    : 'border-surface-border text-text-secondary hover:border-text-secondary/50 hover:text-text-primary disabled:opacity-50'
+                }`}
+              >
+                {isSelected
+                  ? isSim
+                    ? <Check size={14} strokeWidth={3} />
+                    : <X size={14} strokeWidth={3} />
+                  : null}
+                {isSim ? 'Sim' : 'Não'}
+              </button>
+            )
+          })}
         </div>
       </div>
     )
