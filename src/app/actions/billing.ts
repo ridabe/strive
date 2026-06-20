@@ -186,16 +186,3 @@ export async function syncPlanToAbacatePay(planId: string) {
     return { error: String(err) }
   }
 }
-    .eq('id', planId)
-
-  await logAdminAction({
-    action:     'PLAN_SYNCED_ABACATEPAY',
-    category:   'system',
-    description: `Produto "${plan.name}" sincronizado com AbacatePay (ID: ${result.data.id})`,
-    targetType: 'plan',
-    targetId:   planId,
-    metadata:   { abacatepay_product_id: result.data.id },
-  })
-
-  return { success: true, productId: result.data.id }
-}
