@@ -1,14 +1,16 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useMemo } from 'react'
 import { createAssessment } from '@/app/actions/assessments'
 import { deleteAssessment } from '@/app/actions/assessments'
-import { Plus, X, Save, Loader2, Trash2, ChevronDown, ChevronUp } from 'lucide-react'
+import { calcBMI, calcBMR, bmiCategory } from '@/lib/fitness-calc'
+import { Plus, X, Save, Loader2, Trash2, ChevronDown, ChevronUp, Scale, Flame } from 'lucide-react'
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 export interface Assessment {
   id: string
   assessed_at: string
+  sex: string | null
   weight: number | null
   height: number | null
   body_fat: number | null
@@ -18,12 +20,14 @@ export interface Assessment {
   hip: number | null
   thigh: number | null
   notes: string | null
+  bmi: number | null
+  bmr: number | null
 }
 
 const GENERAL_FIELDS = [
-  { name: 'weight',   label: 'Peso (kg)',      step: '0.1' },
-  { name: 'height',   label: 'Altura (cm)',    step: '0.1' },
-  { name: 'body_fat', label: '% Gordura',      step: '0.1' },
+  { name: 'weight',   label: 'Peso (kg)',   step: '0.1' },
+  { name: 'height',   label: 'Altura (cm)', step: '0.1' },
+  { name: 'body_fat', label: '% Gordura',   step: '0.1' },
 ] as const
 
 const CIRCUM_FIELDS = [
@@ -34,24 +38,100 @@ const CIRCUM_FIELDS = [
   { name: 'thigh', label: 'Coxa'     },
 ] as const
 
+type Sex = '' | 'M' | 'F'
+
+// ─── Preview calculado ────────────────────────────────────────────────────────
+
+function CalcPreview({
+  weight, height, sex, birthDate,
+}: {
+  weight: string; height: string; sex: Sex; birthDate: string | null
+}) {
+  const w = weight ? parseFloat(weight) : null
+  const h = height ? parseFloat(height) : null
+
+  const bmi = useMemo(
+    () => w !== null && !isNaN(w) && h !== null && !isNaN(h) && h > 0 ? calcBMI(w, h) : null,
+    [w, h],
+  )
+  const bmr = useMemo(
+    () =>
+      w !== null && !isNaN(w) && h !== null && !isNaN(h) && (sex === 'M' || sex === 'F') && birthDate
+        ? calcBMR(w, h, birthDate, sex)
+        : null,
+    [w, h, sex, birthDate],
+  )
+
+  if (bmi === null && bmr === null) return null
+
+  const cat = bmi !== null ? bmiCategory(bmi) : null
+
+  return (
+    <div className="bg-background border border-brand-lime/20 rounded-lg p-3 space-y-2">
+      <p className="text-xs font-semibold text-brand-lime uppercase tracking-widest">
+        Calculado
+      </p>
+      <div className="flex gap-4">
+        {bmi !== null && cat !== null && (
+          <div>
+            <div className="flex items-center gap-1 text-xs text-text-secondary mb-0.5">
+              <Scale size={10} /> IMC
+            </div>
+            <span className="text-base font-display font-bold text-text-primary">{bmi}</span>
+            <span className={`ml-1.5 text-xs font-medium ${cat.color}`}>{cat.label}</span>
+          </div>
+        )}
+        {bmr !== null && (
+          <div>
+            <div className="flex items-center gap-1 text-xs text-text-secondary mb-0.5">
+              <Flame size={10} /> TMB
+            </div>
+            <span className="text-base font-display font-bold text-text-primary">{bmr}</span>
+            <span className="ml-1.5 text-xs text-text-secondary">kcal/dia</span>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 // ─── Formulário de nova avaliação ─────────────────────────────────────────────
-export function NewAssessmentForm({ studentId }: { studentId: string }) {
-  const [open, setOpen] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [isPending, startTransition] = useTransition()
+export function NewAssessmentForm({
+  studentId,
+  birthDate,
+}: {
+  studentId: string
+  birthDate: string | null
+}) {
+  const [open, setOpen]         = useState(false)
+  const [error, setError]       = useState<string | null>(null)
+  const [isPending, setPending] = useState(false)
+  const [sex, setSex]           = useState<Sex>('')
+
+  // rastrear peso/altura para o preview
+  const [weight, setWeight] = useState('')
+  const [height, setHeight] = useState('')
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const fd = new FormData(e.currentTarget)
+    fd.set('sex', sex)
     setError(null)
-    startTransition(async () => {
-      const res = await createAssessment(studentId, fd)
+    setPending(true)
+    createAssessment(studentId, fd).then((res) => {
       if (res?.error) {
         setError(res.error)
       } else {
         setOpen(false)
+        setWeight('')
+        setHeight('')
+        setSex('')
         ;(e.target as HTMLFormElement).reset()
       }
+    }).catch(() => {
+      setError('Erro inesperado. Tente novamente.')
+    }).finally(() => {
+      setPending(false)
     })
   }
 
@@ -97,6 +177,29 @@ export function NewAssessmentForm({ studentId }: { studentId: string }) {
         />
       </div>
 
+      {/* Sexo biológico */}
+      <div>
+        <p className="text-xs font-body font-semibold text-text-secondary uppercase tracking-widest mb-2">
+          Sexo Biológico <span className="normal-case font-normal">(para cálculo da TMB)</span>
+        </p>
+        <div className="flex gap-2">
+          {(['M', 'F'] as const).map((s) => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => setSex((prev) => prev === s ? '' : s)}
+              className={`flex-1 py-2 rounded-lg border text-sm font-medium transition-all ${
+                sex === s
+                  ? 'bg-brand-lime border-brand-lime text-black'
+                  : 'border-surface-border text-text-secondary hover:border-text-secondary/40'
+              }`}
+            >
+              {s === 'M' ? 'Masculino' : 'Feminino'}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Medidas gerais */}
       <div>
         <p className="text-xs font-body font-semibold text-text-secondary uppercase tracking-widest mb-3 pb-2 border-b border-surface-border">
@@ -112,12 +215,19 @@ export function NewAssessmentForm({ studentId }: { studentId: string }) {
                 step={f.step}
                 min="0"
                 placeholder="—"
+                onChange={(e) => {
+                  if (f.name === 'weight') setWeight(e.target.value)
+                  if (f.name === 'height') setHeight(e.target.value)
+                }}
                 className="w-full bg-background border border-surface-border rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-brand-lime/50 placeholder:text-text-secondary/40"
               />
             </div>
           ))}
         </div>
       </div>
+
+      {/* Preview */}
+      <CalcPreview weight={weight} height={height} sex={sex} birthDate={birthDate} />
 
       {/* Circunferências */}
       <div>
@@ -184,24 +294,22 @@ export function AssessmentCard({
   studentId: string
 }) {
   const [expanded, setExpanded] = useState(false)
-  const [isPending, startTransition] = useTransition()
+  const [isPending, setPending] = useState(false)
 
   function handleDelete() {
     if (!window.confirm('Excluir esta avaliação? Esta ação não pode ser desfeita.')) return
-    startTransition(async () => {
-      await deleteAssessment(assessment.id, studentId)
-    })
+    setPending(true)
+    deleteAssessment(assessment.id, studentId).finally(() => setPending(false))
   }
 
   const fmt = (v: number | null, suffix = '') =>
     v !== null ? `${v}${suffix}` : '—'
 
   const hasMeasurements =
-    assessment.arm !== null ||
-    assessment.chest !== null ||
-    assessment.waist !== null ||
-    assessment.hip !== null ||
-    assessment.thigh !== null
+    assessment.arm !== null || assessment.chest !== null ||
+    assessment.waist !== null || assessment.hip !== null || assessment.thigh !== null
+
+  const cat = assessment.bmi !== null ? bmiCategory(assessment.bmi) : null
 
   return (
     <div className="bg-surface border border-surface-border rounded-xl overflow-hidden">
@@ -211,17 +319,23 @@ export function AssessmentCard({
           <div>
             <p className="font-body font-semibold text-sm text-text-primary">
               {new Date(assessment.assessed_at + 'T12:00:00').toLocaleDateString('pt-BR', {
-                day: '2-digit',
-                month: 'long',
-                year: 'numeric',
+                day: '2-digit', month: 'long', year: 'numeric',
               })}
             </p>
-            <div className="flex items-center gap-3 mt-1 text-xs text-text-secondary">
+            <div className="flex items-center gap-3 mt-1 text-xs text-text-secondary flex-wrap">
               {assessment.weight !== null && (
                 <span className="text-text-primary font-medium">{assessment.weight} kg</span>
               )}
               {assessment.height !== null && <span>{assessment.height} cm</span>}
               {assessment.body_fat !== null && <span>{assessment.body_fat}% gordura</span>}
+              {assessment.bmi !== null && cat !== null && (
+                <span className={`font-semibold ${cat.color}`}>
+                  IMC {assessment.bmi} · {cat.label}
+                </span>
+              )}
+              {assessment.bmr !== null && (
+                <span>TMB {assessment.bmr} kcal/dia</span>
+              )}
             </div>
           </div>
         </div>

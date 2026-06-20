@@ -14,7 +14,7 @@ export default async function StudentAvaliacoesPage({ params }: Props) {
 
   const { data: student } = await supabase
     .from('students')
-    .select('full_name, status')
+    .select('full_name, status, birth_date')
     .eq('id', id)
     .single()
 
@@ -23,7 +23,7 @@ export default async function StudentAvaliacoesPage({ params }: Props) {
   const { data: assessments } = await supabase
     .from('physical_assessments')
     .select(
-      'id, assessed_at, weight, height, body_fat, arm, chest, waist, hip, thigh, notes',
+      'id, assessed_at, sex, weight, height, body_fat, arm, chest, waist, hip, thigh, notes, bmi, bmr',
     )
     .eq('student_id', id)
     .order('assessed_at', { ascending: false })
@@ -31,7 +31,6 @@ export default async function StudentAvaliacoesPage({ params }: Props) {
   const list = (assessments ?? []) as Assessment[]
   const latest = list[0]
 
-  // Comparar primeira e última avaliação para delta de peso
   const oldest = list.length > 1 ? list[list.length - 1] : null
   const weightDelta =
     latest?.weight !== null && latest?.weight !== undefined &&
@@ -66,10 +65,10 @@ export default async function StudentAvaliacoesPage({ params }: Props) {
           </h1>
           <p className="text-text-secondary text-sm mt-1">{student.full_name}</p>
         </div>
-        <NewAssessmentForm studentId={id} />
+        <NewAssessmentForm studentId={id} birthDate={student.birth_date ?? null} />
       </div>
 
-      {/* Stats rápidas (só se houver avaliações) */}
+      {/* Stats rápidas */}
       {list.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
@@ -86,9 +85,9 @@ export default async function StudentAvaliacoesPage({ params }: Props) {
               color: 'text-purple-400',
             },
             {
-              label: '% Gordura atual',
-              value: latest?.body_fat !== null && latest?.body_fat !== undefined
-                ? `${latest.body_fat}%`
+              label: 'IMC atual',
+              value: latest?.bmi !== null && latest?.bmi !== undefined
+                ? String(latest.bmi)
                 : '—',
               color: 'text-brand-lime',
             },
