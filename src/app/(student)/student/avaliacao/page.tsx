@@ -91,7 +91,7 @@ export default async function AvaliacaoPage() {
             Nenhuma avaliação registrada ainda.
           </p>
           <p className="text-xs text-text-secondary/60 mt-1">
-            Clique em "Nova Avaliação" para registrar seus dados.
+            Clique em &quot;Nova Avaliação&quot; para registrar seus dados.
           </p>
         </div>
       )}
