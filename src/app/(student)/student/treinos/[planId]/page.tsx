@@ -1,4 +1,3 @@
-import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { getWorkoutPlan, type WorkoutPlanWithRoutines } from '@/actions/workout-plans'
 import Link from 'next/link'
@@ -167,7 +166,7 @@ export default async function StudentPlanPage({ params }: Props) {
 
             {/* Blocos de exercícios */}
             <div className="space-y-2">
-              {blocks.map((block, bi) => {
+              {blocks.map((block) => {
                 if (block.type === 'single') {
                   return <ExerciseBlock key={block.item.id} item={block.item} />
                 }

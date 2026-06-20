@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { Trash2, GripVertical, Link2, Unlink, ChevronDown, ChevronUp } from 'lucide-react'
+import { Trash2, GripVertical, Unlink, ChevronDown, ChevronUp } from 'lucide-react'
 import { updateWorkoutItem, removeWorkoutItem, ungroupWorkoutItems } from '@/actions/workout-items'
 import { muscleColor } from '@/lib/exercise-config'
 
@@ -73,7 +73,6 @@ export function WorkoutItemCard({ item, selected, onToggleSelect, onRemove, drag
   }
 
   const ex = item.exercises
-  const comboLabel: Record<string, string> = { biset: 'BI-SET', triset: 'TRI-SET', circuit: 'CIRCUITO' }
 
   return (
     <div className={`rounded-xl border transition-all ${

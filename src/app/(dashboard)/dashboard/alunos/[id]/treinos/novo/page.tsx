@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound, redirect } from 'next/navigation'
 import { createWorkoutPlan } from '@/actions/workout-plans'
-import { WorkoutBuilder } from '../_components/WorkoutBuilder'
 import Link from 'next/link'
 import { ArrowLeft, Calendar, ClipboardList } from 'lucide-react'
 

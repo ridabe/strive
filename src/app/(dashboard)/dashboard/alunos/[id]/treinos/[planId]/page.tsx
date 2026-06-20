@@ -1,10 +1,8 @@
-import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { getWorkoutPlan } from '@/actions/workout-plans'
 import { WorkoutBuilder } from '../_components/WorkoutBuilder'
 import Link from 'next/link'
 import { ArrowLeft, ClipboardList, Calendar, Target } from 'lucide-react'
-import { joinOne } from '@/lib/supabase/join'
 
 type Props = { params: Promise<{ id: string; planId: string }> }
 

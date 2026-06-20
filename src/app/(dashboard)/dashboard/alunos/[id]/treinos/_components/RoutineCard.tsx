@@ -171,11 +171,11 @@ export function RoutineCard({ routine, studentId, planId, onDelete }: Props) {
             {/* Blocos de exercícios */}
             {blocks.length === 0 && (
               <p className="text-xs text-text-secondary text-center py-4">
-                Nenhum exercício ainda. Clique em "+ Exercício" para adicionar.
+                Nenhum exercício ainda. Clique em &quot;+ Exercício&quot; para adicionar.
               </p>
             )}
 
-            {blocks.map((block, bi) => {
+            {blocks.map((block) => {
               if (block.type === 'single') {
                 return (
                   <WorkoutItemCard
