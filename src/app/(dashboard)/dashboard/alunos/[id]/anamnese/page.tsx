@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { ArrowLeft, CheckCircle2, Clock } from 'lucide-react'
+import { CheckCircle2, Clock } from 'lucide-react'
 import { AnamneseForm, type AnamneseField } from './anamnese-form'
 
 interface Props {

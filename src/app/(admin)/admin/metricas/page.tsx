@@ -348,8 +348,6 @@ export default async function MetricasPage() {
           <div className="divide-y divide-surface-border">
             {topClients.map((tenant, i) => {
               const count   = countByTenant[tenant.id] ?? 0
-              const maxCount = countByTenant[topClients[0].id] ?? 1
-              const pctVal  = Math.round((count / maxCount) * 100)
               const usagePct = Math.round((count / tenant.max_students) * 100)
 
               return (

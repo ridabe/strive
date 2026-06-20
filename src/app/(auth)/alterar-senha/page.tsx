@@ -3,7 +3,6 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { changePassword } from '@/app/actions/password'
 import { LogoVertical } from '@/components/logo'
-import { AuthSubmitButton } from '@/components/auth/submit-button'
 import { ShieldCheck, ArrowLeft } from 'lucide-react'
 
 export default async function AlterarSenhaPage({

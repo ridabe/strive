@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useRef, useTransition } from 'react'
-import { useRouter } from 'next/navigation'
 import { Pencil, X, Upload, Loader2, Check } from 'lucide-react'
 import Image from 'next/image'
 import { updateClient } from '@/app/actions/clients'
@@ -30,7 +29,6 @@ interface Props {
 const PLAN_LABELS = { free: 'Free', pro: 'Pro', premium: 'Premium' }
 
 export function ClientEditForm({ tenant, profile }: Props) {
-  const router = useRouter()
   const [editing, setEditing] = useState(false)
   const [preview, setPreview] = useState<string | null>(null)
   const [error, setError]     = useState<string | null>(null)
