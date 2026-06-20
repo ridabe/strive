@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { uploadSharedFile, deleteSharedFile } from './actions'
+import { createSignedUploadUrl, saveSharedFile, deleteSharedFile } from './actions'
 import {
   Plus, X, Loader2, Upload, FileText, ImageIcon,
   Trash2, Users, User, AlertTriangle, CheckCircle2,
@@ -33,19 +33,28 @@ interface Props {
 
 function fmtSize(bytes: number | null) {
   if (!bytes) return ''
-  if (bytes < 1024) return `${bytes} B`
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
 
+const ALLOWED_MIME: Record<string, 'pdf' | 'image'> = {
+  'application/pdf': 'pdf',
+  'image/jpeg':      'image',
+  'image/jpg':       'image',
+  'image/png':       'image',
+  'image/webp':      'image',
+  'image/gif':       'image',
+}
+
 export function ArquivosClient({ students, files: initialFiles }: Props) {
-  const [files, setFiles]     = useState<SharedFile[]>(initialFiles)
-  const [open, setOpen]       = useState(false)
+  const [files, setFiles]       = useState<SharedFile[]>(initialFiles)
+  const [open, setOpen]         = useState(false)
   const [isPending, setPending] = useState(false)
+  const [progress, setProgress] = useState<string | null>(null)
   const [deleting, setDeleting] = useState<string | null>(null)
-  const [error, setError]     = useState<string | null>(null)
-  const [success, setSuccess] = useState(false)
-  const [preview, setPreview] = useState<{ name: string; type: string } | null>(null)
+  const [error, setError]       = useState<string | null>(null)
+  const [success, setSuccess]   = useState(false)
+  const [preview, setPreview]   = useState<{ name: string; type: string; size: number } | null>(null)
   const formRef = useRef<HTMLFormElement>(null)
   const fileRef = useRef<HTMLInputElement>(null)
 
@@ -54,37 +63,109 @@ export function ArquivosClient({ students, files: initialFiles }: Props) {
     setError(null)
     setSuccess(false)
     setPreview(null)
+    setProgress(null)
   }
 
   function closeModal() {
     setOpen(false)
     setPreview(null)
+    setProgress(null)
     formRef.current?.reset()
   }
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0]
-    if (f) setPreview({ name: f.name, type: f.type })
+    if (f) setPreview({ name: f.name, type: f.type, size: f.size })
     else   setPreview(null)
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    const form = e.currentTarget
+    const fileInput = fileRef.current
+    const file = fileInput?.files?.[0]
+
+    if (!file) { setError('Selecione um arquivo'); return }
+    if (!ALLOWED_MIME[file.type]) {
+      setError('Tipo não suportado. Use PDF ou imagem (JPG, PNG, WEBP).')
+      return
+    }
+    if (file.size > 50 * 1024 * 1024) {
+      setError('Arquivo deve ter no máximo 50 MB')
+      return
+    }
+
+    const title       = (form.querySelector('[name=title]') as HTMLInputElement)?.value.trim()
+    const description = (form.querySelector('[name=description]') as HTMLInputElement)?.value.trim() || null
+    const studentId   = (form.querySelector('[name=student_id]') as HTMLSelectElement)?.value || null
+
+    if (!title) { setError('Título obrigatório'); return }
+
     setPending(true)
     setError(null)
+    setProgress('Preparando upload…')
+
     try {
-      const fd  = new FormData(e.currentTarget)
-      const res = await uploadSharedFile(fd)
-      if (res.error) {
-        setError(res.error)
-      } else {
-        setSuccess(true)
-        closeModal()
+      // Passo 1 — gera URL assinada (chamada leve, sem arquivo)
+      const urlRes = await createSignedUploadUrl(file.name, file.type)
+      if ('error' in urlRes && urlRes.error) {
+        setError(urlRes.error)
+        return
       }
+      const { signedUrl, path, fileType } = urlRes as { signedUrl: string; path: string; fileType: 'pdf' | 'image' }
+
+      // Passo 2 — envia o arquivo direto ao Supabase (bypass Vercel)
+      setProgress('Enviando arquivo…')
+      const uploadRes = await fetch(signedUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': file.type },
+        body: file,
+      })
+
+      if (!uploadRes.ok) {
+        setError(`Erro no upload: ${uploadRes.statusText}`)
+        return
+      }
+
+      // Passo 3 — salva metadados no banco
+      setProgress('Salvando metadados…')
+      const saveRes = await saveSharedFile({
+        path,
+        title,
+        description,
+        student_id: studentId,
+        file_type:  fileType,
+        file_name:  file.name,
+        file_size:  file.size,
+      })
+
+      if (saveRes.error) {
+        setError(saveRes.error)
+        return
+      }
+
+      // Atualização optimista da lista
+      const student = students.find(s => s.id === studentId) ?? null
+      setFiles(prev => [{
+        id:          Math.random().toString(),
+        title,
+        description,
+        file_url:    (saveRes as { publicUrl?: string }).publicUrl ?? '',
+        file_type:   fileType,
+        file_name:   file.name,
+        file_size:   file.size,
+        created_at:  new Date().toISOString(),
+        student_id:  studentId,
+        students:    student ? { full_name: student.full_name } : null,
+      }, ...prev])
+
+      setSuccess(true)
+      closeModal()
     } catch {
-      setError('Erro ao enviar arquivo. Tente novamente.')
+      setError('Erro inesperado. Tente novamente.')
     } finally {
       setPending(false)
+      setProgress(null)
     }
   }
 
@@ -92,9 +173,7 @@ export function ArquivosClient({ students, files: initialFiles }: Props) {
     setDeleting(id)
     try {
       const res = await deleteSharedFile(id)
-      if (!res.error) {
-        setFiles(prev => prev.filter(f => f.id !== id))
-      }
+      if (!res.error) setFiles(prev => prev.filter(f => f.id !== id))
     } finally {
       setDeleting(null)
     }
@@ -226,14 +305,18 @@ export function ArquivosClient({ students, files: initialFiles }: Props) {
       {/* Modal de upload */}
       {open && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={closeModal} />
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={!isPending ? closeModal : undefined} />
           <div className="relative bg-surface border border-surface-border rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-5">
 
             <div className="flex items-center justify-between">
               <h2 className="font-display text-lg font-bold text-text-primary uppercase tracking-widest">
                 Enviar Arquivo
               </h2>
-              <button onClick={closeModal} className="text-text-secondary hover:text-text-primary transition-colors">
+              <button
+                onClick={closeModal}
+                disabled={isPending}
+                className="text-text-secondary hover:text-text-primary transition-colors disabled:opacity-40"
+              >
                 <X size={18} />
               </button>
             </div>
@@ -243,7 +326,7 @@ export function ArquivosClient({ students, files: initialFiles }: Props) {
               {/* Arquivo */}
               <div className="space-y-1.5">
                 <label className="text-xs font-body font-medium text-text-secondary uppercase tracking-widest">
-                  Arquivo <span className="text-text-secondary/50">(PDF ou imagem, máx. 20 MB)</span>
+                  Arquivo <span className="text-text-secondary/50">(PDF ou imagem, máx. 50 MB)</span>
                 </label>
                 <label className={`flex flex-col items-center justify-center gap-2 p-5 rounded-xl border-2 border-dashed cursor-pointer transition-colors ${
                   preview
@@ -272,7 +355,7 @@ export function ArquivosClient({ students, files: initialFiles }: Props) {
                         }
                       </div>
                       <p className="text-sm text-text-primary font-medium text-center truncate max-w-xs">{preview.name}</p>
-                      <p className="text-xs text-brand-lime">Clique para trocar</p>
+                      <p className="text-xs text-text-secondary">{fmtSize(preview.size)} · <span className="text-brand-lime">Clique para trocar</span></p>
                     </>
                   ) : (
                     <>
@@ -339,11 +422,25 @@ export function ArquivosClient({ students, files: initialFiles }: Props) {
                 </div>
               )}
 
+              {/* Barra de progresso durante upload */}
+              {isPending && progress && (
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-2 text-xs text-text-secondary">
+                    <Loader2 size={12} className="animate-spin" />
+                    {progress}
+                  </div>
+                  <div className="w-full h-1 bg-surface-border rounded-full overflow-hidden">
+                    <div className="h-full bg-brand-lime rounded-full animate-pulse" style={{ width: '60%' }} />
+                  </div>
+                </div>
+              )}
+
               <div className="flex gap-3 pt-1">
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="flex-1 px-4 py-2.5 rounded-lg border border-surface-border text-sm text-text-secondary hover:text-text-primary transition-colors"
+                  disabled={isPending}
+                  className="flex-1 px-4 py-2.5 rounded-lg border border-surface-border text-sm text-text-secondary hover:text-text-primary transition-colors disabled:opacity-40"
                 >
                   Cancelar
                 </button>
