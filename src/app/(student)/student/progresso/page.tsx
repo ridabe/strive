@@ -8,12 +8,11 @@ export default async function ProgressoPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  // Busca o student vinculado ao usuário
   const { data: student } = await supabase
     .from('students')
     .select('id, full_name')
     .eq('user_id', user.id)
-    .single()
+    .maybeSingle()
 
   if (!student) redirect('/student')
 
@@ -25,95 +24,82 @@ export default async function ProgressoPage() {
 
   const list = (entries ?? []) as ProgressEntry[]
 
-  // Stats: peso mais recente e mais antigo (para delta)
-  const latest  = list[0]
   const withWeight = list.filter((e) => e.weight !== null)
-
   const weightDelta =
     withWeight.length > 1
       ? +(withWeight[0].weight! - withWeight[withWeight.length - 1].weight!).toFixed(1)
       : null
 
+  const totalPhotos = list.reduce((acc, e) => acc + e.photo_urls.length, 0)
+
   return (
-    <div className="p-6 md:p-8 space-y-6 max-w-2xl">
+    <div className="p-5 md:p-8 space-y-6 max-w-2xl">
 
       {/* Header */}
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex items-start gap-3">
+        <div className="w-10 h-10 rounded-xl bg-brand-lime/10 border border-brand-lime/20 flex items-center justify-center flex-shrink-0">
+          <TrendingUp size={18} className="text-brand-lime" />
+        </div>
         <div>
-          <h1 className="font-display text-2xl font-bold text-text-primary uppercase tracking-widest">
+          <h1 className="font-display text-xl font-bold text-text-primary uppercase tracking-widest">
             Meu Progresso
           </h1>
-          <p className="text-text-secondary text-sm mt-1">
-            Registre seu peso, fotos e notas ao longo do tempo.
+          <p className="text-sm text-text-secondary mt-0.5">
+            Registre peso, fotos e notas. Visível para seu personal.
           </p>
         </div>
-        <NewProgressForm />
       </div>
 
       {/* Stats */}
       {list.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          <div className="bg-surface border border-surface-border rounded-xl p-4">
-            <p className="font-display font-bold text-2xl text-text-primary">
-              {list.length}
-            </p>
-            <p className="text-xs text-text-secondary mt-0.5">
-              registro{list.length !== 1 ? 's' : ''}
-            </p>
+        <div className="grid grid-cols-3 gap-3">
+          <div className="bg-surface border border-surface-border rounded-2xl p-4">
+            <p className="text-2xl font-display font-bold text-text-primary">{list.length}</p>
+            <p className="text-xs text-text-secondary mt-0.5">registro{list.length !== 1 ? 's' : ''}</p>
           </div>
-
-          <div className="bg-surface border border-surface-border rounded-xl p-4">
-            <p className="font-display font-bold text-2xl text-brand-lime">
-              {latest?.weight !== null && latest?.weight !== undefined
-                ? `${latest.weight} kg`
-                : '—'}
-            </p>
-            <p className="text-xs text-text-secondary mt-0.5">peso atual</p>
-          </div>
-
-          <div className="bg-surface border border-surface-border rounded-xl p-4">
-            <p className={`font-display font-bold text-2xl ${
-              weightDelta === null
-                ? 'text-text-secondary'
-                : weightDelta <= 0
-                ? 'text-status-success'
-                : 'text-status-warning'
+          <div className="bg-surface border border-surface-border rounded-2xl p-4">
+            <p className={`text-2xl font-display font-bold ${
+              weightDelta === null ? 'text-text-secondary'
+              : weightDelta <= 0 ? 'text-status-success'
+              : 'text-status-warning'
             }`}>
               {weightDelta !== null
                 ? `${weightDelta > 0 ? '+' : ''}${weightDelta} kg`
-                : '—'}
+                : list[0]?.weight !== null && list[0]?.weight !== undefined
+                  ? `${list[0].weight} kg`
+                  : '—'}
             </p>
-            <p className="text-xs text-text-secondary mt-0.5">variação total</p>
+            <p className="text-xs text-text-secondary mt-0.5">
+              {weightDelta !== null ? 'variação total' : 'peso atual'}
+            </p>
+          </div>
+          <div className="bg-surface border border-surface-border rounded-2xl p-4">
+            <p className="text-2xl font-display font-bold text-text-primary">{totalPhotos}</p>
+            <p className="text-xs text-text-secondary mt-0.5">foto{totalPhotos !== 1 ? 's' : ''}</p>
           </div>
         </div>
       )}
 
-      {/* Lista de registros */}
-      {list.length === 0 ? (
-        <div className="bg-surface border border-surface-border rounded-xl p-12 text-center space-y-3">
-          <div className="w-12 h-12 rounded-xl bg-brand-lime/10 border border-brand-lime/20 flex items-center justify-center mx-auto">
-            <TrendingUp size={22} className="text-brand-lime" />
-          </div>
-          <div>
-            <p className="font-body font-medium text-text-primary">
-              Nenhum registro ainda
-            </p>
-            <p className="text-sm text-text-secondary mt-1">
-              Clique em &quot;Novo Registro&quot; para começar a acompanhar sua evolução.
-            </p>
-          </div>
-        </div>
-      ) : (
+      {/* Botão / Form */}
+      <NewProgressForm />
+
+      {/* Histórico */}
+      {list.length > 0 ? (
         <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <TrendingUp size={14} className="text-text-secondary" />
-            <h2 className="text-xs font-body font-semibold text-text-secondary uppercase tracking-widest">
-              Histórico ({list.length})
-            </h2>
-          </div>
+          <p className="text-xs font-bold text-text-secondary uppercase tracking-widest">
+            Histórico ({list.length})
+          </p>
           {list.map((entry) => (
             <ProgressEntryCard key={entry.id} entry={entry} />
           ))}
+        </div>
+      ) : (
+        <div className="bg-surface border border-surface-border rounded-2xl p-10 text-center">
+          <TrendingUp size={32} className="text-text-secondary/30 mx-auto mb-3" />
+          <p className="text-sm text-text-secondary">Nenhum registro ainda.</p>
+          <p className="text-xs text-text-secondary/60 mt-1">
+            Clique em &quot;Novo Registro&quot; para começar a acompanhar sua evolução.
+          </p>
         </div>
       )}
     </div>
