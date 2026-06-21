@@ -42,6 +42,7 @@ function toWorkoutItemData(item: ExtraWorkoutItemData): WorkoutItemData {
     load: item.load,
     count_type: item.count_type,
     notes: item.notes,
+    cadence: null,
     exercises: item.exercises,
   }
 }

@@ -17,6 +17,7 @@ export type WorkoutItemData = {
   load: string | null
   count_type: string
   notes: string | null
+  cadence: string | null
   exercises: {
     id: string
     name: string
@@ -52,6 +53,7 @@ export function WorkoutItemCard({ item, selected, onToggleSelect, onRemove, drag
     reps:         item.reps ?? '10-12',
     load:         item.load ?? '',
     rest_seconds: item.rest_seconds?.toString() ?? '60',
+    cadence:      item.cadence ?? '',
     notes:        item.notes ?? '',
   })
 
@@ -199,6 +201,13 @@ export function WorkoutItemCard({ item, selected, onToggleSelect, onRemove, drag
               min={0}
             />
           </div>
+          <FieldInput
+            label="Cadência (ex: 4-1-2-0)"
+            value={fields.cadence}
+            onChange={(v) => setFields((f) => ({ ...f, cadence: v }))}
+            onBlur={() => saveField('cadence', fields.cadence)}
+            placeholder="4-1-2-0"
+          />
           <FieldInput
             label="Observações"
             value={fields.notes}

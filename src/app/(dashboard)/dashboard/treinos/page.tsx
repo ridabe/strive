@@ -30,9 +30,10 @@ export default async function TreinosPage() {
         <Link
           href="/dashboard/alunos"
           className="flex items-center gap-2 bg-brand-lime text-background font-body font-semibold text-sm px-4 py-2.5 rounded-lg hover:bg-brand-lime/90 transition-colors flex-shrink-0"
+          title="Selecione um aluno para criar o plano"
         >
           <Plus size={16} />
-          Novo plano
+          Selecionar Aluno
         </Link>
       </div>
 

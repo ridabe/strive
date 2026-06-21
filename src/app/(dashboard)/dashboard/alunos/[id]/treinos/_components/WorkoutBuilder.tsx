@@ -25,6 +25,7 @@ type Routine = {
     load: string | null
     count_type: string
     notes: string | null
+    cadence: string | null
     exercises: {
       id: string
       name: string
