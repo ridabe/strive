@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Play, Clock, Target, Link2, Zap, CheckCircle, Film } from 'lucide-react'
+import { ArrowLeft, Play, Clock, Target, Link2, CheckCircle, Zap } from 'lucide-react'
 import { VideoModal } from '@/components/student/VideoModal'
 import { muscleColor } from '@/lib/exercise-config'
 import type { WorkoutPlanWithRoutines } from '@/actions/workout-plans'
@@ -183,7 +183,16 @@ export function PlanViewClient({ plan }: { plan: WorkoutPlanWithRoutines }) {
         )}
       </div>
 
-      {/* Rotinas */}
+      {/* Botão único de iniciar treino */}
+      <Link
+        href={`/student/treinos/${plan.id}/executar`}
+        className="flex items-center justify-center gap-2 bg-brand-lime text-background font-display font-bold text-sm uppercase tracking-widest py-4 rounded-2xl hover:bg-brand-lime/90 transition-colors"
+      >
+        <Zap size={16} />
+        Iniciar Treino
+      </Link>
+
+      {/* Rotinas — apenas visualização */}
       {plan.workout_routines.map((routine) => {
         const blocks = groupItemsByCombo(routine.workout_items)
         return (
@@ -201,13 +210,6 @@ export function PlanViewClient({ plan }: { plan: WorkoutPlanWithRoutines }) {
               <span className="text-xs text-text-secondary">
                 {routine.workout_items.length} exercício{routine.workout_items.length !== 1 ? 's' : ''}
               </span>
-              <Link
-                href={`/student/treinos/${plan.id}/executar/${routine.id}`}
-                className="ml-auto flex items-center gap-1.5 bg-brand-lime text-background font-semibold text-xs px-4 py-2 rounded-xl hover:bg-brand-lime/90 transition-colors"
-              >
-                <Zap size={12} />
-                Iniciar Treino
-              </Link>
             </div>
 
             <div className="space-y-2">

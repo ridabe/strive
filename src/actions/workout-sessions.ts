@@ -21,7 +21,7 @@ async function getStudentCtx() {
 // ─── Iniciar sessão ───────────────────────────────────────────────────────────
 export async function startWorkoutSession(
   workoutPlanId: string,
-  workoutRoutineId: string
+  workoutRoutineId: string | null = null
 ) {
   const ctx = await getStudentCtx()
   if (!ctx) return { error: 'Não autenticado' }
