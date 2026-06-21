@@ -261,48 +261,51 @@ export function WorkoutExecutionClient({
             return (
               <div
                 key={item.id}
-                className={`bg-surface rounded-xl overflow-hidden ${
+                className={`bg-surface rounded-xl p-3 ${
                   isCombo
                     ? 'border-l-[3px] border-l-brand-lime border border-surface-border'
                     : 'border border-surface-border'
                 }`}
               >
-                {/* Video thumbnail */}
-                {e.video_url && (
-                  <button
-                    onClick={() => setVideoModal({ url: e.video_url!, name: e.name })}
-                    className="relative w-full aspect-video bg-zinc-900 group block"
-                  >
-                    <video
-                      src={e.video_url}
-                      preload="metadata"
-                      muted
-                      playsInline
-                      className="w-full h-full object-cover"
-                      onLoadedMetadata={(ev) => { ev.currentTarget.currentTime = 0.1 }}
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/25 transition-colors">
-                      <div className="w-12 h-12 rounded-full bg-brand-lime flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
-                        <Play size={20} className="text-background ml-0.5" fill="currentColor" />
-                      </div>
+                <div className="flex items-start gap-3">
+                  {/* Ícone + info à esquerda */}
+                  <div className="flex items-start gap-2 flex-1 min-w-0">
+                    <div className="w-7 h-7 rounded-lg bg-brand-lime/10 border border-brand-lime/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      {letter
+                        ? <span className="text-[11px] font-bold text-brand-lime">{letter}</span>
+                        : <Dumbbell size={12} className="text-brand-lime" />
+                      }
                     </div>
-                  </button>
-                )}
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-text-primary leading-snug">{e.name}</p>
+                      <p className="text-xs text-text-secondary">{countLine(item)}</p>
+                      <span className={`inline-block mt-1 text-[10px] font-medium px-1.5 py-0.5 rounded-md border ${muscleColor(e.muscle_group)}`}>
+                        {e.muscle_group}
+                      </span>
+                    </div>
+                  </div>
 
-                <div className="flex items-center gap-3 px-4 py-3">
-                  <div className="w-7 h-7 rounded-lg bg-brand-lime/10 border border-brand-lime/20 flex items-center justify-center flex-shrink-0">
-                    {letter
-                      ? <span className="text-[11px] font-bold text-brand-lime">{letter}</span>
-                      : <Dumbbell size={12} className="text-brand-lime" />
-                    }
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-text-primary truncate">{e.name}</p>
-                    <p className="text-xs text-text-secondary">{countLine(item)}</p>
-                  </div>
-                  <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-md border ${muscleColor(e.muscle_group)}`}>
-                    {e.muscle_group}
-                  </span>
+                  {/* Thumbnail à direita */}
+                  {e.video_url && (
+                    <button
+                      onClick={() => setVideoModal({ url: e.video_url!, name: e.name })}
+                      className="relative w-24 h-16 rounded-xl overflow-hidden bg-zinc-900 flex-shrink-0 group"
+                    >
+                      <video
+                        src={e.video_url}
+                        preload="metadata"
+                        muted
+                        playsInline
+                        className="w-full h-full object-cover"
+                        onLoadedMetadata={(ev) => { ev.currentTarget.currentTime = 0.1 }}
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/25 transition-colors">
+                        <div className="w-7 h-7 rounded-full bg-brand-lime flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                          <Play size={12} className="text-background ml-0.5" fill="currentColor" />
+                        </div>
+                      </div>
+                    </button>
+                  )}
                 </div>
               </div>
             )

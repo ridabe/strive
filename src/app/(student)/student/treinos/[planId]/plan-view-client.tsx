@@ -39,11 +39,11 @@ function groupItemsByCombo(items: WorkoutItem[]): ItemBlock[] {
   return blocks
 }
 
-function VideoThumbnail({ url, name, onClick }: { url: string; name: string; onClick: () => void }) {
+function VideoThumbnail({ url, onClick }: { url: string; name: string; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="relative w-full aspect-video rounded-t-xl overflow-hidden bg-zinc-900 group block"
+      className="relative w-28 h-20 rounded-xl overflow-hidden bg-zinc-900 flex-shrink-0 group"
     >
       <video
         src={url}
@@ -54,12 +54,9 @@ function VideoThumbnail({ url, name, onClick }: { url: string; name: string; onC
         onLoadedMetadata={(e) => { e.currentTarget.currentTime = 0.1 }}
       />
       <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/25 transition-colors">
-        <div className="w-14 h-14 rounded-full bg-brand-lime flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
-          <Play size={22} className="text-background ml-1" fill="currentColor" />
+        <div className="w-8 h-8 rounded-full bg-brand-lime flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+          <Play size={14} className="text-background ml-0.5" fill="currentColor" />
         </div>
-      </div>
-      <div className="absolute bottom-0 left-0 right-0 px-3 py-2 bg-gradient-to-t from-black/70 to-transparent">
-        <p className="text-white text-xs font-semibold truncate">{name}</p>
       </div>
     </button>
   )
@@ -85,67 +82,51 @@ function ExerciseBlock({
         : `${item.sets ?? '?'}× ${item.reps ?? '?'} reps`
 
   return (
-    <div className="bg-background border border-surface-border rounded-xl overflow-hidden">
-      {ex.video_url && (
-        <VideoThumbnail
-          url={ex.video_url}
-          name={ex.name}
-          onClick={() => onVideoClick(ex.video_url!, ex.name)}
-        />
-      )}
-
-      <div className="p-4 space-y-3">
-        <div className="flex items-start gap-3">
-          <div className="flex-1 min-w-0">
+    <div className="bg-background border border-surface-border rounded-xl p-4">
+      <div className="flex items-start gap-3">
+        {/* Info à esquerda */}
+        <div className="flex-1 min-w-0 space-y-2">
+          <div>
             <div className="flex items-center gap-2 mb-0.5">
               {comboLetter && (
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-brand-lime text-background text-xs font-bold flex items-center justify-center">
                   {comboLetter}
                 </span>
               )}
-              <p className="font-body font-semibold text-text-primary">{ex.name}</p>
+              <p className="font-body font-semibold text-text-primary leading-snug">{ex.name}</p>
             </div>
             <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-md border ${muscleColor(ex.muscle_group)}`}>
               {ex.muscle_group}
             </span>
           </div>
+
+          <div className="space-y-1 text-sm text-text-secondary">
+            <p><span className="font-semibold text-text-primary">Séries:</span> {countLine}</p>
+            {item.load && (
+              <p><span className="font-semibold text-text-primary">Carga:</span> {item.load}</p>
+            )}
+            {item.rest_seconds != null && item.rest_seconds > 0 && (
+              <p className="flex items-center gap-1">
+                <Clock size={10} />
+                <span className="font-semibold text-text-primary">Intervalo:</span> {item.rest_seconds}s
+              </p>
+            )}
+          </div>
+
+          {item.notes && (
+            <p className="text-xs text-text-secondary italic border-l-2 border-brand-lime/30 pl-2">
+              {item.notes}
+            </p>
+          )}
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          <span className="text-sm font-semibold text-text-primary bg-surface border border-surface-border rounded-lg px-3 py-1.5">
-            {countLine}
-          </span>
-          {item.load && (
-            <span className="text-sm text-text-secondary bg-surface border border-surface-border rounded-lg px-3 py-1.5">
-              {item.load}
-            </span>
-          )}
-          {item.rest_seconds != null && item.rest_seconds > 0 && (
-            <span className="flex items-center gap-1 text-sm text-text-secondary bg-surface border border-surface-border rounded-lg px-3 py-1.5">
-              <Clock size={11} />
-              {item.rest_seconds}s descanso
-            </span>
-          )}
-        </div>
-
-        {item.notes && (
-          <p className="text-xs text-text-secondary italic border-l-2 border-brand-lime/30 pl-3">
-            {item.notes}
-          </p>
-        )}
-
-        {ex.instructions && (
-          <p className="text-xs text-text-secondary leading-relaxed">{ex.instructions}</p>
-        )}
-
+        {/* Thumbnail à direita */}
         {ex.video_url && (
-          <button
+          <VideoThumbnail
+            url={ex.video_url}
+            name={ex.name}
             onClick={() => onVideoClick(ex.video_url!, ex.name)}
-            className="flex items-center gap-1.5 text-xs text-brand-lime hover:underline"
-          >
-            <Film size={11} />
-            Ver demonstração em tela cheia
-          </button>
+          />
         )}
       </div>
     </div>
