@@ -1,7 +1,9 @@
 import { notFound } from 'next/navigation'
 import { getWorkoutPlan, type WorkoutPlanWithRoutines } from '@/actions/workout-plans'
 import Link from 'next/link'
-import { ArrowLeft, Play, Clock, Target, Dumbbell, Link2 } from 'lucide-react'
+import { Suspense } from 'react'
+import { ArrowLeft, Play, Clock, Target, Dumbbell, Link2, Zap } from 'lucide-react'
+import { ConcludedBanner } from './concluded-banner'
 import { muscleColor } from '@/lib/exercise-config'
 
 type Props = { params: Promise<{ planId: string }> }
@@ -116,6 +118,10 @@ export default async function StudentPlanPage({ params }: Props) {
         Meus treinos
       </Link>
 
+      <Suspense>
+        <ConcludedBanner />
+      </Suspense>
+
       {/* Cabeçalho do plano */}
       <div className="bg-surface border border-surface-border rounded-2xl p-4 space-y-2">
         <h1 className="font-display text-lg font-bold text-text-primary uppercase tracking-widest">
@@ -149,8 +155,8 @@ export default async function StudentPlanPage({ params }: Props) {
         return (
           <div key={routine.id} className="space-y-3">
             {/* Header da rotina */}
-            <div className="flex items-center gap-2">
-              <div className="w-1.5 h-5 bg-brand-lime rounded-full" />
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="w-1.5 h-5 bg-brand-lime rounded-full flex-shrink-0" />
               <h2 className="font-display font-bold text-text-primary uppercase tracking-widest text-sm">
                 {routine.name}
               </h2>
@@ -159,9 +165,16 @@ export default async function StudentPlanPage({ params }: Props) {
                   {DAY_LABELS[routine.day_of_week]}
                 </span>
               )}
-              <span className="text-xs text-text-secondary ml-auto">
+              <span className="text-xs text-text-secondary">
                 {routine.workout_items.length} exercício{routine.workout_items.length !== 1 ? 's' : ''}
               </span>
+              <Link
+                href={`/student/treinos/${plan.id}/executar/${routine.id}`}
+                className="ml-auto flex items-center gap-1.5 bg-brand-lime text-background font-semibold text-xs px-3 py-1.5 rounded-lg hover:bg-brand-lime/90 transition-colors"
+              >
+                <Zap size={12} />
+                Iniciar
+              </Link>
             </div>
 
             {/* Blocos de exercícios */}
