@@ -158,6 +158,18 @@ export async function getStudentSessionsForPersonal(studentId: string, limit = 3
   return data ?? []
 }
 
+// ─── Total de treinos concluídos pelo aluno ───────────────────────────────────
+export async function getStudentWorkoutCount() {
+  const ctx = await getStudentCtx()
+  if (!ctx) return 0
+  const { count } = await ctx.supabase
+    .from('workout_sessions')
+    .select('id', { count: 'exact', head: true })
+    .eq('student_id', ctx.studentId)
+    .not('finished_at', 'is', null)
+  return count ?? 0
+}
+
 // ─── Evolução de carga por exercício (aluno) ──────────────────────────────────
 export async function getExerciseLoadHistory(exerciseId: string, limit = 10) {
   const ctx = await getStudentCtx()

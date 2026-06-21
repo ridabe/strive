@@ -4,9 +4,9 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   ArrowLeft, Play, Pause, CheckCircle2, ChevronLeft, ChevronRight,
-  Timer, Dumbbell, Link2, RotateCcw, Flag, Clock, Film,
+  Timer, Dumbbell, Link2, RotateCcw, Clock, Film, Trophy, Home,
 } from 'lucide-react'
-import { startWorkoutSession, finishWorkoutSession, saveSessionExercise } from '@/actions/workout-sessions'
+import { startWorkoutSession, finishWorkoutSession, saveSessionExercise, getStudentWorkoutCount } from '@/actions/workout-sessions'
 import { muscleColor } from '@/lib/exercise-config'
 import type { WorkoutPlanWithRoutines } from '@/actions/workout-plans'
 import { VideoModal } from '@/components/student/VideoModal'
@@ -134,12 +134,14 @@ export function PlanExecutionClient({ plan }: { plan: WorkoutPlanWithRoutines })
   const restRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   // ── Finish modal ──────────────────────────────────────────────────────────
-  const [showFinish, setShowFinish] = useState(false)
-  const [intensity,  setIntensity]  = useState<IntensityValue>('moderado')
-  const [finalNotes, setFinalNotes] = useState('')
-  const [saving,     setSaving]     = useState(false)
-  const [error,      setError]      = useState('')
-  const [videoModal, setVideoModal] = useState<{ url: string; name: string } | null>(null)
+  const [showFinish,    setShowFinish]    = useState(false)
+  const [showDone,      setShowDone]      = useState(false)
+  const [workoutCount,  setWorkoutCount]  = useState<number | null>(null)
+  const [intensity,     setIntensity]     = useState<IntensityValue>('moderado')
+  const [finalNotes,    setFinalNotes]    = useState('')
+  const [saving,        setSaving]        = useState(false)
+  const [error,         setError]         = useState('')
+  const [videoModal,    setVideoModal]    = useState<{ url: string; name: string } | null>(null)
 
   // ─────────────────────────────────────────────────────────────────────────
   // Timer management
@@ -244,7 +246,10 @@ export function PlanExecutionClient({ plan }: { plan: WorkoutPlanWithRoutines })
       setSaving(false)
       return
     }
-    router.push(`/student/treinos/${plan.id}?concluido=1`)
+    const count = await getStudentWorkoutCount()
+    setWorkoutCount(count)
+    setShowFinish(false)
+    setShowDone(true)
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -353,16 +358,71 @@ export function PlanExecutionClient({ plan }: { plan: WorkoutPlanWithRoutines })
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // FINISH MODAL
+  // TELA DE PARABÉNS
+  // ─────────────────────────────────────────────────────────────────────────
+  if (showDone) {
+    return (
+      <div className="p-5 flex flex-col items-center justify-center min-h-[80vh] gap-6">
+        {/* Ícone central */}
+        <div className="w-24 h-24 rounded-full bg-brand-lime/10 border-2 border-brand-lime flex items-center justify-center">
+          <Trophy size={44} className="text-brand-lime" />
+        </div>
+
+        {/* Mensagem principal */}
+        <div className="text-center space-y-1">
+          <h1 className="font-display text-2xl font-bold text-text-primary uppercase tracking-widest">
+            Parabéns!
+          </h1>
+          <p className="text-text-secondary text-sm">Você completou o treino com sucesso 💪</p>
+          <p className="text-xs text-text-secondary">{plan.name}</p>
+        </div>
+
+        {/* Stats do treino */}
+        <div className="w-full grid grid-cols-2 gap-3">
+          <div className="bg-surface border border-surface-border rounded-2xl p-4 text-center space-y-1">
+            <p className="text-[10px] text-text-secondary uppercase tracking-widest">Duração</p>
+            <p className="font-display font-bold text-brand-lime text-2xl tracking-widest">{formatTime(elapsed)}</p>
+          </div>
+          <div className="bg-surface border border-surface-border rounded-2xl p-4 text-center space-y-1">
+            <p className="text-[10px] text-text-secondary uppercase tracking-widest">Exercícios</p>
+            <p className="font-display font-bold text-brand-lime text-2xl tracking-widest">{completedCount}/{total}</p>
+          </div>
+        </div>
+
+        {/* Frequência */}
+        {workoutCount !== null && (
+          <div className="w-full bg-brand-lime/5 border border-brand-lime/20 rounded-2xl p-4 text-center space-y-0.5">
+            <p className="text-xs text-text-secondary">Total de treinos concluídos</p>
+            <p className="font-display font-bold text-text-primary text-3xl">{workoutCount}</p>
+            <p className="text-xs text-brand-lime font-semibold">
+              {workoutCount === 1 ? 'Primeiro treino! Incrível!' : `Continue assim, você está evoluindo!`}
+            </p>
+          </div>
+        )}
+
+        {/* Botão */}
+        <button
+          onClick={() => router.push('/student/treinos')}
+          className="w-full flex items-center justify-center gap-2 py-4 bg-brand-lime text-background font-display font-bold text-sm uppercase tracking-widest rounded-2xl hover:bg-brand-lime/90 transition-colors"
+        >
+          <Home size={16} />
+          Ir para Meus Treinos
+        </button>
+      </div>
+    )
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // TELA DE AVALIAÇÃO (antes de salvar)
   // ─────────────────────────────────────────────────────────────────────────
   if (showFinish) {
     return (
       <div className="p-5 space-y-6">
         <div className="bg-surface border border-surface-border rounded-2xl p-5 text-center space-y-2">
-          <Flag size={32} className="text-brand-lime mx-auto" />
-          <h2 className="font-display text-lg font-bold text-text-primary uppercase tracking-widest">Treino Concluído!</h2>
-          <p className="text-text-secondary text-sm">Tempo total: <span className="text-brand-lime font-bold">{formatTime(elapsed)}</span></p>
-          <p className="text-text-secondary text-sm">{completedCount}/{total} exercícios marcados</p>
+          <RotateCcw size={28} className="text-brand-lime mx-auto" />
+          <h2 className="font-display text-lg font-bold text-text-primary uppercase tracking-widest">Quase lá!</h2>
+          <p className="text-text-secondary text-sm">Tempo: <span className="text-brand-lime font-bold">{formatTime(elapsed)}</span></p>
+          <p className="text-text-secondary text-sm">{completedCount}/{total} exercícios concluídos</p>
         </div>
 
         <div className="space-y-3">
@@ -409,7 +469,7 @@ export function PlanExecutionClient({ plan }: { plan: WorkoutPlanWithRoutines })
             disabled={saving}
             className="flex-1 py-3 bg-brand-lime text-background font-semibold rounded-xl text-sm hover:bg-brand-lime/90 transition-colors disabled:opacity-60"
           >
-            {saving ? 'Salvando...' : 'Salvar Treino'}
+            {saving ? 'Salvando...' : 'Concluir Treino'}
           </button>
         </div>
       </div>
@@ -460,14 +520,11 @@ export function PlanExecutionClient({ plan }: { plan: WorkoutPlanWithRoutines })
         {/* Grupo / rotina atual */}
         <div className="flex items-center gap-2 flex-wrap">
           <div className="w-1 h-4 bg-brand-lime rounded-full flex-shrink-0" />
-          <span className="text-[10px] font-bold text-brand-lime uppercase tracking-widest">
-            {current.routineName}
-          </span>
-          {current.item.combo_group_id && (
+          {current.item.combo_group_id ? (
             <>
               <Link2 size={11} className="text-brand-lime" />
-              <span className="text-[10px] font-bold text-brand-lime tracking-widest">
-                {current.item.combo_type?.toUpperCase() ?? 'COMBO'}
+              <span className="text-[10px] font-bold text-brand-lime uppercase tracking-widest">
+                Treino Combinado
               </span>
               {currentComboLetter && (
                 <span className="w-5 h-5 rounded-full bg-brand-lime text-background text-[10px] font-bold flex items-center justify-center">
@@ -475,6 +532,10 @@ export function PlanExecutionClient({ plan }: { plan: WorkoutPlanWithRoutines })
                 </span>
               )}
             </>
+          ) : (
+            <span className="text-[10px] font-bold text-brand-lime uppercase tracking-widest">
+              {current.routineName}
+            </span>
           )}
         </div>
 
