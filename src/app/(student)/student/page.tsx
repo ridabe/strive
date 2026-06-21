@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import {
   Dumbbell, Zap, TrendingUp, CalendarCheck,
-  ClipboardList, Activity, MessageSquare,
+  ClipboardList, Activity, MessageSquare, Target, ChevronRight,
 } from 'lucide-react'
 
 export default async function StudentHomePage() {
@@ -37,23 +37,22 @@ export default async function StudentHomePage() {
     personalName = personal?.full_name ?? null
   }
 
-  // Active plan + streak
-  let activePlan: { id: string; name: string } | null = null
+  // Active plans (via student_plan_assignments) + streak
+  type ActivePlan = { id: string; name: string; goal: string | null }
+  let activePlans: ActivePlan[] = []
   let streak = 0
 
   if (student) {
     const sixtyDaysAgo = new Date()
     sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60)
 
-    const [{ data: plan }, { data: attendanceRows }] = await Promise.all([
+    const [assignmentsResult, { data: attendanceRows }] = await Promise.all([
       supabase
-        .from('workout_plans')
-        .select('id, name')
+        .from('student_plan_assignments')
+        .select('workout_plans ( id, name, goal, status )')
         .eq('student_id', student.id)
         .eq('status', 'active')
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle(),
+        .order('assigned_at', { ascending: false }),
       supabase
         .from('attendance')
         .select('attended_at')
@@ -62,7 +61,12 @@ export default async function StudentHomePage() {
         .order('attended_at', { ascending: false }),
     ])
 
-    activePlan = plan
+    activePlans = (assignmentsResult.data ?? [])
+      .map((a) => {
+        const p = Array.isArray(a.workout_plans) ? a.workout_plans[0] : a.workout_plans
+        return p as { id: string; name: string; goal: string | null; status: string } | null
+      })
+      .filter((p): p is ActivePlan & { status: string } => p !== null && p.status === 'active')
 
     if (attendanceRows && attendanceRows.length > 0) {
       const trainedDates = new Set(
@@ -115,27 +119,41 @@ export default async function StudentHomePage() {
         </div>
       )}
 
-      {/* Active plan banner */}
-      {activePlan && (
-        <Link
-          href="/student/treinos"
-          className="group flex items-center gap-4 bg-surface border border-surface-border rounded-xl p-4 hover:border-brand-lime/30 transition-all"
-        >
-          <div className="w-10 h-10 rounded-lg bg-brand-lime/10 border border-brand-lime/20 flex items-center justify-center flex-shrink-0">
-            <Dumbbell size={18} className="text-brand-lime" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs text-text-secondary uppercase tracking-widest font-semibold">
-              Treino ativo
+      {/* Treinos ativos */}
+      {activePlans.length > 0 && (
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-semibold text-text-secondary uppercase tracking-widest">
+              Treino{activePlans.length !== 1 ? 's' : ''} ativo{activePlans.length !== 1 ? 's' : ''}
             </p>
-            <p className="text-sm font-body font-semibold text-text-primary group-hover:text-brand-lime transition-colors truncate">
-              {activePlan.name}
-            </p>
+            <Link href="/student/treinos" className="text-xs text-brand-lime hover:underline">
+              Ver todos →
+            </Link>
           </div>
-          <span className="text-xs text-brand-lime font-medium flex-shrink-0">
-            Ver →
-          </span>
-        </Link>
+          {activePlans.map((plan) => (
+            <Link
+              key={plan.id}
+              href={`/student/treinos/${plan.id}`}
+              className="group flex items-center gap-3 bg-surface border border-surface-border rounded-xl p-4 hover:border-brand-lime/30 transition-all"
+            >
+              <div className="w-9 h-9 rounded-lg bg-brand-lime/10 border border-brand-lime/20 flex items-center justify-center flex-shrink-0">
+                <Dumbbell size={16} className="text-brand-lime" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-body font-semibold text-text-primary group-hover:text-brand-lime transition-colors truncate">
+                  {plan.name}
+                </p>
+                {plan.goal && (
+                  <span className="flex items-center gap-1 text-[10px] text-text-secondary mt-0.5">
+                    <Target size={9} />
+                    {plan.goal}
+                  </span>
+                )}
+              </div>
+              <ChevronRight size={14} className="text-text-secondary flex-shrink-0" />
+            </Link>
+          ))}
+        </div>
       )}
 
       {/* Feedback CTA */}
