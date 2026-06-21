@@ -214,10 +214,6 @@ export function PlanExecutionClient({ plan }: { plan: WorkoutPlanWithRoutines })
         })
       }
     }
-    const flat = flatItems.find((f) => f.item.id === itemId)
-    if (flat?.item.rest_seconds && flat.item.rest_seconds > 0) {
-      startRest(flat.item.rest_seconds)
-    }
   }
 
   async function handleFinish() {
