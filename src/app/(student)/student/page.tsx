@@ -13,10 +13,11 @@ export default async function StudentHomePage() {
 
   const [{ data: profile }, { data: student }] = await Promise.all([
     supabase.from('profiles').select('full_name, tenant_id').eq('id', user.id).single(),
-    supabase.from('students').select('id').eq('user_id', user.id).maybeSingle(),
+    supabase.from('students').select('id, full_name').eq('user_id', user.id).maybeSingle(),
   ])
 
-  const firstName = profile?.full_name?.split(' ')[0] ?? 'Aluno'
+  const fullName = profile?.full_name || student?.full_name || ''
+  const firstName = fullName.split(' ')[0] || 'Aluno'
 
   // Tenant + personal name
   let personalName: string | null = null
