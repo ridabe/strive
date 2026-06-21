@@ -126,7 +126,7 @@ export default async function StudentHomePage() {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-xs text-text-secondary uppercase tracking-widest font-semibold">
-              Plano ativo
+              Treino ativo
             </p>
             <p className="text-sm font-body font-semibold text-text-primary group-hover:text-brand-lime transition-colors truncate">
               {activePlan.name}

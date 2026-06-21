@@ -129,7 +129,7 @@ export function WorkoutBuilder({ planId, studentId, initialRoutines, status }: P
         <div className="flex items-center gap-2 p-3 bg-status-success/10 border border-status-success/20 rounded-xl">
           <CheckCircle size={14} className="text-status-success flex-shrink-0" />
           <p className="text-xs text-status-success font-medium">
-            Plano ativo — pronto para ser atribuído a alunos.
+            Treino ativo — pronto para ser atribuído a alunos.
           </p>
         </div>
       )}
