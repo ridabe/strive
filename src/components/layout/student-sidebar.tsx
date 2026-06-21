@@ -5,12 +5,13 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import {
   House, Dumbbell, Zap, TrendingUp, CalendarCheck,
-  ClipboardList, Activity, MessageSquare, Receipt, Utensils, Calendar, FolderOpen,
+  ClipboardList, Activity, MessageSquare, Receipt, Utensils, Calendar, FolderOpen, History,
 } from 'lucide-react'
 
 const NAV_ITEMS = [
   { label: 'Início',          href: '/student',               icon: House,         exact: true },
   { label: 'Meus Treinos',   href: '/student/treinos',        icon: Dumbbell,      exact: false },
+  { label: 'Histórico',      href: '/student/historico',      icon: History,       exact: false },
   { label: 'Treinos Extras', href: '/student/treinos-extras', icon: Zap,           exact: false },
   { label: 'Meu Progresso',  href: '/student/progresso',      icon: TrendingUp,    exact: false },
   { label: 'Frequência',     href: '/student/frequencia',     icon: CalendarCheck, exact: false },
