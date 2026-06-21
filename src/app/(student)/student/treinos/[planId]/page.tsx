@@ -31,7 +31,7 @@ function groupItemsByCombo(items: WorkoutItem[]): ItemBlock[] {
 const DAY_LABELS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 const COMBO_LABEL: Record<string, string> = { biset: 'BI-SET', triset: 'TRI-SET', circuit: 'CIRCUITO' }
 
-function ExerciseBlock({ item }: { item: WorkoutItem }) {
+function ExerciseBlock({ item, comboLetter }: { item: WorkoutItem; comboLetter?: string }) {
   const ex = item.exercises
   if (!ex) return null
 
@@ -49,7 +49,14 @@ function ExerciseBlock({ item }: { item: WorkoutItem }) {
           <Dumbbell size={14} className="text-brand-lime" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-body font-semibold text-text-primary">{ex.name}</p>
+          <div className="flex items-center gap-2">
+            {comboLetter && (
+              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-brand-lime text-background text-xs font-bold flex items-center justify-center">
+                {comboLetter}
+              </span>
+            )}
+            <p className="font-body font-semibold text-text-primary">{ex.name}</p>
+          </div>
           <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-md border ${muscleColor(ex.muscle_group)}`}>
             {ex.muscle_group}
           </span>
@@ -195,8 +202,8 @@ export default async function StudentPlanPage({ params }: Props) {
                       </span>
                     </div>
                     <div className="pl-4 space-y-1 border-l-2 border-brand-lime/30">
-                      {block.items.map((item) => (
-                        <ExerciseBlock key={item.id} item={item} />
+                      {block.items.map((item, idx) => (
+                        <ExerciseBlock key={item.id} item={item} comboLetter={String.fromCharCode(65 + idx)} />
                       ))}
                     </div>
                   </div>

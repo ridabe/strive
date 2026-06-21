@@ -195,10 +195,11 @@ export function RoutineCard({ routine, studentId, planId, onDelete }: Props) {
                       {comboLabel[block.comboType] ?? block.comboType.toUpperCase()}
                     </span>
                   </div>
-                  {block.items.map((item) => (
+                  {block.items.map((item, idx) => (
                     <WorkoutItemCard
                       key={item.id}
                       item={item}
+                      comboLetter={String.fromCharCode(65 + idx)}
                       selected={selectedIds.includes(item.id)}
                       onToggleSelect={toggleSelect}
                       onRemove={handleRemoveItem}

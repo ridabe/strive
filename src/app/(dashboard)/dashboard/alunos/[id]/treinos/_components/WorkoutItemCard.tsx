@@ -43,9 +43,10 @@ type Props = {
   onRemove: (id: string) => void
   dragHandleProps?: React.HTMLAttributes<HTMLDivElement>
   actions?: ItemActions
+  comboLetter?: string
 }
 
-export function WorkoutItemCard({ item, selected, onToggleSelect, onRemove, dragHandleProps, actions }: Props) {
+export function WorkoutItemCard({ item, selected, onToggleSelect, onRemove, dragHandleProps, actions, comboLetter }: Props) {
   const [isPending, startTransition] = useTransition()
   const [expanded, setExpanded] = useState(false)
   const [fields, setFields] = useState({
@@ -123,9 +124,16 @@ export function WorkoutItemCard({ item, selected, onToggleSelect, onRemove, drag
 
         {/* Exercício */}
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-text-primary truncate">
-            {ex?.name ?? 'Exercício removido'}
-          </p>
+          <div className="flex items-center gap-1.5">
+            {comboLetter && (
+              <span className="flex-shrink-0 w-5 h-5 rounded-full bg-brand-lime text-background text-[10px] font-bold flex items-center justify-center">
+                {comboLetter}
+              </span>
+            )}
+            <p className="text-sm font-medium text-text-primary truncate">
+              {ex?.name ?? 'Exercício removido'}
+            </p>
+          </div>
           {ex && (
             <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-md border ${muscleColor(ex.muscle_group)}`}>
               {ex.muscle_group}

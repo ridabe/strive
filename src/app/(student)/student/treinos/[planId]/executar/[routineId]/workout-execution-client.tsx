@@ -216,6 +216,18 @@ export function WorkoutExecutionClient({
     return `${item.sets}× ${item.reps ?? '?'} reps`
   }
 
+  // Mapa item.id → letra do combo (A, B, C...)
+  const comboLetters: Record<string, string> = {}
+  const seenGroups: Record<string, number> = {}
+  for (const item of items) {
+    if (item.combo_group_id) {
+      if (seenGroups[item.combo_group_id] === undefined) seenGroups[item.combo_group_id] = 0
+      comboLetters[item.id] = String.fromCharCode(65 + seenGroups[item.combo_group_id])
+      seenGroups[item.combo_group_id]++
+    }
+  }
+  const currentComboLetter = currentItem?.combo_group_id ? comboLetters[currentItem.id] : null
+
   // ─────────────────────────────────────────────────────────────────────────
   // PRE-START SCREEN
   // ─────────────────────────────────────────────────────────────────────────
@@ -241,10 +253,22 @@ export function WorkoutExecutionClient({
           {items.map((item) => {
             const e = item.exercises
             if (!e) return null
+            const letter = comboLetters[item.id]
+            const isCombo = !!item.combo_group_id
             return (
-              <div key={item.id} className="flex items-center gap-3 bg-surface border border-surface-border rounded-xl px-4 py-3">
+              <div
+                key={item.id}
+                className={`flex items-center gap-3 bg-surface rounded-xl px-4 py-3 ${
+                  isCombo
+                    ? 'border-l-[3px] border-l-brand-lime border border-surface-border'
+                    : 'border border-surface-border'
+                }`}
+              >
                 <div className="w-7 h-7 rounded-lg bg-brand-lime/10 border border-brand-lime/20 flex items-center justify-center flex-shrink-0">
-                  <Dumbbell size={12} className="text-brand-lime" />
+                  {letter
+                    ? <span className="text-[11px] font-bold text-brand-lime">{letter}</span>
+                    : <Dumbbell size={12} className="text-brand-lime" />
+                  }
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-text-primary truncate">{e.name}</p>
@@ -381,6 +405,11 @@ export function WorkoutExecutionClient({
             <span className="text-[10px] font-bold text-brand-lime tracking-widest">
               {currentItem.combo_type?.toUpperCase() ?? 'COMBO'}
             </span>
+            {currentComboLetter && (
+              <span className="w-5 h-5 rounded-full bg-brand-lime text-background text-[10px] font-bold flex items-center justify-center">
+                {currentComboLetter}
+              </span>
+            )}
           </div>
         )}
 
@@ -392,7 +421,9 @@ export function WorkoutExecutionClient({
             }`}>
               {st.completed
                 ? <CheckCircle2 size={18} className="text-brand-lime" />
-                : <Dumbbell size={14} className="text-brand-lime" />
+                : currentComboLetter
+                  ? <span className="text-sm font-bold text-brand-lime">{currentComboLetter}</span>
+                  : <Dumbbell size={14} className="text-brand-lime" />
               }
             </div>
             <div className="flex-1 min-w-0">
