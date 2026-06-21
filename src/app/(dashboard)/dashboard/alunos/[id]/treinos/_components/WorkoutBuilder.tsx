@@ -41,7 +41,7 @@ type Routine = {
 
 type Props = {
   planId: string
-  studentId: string
+  studentId?: string | null
   initialRoutines: Routine[]
   status: 'active' | 'inactive'
 }
@@ -74,7 +74,7 @@ export function WorkoutBuilder({ planId, studentId, initialRoutines, status }: P
 
   function handlePublish() {
     startTransition(async () => {
-      await publishWorkoutPlan(planId, studentId)
+      await publishWorkoutPlan(planId, studentId ?? null)
       router.refresh()
     })
   }
@@ -86,7 +86,7 @@ export function WorkoutBuilder({ planId, studentId, initialRoutines, status }: P
         <RoutineCard
           key={routine.id}
           routine={routine}
-          studentId={studentId}
+          studentId={studentId ?? undefined}
           planId={planId}
           onDelete={handleDeleteRoutine}
         />
@@ -117,10 +117,10 @@ export function WorkoutBuilder({ planId, studentId, initialRoutines, status }: P
               ? <Loader2 size={15} className="animate-spin" />
               : <CheckCircle size={15} />
             }
-            Publicar Plano para o Aluno
+            Ativar Plano
           </button>
           <p className="text-xs text-text-secondary text-center mt-2">
-            Após publicar, o aluno poderá visualizar este treino no app.
+            Após ativar, o plano poderá ser atribuído a alunos.
           </p>
         </div>
       )}
@@ -129,7 +129,7 @@ export function WorkoutBuilder({ planId, studentId, initialRoutines, status }: P
         <div className="flex items-center gap-2 p-3 bg-status-success/10 border border-status-success/20 rounded-xl">
           <CheckCircle size={14} className="text-status-success flex-shrink-0" />
           <p className="text-xs text-status-success font-medium">
-            Plano publicado — o aluno já pode visualizar este treino.
+            Plano ativo — pronto para ser atribuído a alunos.
           </p>
         </div>
       )}

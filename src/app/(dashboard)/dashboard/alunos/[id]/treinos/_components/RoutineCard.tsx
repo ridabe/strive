@@ -37,7 +37,7 @@ type Routine = {
 
 type Props = {
   routine: Routine
-  studentId: string
+  studentId?: string
   planId: string
   onDelete: (id: string) => void
 }

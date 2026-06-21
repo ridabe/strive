@@ -13,14 +13,24 @@ export default async function StudentTreinosPage() {
     .eq('user_id', user.id)
     .single()
 
-  const plans = student
+  // Planos atribuídos e ativos para este aluno
+  const assignments = student
     ? (await supabase
-        .from('workout_plans')
-        .select('id, name, goal, status, start_date, end_date')
+        .from('student_plan_assignments')
+        .select(`
+          workout_plans ( id, name, goal, status, start_date, end_date )
+        `)
         .eq('student_id', student.id)
         .eq('status', 'active')
-        .order('created_at', { ascending: false })).data ?? []
+        .order('assigned_at', { ascending: false })).data ?? []
     : []
+
+  const plans = assignments
+    .map((a) => {
+      const p = Array.isArray(a.workout_plans) ? a.workout_plans[0] : a.workout_plans
+      return p as { id: string; name: string; goal: string | null; status: string; start_date: string | null; end_date: string | null } | null
+    })
+    .filter((p): p is NonNullable<typeof p> => p !== null && p.status === 'active')
 
   const goalColor: Record<string, string> = {
     'Hipertrofia':    'text-blue-400 bg-blue-400/10 border-blue-400/20',
@@ -47,7 +57,7 @@ export default async function StudentTreinosPage() {
           <ClipboardList size={32} className="text-text-secondary/30 mx-auto" />
           <p className="font-body font-medium text-text-primary">Nenhum plano ativo</p>
           <p className="text-sm text-text-secondary">
-            Aguarde seu personal trainer criar e publicar um plano.
+            Aguarde seu personal trainer atribuir um plano para você.
           </p>
         </div>
       ) : (

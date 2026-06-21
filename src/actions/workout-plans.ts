@@ -12,7 +12,7 @@ export type WorkoutPlanWithRoutines = {
   status: 'active' | 'inactive'
   start_date: string | null
   end_date: string | null
-  student_id: string
+  student_id: string | null
   tenant_id: string
   student: { full_name: string; avatar_url: string | null } | null
   workout_routines: {
@@ -94,11 +94,30 @@ export async function getWorkoutPlan(planId: string): Promise<WorkoutPlanWithRou
 export async function getStudentWorkoutPlans(studentId: string) {
   const supabase = await createClient()
   const { data } = await supabase
-    .from('workout_plans')
-    .select('id, name, goal, status, start_date, end_date, created_at')
+    .from('student_plan_assignments')
+    .select(`
+      status,
+      assigned_at,
+      workout_plans ( id, name, goal, status, start_date, end_date, created_at )
+    `)
     .eq('student_id', studentId)
-    .order('created_at', { ascending: false })
-  return data ?? []
+    .eq('status', 'active')
+    .order('assigned_at', { ascending: false })
+
+  return (data ?? [])
+    .map((a) => {
+      const plan = Array.isArray(a.workout_plans)
+        ? a.workout_plans[0]
+        : a.workout_plans
+      return plan as {
+        id: string; name: string; goal: string | null;
+        status: string; start_date: string | null; end_date: string | null; created_at: string
+      } | null
+    })
+    .filter(Boolean) as {
+      id: string; name: string; goal: string | null;
+      status: string; start_date: string | null; end_date: string | null; created_at: string
+    }[]
 }
 
 export async function createWorkoutPlan(formData: FormData) {
@@ -113,34 +132,34 @@ export async function createWorkoutPlan(formData: FormData) {
     .single()
   if (!profile?.tenant_id) return { error: 'Tenant não encontrado' }
 
-  const studentId  = formData.get('student_id') as string
+  const studentId  = (formData.get('student_id') as string) || null
   const name       = formData.get('name') as string
   const goal       = formData.get('goal') as string | null
   const description= formData.get('description') as string | null
   const start_date = formData.get('start_date') as string | null
   const end_date   = formData.get('end_date') as string | null
 
-  if (!studentId || !name) return { error: 'Campos obrigatórios ausentes' }
+  if (!name) return { error: 'Nome do plano é obrigatório' }
 
   const { data, error } = await supabase
     .from('workout_plans')
     .insert({
-      tenant_id: profile.tenant_id,
-      student_id: studentId,
+      tenant_id:  profile.tenant_id,
+      student_id: studentId || null,
       name,
-      goal: goal || null,
+      goal:        goal || null,
       description: description || null,
-      start_date: start_date || null,
-      end_date: end_date || null,
-      status: 'inactive',
+      start_date:  start_date || null,
+      end_date:    end_date || null,
+      status:      'inactive',
     })
     .select('id')
     .single()
 
   if (error) return { error: error.message }
 
-  revalidatePath(`/dashboard/alunos/${studentId}`)
   revalidatePath('/dashboard/treinos')
+  if (studentId) revalidatePath(`/dashboard/alunos/${studentId}`)
   return { planId: data.id }
 }
 
@@ -165,7 +184,7 @@ export async function updateWorkoutPlan(planId: string, formData: FormData) {
   return { success: true }
 }
 
-export async function publishWorkoutPlan(planId: string, studentId: string) {
+export async function publishWorkoutPlan(planId: string, studentId?: string | null) {
   const supabase = await createClient()
   const { error } = await supabase
     .from('workout_plans')
@@ -174,8 +193,8 @@ export async function publishWorkoutPlan(planId: string, studentId: string) {
 
   if (error) return { error: error.message }
 
-  revalidatePath(`/dashboard/alunos/${studentId}/treinos/${planId}`)
   revalidatePath('/dashboard/treinos')
+  if (studentId) revalidatePath(`/dashboard/alunos/${studentId}/treinos/${planId}`)
   return { success: true }
 }
 

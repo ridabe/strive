@@ -1,20 +1,30 @@
 import { createClient } from '@/lib/supabase/server'
 import { joinOne } from '@/lib/supabase/join'
 import Link from 'next/link'
-import { ClipboardList, Plus, Users } from 'lucide-react'
+import { ClipboardList, Plus, Target, Users, ChevronRight } from 'lucide-react'
+
+const GOAL_COLOR: Record<string, string> = {
+  'Hipertrofia':    'text-blue-400 bg-blue-400/10 border-blue-400/20',
+  'Emagrecimento':  'text-orange-400 bg-orange-400/10 border-orange-400/20',
+  'Força':          'text-red-400 bg-red-400/10 border-red-400/20',
+  'Resistência':    'text-brand-lime bg-brand-lime/10 border-brand-lime/20',
+  'Condicionamento':'text-cyan-400 bg-cyan-400/10 border-cyan-400/20',
+  'Reabilitação':   'text-purple-400 bg-purple-400/10 border-purple-400/20',
+}
 
 export default async function TreinosPage() {
   const supabase = await createClient()
+
   const { data: plans } = await supabase
     .from('workout_plans')
     .select(`
-      id, name, status, created_at,
-      students ( full_name )
+      id, name, goal, status, created_at,
+      student_plan_assignments ( student_id )
     `)
     .order('created_at', { ascending: false })
 
-  const total   = plans?.length ?? 0
-  const active  = plans?.filter((p) => p.status === 'active').length ?? 0
+  const total  = plans?.length ?? 0
+  const active = plans?.filter((p) => p.status === 'active').length ?? 0
 
   return (
     <div className="p-6 md:p-8 space-y-6">
@@ -28,12 +38,11 @@ export default async function TreinosPage() {
           </p>
         </div>
         <Link
-          href="/dashboard/alunos"
+          href="/dashboard/treinos/novo"
           className="flex items-center gap-2 bg-brand-lime text-background font-body font-semibold text-sm px-4 py-2.5 rounded-lg hover:bg-brand-lime/90 transition-colors flex-shrink-0"
-          title="Selecione um aluno para criar o plano"
         >
           <Plus size={16} />
-          Selecionar Aluno
+          Novo Plano
         </Link>
       </div>
 
@@ -52,39 +61,57 @@ export default async function TreinosPage() {
         <div className="bg-surface border border-surface-border rounded-xl p-10 text-center space-y-3">
           <ClipboardList size={32} className="text-text-secondary/40 mx-auto" />
           <div>
-            <p className="font-body font-medium text-text-primary">Nenhum plano de treino ainda</p>
+            <p className="font-body font-medium text-text-primary">Nenhum plano ainda</p>
             <p className="text-sm text-text-secondary mt-1">
-              Acesse a ficha de um aluno para criar o primeiro plano.
+              Crie seu primeiro plano e depois atribua a alunos.
             </p>
           </div>
-          <Link href="/dashboard/alunos" className="inline-flex items-center gap-2 text-sm text-brand-lime hover:underline">
-            <Users size={14} /> Ver alunos
+          <Link href="/dashboard/treinos/novo" className="inline-flex items-center gap-2 text-sm text-brand-lime hover:underline">
+            <Plus size={13} /> Criar plano
           </Link>
         </div>
       ) : (
         <div className="bg-surface border border-surface-border rounded-xl overflow-hidden">
           <div className="divide-y divide-surface-border">
             {plans?.map((plan) => {
-              const student = joinOne<{ full_name: string }>(plan.students)
+              const assignCount = plan.student_plan_assignments?.length ?? 0
               return (
-                <div key={plan.id} className="flex items-center gap-4 px-5 py-4">
+                <Link
+                  key={plan.id}
+                  href={`/dashboard/treinos/${plan.id}`}
+                  className="flex items-center gap-4 px-5 py-4 hover:bg-surface-border/20 transition-colors group"
+                >
                   <div className="w-9 h-9 rounded-lg bg-blue-400/10 border border-blue-400/20 flex items-center justify-center flex-shrink-0">
                     <ClipboardList size={16} className="text-blue-400" />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-body font-medium text-text-primary text-sm truncate">{plan.name}</p>
-                    {student && (
-                      <p className="text-xs text-text-secondary">{student.full_name}</p>
-                    )}
+                  <div className="flex-1 min-w-0 space-y-1">
+                    <p className="font-body font-medium text-text-primary text-sm truncate group-hover:text-brand-lime transition-colors">
+                      {plan.name}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      {plan.goal && (
+                        <span className={`flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-md border ${
+                          GOAL_COLOR[plan.goal] ?? 'text-text-secondary bg-background border-surface-border'
+                        }`}>
+                          <Target size={8} />
+                          {plan.goal}
+                        </span>
+                      )}
+                      <span className="flex items-center gap-1 text-[10px] text-text-secondary">
+                        <Users size={9} />
+                        {assignCount} aluno{assignCount !== 1 ? 's' : ''}
+                      </span>
+                    </div>
                   </div>
-                  <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${
+                  <span className={`text-xs font-medium px-2 py-0.5 rounded-full border flex-shrink-0 ${
                     plan.status === 'active'
                       ? 'text-status-success bg-status-success/10 border-status-success/20'
                       : 'text-text-secondary bg-background border-surface-border'
                   }`}>
-                    {plan.status === 'active' ? 'Ativo' : 'Inativo'}
+                    {plan.status === 'active' ? 'Ativo' : 'Rascunho'}
                   </span>
-                </div>
+                  <ChevronRight size={14} className="text-text-secondary/40 flex-shrink-0" />
+                </Link>
               )
             })}
           </div>

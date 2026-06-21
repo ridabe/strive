@@ -44,7 +44,7 @@ export async function updateRoutine(
   return { success: true }
 }
 
-export async function deleteRoutine(routineId: string, planId: string, studentId: string) {
+export async function deleteRoutine(routineId: string, planId: string, studentId?: string) {
   const supabase = await createClient()
   const { error } = await supabase
     .from('workout_routines')
@@ -53,13 +53,14 @@ export async function deleteRoutine(routineId: string, planId: string, studentId
 
   if (error) return { error: error.message }
 
-  revalidatePath(`/dashboard/alunos/${studentId}/treinos/${planId}`)
+  revalidatePath('/dashboard/treinos')
+  if (studentId) revalidatePath(`/dashboard/alunos/${studentId}/treinos/${planId}`)
   return { success: true }
 }
 
 export async function reorderRoutines(
   planId: string,
-  studentId: string,
+  studentId: string | undefined,
   orderedIds: string[]
 ) {
   const supabase = await createClient()
@@ -74,6 +75,7 @@ export async function reorderRoutines(
   const failed  = results.find((r) => r.error)
   if (failed?.error) return { error: failed.error.message }
 
-  revalidatePath(`/dashboard/alunos/${studentId}/treinos/${planId}`)
+  revalidatePath('/dashboard/treinos')
+  if (studentId) revalidatePath(`/dashboard/alunos/${studentId}/treinos/${planId}`)
   return { success: true }
 }
