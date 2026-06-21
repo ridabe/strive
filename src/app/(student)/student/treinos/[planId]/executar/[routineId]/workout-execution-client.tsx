@@ -4,11 +4,12 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   ArrowLeft, Play, Pause, CheckCircle2, ChevronLeft, ChevronRight,
-  Timer, Dumbbell, Link2, RotateCcw, Flag, Clock,
+  Timer, Dumbbell, Link2, RotateCcw, Flag, Clock, Film,
 } from 'lucide-react'
 import { startWorkoutSession, finishWorkoutSession, saveSessionExercise } from '@/actions/workout-sessions'
 import { muscleColor } from '@/lib/exercise-config'
 import type { WorkoutPlanWithRoutines } from '@/actions/workout-plans'
+import { VideoModal } from '@/components/student/VideoModal'
 
 type Routine   = WorkoutPlanWithRoutines['workout_routines'][number]
 type WItem     = Routine['workout_items'][number]
@@ -91,6 +92,7 @@ export function WorkoutExecutionClient({
   const [finalNotes, setFinalNotes] = useState('')
   const [saving,     setSaving]     = useState(false)
   const [error,      setError]      = useState('')
+  const [videoModal, setVideoModal] = useState<{ url: string; name: string } | null>(null)
 
   // ─────────────────────────────────────────────────────────────────────────
   // Timer management
@@ -233,6 +235,7 @@ export function WorkoutExecutionClient({
   // ─────────────────────────────────────────────────────────────────────────
   if (!started) {
     return (
+      <>
       <div className="p-5 space-y-6">
         <button
           onClick={() => router.back()}
@@ -249,7 +252,7 @@ export function WorkoutExecutionClient({
           <p className="text-sm text-text-secondary">{total} exercício{total !== 1 ? 's' : ''}</p>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-3">
           {items.map((item) => {
             const e = item.exercises
             if (!e) return null
@@ -258,25 +261,49 @@ export function WorkoutExecutionClient({
             return (
               <div
                 key={item.id}
-                className={`flex items-center gap-3 bg-surface rounded-xl px-4 py-3 ${
+                className={`bg-surface rounded-xl overflow-hidden ${
                   isCombo
                     ? 'border-l-[3px] border-l-brand-lime border border-surface-border'
                     : 'border border-surface-border'
                 }`}
               >
-                <div className="w-7 h-7 rounded-lg bg-brand-lime/10 border border-brand-lime/20 flex items-center justify-center flex-shrink-0">
-                  {letter
-                    ? <span className="text-[11px] font-bold text-brand-lime">{letter}</span>
-                    : <Dumbbell size={12} className="text-brand-lime" />
-                  }
+                {/* Video thumbnail */}
+                {e.video_url && (
+                  <button
+                    onClick={() => setVideoModal({ url: e.video_url!, name: e.name })}
+                    className="relative w-full aspect-video bg-zinc-900 group block"
+                  >
+                    <video
+                      src={e.video_url}
+                      preload="metadata"
+                      muted
+                      playsInline
+                      className="w-full h-full object-cover"
+                      onLoadedMetadata={(ev) => { ev.currentTarget.currentTime = 0.1 }}
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/25 transition-colors">
+                      <div className="w-12 h-12 rounded-full bg-brand-lime flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
+                        <Play size={20} className="text-background ml-0.5" fill="currentColor" />
+                      </div>
+                    </div>
+                  </button>
+                )}
+
+                <div className="flex items-center gap-3 px-4 py-3">
+                  <div className="w-7 h-7 rounded-lg bg-brand-lime/10 border border-brand-lime/20 flex items-center justify-center flex-shrink-0">
+                    {letter
+                      ? <span className="text-[11px] font-bold text-brand-lime">{letter}</span>
+                      : <Dumbbell size={12} className="text-brand-lime" />
+                    }
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-text-primary truncate">{e.name}</p>
+                    <p className="text-xs text-text-secondary">{countLine(item)}</p>
+                  </div>
+                  <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-md border ${muscleColor(e.muscle_group)}`}>
+                    {e.muscle_group}
+                  </span>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-text-primary truncate">{e.name}</p>
-                  <p className="text-xs text-text-secondary">{countLine(item)}</p>
-                </div>
-                <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-md border ${muscleColor(e.muscle_group)}`}>
-                  {e.muscle_group}
-                </span>
               </div>
             )
           })}
@@ -292,6 +319,14 @@ export function WorkoutExecutionClient({
           Iniciar Treino
         </button>
       </div>
+
+      <VideoModal
+        open={videoModal !== null}
+        onClose={() => setVideoModal(null)}
+        videoUrl={videoModal?.url ?? ''}
+        exerciseName={videoModal?.name ?? ''}
+      />
+      </>
     )
   }
 
@@ -373,11 +408,14 @@ export function WorkoutExecutionClient({
           <p className="text-[11px] text-text-secondary truncate">{planName} · {routine.name}</p>
           <p className="text-xs text-text-secondary">{completedCount}/{total} exercícios</p>
         </div>
-        {/* Timer */}
+        {/* Timer total */}
         <div className="flex items-center gap-2">
-          <span className="font-display text-brand-lime font-bold text-lg tracking-widest">
-            {formatTime(elapsed)}
-          </span>
+          <div className="text-right">
+            <p className="text-[9px] text-text-secondary uppercase tracking-widest leading-none">Tempo total</p>
+            <span className="font-display text-brand-lime font-bold text-lg tracking-widest leading-none">
+              {formatTime(elapsed)}
+            </span>
+          </div>
           <button
             onClick={() => setTimerActive((v) => !v)}
             className="p-1.5 rounded-lg bg-surface border border-surface-border text-text-secondary hover:text-text-primary transition-colors"
@@ -469,14 +507,12 @@ export function WorkoutExecutionClient({
           )}
 
           {ex?.video_url && (
-            <a
-              href={ex.video_url}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => setVideoModal({ url: ex.video_url!, name: ex.name ?? '' })}
               className="flex items-center gap-1.5 text-xs text-brand-lime hover:underline"
             >
-              <Play size={11} /> Ver demonstração
-            </a>
+              <Film size={11} /> Ver demonstração
+            </button>
           )}
         </div>
 
@@ -599,6 +635,13 @@ export function WorkoutExecutionClient({
           </button>
         )}
       </div>
+
+      <VideoModal
+        open={videoModal !== null}
+        onClose={() => setVideoModal(null)}
+        videoUrl={videoModal?.url ?? ''}
+        exerciseName={videoModal?.name ?? ''}
+      />
     </div>
   )
 }
