@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import {
   ArrowLeft, User, Phone, Mail, CalendarDays,
-  ClipboardList, FileHeart, Receipt, TrendingUp, CalendarCheck,
+  ClipboardList, FileHeart, Receipt, TrendingUp, CalendarCheck, History,
 } from 'lucide-react'
 
 interface Props {
@@ -23,13 +23,14 @@ export default async function StudentDetailPage({ params }: Props) {
   if (!student) notFound()
 
   // Contagens rápidas
-  const [{ count: planCount }, { count: assessCount }, { count: invoiceCount }, { count: attendCount }, { data: anamnese }] =
+  const [{ count: planCount }, { count: assessCount }, { count: invoiceCount }, { count: attendCount }, { data: anamnese }, { count: sessionCount }] =
     await Promise.all([
       supabase.from('workout_plans').select('*', { count: 'exact', head: true }).eq('student_id', id),
       supabase.from('physical_assessments').select('*', { count: 'exact', head: true }).eq('student_id', id),
       supabase.from('financial_plans').select('*', { count: 'exact', head: true }).eq('student_id', id),
       supabase.from('attendance').select('*', { count: 'exact', head: true }).eq('student_id', id),
       supabase.from('anamnese_responses').select('completed_at, updated_at').eq('student_id', id).maybeSingle(),
+      supabase.from('workout_sessions').select('*', { count: 'exact', head: true }).eq('student_id', id).not('finished_at', 'is', null),
     ])
 
   const age = student.birth_date
@@ -80,6 +81,16 @@ export default async function StudentDetailPage({ params }: Props) {
       color: 'text-orange-400 bg-orange-400/10 border-orange-400/20',
       badge: `${attendCount ?? 0} treino${attendCount !== 1 ? 's' : ''}`,
       badgeColor: 'text-text-secondary bg-background border-surface-border',
+    },
+    {
+      href:  `/dashboard/alunos/${id}/historico`,
+      label: 'Histórico de Treinos',
+      icon:  History,
+      color: 'text-brand-lime bg-brand-lime/10 border-brand-lime/20',
+      badge: `${sessionCount ?? 0} sessão${sessionCount !== 1 ? 'ões' : ''}`,
+      badgeColor: sessionCount && sessionCount > 0
+        ? 'text-brand-lime bg-brand-lime/10 border-brand-lime/20'
+        : 'text-text-secondary bg-background border-surface-border',
     },
   ]
 
