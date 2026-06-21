@@ -73,7 +73,6 @@ export async function getWorkoutPlan(planId: string): Promise<WorkoutPlanWithRou
     `)
     .eq('id', planId)
     .order('display_order', { referencedTable: 'workout_routines' })
-    .order('display_order', { referencedTable: 'workout_items' })
     .single()
 
   if (error || !data) return null
@@ -81,13 +80,17 @@ export async function getWorkoutPlan(planId: string): Promise<WorkoutPlanWithRou
   return {
     ...data,
     student: joinOne<{ full_name: string; avatar_url: string | null }>(data.students),
-    workout_routines: (data.workout_routines ?? []).map((r) => ({
-      ...r,
-      workout_items: (r.workout_items ?? []).map((item) => ({
-        ...item,
-        exercises: joinOne(item.exercises),
+    workout_routines: (data.workout_routines ?? [])
+      .sort((a, b) => a.display_order - b.display_order)
+      .map((r) => ({
+        ...r,
+        workout_items: (r.workout_items ?? [])
+          .sort((a, b) => a.display_order - b.display_order)
+          .map((item) => ({
+            ...item,
+            exercises: joinOne(item.exercises),
+          })),
       })),
-    })),
   } as WorkoutPlanWithRoutines
 }
 
