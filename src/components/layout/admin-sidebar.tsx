@@ -12,6 +12,7 @@ import {
   Puzzle,
   CreditCard,
   Dumbbell,
+  Smartphone,
 } from 'lucide-react'
 
 const NAV_ITEMS = [
@@ -21,6 +22,7 @@ const NAV_ITEMS = [
   { label: 'Módulos',      href: '/admin/modulos',               icon: Puzzle },
   { label: 'Exercícios',   href: '/admin/banco-de-exercicios',   icon: Dumbbell },
   { label: 'Usuários',     href: '/admin/usuarios',              icon: Users },
+  { label: 'Versão App',   href: '/admin/app-versao',            icon: Smartphone },
   { label: 'Métricas',     href: '/admin/metricas',              icon: BarChart2 },
   { label: 'Logs',         href: '/admin/logs',                  icon: ScrollText },
 ]
