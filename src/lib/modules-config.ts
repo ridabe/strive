@@ -16,6 +16,7 @@ export const MODULE_ROUTES: Record<string, { href: string; label: string }> = {
   'notificacoes':        { href: '/dashboard/notificacoes',        label: 'Notificações'        },
   'white-label':         { href: '/dashboard/ajustes',             label: 'Identidade Visual'   },
   'minha-agenda':        { href: '/dashboard/agenda',              label: 'Minha Agenda'        },
+  'planos-alimentares':  { href: '/dashboard/planos-alimentares',  label: 'Planos Alimentares'  },
 }
 
 // Módulos principais para a grid do dashboard home (ícone SVG path inline)

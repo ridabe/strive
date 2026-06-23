@@ -13,6 +13,7 @@ import {
   CreditCard,
   Dumbbell,
   Smartphone,
+  Trophy,
 } from 'lucide-react'
 
 const NAV_ITEMS = [
@@ -21,6 +22,7 @@ const NAV_ITEMS = [
   { label: 'Planos',       href: '/admin/planos',                icon: CreditCard },
   { label: 'Módulos',      href: '/admin/modulos',               icon: Puzzle },
   { label: 'Exercícios',   href: '/admin/banco-de-exercicios',   icon: Dumbbell },
+  { label: 'Ranking',      href: '/admin/ranking',               icon: Trophy },
   { label: 'Usuários',     href: '/admin/usuarios',              icon: Users },
   { label: 'Versão App',   href: '/admin/app-versao',            icon: Smartphone },
   { label: 'Métricas',     href: '/admin/metricas',              icon: BarChart2 },

@@ -24,6 +24,7 @@ import {
   FolderOpen,
   Bell,
   Palette,
+  UtensilsCrossed,
   ChevronDown,
   type LucideIcon,
 } from 'lucide-react'
@@ -32,7 +33,7 @@ import {
 const ICON_MAP: Record<string, LucideIcon> = {
   Dumbbell, ClipboardList, Zap, Play, Ruler, FileHeart,
   TrendingUp, CalendarCheck, CalendarDays, MessageSquare, Receipt,
-  FolderOpen, Bell, Palette,
+  FolderOpen, Bell, Palette, UtensilsCrossed,
 }
 
 export type EnabledModule = {
@@ -49,7 +50,7 @@ const MODULE_GROUPS: { label: string; slugs: string[] }[] = [
   },
   {
     label: 'Acompanhamento',
-    slugs: ['avaliacoes-fisicas', 'anamnese', 'meu-progresso', 'frequencia', 'feedbacks'],
+    slugs: ['avaliacoes-fisicas', 'anamnese', 'meu-progresso', 'frequencia', 'feedbacks', 'planos-alimentares'],
   },
   {
     label: 'Financeiro',

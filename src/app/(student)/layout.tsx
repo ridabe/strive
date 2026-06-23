@@ -60,6 +60,13 @@ export default async function StudentLayout({
     .eq('user_id', user.id)
     .single()
 
+  // Status da gamificação
+  const { data: gamifSettings } = await supabase
+    .from('gamification_settings')
+    .select('is_active')
+    .single()
+  const gamificationActive = gamifSettings?.is_active ?? false
+
   if (studentRow) {
     const [{ count: pending }, { count: rejected }] = await Promise.all([
       supabase
@@ -132,7 +139,7 @@ export default async function StudentLayout({
         />
 
         <div className="flex-1 overflow-y-auto">
-          <StudentSidebarNav personalName={personalName} />
+          <StudentSidebarNav personalName={personalName} gamificationActive={gamificationActive} />
         </div>
 
         <UserMenu

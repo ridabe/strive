@@ -5,10 +5,11 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import {
   House, Dumbbell, Zap, TrendingUp, CalendarCheck,
-  ClipboardList, Activity, MessageSquare, Receipt, Utensils, Calendar, FolderOpen, History,
+  ClipboardList, Activity, MessageSquare, Receipt, Utensils, UtensilsCrossed, Calendar, FolderOpen, History,
+  Trophy,
 } from 'lucide-react'
 
-const NAV_ITEMS = [
+const BASE_NAV_ITEMS = [
   { label: 'Início',          href: '/student',               icon: House,         exact: true },
   { label: 'Meus Treinos',   href: '/student/treinos',        icon: Dumbbell,      exact: false },
   { label: 'Histórico',      href: '/student/historico',      icon: History,       exact: false },
@@ -21,15 +22,27 @@ const NAV_ITEMS = [
   { label: 'Arquivos',       href: '/student/arquivos',       icon: FolderOpen,    exact: false },
   { label: 'Financeiro',     href: '/student/financeiro',     icon: Receipt,       exact: false },
   { label: 'Nutrição',       href: '/student/nutricao',       icon: Utensils,      exact: false },
+  { label: 'Plano Alimentar', href: '/student/planos-alimentares', icon: UtensilsCrossed, exact: false },
   { label: 'Agenda',         href: '/student/agenda',         icon: Calendar,      exact: false },
 ]
 
-interface StudentSidebarNavProps {
-  personalName: string | null
+const RANKING_ITEM = {
+  label: 'Ranking',
+  href:  '/student/ranking',
+  icon:  Trophy,
+  exact: false,
 }
 
-export function StudentSidebarNav({ personalName }: StudentSidebarNavProps) {
+interface StudentSidebarNavProps {
+  personalName: string | null
+  gamificationActive?: boolean
+}
+
+export function StudentSidebarNav({ personalName, gamificationActive }: StudentSidebarNavProps) {
   const pathname = usePathname()
+  const NAV_ITEMS = gamificationActive
+    ? [...BASE_NAV_ITEMS, RANKING_ITEM]
+    : BASE_NAV_ITEMS
 
   return (
     <div className="flex flex-col h-full gap-4">

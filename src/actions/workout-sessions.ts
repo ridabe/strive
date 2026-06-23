@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
+import { processWorkoutGamification } from '@/app/actions/gamification'
 
 async function getStudentCtx() {
   const supabase = await createClient()
@@ -67,6 +68,10 @@ export async function finishWorkoutSession(
 
   revalidatePath('/student/treinos')
   revalidatePath('/student/historico')
+
+  // Processar gamificação em background (não bloqueia o retorno)
+  processWorkoutGamification(sessionId).catch(() => {/* silent */})
+
   return { success: true }
 }
 

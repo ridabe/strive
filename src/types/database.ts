@@ -1,7 +1,7 @@
 // Auto-gerado via: supabase gen types typescript --project-id lodetzmtsymvnjffmvat
 // Atualizar apos migrations: use o MCP do Supabase (generate_typescript_types) ou
 // pnpm supabase gen types typescript --project-id lodetzmtsymvnjffmvat > src/types/database.ts
-// Ultima atualizacao: 2026-06-23 (adicionado agenda_events)
+// Ultima atualizacao: 2026-06-23 (adicionado student_meal_plan_assignments)
 
 export type Json =
   | string
@@ -138,7 +138,7 @@ export type Database = {
             foreignKeyName: "agenda_events_student_id_fkey"
             columns: ["student_id"]
             isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "students"
             referencedColumns: ["id"]
           },
           {
@@ -244,6 +244,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      app_versions: {
+        Row: {
+          current_version: string
+          current_version_code: number
+          force_update: boolean
+          min_version_code: number
+          platform: string
+          release_notes: string | null
+          store_url: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          current_version: string
+          current_version_code: number
+          force_update?: boolean
+          min_version_code: number
+          platform: string
+          release_notes?: string | null
+          store_url?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          current_version?: string
+          current_version_code?: number
+          force_update?: boolean
+          min_version_code?: number
+          platform?: string
+          release_notes?: string | null
+          store_url?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
       }
       attendance: {
         Row: {
@@ -643,10 +679,255 @@ export type Database = {
           },
         ]
       }
+      food_items: {
+        Row: {
+          calories: number
+          carbs_g: number
+          category: string
+          created_at: string
+          fat_g: number
+          fiber_g: number
+          id: string
+          is_global: boolean
+          name: string
+          portion_grams: number
+          portion_label: string
+          protein_g: number
+          tenant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          calories?: number
+          carbs_g?: number
+          category?: string
+          created_at?: string
+          fat_g?: number
+          fiber_g?: number
+          id?: string
+          is_global?: boolean
+          name: string
+          portion_grams?: number
+          portion_label?: string
+          protein_g?: number
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          calories?: number
+          carbs_g?: number
+          category?: string
+          created_at?: string
+          fat_g?: number
+          fiber_g?: number
+          id?: string
+          is_global?: boolean
+          name?: string
+          portion_grams?: number
+          portion_label?: string
+          protein_g?: number
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "food_items_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meal_plan_foods: {
+        Row: {
+          calories: number
+          carbs_g: number
+          created_at: string
+          fat_g: number
+          fiber_g: number
+          food_item_id: string
+          id: string
+          meal_id: string
+          notes: string | null
+          protein_g: number
+          quantity: number
+          sort_order: number
+          tenant_id: string
+        }
+        Insert: {
+          calories?: number
+          carbs_g?: number
+          created_at?: string
+          fat_g?: number
+          fiber_g?: number
+          food_item_id: string
+          id?: string
+          meal_id: string
+          notes?: string | null
+          protein_g?: number
+          quantity?: number
+          sort_order?: number
+          tenant_id: string
+        }
+        Update: {
+          calories?: number
+          carbs_g?: number
+          created_at?: string
+          fat_g?: number
+          fiber_g?: number
+          food_item_id?: string
+          id?: string
+          meal_id?: string
+          notes?: string | null
+          protein_g?: number
+          quantity?: number
+          sort_order?: number
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meal_plan_foods_food_item_id_fkey"
+            columns: ["food_item_id"]
+            isOneToOne: false
+            referencedRelation: "food_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meal_plan_foods_meal_id_fkey"
+            columns: ["meal_id"]
+            isOneToOne: false
+            referencedRelation: "meal_plan_meals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meal_plan_foods_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meal_plan_meals: {
+        Row: {
+          created_at: string
+          id: string
+          meal_plan_id: string
+          meal_type: Database["public"]["Enums"]["meal_type"]
+          name: string
+          notes: string | null
+          sort_order: number
+          suggested_time: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          meal_plan_id: string
+          meal_type?: Database["public"]["Enums"]["meal_type"]
+          name: string
+          notes?: string | null
+          sort_order?: number
+          suggested_time?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          meal_plan_id?: string
+          meal_type?: Database["public"]["Enums"]["meal_type"]
+          name?: string
+          notes?: string | null
+          sort_order?: number
+          suggested_time?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meal_plan_meals_meal_plan_id_fkey"
+            columns: ["meal_plan_id"]
+            isOneToOne: false
+            referencedRelation: "meal_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meal_plan_meals_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meal_plans: {
+        Row: {
+          created_at: string
+          daily_calories: number | null
+          description: string | null
+          end_date: string | null
+          goal: string | null
+          id: string
+          name: string
+          start_date: string | null
+          status: string
+          student_id: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          daily_calories?: number | null
+          description?: string | null
+          end_date?: string | null
+          goal?: string | null
+          id?: string
+          name: string
+          start_date?: string | null
+          status?: string
+          student_id?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          daily_calories?: number | null
+          description?: string | null
+          end_date?: string | null
+          goal?: string | null
+          id?: string
+          name?: string
+          start_date?: string | null
+          status?: string
+          student_id?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meal_plans_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meal_plans_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       physical_assessments: {
         Row: {
           arm: number | null
           assessed_at: string
+          bmi: number | null
+          bmr: number | null
           body_fat: number | null
           chest: number | null
           created_at: string
@@ -654,6 +935,7 @@ export type Database = {
           hip: number | null
           id: string
           notes: string | null
+          sex: string | null
           student_id: string
           tenant_id: string
           thigh: number | null
@@ -663,6 +945,8 @@ export type Database = {
         Insert: {
           arm?: number | null
           assessed_at?: string
+          bmi?: number | null
+          bmr?: number | null
           body_fat?: number | null
           chest?: number | null
           created_at?: string
@@ -670,6 +954,7 @@ export type Database = {
           hip?: number | null
           id?: string
           notes?: string | null
+          sex?: string | null
           student_id: string
           tenant_id: string
           thigh?: number | null
@@ -679,6 +964,8 @@ export type Database = {
         Update: {
           arm?: number | null
           assessed_at?: string
+          bmi?: number | null
+          bmr?: number | null
           body_fat?: number | null
           chest?: number | null
           created_at?: string
@@ -686,6 +973,7 @@ export type Database = {
           hip?: number | null
           id?: string
           notes?: string | null
+          sex?: string | null
           student_id?: string
           tenant_id?: string
           thigh?: number | null
@@ -794,6 +1082,158 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "profiles_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shared_files: {
+        Row: {
+          created_at: string
+          description: string | null
+          file_name: string
+          file_size: number | null
+          file_type: string
+          file_url: string
+          id: string
+          student_id: string | null
+          tenant_id: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          file_name: string
+          file_size?: number | null
+          file_type: string
+          file_url: string
+          id?: string
+          student_id?: string | null
+          tenant_id: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          file_name?: string
+          file_size?: number | null
+          file_type?: string
+          file_url?: string
+          id?: string
+          student_id?: string | null
+          tenant_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_files_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shared_files_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_meal_plan_assignments: {
+        Row: {
+          assigned_at: string
+          id: string
+          meal_plan_id: string
+          status: string
+          student_id: string
+          tenant_id: string
+        }
+        Insert: {
+          assigned_at?: string
+          id?: string
+          meal_plan_id: string
+          status?: string
+          student_id: string
+          tenant_id: string
+        }
+        Update: {
+          assigned_at?: string
+          id?: string
+          meal_plan_id?: string
+          status?: string
+          student_id?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_meal_plan_assignments_meal_plan_id_fkey"
+            columns: ["meal_plan_id"]
+            isOneToOne: false
+            referencedRelation: "meal_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_meal_plan_assignments_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_meal_plan_assignments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_plan_assignments: {
+        Row: {
+          assigned_at: string
+          id: string
+          plan_id: string
+          status: string
+          student_id: string
+          tenant_id: string
+        }
+        Insert: {
+          assigned_at?: string
+          id?: string
+          plan_id: string
+          status?: string
+          student_id: string
+          tenant_id: string
+        }
+        Update: {
+          assigned_at?: string
+          id?: string
+          plan_id?: string
+          status?: string
+          student_id?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_plan_assignments_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "workout_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_plan_assignments_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_plan_assignments_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
@@ -1239,6 +1679,7 @@ export type Database = {
       }
       workout_items: {
         Row: {
+          cadence: string | null
           combo_group_id: string | null
           combo_type: string | null
           count_type: string
@@ -1256,6 +1697,7 @@ export type Database = {
           tenant_id: string
         }
         Insert: {
+          cadence?: string | null
           combo_group_id?: string | null
           combo_type?: string | null
           count_type?: string
@@ -1273,6 +1715,7 @@ export type Database = {
           tenant_id: string
         }
         Update: {
+          cadence?: string | null
           combo_group_id?: string | null
           combo_type?: string | null
           count_type?: string
@@ -1323,7 +1766,7 @@ export type Database = {
           name: string
           start_date: string | null
           status: Database["public"]["Enums"]["workout_plan_status"]
-          student_id: string
+          student_id: string | null
           tenant_id: string
           updated_at: string
         }
@@ -1336,7 +1779,7 @@ export type Database = {
           name: string
           start_date?: string | null
           status?: Database["public"]["Enums"]["workout_plan_status"]
-          student_id: string
+          student_id?: string | null
           tenant_id: string
           updated_at?: string
         }
@@ -1349,7 +1792,7 @@ export type Database = {
           name?: string
           start_date?: string | null
           status?: Database["public"]["Enums"]["workout_plan_status"]
-          student_id?: string
+          student_id?: string | null
           tenant_id?: string
           updated_at?: string
         }
@@ -1421,6 +1864,135 @@ export type Database = {
           },
         ]
       }
+      workout_session_exercises: {
+        Row: {
+          created_at: string
+          exercise_id: string
+          feedback: string | null
+          id: string
+          load_used: string | null
+          reps_done: string | null
+          session_id: string
+          sets_done: number | null
+          workout_item_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          exercise_id: string
+          feedback?: string | null
+          id?: string
+          load_used?: string | null
+          reps_done?: string | null
+          session_id: string
+          sets_done?: number | null
+          workout_item_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          exercise_id?: string
+          feedback?: string | null
+          id?: string
+          load_used?: string | null
+          reps_done?: string | null
+          session_id?: string
+          sets_done?: number | null
+          workout_item_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workout_session_exercises_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_session_exercises_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "workout_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_session_exercises_workout_item_id_fkey"
+            columns: ["workout_item_id"]
+            isOneToOne: false
+            referencedRelation: "workout_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workout_sessions: {
+        Row: {
+          created_at: string
+          duration_seconds: number | null
+          finished_at: string | null
+          id: string
+          intensity: string | null
+          notes: string | null
+          started_at: string
+          student_id: string
+          tenant_id: string
+          workout_plan_id: string | null
+          workout_routine_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          duration_seconds?: number | null
+          finished_at?: string | null
+          id?: string
+          intensity?: string | null
+          notes?: string | null
+          started_at?: string
+          student_id: string
+          tenant_id: string
+          workout_plan_id?: string | null
+          workout_routine_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          duration_seconds?: number | null
+          finished_at?: string | null
+          id?: string
+          intensity?: string | null
+          notes?: string | null
+          started_at?: string
+          student_id?: string
+          tenant_id?: string
+          workout_plan_id?: string | null
+          workout_routine_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workout_sessions_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_sessions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_sessions_workout_plan_id_fkey"
+            columns: ["workout_plan_id"]
+            isOneToOne: false
+            referencedRelation: "workout_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_sessions_workout_routine_id_fkey"
+            columns: ["workout_routine_id"]
+            isOneToOne: false
+            referencedRelation: "workout_routines"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -1458,6 +2030,16 @@ export type Database = {
         | "forca"
         | "outros"
       financial_plan_status: "pending" | "paid" | "overdue" | "cancelled"
+      meal_type:
+        | "cafe_da_manha"
+        | "lanche_manha"
+        | "almoco"
+        | "lanche_tarde"
+        | "jantar"
+        | "ceia"
+        | "pre_treino"
+        | "pos_treino"
+        | "outro"
       profile_status: "active" | "inactive" | "suspended"
       student_status: "active" | "inactive"
       tenant_plan: "free" | "pro" | "premium"
@@ -1587,6 +2169,13 @@ export type CompositeTypes<
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
+// ─── Aliases de conveniência (compatibilidade com código existente) ───────────
+export type AppRole            = Database["public"]["Enums"]["app_role"]
+export type ProfileStatus      = Database["public"]["Enums"]["profile_status"]
+export type ExtraWorkoutCategory = Database["public"]["Enums"]["extra_workout_category"]
+export type audit_category     = Database["public"]["Enums"]["audit_category"]
+export type MealType           = Database["public"]["Enums"]["meal_type"]
+
 export const Constants = {
   public: {
     Enums: {
@@ -1602,6 +2191,17 @@ export const Constants = {
         "outros",
       ],
       financial_plan_status: ["pending", "paid", "overdue", "cancelled"],
+      meal_type: [
+        "cafe_da_manha",
+        "lanche_manha",
+        "almoco",
+        "lanche_tarde",
+        "jantar",
+        "ceia",
+        "pre_treino",
+        "pos_treino",
+        "outro",
+      ],
       profile_status: ["active", "inactive", "suspended"],
       student_status: ["active", "inactive"],
       tenant_plan: ["free", "pro", "premium"],
@@ -1610,9 +2210,3 @@ export const Constants = {
     },
   },
 } as const
-
-// Re-exports para compatibilidade com imports existentes
-export type AppRole       = Database["public"]["Enums"]["app_role"]
-export type ProfileStatus = Database["public"]["Enums"]["profile_status"]
-export type audit_category = Database["public"]["Enums"]["audit_category"]
-export type ExtraWorkoutCategory = Database["public"]["Enums"]["extra_workout_category"]
