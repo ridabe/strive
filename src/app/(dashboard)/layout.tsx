@@ -4,6 +4,7 @@ import { joinOne } from '@/lib/supabase/join'
 import { DashboardSidebarNav, type EnabledModule } from '@/components/layout/dashboard-sidebar'
 import { UserMenu } from '@/components/layout/user-menu'
 import { TenantLogoHeader } from '@/components/layout/tenant-logo-header'
+import { PendingAgendaBanner } from '@/components/agenda/PendingAgendaBanner'
 
 export default async function DashboardLayout({
   children,
@@ -69,6 +70,18 @@ export default async function DashboardLayout({
 
   const primaryColor = tenantBranding?.primary_color ?? '#E8FF47'
 
+  // Conta solicitações de agendamento presencial pendentes dos alunos
+  let pendingAgendaCount = 0
+  if (profile.tenant_id) {
+    const { count } = await supabase
+      .from('agenda_events')
+      .select('id', { count: 'exact', head: true })
+      .eq('tenant_id', profile.tenant_id)
+      .eq('status', 'pending_confirmation')
+      .eq('origin', 'student')
+    pendingAgendaCount = count ?? 0
+  }
+
   return (
     <div
       className="min-h-screen bg-background flex"
@@ -104,6 +117,7 @@ export default async function DashboardLayout({
       </aside>
 
       <main className="flex-1 overflow-auto">
+        <PendingAgendaBanner count={pendingAgendaCount} />
         {children}
       </main>
     </div>

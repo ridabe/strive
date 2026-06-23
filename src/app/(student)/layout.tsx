@@ -5,6 +5,7 @@ import { TenantLogoHeader } from '@/components/layout/tenant-logo-header'
 import { StudentSidebarNav } from '@/components/layout/student-sidebar'
 import { StudentBottomNav } from '@/components/layout/student-bottom-nav'
 import { UserMenu } from '@/components/layout/user-menu'
+import { StudentAgendaBanner } from '@/components/agenda/StudentAgendaBanner'
 
 export default async function StudentLayout({
   children,
@@ -48,6 +49,36 @@ export default async function StudentLayout({
 
   const primaryColor = tenantBranding?.primary_color ?? '#E8FF47'
   const businessName = tenantBranding?.business_name ?? 'Strive Personal'
+
+  // Conta solicitações de agendamento pendentes/recusadas para o aluno
+  let pendingAgendaCount  = 0
+  let rejectedAgendaCount = 0
+
+  const { data: studentRow } = await supabase
+    .from('students')
+    .select('id')
+    .eq('user_id', user.id)
+    .single()
+
+  if (studentRow) {
+    const [{ count: pending }, { count: rejected }] = await Promise.all([
+      supabase
+        .from('agenda_events')
+        .select('id', { count: 'exact', head: true })
+        .eq('student_id', studentRow.id)
+        .eq('status', 'pending_confirmation')
+        .eq('origin', 'student'),
+      supabase
+        .from('agenda_events')
+        .select('id', { count: 'exact', head: true })
+        .eq('student_id', studentRow.id)
+        .eq('status', 'rejected')
+        .eq('origin', 'student')
+        .gte('event_date', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]),
+    ])
+    pendingAgendaCount  = pending  ?? 0
+    rejectedAgendaCount = rejected ?? 0
+  }
 
   return (
     <div
@@ -113,6 +144,10 @@ export default async function StudentLayout({
 
       {/* ── Main content ──────────────────────────────────────────── */}
       <main className="md:ml-60 pt-14 pb-20 md:pt-0 md:pb-0 min-h-screen overflow-auto">
+        <StudentAgendaBanner
+          pendingCount={pendingAgendaCount}
+          rejectedCount={rejectedAgendaCount}
+        />
         {children}
       </main>
 

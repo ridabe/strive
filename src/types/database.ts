@@ -1,6 +1,7 @@
 // Auto-gerado via: supabase gen types typescript --project-id lodetzmtsymvnjffmvat
 // Atualizar apos migrations: use o MCP do Supabase (generate_typescript_types) ou
 // pnpm supabase gen types typescript --project-id lodetzmtsymvnjffmvat > src/types/database.ts
+// Ultima atualizacao: 2026-06-23 (adicionado agenda_events)
 
 export type Json =
   | string
@@ -61,6 +62,90 @@ export type Database = {
             columns: ["admin_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agenda_events: {
+        Row: {
+          address_cep: string | null
+          amount: number | null
+          created_at: string
+          description: string | null
+          event_date: string
+          id: string
+          location: string | null
+          meeting_url: string | null
+          notes: string | null
+          notified: boolean
+          origin: string
+          rejection_reason: string | null
+          start_time: string | null
+          status: string
+          student_id: string | null
+          student_name: string | null
+          tenant_id: string
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          address_cep?: string | null
+          amount?: number | null
+          created_at?: string
+          description?: string | null
+          event_date: string
+          id?: string
+          location?: string | null
+          meeting_url?: string | null
+          notes?: string | null
+          notified?: boolean
+          origin?: string
+          rejection_reason?: string | null
+          start_time?: string | null
+          status?: string
+          student_id?: string | null
+          student_name?: string | null
+          tenant_id: string
+          title: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          address_cep?: string | null
+          amount?: number | null
+          created_at?: string
+          description?: string | null
+          event_date?: string
+          id?: string
+          location?: string | null
+          meeting_url?: string | null
+          notes?: string | null
+          notified?: boolean
+          origin?: string
+          rejection_reason?: string | null
+          start_time?: string | null
+          status?: string
+          student_id?: string | null
+          student_name?: string | null
+          tenant_id?: string
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agenda_events_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenda_events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
         ]

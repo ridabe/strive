@@ -1,66 +1,69 @@
-import Link from 'next/link'
-import { Calendar, ArrowLeft, Clock } from 'lucide-react'
+import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
+import { StudentAgendaCalendarView } from './StudentAgendaCalendarView'
 
-export default function AgendaPage() {
+function formatPhone(phone: string | null | undefined): string | null {
+  if (!phone) return null
+  return phone.replace(/\D/g, '')
+}
+
+export default async function StudentAgendaPage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role, tenant_id')
+    .eq('id', user.id)
+    .single()
+
+  if (!profile || profile.role !== 'student') redirect('/login')
+
+  // students.id do aluno logado
+  const { data: studentRow } = await supabase
+    .from('students')
+    .select('id')
+    .eq('user_id', user.id)
+    .single()
+
+  // Telefone do personal (para botão WhatsApp em solicitações recusadas)
+  const { data: tenantRow } = profile.tenant_id
+    ? await supabase
+        .from('tenants')
+        .select('contact_phone')
+        .eq('id', profile.tenant_id)
+        .single()
+    : { data: null }
+
+  const personalPhone = formatPhone((tenantRow as { contact_phone?: string | null } | null)?.contact_phone)
+
+  // Carrega eventos do mês atual para renderização inicial
+  const now   = new Date()
+  const year  = now.getFullYear()
+  const month = now.getMonth() + 1
+
+  const startDate = `${year}-${String(month).padStart(2, '0')}-01`
+  const endDate   = new Date(year, month, 0).toISOString().split('T')[0]
+
+  const initialEvents = studentRow
+    ? (await supabase
+        .from('agenda_events')
+        .select('*')
+        .eq('student_id', studentRow.id)
+        .gte('event_date', startDate)
+        .lte('event_date', endDate)
+        .order('event_date', { ascending: true })
+        .order('start_time', { ascending: true })
+      ).data ?? []
+    : []
+
   return (
-    <div className="p-5 md:p-8 space-y-6 max-w-lg">
-
-      {/* Header */}
-      <div className="flex items-start gap-3">
-        <div className="w-10 h-10 rounded-xl bg-violet-400/10 border border-violet-400/20 flex items-center justify-center flex-shrink-0">
-          <Calendar size={18} className="text-violet-400" />
-        </div>
-        <div>
-          <h1 className="font-display text-xl font-bold text-text-primary uppercase tracking-widest">
-            Agenda
-          </h1>
-          <p className="text-sm text-text-secondary mt-0.5">
-            Agendamentos e horários com seu personal trainer.
-          </p>
-        </div>
-      </div>
-
-      {/* Coming soon card */}
-      <div className="bg-surface border border-surface-border rounded-2xl p-10 flex flex-col items-center text-center gap-5">
-        <div className="w-16 h-16 rounded-2xl bg-violet-400/10 border border-violet-400/20 flex items-center justify-center">
-          <Calendar size={28} className="text-violet-400" />
-        </div>
-
-        <div className="space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-400/10 border border-violet-400/20 text-violet-400 text-xs font-display font-bold uppercase tracking-widest">
-            <Clock size={11} />
-            Em breve
-          </div>
-          <h2 className="font-display text-lg font-bold text-text-primary uppercase tracking-widest">
-            Módulo em desenvolvimento
-          </h2>
-          <p className="text-sm text-text-secondary max-w-xs">
-            Aqui você poderá agendar sessões, visualizar horários disponíveis e confirmar compromissos com seu personal.
-          </p>
-        </div>
-
-        <ul className="w-full max-w-xs space-y-2 text-left">
-          {[
-            'Agendar sessão com o personal',
-            'Visualizar horários disponíveis',
-            'Confirmação e lembretes',
-            'Histórico de sessões',
-          ].map((item) => (
-            <li key={item} className="flex items-center gap-2 text-sm text-text-secondary">
-              <div className="w-1.5 h-1.5 rounded-full bg-violet-400/50 flex-shrink-0" />
-              {item}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <Link
-        href="/student"
-        className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
-      >
-        <ArrowLeft size={14} />
-        Voltar ao início
-      </Link>
-    </div>
+    <StudentAgendaCalendarView
+      initialEvents={initialEvents as Parameters<typeof StudentAgendaCalendarView>[0]['initialEvents']}
+      initialYear={year}
+      initialMonth={month}
+      personalPhone={personalPhone}
+    />
   )
 }

@@ -18,6 +18,7 @@ import {
   FileHeart,
   TrendingUp,
   CalendarCheck,
+  CalendarDays,
   MessageSquare,
   Receipt,
   FolderOpen,
@@ -30,7 +31,7 @@ import {
 // ─── Mapa de ícones por nome (espelha system_modules.icon) ───────────────────
 const ICON_MAP: Record<string, LucideIcon> = {
   Dumbbell, ClipboardList, Zap, Play, Ruler, FileHeart,
-  TrendingUp, CalendarCheck, MessageSquare, Receipt,
+  TrendingUp, CalendarCheck, CalendarDays, MessageSquare, Receipt,
   FolderOpen, Bell, Palette,
 }
 
@@ -56,7 +57,7 @@ const MODULE_GROUPS: { label: string; slugs: string[] }[] = [
   },
   {
     label: 'Comunicação',
-    slugs: ['arquivos', 'notificacoes'],
+    slugs: ['arquivos', 'notificacoes', 'minha-agenda'],
   },
 ]
 

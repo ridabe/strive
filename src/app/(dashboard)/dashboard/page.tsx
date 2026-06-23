@@ -4,7 +4,8 @@ import Link from 'next/link'
 import {
   Users, Dumbbell, TrendingUp, Receipt,
   ClipboardList, Zap, Play, Ruler, FileHeart,
-  CalendarCheck, MessageSquare, FolderOpen, Bell, Palette,
+  CalendarCheck, CalendarDays, MessageSquare, FolderOpen, Bell, Palette,
+  MapPin, Video, Clock,
   Lock, type LucideIcon,
 } from 'lucide-react'
 import { MODULE_ROUTES } from '@/lib/modules-config'
@@ -12,7 +13,7 @@ import { MODULE_ROUTES } from '@/lib/modules-config'
 // ─── Ícones por nome (espelha system_modules.icon) ──────────────────────────
 const ICON_MAP: Record<string, LucideIcon> = {
   Dumbbell, ClipboardList, Zap, Play, Ruler, FileHeart,
-  TrendingUp, CalendarCheck, MessageSquare, Receipt,
+  TrendingUp, CalendarCheck, CalendarDays, MessageSquare, Receipt,
   FolderOpen, Bell, Palette,
 }
 
@@ -79,6 +80,18 @@ export default async function DashboardPage() {
     { label: 'Módulos ativos',   value: enabledSlugs.size,   icon: Zap,       color: 'text-status-success', href: null },
   ]
 
+  // ── Eventos de hoje (banner de notificação) ───────────────────────────────
+  const todayStr = new Date().toISOString().split('T')[0]
+  const { data: todayEvents } = tenantId
+    ? await supabase
+        .from('agenda_events')
+        .select('id, type, title, start_time, location, meeting_url')
+        .eq('event_date', todayStr)
+        .eq('status', 'scheduled')
+        .order('start_time', { ascending: true })
+        .limit(5)
+    : { data: null }
+
   const now    = new Date()
   const hour   = now.getHours()
   const greeting = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite'
@@ -95,6 +108,41 @@ export default async function DashboardPage() {
           Aqui está um resumo da sua operação.
         </p>
       </div>
+
+      {/* Banner de eventos de hoje */}
+      {todayEvents && todayEvents.length > 0 && (
+        <div className="bg-brand-lime/5 border border-brand-lime/20 rounded-xl p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <CalendarDays size={16} className="text-brand-lime" />
+              <span className="text-sm font-medium text-brand-lime">
+                {todayEvents.length === 1
+                  ? 'Você tem 1 evento hoje'
+                  : `Você tem ${todayEvents.length} eventos hoje`}
+              </span>
+            </div>
+            <Link href="/dashboard/agenda" className="text-xs text-text-secondary hover:text-brand-lime transition-colors">
+              Ver agenda →
+            </Link>
+          </div>
+          <div className="space-y-1.5">
+            {todayEvents.map((ev) => (
+              <div key={ev.id} className="flex items-center gap-2 text-xs text-text-secondary">
+                {ev.type === 'presencial' && <MapPin size={11} className="text-blue-400 flex-shrink-0" />}
+                {ev.type === 'virtual'    && <Video  size={11} className="text-emerald-400 flex-shrink-0" />}
+                {ev.type === 'pagamento_a_fazer'    && <span className="w-2 h-2 rounded-full bg-red-500 flex-shrink-0" />}
+                {ev.type === 'pagamento_a_receber'  && <span className="w-2 h-2 rounded-full bg-amber-500 flex-shrink-0" />}
+                <span className="text-text-primary font-medium truncate">{ev.title}</span>
+                {ev.start_time && (
+                  <span className="flex items-center gap-0.5 text-text-secondary/60 flex-shrink-0">
+                    <Clock size={10} /> {ev.start_time.slice(0, 5)}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
