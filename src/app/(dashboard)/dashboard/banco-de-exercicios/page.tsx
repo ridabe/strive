@@ -149,6 +149,15 @@ export default async function BancoDeExerciciosPage({ searchParams }: Props) {
                 <tr key={ex.id} className="hover:bg-surface-border/10 group">
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-2.5">
+                      {ex.video_url ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={ex.video_url} alt="" loading="lazy"
+                          className="w-10 h-10 rounded-lg object-cover flex-shrink-0 bg-surface-border" />
+                      ) : (
+                        <div className="w-10 h-10 rounded-lg bg-surface-border/50 flex items-center justify-center flex-shrink-0">
+                          <Dumbbell size={14} className="text-text-secondary/30" />
+                        </div>
+                      )}
                       {ex.is_global
                         ? <Globe size={13} className="text-brand-lime flex-shrink-0" />
                         : <Lock  size={13} className="text-purple-400 flex-shrink-0" />

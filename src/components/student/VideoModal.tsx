@@ -29,6 +29,8 @@ export function VideoModal({
 
   if (!open) return null
 
+  const isGif = videoUrl.toLowerCase().includes('.gif')
+
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/95 p-4">
       <div className="w-full max-w-2xl space-y-3">
@@ -43,16 +45,26 @@ export function VideoModal({
           </button>
         </div>
 
-        <video
-          ref={videoRef}
-          key={videoUrl}
-          src={videoUrl}
-          controls
-          autoPlay
-          playsInline
-          className="w-full rounded-2xl bg-black"
-          style={{ maxHeight: '65vh' }}
-        />
+        {isGif ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={videoUrl}
+            alt={exerciseName}
+            className="w-full rounded-2xl"
+            style={{ maxHeight: '65vh', objectFit: 'contain' }}
+          />
+        ) : (
+          <video
+            ref={videoRef}
+            key={videoUrl}
+            src={videoUrl}
+            controls
+            autoPlay
+            playsInline
+            className="w-full rounded-2xl bg-black"
+            style={{ maxHeight: '65vh' }}
+          />
+        )}
 
         <button
           onClick={onClose}

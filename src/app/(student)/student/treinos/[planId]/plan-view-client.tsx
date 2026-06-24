@@ -39,25 +39,33 @@ function groupItemsByCombo(items: WorkoutItem[]): ItemBlock[] {
   return blocks
 }
 
-function VideoThumbnail({ url, onClick }: { url: string; name: string; onClick: () => void }) {
+function VideoThumbnail({ url, name, onClick }: { url: string; name: string; onClick: () => void }) {
+  const isGif = url.toLowerCase().includes('.gif')
   return (
     <button
       onClick={onClick}
       className="relative w-28 h-20 rounded-xl overflow-hidden bg-zinc-900 flex-shrink-0 group"
     >
-      <video
-        src={url}
-        preload="metadata"
-        muted
-        playsInline
-        className="w-full h-full object-cover"
-        onLoadedMetadata={(e) => { e.currentTarget.currentTime = 0.1 }}
-      />
-      <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/25 transition-colors">
-        <div className="w-8 h-8 rounded-full bg-brand-lime flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-          <Play size={14} className="text-background ml-0.5" fill="currentColor" />
-        </div>
-      </div>
+      {isGif ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={url} alt={name} className="w-full h-full object-cover" />
+      ) : (
+        <>
+          <video
+            src={url}
+            preload="metadata"
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+            onLoadedMetadata={(e) => { e.currentTarget.currentTime = 0.1 }}
+          />
+          <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/25 transition-colors">
+            <div className="w-8 h-8 rounded-full bg-brand-lime flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+              <Play size={14} className="text-background ml-0.5" fill="currentColor" />
+            </div>
+          </div>
+        </>
+      )}
     </button>
   )
 }

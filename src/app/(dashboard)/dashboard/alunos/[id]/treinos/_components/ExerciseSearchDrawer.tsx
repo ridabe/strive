@@ -112,9 +112,15 @@ export function ExerciseSearchDrawer({ open, onClose, onSelect, adding }: Props)
               disabled={adding}
               className="w-full flex items-center gap-3 p-3 rounded-xl bg-background border border-surface-border hover:border-brand-lime/40 hover:bg-brand-lime/5 transition-all text-left group"
             >
-              <div className="w-9 h-9 rounded-lg bg-brand-lime/10 border border-brand-lime/20 flex items-center justify-center flex-shrink-0">
-                <Dumbbell size={14} className="text-brand-lime" />
-              </div>
+              {ex.video_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={ex.video_url} alt="" loading="lazy"
+                  className="w-9 h-9 rounded-lg object-cover flex-shrink-0" />
+              ) : (
+                <div className="w-9 h-9 rounded-lg bg-brand-lime/10 border border-brand-lime/20 flex items-center justify-center flex-shrink-0">
+                  <Dumbbell size={14} className="text-brand-lime" />
+                </div>
+              )}
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-text-primary truncate group-hover:text-brand-lime transition-colors">
                   {ex.name}

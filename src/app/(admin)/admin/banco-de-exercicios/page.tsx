@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import { Plus, Search, Video, Globe } from 'lucide-react'
+import { Plus, Search, Video, Globe, Dumbbell } from 'lucide-react'
 import { muscleColor, loadEmoji, loadLabel, countLabel, MUSCLE_GROUPS } from '@/lib/exercise-config'
 import { DeleteGlobalExerciseButton } from './delete-button'
 
@@ -139,12 +139,25 @@ export default async function AdminBancoExerciciosPage({ searchParams }: Props) 
               {exercises.map(ex => (
                 <tr key={ex.id} className="hover:bg-surface-border/10 group">
                   <td className="px-5 py-3.5">
-                    <p className="text-text-primary font-medium">{ex.name}</p>
-                    {ex.secondary_muscles?.length > 0 && (
-                      <p className="text-xs text-text-secondary/60 hidden sm:block">
-                        +{ex.secondary_muscles.join(', ')}
-                      </p>
-                    )}
+                    <div className="flex items-center gap-3">
+                      {ex.video_url ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={ex.video_url} alt="" loading="lazy"
+                          className="w-10 h-10 rounded-lg object-cover flex-shrink-0 bg-surface-border" />
+                      ) : (
+                        <div className="w-10 h-10 rounded-lg bg-surface-border/50 flex items-center justify-center flex-shrink-0">
+                          <Dumbbell size={14} className="text-text-secondary/30" />
+                        </div>
+                      )}
+                      <div>
+                        <p className="text-text-primary font-medium">{ex.name}</p>
+                        {ex.secondary_muscles?.length > 0 && (
+                          <p className="text-xs text-text-secondary/60 hidden sm:block">
+                            +{ex.secondary_muscles.join(', ')}
+                          </p>
+                        )}
+                      </div>
+                    </div>
                   </td>
                   <td className="px-4 py-3.5 hidden md:table-cell">
                     <span className={`inline-flex px-2 py-0.5 rounded-md text-xs font-medium border ${muscleColor(ex.muscle_group)}`}>

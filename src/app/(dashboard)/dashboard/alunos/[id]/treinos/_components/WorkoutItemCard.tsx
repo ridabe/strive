@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { Trash2, GripVertical, Unlink, ChevronDown, ChevronUp } from 'lucide-react'
+import { Trash2, GripVertical, Unlink, ChevronDown, ChevronUp, Dumbbell } from 'lucide-react'
 import { updateWorkoutItem, removeWorkoutItem, ungroupWorkoutItems } from '@/actions/workout-items'
 import { muscleColor } from '@/lib/exercise-config'
 
@@ -121,6 +121,17 @@ export function WorkoutItemCard({ item, selected, onToggleSelect, onRemove, drag
         <div {...dragHandleProps} className="cursor-grab text-text-secondary/40 hover:text-text-secondary flex-shrink-0">
           <GripVertical size={14} />
         </div>
+
+        {/* Thumbnail */}
+        {ex?.video_url ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={ex.video_url} alt="" loading="lazy"
+            className="w-9 h-9 rounded-lg object-cover flex-shrink-0" />
+        ) : (
+          <div className="w-9 h-9 rounded-lg bg-surface-border/50 flex items-center justify-center flex-shrink-0">
+            <Dumbbell size={13} className="text-text-secondary/30" />
+          </div>
+        )}
 
         {/* Exercício */}
         <div className="flex-1 min-w-0">
