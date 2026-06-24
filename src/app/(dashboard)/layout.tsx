@@ -87,19 +87,21 @@ export default async function DashboardLayout({
       className="min-h-screen bg-background flex"
       style={{ '--brand-lime': primaryColor } as React.CSSProperties}
     >
-      <aside className="hidden md:flex flex-col w-60 border-r border-surface-border bg-surface px-4 py-5 gap-6 flex-shrink-0">
+      <aside className="hidden md:flex flex-col w-60 h-screen sticky top-0 border-r border-surface-border bg-surface px-4 py-5 gap-6 flex-shrink-0">
 
-        <TenantLogoHeader
-          logoUrl={tenantBranding?.logo_url ?? null}
-          businessName={tenantBranding?.business_name ?? 'Strive Personal'}
-          primaryColor={primaryColor}
-        />
+        <div className="flex-shrink-0">
+          <TenantLogoHeader
+            logoUrl={tenantBranding?.logo_url ?? null}
+            businessName={tenantBranding?.business_name ?? 'Strive Personal'}
+            primaryColor={primaryColor}
+          />
+        </div>
 
         <div className="flex-1 overflow-y-auto">
           <DashboardSidebarNav modules={enabledModules} />
         </div>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 flex-shrink-0">
           <UserMenu
             name={profile.full_name}
             email={profile.email}

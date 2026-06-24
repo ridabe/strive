@@ -1,33 +1,57 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import { Plus, Search, Dumbbell, Video, Globe, Lock } from 'lucide-react'
+import { Plus, Search, Dumbbell, Globe, Lock } from 'lucide-react'
 import { muscleColor, loadEmoji, loadLabel, countLabel, MUSCLE_GROUPS } from '@/lib/exercise-config'
 import { DeleteExerciseButton } from './delete-button'
+import { VideoPreviewButton } from '@/components/exercises/VideoPreviewButton'
+import { PaginationBar } from '@/components/ui/PaginationBar'
 
-interface SearchParams { q?: string; muscle?: string; scope?: string }
+const PAGE_SIZE = 30
+
+interface SearchParams { q?: string; muscle?: string; scope?: string; page?: string }
 interface Props { searchParams: Promise<SearchParams> }
 
 export default async function BancoDeExerciciosPage({ searchParams }: Props) {
-  const { q, muscle, scope } = await searchParams
+  const { q, muscle, scope, page } = await searchParams
+  const pageNum = Math.max(1, parseInt(page ?? '1') || 1)
   const supabase = await createClient()
+
+  const from = (pageNum - 1) * PAGE_SIZE
+  const to   = from + PAGE_SIZE - 1
 
   let query = supabase
     .from('exercises')
-    .select('id, name, muscle_group, secondary_muscles, load_type, count_type, video_url, is_global, default_sets, default_reps, default_duration_secs')
+    .select('id, name, muscle_group, secondary_muscles, load_type, count_type, video_url, is_global, default_sets, default_reps, default_duration_secs', { count: 'exact' })
     .order('is_global', { ascending: false })
     .order('name')
-    .limit(200)
+    .range(from, to)
 
   if (q)      query = query.ilike('name', `%${q}%`)
   if (muscle) query = query.eq('muscle_group', muscle)
   if (scope === 'global') query = query.eq('is_global', true)
   if (scope === 'mine')   query = query.eq('is_global', false)
 
-  const { data: exercises } = await query
+  const { data: exercises, count: total } = await query
 
-  const total   = exercises?.length ?? 0
-  const globals = exercises?.filter(e => e.is_global).length ?? 0
-  const custom  = total - globals
+  // Global total counts for header (unfiltered by current page)
+  const { data: allStats } = await supabase
+    .from('exercises')
+    .select('is_global')
+  const globals = allStats?.filter(e => e.is_global).length ?? 0
+  const custom  = (allStats?.length ?? 0) - globals
+
+  const totalCount = total ?? 0
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE)
+
+  const buildUrl = (p: number) => {
+    const params = new URLSearchParams()
+    if (q)      params.set('q', q)
+    if (muscle) params.set('muscle', muscle)
+    if (scope)  params.set('scope', scope)
+    if (p > 1)  params.set('page', String(p))
+    const s = params.toString()
+    return s ? `?${s}` : '/dashboard/banco-de-exercicios'
+  }
 
   const scopeBase = (s: string) => {
     const p = new URLSearchParams()
@@ -191,9 +215,7 @@ export default async function BancoDeExerciciosPage({ searchParams }: Props) {
                   </td>
                   <td className="px-4 py-3.5 text-center">
                     {ex.video_url
-                      ? <a href={ex.video_url} target="_blank" rel="noopener noreferrer">
-                          <Video size={15} className="text-brand-lime hover:opacity-80 transition-opacity" />
-                        </a>
+                      ? <VideoPreviewButton url={ex.video_url} name={ex.name} />
                       : <span className="text-text-secondary/30">—</span>
                     }
                   </td>
@@ -225,11 +247,14 @@ export default async function BancoDeExerciciosPage({ searchParams }: Props) {
             </tbody>
           </table>
 
-          {total >= 200 && (
-            <div className="px-5 py-3 border-t border-surface-border text-xs text-text-secondary">
-              Exibindo 200 resultados. Use a busca para refinar.
-            </div>
-          )}
+          <PaginationBar
+            page={pageNum}
+            totalPages={totalPages}
+            total={totalCount}
+            pageSize={PAGE_SIZE}
+            prevUrl={pageNum > 1 ? buildUrl(pageNum - 1) : null}
+            nextUrl={pageNum < totalPages ? buildUrl(pageNum + 1) : null}
+          />
         </div>
       )}
     </div>

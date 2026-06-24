@@ -18,6 +18,7 @@ import {
   updateGlobalExercise,
 } from '@/app/actions/exercises'
 import { Upload, X, Play, Loader2, AlertCircle } from 'lucide-react'
+import { VideoModal } from '@/components/student/VideoModal'
 
 type Exercise = {
   id: string
@@ -55,6 +56,7 @@ export function ExerciseForm({ isGlobal, tenantId, exercise, redirectTo }: Props
   const [uploadProgress, setUploadProgress] = useState(0)
   const [countType,    setCountType]    = useState(exercise?.count_type ?? 'reps')
   const [isDragging,   setIsDragging]   = useState(false)
+  const [videoPreview, setVideoPreview] = useState(false)
 
   const isEdit = !!exercise
 
@@ -283,12 +285,25 @@ export function ExerciseForm({ isGlobal, tenantId, exercise, redirectTo }: Props
               className="mb-3 w-full max-h-56 object-contain rounded-xl bg-black"
             />
           ) : (
-            <div className="mb-3 flex items-center gap-3 p-3 bg-surface border border-surface-border rounded-lg">
-              <Play size={16} className="text-brand-lime flex-shrink-0" />
-              <span className="text-sm text-text-primary truncate flex-1">Vídeo atual</span>
-              <a href={exercise.video_url} target="_blank" rel="noopener noreferrer"
-                className="text-xs text-brand-lime hover:underline">Ver</a>
-            </div>
+            <>
+              <div className="mb-3 flex items-center gap-3 p-3 bg-surface border border-surface-border rounded-lg">
+                <Play size={16} className="text-brand-lime flex-shrink-0" />
+                <span className="text-sm text-text-primary truncate flex-1">Vídeo atual</span>
+                <button
+                  type="button"
+                  onClick={() => setVideoPreview(true)}
+                  className="text-xs text-brand-lime hover:underline"
+                >
+                  Ver
+                </button>
+              </div>
+              <VideoModal
+                open={videoPreview}
+                onClose={() => setVideoPreview(false)}
+                videoUrl={exercise.video_url!}
+                exerciseName={exercise.name ?? 'Demonstração'}
+              />
+            </>
           )
         )}
 

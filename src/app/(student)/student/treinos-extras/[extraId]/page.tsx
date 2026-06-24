@@ -1,9 +1,10 @@
 import { notFound } from 'next/navigation'
 import { getExtraWorkout } from '@/actions/extra-workouts'
 import Link from 'next/link'
-import { ArrowLeft, Dumbbell, Clock, Play, Link2, Tag, Zap } from 'lucide-react'
+import { ArrowLeft, Dumbbell, Clock, Link2, Tag, Zap } from 'lucide-react'
 import { muscleColor } from '@/lib/exercise-config'
 import type { ExtraWorkoutItemData } from '@/actions/extra-workouts'
+import { VideoPreviewButton } from '@/components/exercises/VideoPreviewButton'
 
 type Props = { params: Promise<{ extraId: string }> }
 
@@ -97,15 +98,7 @@ function ExerciseBlock({ item }: { item: ExtraWorkoutItemData }) {
       )}
 
       {ex.video_url && (
-        <a
-          href={ex.video_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 text-xs text-brand-lime hover:underline"
-        >
-          <Play size={11} />
-          Ver demonstração
-        </a>
+        <VideoPreviewButton url={ex.video_url} name={ex.name} label="Ver demonstração" />
       )}
     </div>
   )

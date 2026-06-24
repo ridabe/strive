@@ -1,33 +1,61 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import { Plus, Search, Video, Globe, Dumbbell } from 'lucide-react'
+import { Plus, Search, Globe, Dumbbell } from 'lucide-react'
 import { muscleColor, loadEmoji, loadLabel, countLabel, MUSCLE_GROUPS } from '@/lib/exercise-config'
 import { DeleteGlobalExerciseButton } from './delete-button'
+import { VideoPreviewButton } from '@/components/exercises/VideoPreviewButton'
+import { PaginationBar } from '@/components/ui/PaginationBar'
 
-interface SearchParams { q?: string; muscle?: string }
+const PAGE_SIZE = 30
+
+interface SearchParams { q?: string; muscle?: string; page?: string }
 interface Props { searchParams: Promise<SearchParams> }
 
 export default async function AdminBancoExerciciosPage({ searchParams }: Props) {
-  const { q, muscle } = await searchParams
+  const { q, muscle, page } = await searchParams
+  const pageNum = Math.max(1, parseInt(page ?? '1') || 1)
   const supabase = await createClient()
+
+  // Paginated data query
+  const from = (pageNum - 1) * PAGE_SIZE
+  const to   = from + PAGE_SIZE - 1
 
   let query = supabase
     .from('exercises')
-    .select('id, name, muscle_group, secondary_muscles, load_type, count_type, video_url, video_path, default_sets, default_reps, default_duration_secs, created_at')
+    .select('id, name, muscle_group, secondary_muscles, load_type, count_type, video_url, video_path, default_sets, default_reps, default_duration_secs', { count: 'exact' })
     .eq('is_global', true)
     .order('name')
-    .limit(300)
+    .range(from, to)
 
   if (q)      query = query.ilike('name', `%${q}%`)
   if (muscle) query = query.eq('muscle_group', muscle)
 
-  const { data: exercises } = await query
-  const total = exercises?.length ?? 0
+  const { data: exercises, count: total } = await query
+
+  // Counts per group for stats (separate light query)
+  let statsQuery = supabase
+    .from('exercises')
+    .select('muscle_group')
+    .eq('is_global', true)
+  if (q) statsQuery = statsQuery.ilike('name', `%${q}%`)
+  const { data: allForStats } = await statsQuery
 
   const byMuscle = MUSCLE_GROUPS.map(g => ({
     group: g,
-    count: exercises?.filter(e => e.muscle_group === g).length ?? 0,
+    count: allForStats?.filter(e => e.muscle_group === g).length ?? 0,
   })).filter(g => g.count > 0)
+
+  const totalCount  = total ?? 0
+  const totalPages  = Math.ceil(totalCount / PAGE_SIZE)
+
+  const buildUrl = (p: number) => {
+    const params = new URLSearchParams()
+    if (q)      params.set('q', q)
+    if (muscle) params.set('muscle', muscle)
+    if (p > 1)  params.set('page', String(p))
+    const s = params.toString()
+    return s ? `?${s}` : '/admin/banco-de-exercicios'
+  }
 
   return (
     <div className="p-6 md:p-8 space-y-6 max-w-6xl">
@@ -39,7 +67,7 @@ export default async function AdminBancoExerciciosPage({ searchParams }: Props) 
             Banco de Exercícios
           </h1>
           <p className="text-text-secondary text-sm mt-1">
-            {total} exercício{total !== 1 ? 's' : ''} globais — disponíveis para todos os tenants
+            {totalCount} exercício{totalCount !== 1 ? 's' : ''} globais — disponíveis para todos os tenants
           </p>
         </div>
         <Link
@@ -54,10 +82,15 @@ export default async function AdminBancoExerciciosPage({ searchParams }: Props) 
       {/* Stats por grupo muscular */}
       {byMuscle.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2">
-          {byMuscle.map(({ group, count }) => (
+          {byMuscle.map(({ group, count }) => {
+            const statParams = new URLSearchParams()
+            if (q) statParams.set('q', q)
+            if (muscle !== group) statParams.set('muscle', group)
+            const statHref = statParams.toString() ? `?${statParams}` : '/admin/banco-de-exercicios'
+            return (
             <Link
               key={group}
-              href={muscle === group ? '/admin/banco-de-exercicios' : `?muscle=${encodeURIComponent(group)}`}
+              href={statHref}
               className={`p-3 rounded-xl border text-center transition-colors ${
                 muscle === group
                   ? 'bg-brand-lime/10 border-brand-lime/20'
@@ -67,7 +100,8 @@ export default async function AdminBancoExerciciosPage({ searchParams }: Props) 
               <p className="font-display font-bold text-xl text-text-primary">{count}</p>
               <p className="text-xs text-text-secondary mt-0.5 leading-tight">{group}</p>
             </Link>
-          ))}
+            )
+          })}
         </div>
       )}
 
@@ -179,9 +213,7 @@ export default async function AdminBancoExerciciosPage({ searchParams }: Props) 
                   </td>
                   <td className="px-4 py-3.5 text-center">
                     {ex.video_url
-                      ? <a href={ex.video_url} target="_blank" rel="noopener noreferrer">
-                          <Video size={15} className="text-brand-lime hover:opacity-80" />
-                        </a>
+                      ? <VideoPreviewButton url={ex.video_url} name={ex.name} />
                       : <span className="text-text-secondary/30">—</span>
                     }
                   </td>
@@ -200,6 +232,15 @@ export default async function AdminBancoExerciciosPage({ searchParams }: Props) 
               ))}
             </tbody>
           </table>
+
+          <PaginationBar
+            page={pageNum}
+            totalPages={totalPages}
+            total={totalCount}
+            pageSize={PAGE_SIZE}
+            prevUrl={pageNum > 1 ? buildUrl(pageNum - 1) : null}
+            nextUrl={pageNum < totalPages ? buildUrl(pageNum + 1) : null}
+          />
         </div>
       )}
     </div>
