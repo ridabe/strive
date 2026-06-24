@@ -75,5 +75,5 @@ export const COMBO_TYPES = [
 ] as const
 
 export const VIDEO_MAX_BYTES  = 20 * 1024 * 1024  // 20 MB
-export const VIDEO_MIME_TYPES = ['video/mp4', 'video/quicktime', 'video/webm']
-export const VIDEO_ACCEPT     = '.mp4,.mov,.webm'
+export const VIDEO_MIME_TYPES = ['video/mp4', 'video/quicktime', 'video/webm', 'image/gif']
+export const VIDEO_ACCEPT     = '.mp4,.mov,.webm,.gif'

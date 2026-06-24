@@ -59,15 +59,16 @@ export default async function ExercicioPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Vídeo */}
+      {/* Mídia demonstrativa */}
       {ex.video_url && (
         <div className="bg-surface border border-surface-border rounded-xl overflow-hidden">
-          <video
-            src={ex.video_url}
-            controls
-            preload="metadata"
-            className="w-full max-h-72 object-contain bg-black"
-          />
+          {ex.video_url.toLowerCase().includes('.gif') ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={ex.video_url} alt={ex.name} className="w-full max-h-72 object-contain" />
+          ) : (
+            <video src={ex.video_url} controls preload="metadata"
+              className="w-full max-h-72 object-contain bg-black" />
+          )}
         </div>
       )}
 

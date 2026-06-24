@@ -291,14 +291,19 @@ export function WorkoutExecutionClient({
                       onClick={() => setVideoModal({ url: e.video_url!, name: e.name })}
                       className="relative w-24 h-16 rounded-xl overflow-hidden bg-zinc-900 flex-shrink-0 group"
                     >
-                      <video
-                        src={e.video_url}
-                        preload="metadata"
-                        muted
-                        playsInline
-                        className="w-full h-full object-cover"
-                        onLoadedMetadata={(ev) => { ev.currentTarget.currentTime = 0.1 }}
-                      />
+                      {e.video_url.toLowerCase().includes('.gif') ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={e.video_url} alt={e.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <video
+                          src={e.video_url}
+                          preload="metadata"
+                          muted
+                          playsInline
+                          className="w-full h-full object-cover"
+                          onLoadedMetadata={(ev) => { ev.currentTarget.currentTime = 0.1 }}
+                        />
+                      )}
                       <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/25 transition-colors">
                         <div className="w-7 h-7 rounded-full bg-brand-lime flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                           <Play size={12} className="text-background ml-0.5" fill="currentColor" />

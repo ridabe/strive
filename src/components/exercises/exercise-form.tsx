@@ -60,7 +60,7 @@ export function ExerciseForm({ isGlobal, tenantId, exercise, redirectTo }: Props
 
   function validateVideo(file: File): string {
     if (!VIDEO_MIME_TYPES.includes(file.type)) {
-      return `Formato inválido. Use .mp4, .mov ou .webm.`
+      return `Formato inválido. Use .mp4, .mov, .webm ou .gif.`
     }
     if (file.size > VIDEO_MAX_BYTES) {
       return `Arquivo muito grande (${(file.size / 1048576).toFixed(1)} MB). Máximo: 20 MB.`
@@ -273,14 +273,23 @@ export function ExerciseForm({ isGlobal, tenantId, exercise, redirectTo }: Props
       <div>
         <label className={LABEL}>Vídeo demonstrativo</label>
 
-        {/* Vídeo atual (modo edição) */}
+        {/* Mídia atual (modo edição) */}
         {isEdit && exercise?.video_url && !videoFile && (
-          <div className="mb-3 flex items-center gap-3 p-3 bg-surface border border-surface-border rounded-lg">
-            <Play size={16} className="text-brand-lime flex-shrink-0" />
-            <span className="text-sm text-text-primary truncate flex-1">Vídeo atual</span>
-            <a href={exercise.video_url} target="_blank" rel="noopener noreferrer"
-              className="text-xs text-brand-lime hover:underline">Ver</a>
-          </div>
+          exercise.video_url.toLowerCase().includes('.gif') ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={exercise.video_url}
+              alt="GIF demonstrativo"
+              className="mb-3 w-full max-h-56 object-contain rounded-xl bg-black"
+            />
+          ) : (
+            <div className="mb-3 flex items-center gap-3 p-3 bg-surface border border-surface-border rounded-lg">
+              <Play size={16} className="text-brand-lime flex-shrink-0" />
+              <span className="text-sm text-text-primary truncate flex-1">Vídeo atual</span>
+              <a href={exercise.video_url} target="_blank" rel="noopener noreferrer"
+                className="text-xs text-brand-lime hover:underline">Ver</a>
+            </div>
+          )
         )}
 
         {/* Zona de drag-and-drop */}
@@ -327,7 +336,7 @@ export function ExerciseForm({ isGlobal, tenantId, exercise, redirectTo }: Props
               <p className="text-sm text-text-primary">
                 {isEdit ? 'Substituir vídeo' : 'Arraste um vídeo ou clique para selecionar'}
               </p>
-              <p className="text-xs text-text-secondary">.mp4 · .mov · .webm · máx 20 MB</p>
+              <p className="text-xs text-text-secondary">.mp4 · .mov · .webm · .gif · máx 20 MB</p>
             </div>
           )}
         </div>

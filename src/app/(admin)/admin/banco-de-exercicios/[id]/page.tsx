@@ -44,8 +44,14 @@ export default async function AdminEditExercicioPage({ params }: Props) {
       </div>
 
       {ex.video_url && (
-        <video src={ex.video_url} controls preload="metadata"
-          className="w-full max-h-64 object-contain bg-black rounded-xl" />
+        ex.video_url.toLowerCase().includes('.gif') ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={ex.video_url} alt={ex.name}
+            className="w-full max-h-64 object-contain bg-black rounded-xl" />
+        ) : (
+          <video src={ex.video_url} controls preload="metadata"
+            className="w-full max-h-64 object-contain bg-black rounded-xl" />
+        )
       )}
 
       <ExerciseForm
