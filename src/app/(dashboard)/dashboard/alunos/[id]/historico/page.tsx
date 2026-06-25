@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { getStudentSessionsForPersonal } from '@/actions/workout-sessions'
-import { ArrowLeft, CalendarCheck, Clock, Flame, ChevronDown, MessageSquare, Dumbbell } from 'lucide-react'
+import { ArrowLeft, CalendarCheck, Clock, Flame, ChevronDown, MessageSquare, Dumbbell, Heart, Zap, Watch } from 'lucide-react'
 
 const INTENSITY_LABEL: Record<string, string> = {
   muito_leve:    'Muito Leve',
@@ -42,6 +42,14 @@ type Session = {
   duration_seconds:         number | null
   intensity:                string | null
   notes:                    string | null
+  heart_rate_avg:           number | null
+  heart_rate_max:           number | null
+  heart_rate_min:           number | null
+  calories_active:          number | null
+  spo2_avg:                 number | null
+  steps:                    number | null
+  distance_meters:          number | null
+  wearable_device:          string | null
   workout_plans:            { name: string } | null
   workout_routines:         { name: string } | null
   workout_session_exercises: SessionExercise[]
@@ -168,6 +176,45 @@ export default async function StudentHistoricoPage({ params }: Props) {
                     <p className="text-xs text-text-secondary italic border-l-2 border-surface-border pl-3">
                       {session.notes}
                     </p>
+                  )}
+
+                  {/* Wearable data */}
+                  {(session.heart_rate_avg || session.calories_active || session.steps || session.distance_meters) && (
+                    <div className="space-y-1.5">
+                      <p className="text-xs font-semibold text-text-secondary uppercase tracking-widest flex items-center gap-1.5">
+                        <Watch size={11} />
+                        {session.wearable_device ?? 'Smartwatch'}
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {session.heart_rate_avg && (
+                          <span className="flex items-center gap-1 text-xs text-red-400 bg-red-400/10 border border-red-400/20 rounded-lg px-2.5 py-1">
+                            <Heart size={10} />
+                            {session.heart_rate_min ?? '?'}–{session.heart_rate_max ?? '?'} bpm (média {session.heart_rate_avg})
+                          </span>
+                        )}
+                        {session.calories_active != null && (
+                          <span className="flex items-center gap-1 text-xs text-orange-400 bg-orange-400/10 border border-orange-400/20 rounded-lg px-2.5 py-1">
+                            <Zap size={10} />
+                            {session.calories_active} kcal
+                          </span>
+                        )}
+                        {session.steps != null && (
+                          <span className="text-xs text-text-secondary bg-background border border-surface-border rounded-lg px-2.5 py-1">
+                            {session.steps.toLocaleString('pt-BR')} passos
+                          </span>
+                        )}
+                        {session.distance_meters != null && (
+                          <span className="text-xs text-text-secondary bg-background border border-surface-border rounded-lg px-2.5 py-1">
+                            {(session.distance_meters / 1000).toFixed(2)} km
+                          </span>
+                        )}
+                        {session.spo2_avg != null && (
+                          <span className="text-xs text-sky-400 bg-sky-400/10 border border-sky-400/20 rounded-lg px-2.5 py-1">
+                            SpO₂ {session.spo2_avg}%
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   )}
 
                   {/* Per-exercise data */}

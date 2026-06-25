@@ -25,10 +25,10 @@ interface Props {
   completedAt: string | null
 }
 
-// Normaliza respostas boolean que o aluno salva como 'sim'/'nao'
+// Normaliza respostas boolean: 'sim'/'nao' do aluno e 'true'/'false' legacy
 function normalizeValue(v: unknown): string {
-  if (v === 'sim') return 'Sim'
-  if (v === 'nao') return 'Não'
+  if (v === 'sim'  || v === true  || v === 'true')  return 'Sim'
+  if (v === 'nao'  || v === false || v === 'false') return 'Não'
   return String(v ?? '')
 }
 

@@ -3,8 +3,9 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import {
   ArrowLeft, User, Phone, Mail, CalendarDays,
-  ClipboardList, FileHeart, Receipt, TrendingUp, CalendarCheck, History,
+  ClipboardList, FileHeart, Receipt, TrendingUp, CalendarCheck, History, KeyRound,
 } from 'lucide-react'
+import { ResetPasswordButton } from './reset-password-button'
 
 interface Props {
   params: Promise<{ id: string }>
@@ -25,7 +26,7 @@ export default async function StudentDetailPage({ params }: Props) {
   // Contagens rápidas
   const [{ count: planCount }, { count: assessCount }, { count: invoiceCount }, { count: attendCount }, { data: anamnese }, { count: sessionCount }] =
     await Promise.all([
-      supabase.from('workout_plans').select('*', { count: 'exact', head: true }).eq('student_id', id),
+      supabase.from('student_plan_assignments').select('*', { count: 'exact', head: true }).eq('student_id', id),
       supabase.from('physical_assessments').select('*', { count: 'exact', head: true }).eq('student_id', id),
       supabase.from('financial_plans').select('*', { count: 'exact', head: true }).eq('student_id', id),
       supabase.from('attendance').select('*', { count: 'exact', head: true }).eq('student_id', id),
@@ -145,6 +146,17 @@ export default async function StudentDetailPage({ params }: Props) {
           )
         })}
       </div>
+
+      {/* Senha do aluno */}
+      {student.user_id && (
+        <div className="bg-surface border border-surface-border rounded-xl p-5 space-y-2">
+          <div className="flex items-center gap-2">
+            <KeyRound size={14} className="text-text-secondary" />
+            <p className="text-xs font-body font-semibold text-text-secondary uppercase tracking-widest">Acesso</p>
+          </div>
+          <ResetPasswordButton studentId={student.id} />
+        </div>
+      )}
 
       {/* Links rápidos */}
       <div>

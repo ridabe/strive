@@ -11,7 +11,7 @@ const GOAL_OPTIONS = [
   'Força',
   'Condicionamento',
   'Reabilitação',
-  'Qualidade de vida',
+  'Outros',
 ]
 
 export default async function NovoAlunoPage({ searchParams }: Props) {

@@ -123,7 +123,7 @@ export async function processWorkoutGamification(sessionId: string): Promise<voi
     const { data: session } = await supabase
       .from('workout_sessions')
       .select(`
-        id, student_id, started_at, finished_at, duration_seconds,
+        id, student_id, tenant_id, started_at, finished_at, duration_seconds,
         workout_routine_id,
         workout_session_exercises (
           id, exercise_id, workout_item_id, sets_done, load_used
@@ -359,7 +359,7 @@ export async function processWorkoutGamification(sessionId: string): Promise<voi
     }
 
     // ── Atualizar aggregate de pontos mensais
-    await updateMonthlyPoints(supabase, studentId, month, year)
+    await updateMonthlyPoints(supabase, studentId, month, year, session.tenant_id as string | null)
 
     // ── Conceder badges adicionais
     if (totalPlanned > 0 && completedExercises.length >= totalPlanned) {
@@ -464,6 +464,7 @@ async function updateMonthlyPoints(
   studentId: string,
   month: number,
   year: number,
+  tenantId?: string | null,
 ) {
   const { data: events } = await supabase
     .from('gamification_events')
@@ -503,6 +504,7 @@ async function updateMonthlyPoints(
       weekly_bonuses:      weeklyBonuses,
       consistency_bonuses: consistencyBonuses,
       last_calculated_at:  new Date().toISOString(),
+      ...(tenantId ? { tenant_id: tenantId } : {}),
     },
     { onConflict: 'student_id,month,year' },
   )

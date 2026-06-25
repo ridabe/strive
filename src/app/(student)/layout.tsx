@@ -25,14 +25,14 @@ export default async function StudentLayout({
   if (!profile || profile.role !== 'student') redirect('/login')
 
   // Tenant branding + personal name
-  let tenantBranding: { logo_url: string | null; primary_color: string | null; business_name: string } | null = null
+  let tenantBranding: { logo_url: string | null; primary_color: string | null; business_name: string; cref?: string | null } | null = null
   let personalName: string | null = null
 
   if (profile.tenant_id) {
     const [{ data: tenant }, { data: personal }] = await Promise.all([
       supabase
         .from('tenants')
-        .select('logo_url, primary_color, business_name')
+        .select('logo_url, primary_color, business_name, cref')
         .eq('id', profile.tenant_id)
         .single(),
       supabase
@@ -132,11 +132,18 @@ export default async function StudentLayout({
 
       {/* ── Desktop sidebar ───────────────────────────────────────── */}
       <aside className="hidden md:flex flex-col w-60 fixed top-0 left-0 bottom-0 border-r border-surface-border bg-surface px-4 py-5 gap-6">
-        <TenantLogoHeader
-          logoUrl={tenantBranding?.logo_url ?? null}
-          businessName={businessName}
-          primaryColor={primaryColor}
-        />
+        <div>
+          <TenantLogoHeader
+            logoUrl={tenantBranding?.logo_url ?? null}
+            businessName={businessName}
+            primaryColor={primaryColor}
+          />
+          {tenantBranding?.cref && (
+            <p className="text-[10px] text-text-secondary/60 font-body mt-1 px-1">
+              CREF {tenantBranding.cref}
+            </p>
+          )}
+        </div>
 
         <div className="flex-1 overflow-y-auto">
           <StudentSidebarNav personalName={personalName} gamificationActive={gamificationActive} />

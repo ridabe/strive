@@ -55,7 +55,7 @@ export async function createProgressEntry(formData: FormData) {
     const ext = photo.name.split('.').pop()?.toLowerCase() ?? 'jpg'
     if (!['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(ext)) continue
 
-    const path = `${student.id}/${crypto.randomUUID()}.${ext}`
+    const path = `${student.tenant_id}/${student.id}/${crypto.randomUUID()}.${ext}`
     const { error: uploadError } = await adminSupabase.storage
       .from('progress-photos')
       .upload(path, await photo.arrayBuffer(), { contentType: photo.type })

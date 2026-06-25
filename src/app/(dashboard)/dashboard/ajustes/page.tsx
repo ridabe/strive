@@ -24,7 +24,7 @@ export default async function AjustesPage({
   const { data: tenant } = profile?.tenant_id
     ? await supabase
         .from('tenants')
-        .select('business_name, contact_email, contact_phone, primary_color, logo_url, plan')
+        .select('business_name, contact_email, contact_phone, primary_color, logo_url, plan, cref')
         .eq('id', profile.tenant_id)
         .single()
     : { data: null }
@@ -102,6 +102,19 @@ export default async function AjustesPage({
                 className="w-full bg-background border border-surface-border rounded-lg px-4 py-3 text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-lime/60 focus:ring-1 focus:ring-brand-lime/30 transition-colors"
               />
             </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="block text-xs font-body font-medium text-text-secondary uppercase tracking-wide">
+              Nº de Registro (CREF)
+            </label>
+            <input
+              name="cref"
+              defaultValue={(tenant as { cref?: string } | null)?.cref ?? ''}
+              placeholder="Ex: 012345-G/SP"
+              className="w-full bg-background border border-surface-border rounded-lg px-4 py-3 text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-lime/60 focus:ring-1 focus:ring-brand-lime/30 transition-colors"
+            />
+            <p className="text-xs text-text-secondary/60">Exibido abaixo do nome do studio no portal dos alunos.</p>
           </div>
 
           <div className="pt-2">

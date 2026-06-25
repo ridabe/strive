@@ -29,8 +29,18 @@ interface Props {
   completedAt: string | null
 }
 
+function normalizeInitialValues(raw: Record<string, string>): Record<string, string> {
+  return Object.fromEntries(
+    Object.entries(raw).map(([k, v]) => {
+      if (v === 'true')  return [k, 'sim']
+      if (v === 'false') return [k, 'nao']
+      return [k, v]
+    }),
+  )
+}
+
 export function AnamneseForm({ fields, initialValues, existingId, completedAt }: Props) {
-  const [values, setValues]         = useState<Record<string, string>>(initialValues)
+  const [values, setValues]         = useState<Record<string, string>>(() => normalizeInitialValues(initialValues))
   const [currentId, setCurrentId]   = useState<string | null>(existingId)
   const [isCompleted, setIsCompleted] = useState(!!completedAt)
   const [savedAt, setSavedAt]       = useState<string | null>(completedAt)

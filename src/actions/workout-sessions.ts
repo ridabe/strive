@@ -147,6 +147,8 @@ export async function getStudentSessionsForPersonal(studentId: string, limit = 3
     .from('workout_sessions')
     .select(`
       id, started_at, finished_at, duration_seconds, intensity, notes,
+      heart_rate_avg, heart_rate_max, heart_rate_min,
+      calories_active, spo2_avg, steps, distance_meters, wearable_device,
       workout_plans ( name ),
       workout_routines ( name ),
       workout_session_exercises (
