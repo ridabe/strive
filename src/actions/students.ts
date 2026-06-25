@@ -53,6 +53,7 @@ export async function createStudent(formData: FormData) {
   const { count: currentCount } = await supabase
     .from('students')
     .select('*', { count: 'exact', head: true })
+    .eq('tenant_id', tenantId)
     .eq('status', 'active')
 
   if ((currentCount ?? 0) >= tenant.max_students) {

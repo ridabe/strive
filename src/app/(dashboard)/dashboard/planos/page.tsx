@@ -61,6 +61,7 @@ export default async function PlanosDashboardPage({
   const { count: studentCount } = await supabase
     .from('students')
     .select('*', { count: 'exact', head: true })
+    .eq('tenant_id', profile!.tenant_id!)
     .eq('status', 'active')
 
   return (

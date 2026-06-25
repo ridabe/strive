@@ -26,6 +26,7 @@ import {
   Palette,
   UtensilsCrossed,
   ChevronDown,
+  Trophy,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -69,6 +70,7 @@ const CORE_TOP: { label: string; href: string; icon: LucideIcon }[] = [
 ]
 
 const CORE_BOTTOM: { label: string; href: string; icon: LucideIcon }[] = [
+  { label: 'Ranking', href: '/dashboard/ranking', icon: Trophy    },
   { label: 'Planos',  href: '/dashboard/planos',  icon: CreditCard },
   { label: 'Ajustes', href: '/dashboard/ajustes', icon: Settings   },
 ]
@@ -149,6 +151,7 @@ export function DashboardSidebarNav({ modules }: Props) {
               <div key={group.label}>
                 {/* Cabeçalho do grupo — clicável */}
                 <button
+                  type="button"
                   onClick={() => toggle(group.label)}
                   className={cn(
                     'w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-body font-semibold uppercase tracking-widest transition-all select-none',
