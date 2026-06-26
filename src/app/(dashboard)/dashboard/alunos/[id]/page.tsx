@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import {
   ArrowLeft, User, Phone, Mail, CalendarDays,
-  ClipboardList, FileHeart, Receipt, TrendingUp, CalendarCheck, History, KeyRound,
+  ClipboardList, FileHeart, Receipt, TrendingUp, CalendarCheck, History, KeyRound, Zap,
 } from 'lucide-react'
 import { ResetPasswordButton } from './reset-password-button'
 
@@ -15,6 +15,12 @@ export default async function StudentDetailPage({ params }: Props) {
   const { id } = await params
   const supabase = await createClient()
 
+  const { data: { user } } = await supabase.auth.getUser()
+
+  const { data: profile } = user
+    ? await supabase.from('profiles').select('tenant_id').eq('id', user.id).single()
+    : { data: null }
+
   const { data: student } = await supabase
     .from('students')
     .select('*')
@@ -22,6 +28,26 @@ export default async function StudentDetailPage({ params }: Props) {
     .single()
 
   if (!student) notFound()
+
+  // Check if Max Strive IA module is enabled for this tenant
+  let hasMaxModule = false
+  if (profile?.tenant_id) {
+    const { data: modRow } = await supabase
+      .from('system_modules')
+      .select('id')
+      .eq('slug', 'assistente-ia')
+      .single()
+
+    if (modRow) {
+      const { count } = await supabase
+        .from('tenant_modules')
+        .select('*', { count: 'exact', head: true })
+        .eq('tenant_id', profile.tenant_id)
+        .eq('module_id', modRow.id)
+        .eq('enabled', true)
+      hasMaxModule = (count ?? 0) > 0
+    }
+  }
 
   // Contagens rápidas
   const [{ count: planCount }, { count: assessCount }, { count: invoiceCount }, { count: attendCount }, { data: anamnese }, { count: sessionCount }] =
@@ -189,6 +215,27 @@ export default async function StudentDetailPage({ params }: Props) {
           })}
         </div>
       </div>
+
+      {/* Max Strive IA */}
+      {hasMaxModule && (
+        <Link
+          href={`/dashboard/alunos/${id}/assistente-ia`}
+          className="group flex items-center gap-4 p-4 bg-violet-500/5 border border-violet-500/20 rounded-xl hover:border-violet-400/50 transition-all"
+        >
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-violet-500/15 border border-violet-500/30">
+            <Zap size={18} className="text-violet-400" />
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-body font-semibold text-text-primary group-hover:text-violet-400 transition-colors">
+              Consultar Max Strive IA
+            </p>
+            <p className="text-xs text-text-secondary">
+              Assistente inteligente — crie treinos, analise progresso e muito mais
+            </p>
+          </div>
+          <ArrowLeft size={14} className="text-violet-400 rotate-180 flex-shrink-0" />
+        </Link>
+      )}
 
       {/* Notas */}
       {student.notes && (

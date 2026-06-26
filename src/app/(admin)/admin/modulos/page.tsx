@@ -22,6 +22,7 @@ const CATEGORY_CONFIG: Record<string, { label: string; color: string }> = {
   financeiro:     { label: 'Financeiro',             color: 'text-green-400  border-green-400/20  bg-green-400/5'  },
   comunicacao:    { label: 'Comunicação / Conteúdo', color: 'text-orange-400 border-orange-400/20 bg-orange-400/5' },
   whitelabel:     { label: 'White-label',            color: 'text-pink-400   border-pink-400/20   bg-pink-400/5'   },
+  ia:             { label: 'Inteligência Artificial', color: 'text-violet-400 border-violet-400/20 bg-violet-400/5'  },
   futuro:         { label: 'Módulos Futuros',        color: 'text-text-secondary border-surface-border bg-background' },
 }
 
@@ -31,7 +32,7 @@ const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
   coming_soon: { label: 'Em breve', color: 'text-text-secondary bg-background border-surface-border' },
 }
 
-const CATEGORY_ORDER = ['treinos', 'acompanhamento', 'financeiro', 'comunicacao', 'whitelabel', 'futuro']
+const CATEGORY_ORDER = ['ia', 'treinos', 'acompanhamento', 'financeiro', 'comunicacao', 'whitelabel', 'futuro']
 
 export default async function ModulosPage() {
   const supabase = await createClient()

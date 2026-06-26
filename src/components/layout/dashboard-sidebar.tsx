@@ -61,6 +61,10 @@ const MODULE_GROUPS: { label: string; slugs: string[] }[] = [
     label: 'Comunicação',
     slugs: ['arquivos', 'notificacoes', 'minha-agenda'],
   },
+  {
+    label: 'IA',
+    slugs: ['assistente-ia'],
+  },
 ]
 
 // ─── Itens fixos ──────────────────────────────────────────────────────────────
