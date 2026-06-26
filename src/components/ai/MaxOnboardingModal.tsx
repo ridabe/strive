@@ -2,8 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import { X, EyeOff, ArrowRight, Zap, MessageSquare, Dumbbell, CheckCircle, User } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { X, EyeOff, ArrowRight, Zap, MessageSquare, CheckCircle, User } from 'lucide-react'
 
 const MAX_COLOR = '#7C3AED'
 const STORAGE_PREFIX = 'max_onboarding_seen_'
@@ -115,7 +114,7 @@ export function MaxOnboardingModal({ userId }: Props) {
         </button>
 
         {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto p-6 pb-2 flex flex-col items-center">
+        <div className="flex-1 min-h-0 overflow-y-auto p-6 pb-2 flex flex-col items-center">
 
           {/* Badge */}
           <div
@@ -191,24 +190,19 @@ export function MaxOnboardingModal({ userId }: Props) {
             </p>
           </div>
 
-          {/* Steps */}
-          {typingDone && (
+          {/* Steps — apenas os já revelados são montados no DOM */}
+          {shownSteps > 0 && (
             <div className="w-full mb-2">
               <p className="text-[10px] font-semibold uppercase tracking-widest text-text-secondary mb-3">
                 Como usar
               </p>
               <div className="space-y-2.5">
-                {STEPS.map((step, idx) => {
+                {STEPS.slice(0, shownSteps).map((step, idx) => {
                   const Icon = step.icon
                   return (
                     <div
                       key={idx}
-                      className={cn(
-                        'flex items-start gap-3 transition-all duration-300',
-                        idx < shownSteps
-                          ? 'opacity-100 translate-x-0'
-                          : 'opacity-0 translate-x-4 pointer-events-none',
-                      )}
+                      className="flex items-start gap-3 animate-[maxSlideIn_0.3s_ease-out]"
                     >
                       <span
                         className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5"
