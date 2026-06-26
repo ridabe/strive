@@ -5,6 +5,7 @@ import { DashboardSidebarNav, type EnabledModule } from '@/components/layout/das
 import { UserMenu } from '@/components/layout/user-menu'
 import { TenantLogoHeader } from '@/components/layout/tenant-logo-header'
 import { PendingAgendaBanner } from '@/components/agenda/PendingAgendaBanner'
+import { MaxOnboardingModal } from '@/components/ai/MaxOnboardingModal'
 
 export default async function DashboardLayout({
   children,
@@ -122,6 +123,11 @@ export default async function DashboardLayout({
         <PendingAgendaBanner count={pendingAgendaCount} />
         {children}
       </main>
+
+      {/* Max Strive IA onboarding — shown once per user when module is enabled */}
+      {enabledModules.some((m) => m.slug === 'assistente-ia') && (
+        <MaxOnboardingModal userId={user.id} />
+      )}
     </div>
   )
 }

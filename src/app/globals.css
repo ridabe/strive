@@ -28,6 +28,12 @@ a {
   text-decoration: none;
 }
 
+/* Max Strive IA — cursor blink keyframe */
+@keyframes maxCursor {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
