@@ -31,6 +31,14 @@ interface GeneratedPlan {
   routines: PlanRoutine[];
 }
 
+interface ExerciseRow {
+  id: string;
+  name: string;
+  muscle_group: string;
+  count_type?: string | null;
+  load_type?: string | null;
+}
+
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -156,7 +164,7 @@ async function fetchAvailableExercises(supabase: SupabaseClient, tenantId: strin
     .order('name');
 
   // Agrupa e limita a 12 por grupo
-  const grouped = new Map<string, any[]>();
+  const grouped = new Map<string, ExerciseRow[]>();
   for (const ex of data ?? []) {
     const list = grouped.get(ex.muscle_group) ?? [];
     if (list.length < EXERCISES_PER_GROUP) {
@@ -167,8 +175,8 @@ async function fetchAvailableExercises(supabase: SupabaseClient, tenantId: strin
   return [...grouped.values()].flat();
 }
 
-function formatExerciseList(exercises: any[]): string {
-  const grouped = new Map<string, any[]>();
+function formatExerciseList(exercises: ExerciseRow[]): string {
+  const grouped = new Map<string, ExerciseRow[]>();
   for (const ex of exercises) {
     const list = grouped.get(ex.muscle_group) ?? [];
     list.push(ex);

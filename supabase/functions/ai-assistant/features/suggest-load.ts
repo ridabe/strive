@@ -2,6 +2,7 @@ import { SupabaseClient }  from 'https://esm.sh/@supabase/supabase-js@2';
 import { fetchWorkoutLoadHistory, formatLoadHistoryForPrompt } from '../retrieval/workout-context.ts';
 import { recordAiUsage, type AiTrackingContext } from '../usage.ts';
 import { ANTHROPIC_EFFICIENT_MODEL } from '../models.ts';
+import { extractSsePayloads } from '../streaming.ts';
 
 const MODEL         = ANTHROPIC_EFFICIENT_MODEL;
 const MAX_TOKENS    = 420;
@@ -178,18 +179,19 @@ function buildSseResponse(
           if (done) break;
 
           buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split('\n');
-          buffer = lines.pop() ?? '';
+          const parsed = extractSsePayloads(buffer);
+          buffer = parsed.rest;
 
-          for (const line of lines) {
-            if (!line.startsWith('data: ')) continue;
-            const raw = line.slice(6).trim();
+          for (const raw of parsed.payloads) {
             if (processRawEvent(raw)) break outer;
           }
         }
 
-        if (!messageCompleted && buffer.trim().startsWith('data: ')) {
-          processRawEvent(buffer.trim().slice(6).trim());
+        if (!messageCompleted && buffer.trim()) {
+          const parsed = extractSsePayloads(buffer, true);
+          for (const raw of parsed.payloads) {
+            if (processRawEvent(raw)) break;
+          }
         }
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);

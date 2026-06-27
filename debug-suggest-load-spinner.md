@@ -22,3 +22,24 @@
 - Coletar evidencias de runtime no cliente web e na Edge Function.
 - Instrumentar apenas logs de debug no primeiro diff do codigo.
 - Reproduzir o erro e comparar eventos do inicio, stream, persistencia e fechamento.
+
+## Evidencias Coletadas
+- O cliente recebeu `status=200` e chunks de texto normalmente.
+- O ultimo chunk util chegou com `accumulatedLength=687`.
+- O marcador `[DONE]` nao chegou ao cliente.
+- O `reader.read()` so retornou `done=true` cerca de 145 segundos depois do ultimo chunk util.
+- Nenhuma nova linha de `suggest_load` foi gravada em `ai_usage_events`.
+- Apenas a mensagem `user` foi gravada em `ai_messages`; nao houve mensagem `assistant`.
+
+## Analise
+- H1. Confirmada: o stream nao estava sendo encerrado logicamente no momento correto.
+- H2. Parcialmente confirmada: como o parser nao detectava o evento final, a persistencia final nem chegava a ocorrer no tempo esperado.
+- H3. Rejeitada: o cliente recebeu chunks e encerrou apenas quando o socket fechou, sem evidencia de bug local de renderizacao.
+- H4. Confirmada no efeito final: havia falha no trecho final do fluxo, causada pelo parsing incompleto dos blocos SSE finais.
+- H5. Rejeitada: a reproducao instrumentada correspondeu ao codigo esperado e ao deploy atual.
+
+## Correcao Aplicada
+- Adicionado parser compartilhado de SSE em `supabase/functions/ai-assistant/streaming.ts`.
+- Ajustado o consumo de SSE em `suggest-load.ts`, `chat.ts` e `analyze-progress.ts` para processar blocos completos `event/data`.
+- Mantida a instrumentacao do cliente web para verificacao `post-fix`.
+- Corrigido tambem o erro de build do Vercel em `generate-plan.ts` removendo `any` explicito.
