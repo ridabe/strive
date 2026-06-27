@@ -28,7 +28,7 @@ interface RecentEventsPanelProps {
  * Renderiza a lista de eventos recentes em um bloco recolhivel com paginacao incremental.
  */
 export function RecentEventsPanel({ items }: RecentEventsPanelProps) {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
   const [visibleCount, setVisibleCount] = useState(10)
 
   const visibleItems = useMemo(() => items.slice(0, visibleCount), [items, visibleCount])
