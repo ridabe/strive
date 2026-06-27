@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { Zap, TrendingUp, Dumbbell, Heart, MessageSquare, Loader2, X, ChevronRight } from 'lucide-react'
+import { Send, Zap, TrendingUp, Dumbbell, Heart, MessageSquare, Loader2, X, ChevronRight } from 'lucide-react'
 import { useMaxStream, type MaxFeature } from '@/hooks/useMaxStream'
+import { createClient } from '@/lib/supabase/client'
 
 const MAX_COLOR = '#7C3AED'
 
@@ -49,25 +50,98 @@ const ACTIONS: Action[] = [
 interface Props {
   studentId: string
   studentName: string
+  tenantId: string
 }
 
 /**
  * Exibe atalhos operacionais do assistente com foco em leitura e toque no mobile.
  */
-export function MaxPanel({ studentId, studentName }: Props) {
+export function MaxPanel({ studentId, studentName, tenantId }: Props) {
   const { text, isStreaming, error, conversationId, planId, trigger, reset } = useMaxStream()
   const [activeFeature, setActiveFeature] = useState<MaxFeature | null>(null)
+  const [isSendingMessage, setIsSendingMessage] = useState(false)
+  const [sendFeedback, setSendFeedback] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
   const displayText = text.replace(/\nplan_id:[a-f0-9-]{36}$/, '').trim()
+  const canSendToStudent = useMemo(
+    () => activeFeature === 'suggest_load' || activeFeature === 'motivation',
+    [activeFeature],
+  )
 
+  useEffect(() => {
+    reset()
+    setActiveFeature(null)
+    setSendFeedback(null)
+  }, [studentId, reset])
+
+  /**
+   * Remove prefacios operacionais para salvar apenas a mensagem final destinada ao aluno.
+   */
+  function sanitizeStudentFacingText(rawText: string) {
+    return rawText
+      .replace(/\nplan_id:[a-f0-9-]{36}/g, '')
+      .replace(/^(?:aqui\s+est[aá].*?|segue\s+(?:abaixo\s+)?(?:uma\s+)?(?:mensagem|sugest[aã]o).*?|prontinho.*?|mensagem\s+pronta.*?|você\s+pode\s+enviar.*?|para\s+o\s+[^\n:.-]+[:,-]?\s*)[\s:,-]*/i, '')
+      .replace(/^(?:oi[,!.\s]+)?personal[,!.\s]*/i, '')
+      .trim()
+  }
+
+  /**
+   * Dispara a feature selecionada limpando feedbacks de envio anteriores.
+   */
   async function handleAction(feature: MaxFeature) {
+    setSendFeedback(null)
     setActiveFeature(feature)
     await trigger({ feature, studentId })
   }
 
+  /**
+   * Limpa a resposta corrente para evitar reaproveitar contexto visual entre execucoes.
+   */
   function handleReset() {
     reset()
     setActiveFeature(null)
+    setSendFeedback(null)
+  }
+
+  /**
+   * Persiste no inbox do aluno apenas respostas prontas para consumo direto.
+   */
+  async function handleSendToStudent() {
+    if (!displayText || !canSendToStudent || isSendingMessage) return
+
+    const clean = sanitizeStudentFacingText(displayText)
+    if (!clean) {
+      setSendFeedback({ type: 'error', text: 'A mensagem gerada ficou vazia para envio ao aluno.' })
+      return
+    }
+
+    setIsSendingMessage(true)
+    setSendFeedback(null)
+
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+
+      const { error: insertError } = await supabase
+        .from('student_messages')
+        .insert({
+          tenant_id: tenantId,
+          student_id: studentId,
+          trainer_id: user?.id,
+          message: clean,
+          message_type: activeFeature === 'suggest_load' ? 'load_suggestion' : 'motivation',
+          title: activeFeature === 'suggest_load' ? 'Sugestão de carga' : 'Mensagem motivacional',
+        })
+
+      if (insertError) throw insertError
+
+      setSendFeedback({ type: 'success', text: 'Mensagem enviada ao aluno com sucesso.' })
+    } catch (sendError: unknown) {
+      const message = sendError instanceof Error ? sendError.message : 'Não foi possível enviar a mensagem.'
+      setSendFeedback({ type: 'error', text: message })
+    } finally {
+      setIsSendingMessage(false)
+    }
   }
 
   return (
@@ -157,6 +231,17 @@ export function MaxPanel({ studentId, studentName }: Props) {
                   Ver plano criado
                 </Link>
               )}
+              {canSendToStudent && (
+                <button
+                  type="button"
+                  onClick={handleSendToStudent}
+                  disabled={isSendingMessage}
+                  className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-green-400/30 bg-green-400/5 px-3 py-2.5 text-xs font-medium text-green-400 transition-all hover:bg-green-400/10 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {isSendingMessage ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
+                  {isSendingMessage ? 'Enviando...' : 'Enviar para aluno'}
+                </button>
+              )}
               <button
                 type="button"
                 onClick={handleReset}
@@ -164,6 +249,13 @@ export function MaxPanel({ studentId, studentName }: Props) {
               >
                 Limpar
               </button>
+            </div>
+          )}
+          {sendFeedback && (
+            <div className="border-t border-surface-border px-4 py-3">
+              <p className={`text-xs ${sendFeedback.type === 'success' ? 'text-green-400' : 'text-red-400'}`}>
+                {sendFeedback.text}
+              </p>
             </div>
           )}
         </div>

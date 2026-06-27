@@ -19,6 +19,7 @@ interface StudentMobileNavProps {
   userRole: AppRole
   personalName: string | null
   gamificationActive?: boolean
+  unreadMessageCount?: number
 }
 
 /**
@@ -34,6 +35,7 @@ export function StudentMobileNav({
   userRole,
   personalName,
   gamificationActive,
+  unreadMessageCount = 0,
 }: StudentMobileNavProps) {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -164,7 +166,12 @@ export function StudentMobileNav({
                     )}
                   >
                     <Icon size={18} />
-                    <span className="truncate">{item.label}</span>
+                    <span className="flex-1 truncate">{item.label}</span>
+                    {item.href === '/student/mensagens' && unreadMessageCount > 0 && (
+                      <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-brand-lime px-1.5 py-0.5 text-[10px] font-bold text-black">
+                        {unreadMessageCount > 9 ? '9+' : unreadMessageCount}
+                      </span>
+                    )}
                   </Link>
                 )
               })}

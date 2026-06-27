@@ -1,4 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
+import { IARefreshButton } from './refresh-button'
+import { RecentEventsPanel } from './recent-events-panel'
 import {
   Zap, MessageSquare, Dumbbell, TrendingUp, Heart, BarChart2,
   Building2, ArrowUp, ArrowDown, Minus, Clock, Users, Cpu,
@@ -6,6 +8,9 @@ import {
 } from 'lucide-react'
 import { subDays, startOfDay, format, formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
 
@@ -233,24 +238,54 @@ export default async function IAAnalyticsPage() {
       tokens: rows.reduce((acc, row) => acc + row.input_tokens + row.output_tokens, 0),
     }
   })
+  const recentItems = recent.map((conv) => {
+    const feat = conv.feature_type as Feature
+    const cfg = FEATURE_CFG[feat] ?? FEATURE_CFG.chat
+    const tenant = tenantMap.get(conv.tenant_id)
+    const providerCfg = PROVIDER_CFG[conv.provider] ?? PROVIDER_CFG.unknown
+    const platformCfg = PLATFORM_CFG[conv.client_platform] ?? PLATFORM_CFG.unknown
+
+    return {
+      id: conv.id,
+      featureLabel: cfg.label,
+      featurePill: cfg.pill,
+      providerLabel: providerCfg.label,
+      providerPill: providerCfg.pill,
+      platformLabel: platformCfg.label,
+      platformPill: platformCfg.pill,
+      statusLabel: conv.status === 'error' ? 'Erro' : 'Sucesso',
+      statusPill:
+        conv.status === 'error'
+          ? 'text-status-error bg-status-error/10 border-status-error/20'
+          : 'text-status-success bg-status-success/10 border-status-success/20',
+      tenantLabel: tenant?.business_name ?? `${conv.tenant_id.slice(0, 8)}…`,
+      tokenLabel: `${(conv.input_tokens + conv.output_tokens).toLocaleString('pt-BR')} tk`,
+      modelLabel: conv.model,
+      errorMessage: conv.error_message,
+      relativeTime: formatDistanceToNow(new Date(conv.created_at), { addSuffix: true, locale: ptBR }),
+    }
+  })
 
   // ─────────────────────────────────────────────────────────────────────────
   return (
     <div className="p-4 md:p-8 space-y-8">
 
       {/* Header */}
-      <div>
-        <div className="flex items-center gap-2 mb-1">
-          <div className="w-7 h-7 rounded-lg bg-violet-400/10 border border-violet-400/20 flex items-center justify-center">
-            <Zap size={14} className="text-violet-400" />
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-7 h-7 rounded-lg bg-violet-400/10 border border-violet-400/20 flex items-center justify-center">
+              <Zap size={14} className="text-violet-400" />
+            </div>
+            <h1 className="font-display text-2xl font-bold text-text-primary uppercase tracking-widest">
+              Max Strive IA
+            </h1>
           </div>
-          <h1 className="font-display text-2xl font-bold text-text-primary uppercase tracking-widest">
-            Max Strive IA
-          </h1>
+          <p className="text-text-secondary text-sm">
+            Analytics de uso do módulo de Inteligência Artificial
+          </p>
         </div>
-        <p className="text-text-secondary text-sm">
-          Analytics de uso do módulo de Inteligência Artificial
-        </p>
+        <IARefreshButton />
       </div>
 
       {/* ── KPIs ─────────────────────────────────────────────────────────────── */}
@@ -333,39 +368,56 @@ export default async function IAAnalyticsPage() {
         <div className="bg-surface border border-surface-border rounded-xl p-5 space-y-4">
           <h2 className="font-body font-semibold text-text-primary text-sm flex items-center gap-2">
             <Cpu size={14} className="text-text-secondary" />
-            Providers
+            Providers e tokens por IA
           </h2>
           {total30 === 0 ? (
             <p className="text-sm text-text-secondary py-4 text-center">Nenhum uso recente.</p>
           ) : (
-            <div className="space-y-3">
-              {providerStats.map(({ provider, count, tokens }) => {
-                const cfg = PROVIDER_CFG[provider]
-                const Icon = cfg.icon
-                const pctVal  = total30 > 0 ? Math.round((count / total30) * 100) : 0
-                return (
-                  <div key={provider} className="space-y-1.5">
-                    <div className="flex items-center justify-between">
-                      <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded-full border ${cfg.pill}`}>
-                        <Icon size={11} />
-                        {cfg.label}
-                      </span>
-                      <span className="text-sm font-display font-bold text-text-primary">
-                        {count}
-                        <span className="text-xs font-body font-normal text-text-secondary/60 ml-1">
-                          {tokens.toLocaleString('pt-BR')} tk
+            <div className="space-y-4">
+              <div className="space-y-3">
+                {providerStats.map(({ provider, count, tokens }) => {
+                  const cfg = PROVIDER_CFG[provider]
+                  const Icon = cfg.icon
+                  const pctVal  = total30 > 0 ? Math.round((count / total30) * 100) : 0
+                  return (
+                    <div key={provider} className="space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded-full border ${cfg.pill}`}>
+                          <Icon size={11} />
+                          {cfg.label}
                         </span>
-                      </span>
+                        <span className="text-sm font-display font-bold text-text-primary">
+                          {count}
+                          <span className="text-xs font-body font-normal text-text-secondary/60 ml-1">
+                            {tokens.toLocaleString('pt-BR')} tk
+                          </span>
+                        </span>
+                      </div>
+                      <div className="w-full h-1.5 bg-background rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all"
+                          style={{ width: `${pctVal}%`, backgroundColor: provider === 'openai' ? '#34D399' : provider === 'anthropic' ? '#A78BFA' : '#71717A' }}
+                        />
+                      </div>
                     </div>
-                    <div className="w-full h-1.5 bg-background rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full transition-all"
-                        style={{ width: `${pctVal}%`, backgroundColor: provider === 'openai' ? '#34D399' : '#A78BFA' }}
-                      />
+                  )
+                })}
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                {providerStats.map(({ provider, tokens }) => {
+                  const cfg = PROVIDER_CFG[provider]
+                  return (
+                    <div key={`${provider}-tokens`} className="rounded-xl border border-surface-border bg-background/60 px-3 py-2">
+                      <p className="text-[11px] uppercase tracking-wider text-text-secondary/70">
+                        Tokens {cfg.label}
+                      </p>
+                      <p className="font-display text-lg font-bold text-text-primary">
+                        {tokens.toLocaleString('pt-BR')}
+                      </p>
                     </div>
-                  </div>
-                )
-              })}
+                  )
+                })}
+              </div>
             </div>
           )}
         </div>
@@ -583,71 +635,7 @@ export default async function IAAnalyticsPage() {
         )}
       </div>
 
-      {/* ── Conversas recentes ────────────────────────────────────────────────── */}
-      <div className="bg-surface border border-surface-border rounded-xl overflow-hidden">
-        <div className="px-4 sm:px-5 py-4 border-b border-surface-border flex items-center gap-2">
-          <Clock size={15} className="text-text-secondary" />
-          <h2 className="font-body font-semibold text-text-primary text-sm">
-            Eventos recentes
-          </h2>
-        </div>
-
-        {recent.length === 0 ? (
-          <p className="text-center text-text-secondary text-sm py-12">
-            Nenhuma consulta registrada ainda.
-          </p>
-        ) : (
-          <div className="divide-y divide-surface-border">
-            {recent.map((conv) => {
-              const feat   = conv.feature_type as Feature
-              const cfg    = FEATURE_CFG[feat] ?? FEATURE_CFG.chat
-              const Icon   = cfg.icon
-              const tenant = tenantMap.get(conv.tenant_id)
-              const providerCfg = PROVIDER_CFG[conv.provider] ?? PROVIDER_CFG.unknown
-              const platformCfg = PLATFORM_CFG[conv.client_platform] ?? PLATFORM_CFG.unknown
-              return (
-                <div key={conv.id} className="flex items-start gap-3 px-4 sm:px-5 py-3">
-                  <div
-                    className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 border ${cfg.pill}`}
-                  >
-                    <Icon size={13} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap items-center gap-2 mb-1">
-                      <p className="text-sm font-body font-medium text-text-primary truncate">
-                        {cfg.label}
-                      </p>
-                      <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded border ${providerCfg.pill}`}>
-                        {PROVIDER_CFG[conv.provider].label}
-                      </span>
-                      <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded border ${platformCfg.pill}`}>
-                        {PLATFORM_CFG[conv.client_platform].label}
-                      </span>
-                      <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded border ${
-                        conv.status === 'error'
-                          ? 'text-status-error bg-status-error/10 border-status-error/20'
-                          : 'text-status-success bg-status-success/10 border-status-success/20'
-                      }`}>
-                        {conv.status === 'error' ? 'Erro' : 'Sucesso'}
-                      </span>
-                    </div>
-                    <p className="text-xs text-text-secondary truncate">
-                      {tenant?.business_name ?? conv.tenant_id.slice(0, 8) + '…'} · {(conv.input_tokens + conv.output_tokens).toLocaleString('pt-BR')} tk
-                      {conv.model ? ` · ${conv.model}` : ''}
-                    </p>
-                    {conv.error_message && (
-                      <p className="text-xs text-status-error/80 truncate mt-1">{conv.error_message}</p>
-                    )}
-                  </div>
-                  <p className="text-xs text-text-secondary/60 flex-shrink-0">
-                    {formatDistanceToNow(new Date(conv.created_at), { addSuffix: true, locale: ptBR })}
-                  </p>
-                </div>
-              )
-            })}
-          </div>
-        )}
-      </div>
+      <RecentEventsPanel items={recentItems} />
 
     </div>
   )

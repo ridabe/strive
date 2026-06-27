@@ -23,7 +23,13 @@ export function MaxChatPanel({ studentId, initialConversationId, initialMessages
   const [messages, setMessages] = useState<Message[]>(initialMessages)
   const [input, setInput] = useState('')
   const bottomRef = useRef<HTMLDivElement>(null)
-  const { text, isStreaming, error, conversationId, trigger } = useMaxStream()
+  const { text, isStreaming, error, conversationId, trigger, reset } = useMaxStream()
+
+  useEffect(() => {
+    reset()
+    setInput('')
+    setMessages(initialMessages)
+  }, [studentId, initialConversationId, initialMessages, reset])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })

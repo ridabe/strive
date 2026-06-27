@@ -5,6 +5,7 @@ import { StudentSidebarNav } from '@/components/layout/student-sidebar'
 import { StudentMobileNav } from '@/components/layout/student-mobile-nav'
 import { UserMenu } from '@/components/layout/user-menu'
 import { StudentAgendaBanner } from '@/components/agenda/StudentAgendaBanner'
+import { StudentMessagesBanner } from '@/components/student/StudentMessagesBanner'
 
 export default async function StudentLayout({
   children,
@@ -53,6 +54,8 @@ export default async function StudentLayout({
   let pendingAgendaCount  = 0
   let rejectedAgendaCount = 0
   let latestAgendaNoticeAt: string | null = null
+  let unreadMessageCount = 0
+  let latestMessageTitle: string | null = null
 
   const { data: studentRow } = await supabase
     .from('students')
@@ -72,6 +75,7 @@ export default async function StudentLayout({
       { count: pending },
       { count: rejected },
       { data: latestNoticeRow },
+      { data: unreadMessages },
     ] = await Promise.all([
       supabase
         .from('agenda_events')
@@ -95,10 +99,18 @@ export default async function StudentLayout({
         .order('updated_at', { ascending: false })
         .limit(1)
         .maybeSingle(),
+      supabase
+        .from('student_messages')
+        .select('id, title, created_at')
+        .eq('student_id', studentRow.id)
+        .is('read_at', null)
+        .order('created_at', { ascending: false }),
     ])
     pendingAgendaCount  = pending  ?? 0
     rejectedAgendaCount = rejected ?? 0
     latestAgendaNoticeAt = latestNoticeRow?.updated_at ?? null
+    unreadMessageCount = unreadMessages?.length ?? 0
+    latestMessageTitle = unreadMessages?.[0]?.title ?? null
   }
 
   return (
@@ -115,6 +127,7 @@ export default async function StudentLayout({
         userRole={profile.role}
         personalName={personalName}
         gamificationActive={gamificationActive}
+        unreadMessageCount={unreadMessageCount}
       />
 
       {/* ── Desktop sidebar ───────────────────────────────────────── */}
@@ -133,7 +146,11 @@ export default async function StudentLayout({
         </div>
 
         <div className="flex-1 overflow-y-auto">
-          <StudentSidebarNav personalName={personalName} gamificationActive={gamificationActive} />
+          <StudentSidebarNav
+            personalName={personalName}
+            gamificationActive={gamificationActive}
+            unreadMessageCount={unreadMessageCount}
+          />
         </div>
 
         <UserMenu
@@ -150,6 +167,13 @@ export default async function StudentLayout({
           rejectedCount={rejectedAgendaCount}
           latestNoticeAt={latestAgendaNoticeAt}
         />
+        {studentRow && (
+          <StudentMessagesBanner
+            studentId={studentRow.id}
+            initialUnreadCount={unreadMessageCount}
+            initialLatestTitle={latestMessageTitle}
+          />
+        )}
         {children}
       </main>
 

@@ -24,6 +24,8 @@ export interface UseMaxStreamResult {
   reset: () => void
 }
 
+const CLIENT_STREAM_IDLE_AFTER_TEXT_MS = 2500
+
 export function useMaxStream(): UseMaxStreamResult {
   const [text, setText] = useState('')
   const [isStreaming, setIsStreaming] = useState(false)
@@ -32,10 +34,17 @@ export function useMaxStream(): UseMaxStreamResult {
   const [planId, setPlanId] = useState<string | null>(null)
   const abortRef = useRef<AbortController | null>(null)
 
+  /**
+   * Limpa completamente a execucao corrente para impedir reaproveito de conversa ao trocar de aluno.
+   */
   const reset = useCallback(() => {
+    abortRef.current?.abort()
+    abortRef.current = null
     setText('')
     setError(null)
     setPlanId(null)
+    setConversationId(null)
+    setIsStreaming(false)
   }, [])
 
   const trigger = useCallback(async (params: MaxStreamParams) => {
@@ -103,8 +112,34 @@ export function useMaxStream(): UseMaxStreamResult {
       let buffer = ''
       let chunkCount = 0
 
+      /**
+       * Encerra o spinner local quando a resposta ja apareceu e o stream
+       * fica ocioso por alguns segundos sem novos chunks.
+       */
+      const readWithIdleTimeout = async (): Promise<ReadableStreamReadResult<Uint8Array> | null> => {
+        if (!accumulated.trim()) return reader.read()
+
+        let timeoutId: ReturnType<typeof setTimeout> | null = null
+        try {
+          return await Promise.race([
+            reader.read(),
+            new Promise<null>((resolve) => {
+              timeoutId = setTimeout(() => resolve(null), CLIENT_STREAM_IDLE_AFTER_TEXT_MS)
+            }),
+          ])
+        } finally {
+          if (timeoutId) clearTimeout(timeoutId)
+        }
+      }
+
       outer: while (true) {
-        const { done, value } = await reader.read()
+        const chunk = await readWithIdleTimeout()
+        if (chunk === null) {
+          controller.abort()
+          break
+        }
+
+        const { done, value } = chunk
         chunkCount += 1
         // #region debug-point D:reader-read
         fetch('http://127.0.0.1:7777/event', { method: 'POST', body: JSON.stringify({ sessionId: 'suggest-load-spinner', runId: debugRunId, hypothesisId: 'D', traceId, location: 'useMaxStream.ts:trigger:reader-read', msg: '[DEBUG] reader.read result', data: { done, chunkCount, valueSize: value?.length ?? 0, accumulatedLength: accumulated.length }, ts: Date.now() }) }).catch(() => {})
@@ -167,6 +202,9 @@ export function useMaxStream(): UseMaxStreamResult {
       // #region debug-point I:finally
       fetch('http://127.0.0.1:7777/event', { method: 'POST', body: JSON.stringify({ sessionId: 'suggest-load-spinner', runId: debugRunId, hypothesisId: 'I', traceId, location: 'useMaxStream.ts:trigger:finally', msg: '[DEBUG] trigger finally', data: { accumulatedLength: accumulated.length }, ts: Date.now() }) }).catch(() => {})
       // #endregion
+      if (abortRef.current === controller) {
+        abortRef.current = null
+      }
       setIsStreaming(false)
     }
   }, [conversationId])

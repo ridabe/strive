@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import {
   House, Dumbbell, Zap, TrendingUp, CalendarCheck,
-  ClipboardList, Activity, MessageSquare, Receipt, Utensils, UtensilsCrossed, Calendar, FolderOpen, History,
+  ClipboardList, Activity, MessageSquare, Receipt, Utensils, UtensilsCrossed, Calendar, FolderOpen, History, Bell,
   Trophy,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
@@ -27,6 +27,7 @@ const BASE_NAV_ITEMS: StudentNavItem[] = [
   { label: 'Anamnese',       href: '/student/anamnese',       icon: ClipboardList, exact: false },
   { label: 'Avaliação',      href: '/student/avaliacao',      icon: Activity,      exact: false },
   { label: 'Feedback',       href: '/student/feedback',       icon: MessageSquare, exact: false },
+  { label: 'Mensagens',      href: '/student/mensagens',      icon: Bell,          exact: false },
   { label: 'Arquivos',       href: '/student/arquivos',       icon: FolderOpen,    exact: false },
   { label: 'Financeiro',     href: '/student/financeiro',     icon: Receipt,       exact: false },
   { label: 'Nutrição',       href: '/student/nutricao',       icon: Utensils,      exact: false },
@@ -44,6 +45,7 @@ const RANKING_ITEM: StudentNavItem = {
 interface StudentSidebarNavProps {
   personalName: string | null
   gamificationActive?: boolean
+  unreadMessageCount?: number
 }
 
 /**
@@ -58,7 +60,11 @@ export function getStudentNavItems(gamificationActive?: boolean): StudentNavItem
 /**
  * Renderiza a navegacao lateral completa da area do aluno.
  */
-export function StudentSidebarNav({ personalName, gamificationActive }: StudentSidebarNavProps) {
+export function StudentSidebarNav({
+  personalName,
+  gamificationActive,
+  unreadMessageCount = 0,
+}: StudentSidebarNavProps) {
   const pathname = usePathname()
   const NAV_ITEMS = getStudentNavItems(gamificationActive)
 
@@ -83,7 +89,12 @@ export function StudentSidebarNav({ personalName, gamificationActive }: StudentS
               )}
             >
               <Icon size={16} />
-              {item.label}
+              <span className="flex-1">{item.label}</span>
+              {item.href === '/student/mensagens' && unreadMessageCount > 0 && (
+                <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-brand-lime px-1.5 py-0.5 text-[10px] font-bold text-black">
+                  {unreadMessageCount > 9 ? '9+' : unreadMessageCount}
+                </span>
+              )}
             </Link>
           )
         })}

@@ -220,7 +220,7 @@ function buildSseResponse(
           const chunk = await readWithIdleTimeout();
           if (chunk === null) {
             messageCompleted = true;
-            await reader.cancel('idle-timeout-after-text').catch(() => {});
+            reader.cancel('idle-timeout-after-text').catch(() => {});
             break;
           }
 

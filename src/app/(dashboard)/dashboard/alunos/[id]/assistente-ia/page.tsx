@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { joinOne } from '@/lib/supabase/join'
 import { MaxPanel } from '@/components/ai/MaxPanel'
 
 type Props = { params: Promise<{ id: string }> }
@@ -68,7 +67,11 @@ export default async function AssistenteIaPage({ params }: Props) {
         </p>
       </div>
 
-      <MaxPanel studentId={student.id} studentName={student.full_name} />
+      <MaxPanel
+        studentId={student.id}
+        studentName={student.full_name}
+        tenantId={profile.tenant_id}
+      />
     </div>
   )
 }
