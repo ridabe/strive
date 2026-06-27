@@ -1,13 +1,12 @@
-import { notFound } from 'next/navigation'
-import { getWorkoutPlan } from '@/actions/workout-plans'
-import { PlanExecutionClient } from './plan-execution-client'
+import { redirect } from 'next/navigation'
 
 type Props = { params: Promise<{ planId: string }> }
 
+/**
+ * Redireciona a rota antiga de execucao global para o detalhe do plano,
+ * forçando a escolha da rotina antes de iniciar o treino.
+ */
 export default async function PlanExecutionPage({ params }: Props) {
   const { planId } = await params
-  const plan = await getWorkoutPlan(planId)
-  if (!plan || plan.status !== 'active') notFound()
-
-  return <PlanExecutionClient plan={plan} />
+  redirect(`/student/treinos/${planId}`)
 }

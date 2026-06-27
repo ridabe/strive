@@ -38,10 +38,10 @@ export default async function ClientesPage() {
   }, {})
 
   return (
-    <div className="p-6 md:p-8 space-y-6">
+    <div className="p-4 md:p-8 space-y-6">
 
       {/* Header */}
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="font-display text-2xl font-bold text-text-primary uppercase tracking-widest">
             Clientes
@@ -52,7 +52,7 @@ export default async function ClientesPage() {
         </div>
         <Link
           href="/admin/clientes/novo"
-          className="inline-flex items-center gap-2 bg-brand-lime text-text-inverse text-sm font-body font-semibold px-5 py-2.5 rounded-lg hover:bg-brand-dark transition-colors flex-shrink-0"
+          className="inline-flex w-full items-center justify-center gap-2 bg-brand-lime text-text-inverse text-sm font-body font-semibold px-5 py-3 rounded-lg hover:bg-brand-dark transition-colors flex-shrink-0 sm:w-auto"
         >
           <Plus size={16} />
           Novo cliente
@@ -151,15 +151,17 @@ export default async function ClientesPage() {
                   </div>
 
                   {/* Rodapé */}
-                  <div className="flex items-center justify-between pt-1 border-t border-surface-border">
+                  <div className="flex flex-col gap-3 pt-1 border-t border-surface-border sm:flex-row sm:items-center sm:justify-between">
                     <span className="text-xs text-text-secondary/60">
                       Desde {format(new Date(tenant.created_at), "MMM/yyyy", { locale: ptBR })}
                     </span>
-                    <ClientActions
-                      tenantId={tenant.id}
-                      tenantName={tenant.business_name}
-                      currentStatus={tenant.status}
-                    />
+                    <div className="self-end sm:self-auto">
+                      <ClientActions
+                        tenantId={tenant.id}
+                        tenantName={tenant.business_name}
+                        currentStatus={tenant.status}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

@@ -200,11 +200,11 @@ function EventModal({ date, event, students, onClose, onSaved }: EventModalProps
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-surface border border-surface-border rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm">
+      <div className="bg-surface border border-surface-border rounded-t-2xl sm:rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl">
 
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-surface-border">
+        <div className="flex items-center justify-between p-4 sm:p-5 border-b border-surface-border">
           <h2 className="font-display text-base font-bold text-text-primary uppercase tracking-widest">
             {event ? 'Editar Evento' : 'Novo Evento'}
           </h2>
@@ -213,10 +213,10 @@ function EventModal({ date, event, students, onClose, onSaved }: EventModalProps
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-5 space-y-4">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-5 space-y-4">
 
           {/* Tipo */}
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {(Object.entries(TYPE_CONFIG) as [AgendaEventType, typeof TYPE_CONFIG[AgendaEventType]][]).map(([t, cfg]) => (
               <button
                 key={t}
@@ -250,7 +250,7 @@ function EventModal({ date, event, students, onClose, onSaved }: EventModalProps
           </div>
 
           {/* Data e Hora */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs text-text-secondary mb-1">Data *</label>
               <input
@@ -388,7 +388,7 @@ function EventModal({ date, event, students, onClose, onSaved }: EventModalProps
 
           {/* Valor (pagamentos) */}
           {needsPayment && (
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs text-text-secondary mb-1">Valor (R$)</label>
                 <div className="relative">
@@ -433,18 +433,18 @@ function EventModal({ date, event, students, onClose, onSaved }: EventModalProps
             </p>
           )}
 
-          <div className="flex gap-3 pt-1">
+          <div className="flex flex-col-reverse sm:flex-row gap-3 pt-1">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 text-sm text-text-secondary border border-surface-border rounded-lg hover:border-text-secondary/30 transition-colors"
+              className="flex-1 px-4 py-2.5 text-sm text-text-secondary border border-surface-border rounded-lg hover:border-text-secondary/30 transition-colors"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={isPending}
-              className="flex-1 px-4 py-2 text-sm font-medium text-background bg-brand-lime rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-2.5 text-sm font-medium text-background bg-brand-lime rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {isPending ? <Loader2 size={14} className="animate-spin" /> : null}
               {event ? 'Salvar' : 'Criar Evento'}
@@ -722,10 +722,10 @@ export function AgendaCalendarView({ initialEvents, initialYear, initialMonth, s
   }
 
   return (
-    <div className="p-6 md:p-8 space-y-6 max-w-6xl">
+    <div className="p-4 md:p-8 space-y-6 max-w-6xl">
 
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-display text-2xl font-bold text-text-primary uppercase tracking-widest">
             Minha Agenda
@@ -736,7 +736,7 @@ export function AgendaCalendarView({ initialEvents, initialYear, initialMonth, s
         </div>
         <button
           onClick={() => { setEditingEvent(null); setShowModal(true) }}
-          className="flex items-center gap-2 px-4 py-2 bg-brand-lime text-background text-sm font-medium rounded-lg hover:opacity-90 transition-opacity"
+          className="flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-3 bg-brand-lime text-background text-sm font-medium rounded-lg hover:opacity-90 transition-opacity"
         >
           <Plus size={16} /> Novo Evento
         </button>
@@ -752,14 +752,14 @@ export function AgendaCalendarView({ initialEvents, initialYear, initialMonth, s
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
 
         {/* Calendário */}
         <div className="lg:col-span-2">
           <div className="bg-surface border border-surface-border rounded-2xl overflow-hidden">
 
             {/* Navegação do mês */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-surface-border">
+            <div className="flex items-center justify-between px-4 sm:px-5 py-4 border-b border-surface-border">
               <button
                 onClick={() => navigate(-1)}
                 className="p-1.5 text-text-secondary hover:text-text-primary transition-colors rounded-lg hover:bg-surface-border/30"
@@ -780,7 +780,7 @@ export function AgendaCalendarView({ initialEvents, initialYear, initialMonth, s
             {/* Grid de dias da semana */}
             <div className="grid grid-cols-7 border-b border-surface-border">
               {WEEKDAYS.map(d => (
-                <div key={d} className="py-2 text-center text-xs font-body font-semibold text-text-secondary/60 uppercase tracking-wider">
+                <div key={d} className="py-2 text-center text-[10px] sm:text-xs font-body font-semibold text-text-secondary/60 uppercase tracking-wider">
                   {d}
                 </div>
               ))}
@@ -795,7 +795,7 @@ export function AgendaCalendarView({ initialEvents, initialYear, initialMonth, s
               <div className="grid grid-cols-7">
                 {calDays.map((day, idx) => {
                   if (!day) {
-                    return <div key={`empty-${idx}`} className="min-h-[72px] border-b border-r border-surface-border/30" />
+                    return <div key={`empty-${idx}`} className="min-h-[56px] sm:min-h-[72px] border-b border-r border-surface-border/30" />
                   }
 
                   const ds = dateStr(day)
@@ -808,11 +808,11 @@ export function AgendaCalendarView({ initialEvents, initialYear, initialMonth, s
                     <button
                       key={ds}
                       onClick={() => setSelectedDate(isSelected ? null : ds)}
-                      className={`min-h-[72px] p-1.5 border-b border-r border-surface-border/30 text-left transition-all hover:bg-surface-border/20 ${
+                      className={`min-h-[56px] sm:min-h-[72px] p-1 sm:p-1.5 border-b border-r border-surface-border/30 text-left transition-all hover:bg-surface-border/20 ${
                         isSelected ? 'bg-brand-lime/10 border-brand-lime/20' : ''
                       }`}
                     >
-                      <span className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-body mb-1 ${
+                      <span className={`flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-full text-[10px] sm:text-xs font-body mb-1 ${
                         isToday
                           ? 'bg-brand-lime text-background font-bold'
                           : isSelected
@@ -856,7 +856,7 @@ export function AgendaCalendarView({ initialEvents, initialYear, initialMonth, s
         <div className="space-y-3">
           {selectedDate ? (
             <>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-3">
                 <h3 className="text-xs font-body font-semibold text-text-secondary uppercase tracking-widest">
                   {new Date(selectedDate + 'T12:00:00').toLocaleDateString('pt-BR', {
                     weekday: 'long', day: 'numeric', month: 'long',
@@ -864,7 +864,7 @@ export function AgendaCalendarView({ initialEvents, initialYear, initialMonth, s
                 </h3>
                 <button
                   onClick={() => { setEditingEvent(null); setShowModal(true) }}
-                  className="flex items-center gap-1 text-xs text-brand-lime hover:opacity-80 transition-opacity"
+                  className="flex items-center gap-1 text-xs text-brand-lime hover:opacity-80 transition-opacity whitespace-nowrap"
                 >
                   <Plus size={12} /> Adicionar
                 </button>

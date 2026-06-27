@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import {
   ChevronLeft, ChevronRight, MapPin, Video, Clock,
   TrendingDown, TrendingUp, CalendarDays,
@@ -27,7 +27,10 @@ interface AgendaEvent {
   origin: string
   rejection_reason: string | null
   address_cep: string | null
+  updated_at: string
 }
+
+const AGENDA_NOTICE_STORAGE_KEY = 'student-agenda-last-seen-notice-at'
 
 // ─── Configurações visuais ────────────────────────────────────
 const TYPE_CONFIG: Record<EventType, { label: string; color: string; dotBg: string; border: string; cardBg: string; icon: ReactNode }> = {
@@ -132,9 +135,24 @@ export function StudentAgendaCalendarView({ initialEvents, initialYear, initialM
   // Pending requests (all months)
   const pendingRequests = events.filter(ev => ev.origin === 'student' && ev.status === 'pending_confirmation')
   const rejectedRequests = events.filter(ev => ev.origin === 'student' && ev.status === 'rejected')
+  const latestNoticeAt = useMemo(() => {
+    const sorted = [...events]
+      .filter(ev => ev.origin === 'student' && (ev.status === 'pending_confirmation' || ev.status === 'rejected'))
+      .sort((a, b) => b.updated_at.localeCompare(a.updated_at))
+
+    return sorted[0]?.updated_at ?? null
+  }, [events])
+
+  /**
+   * Ao abrir a agenda, registra localmente que a ultima resposta foi visualizada.
+   */
+  useEffect(() => {
+    if (!latestNoticeAt || typeof window === 'undefined') return
+    window.localStorage.setItem(AGENDA_NOTICE_STORAGE_KEY, latestNoticeAt)
+  }, [latestNoticeAt])
 
   return (
-    <div className="p-5 md:p-8 space-y-6 max-w-5xl">
+    <div className="p-4 md:p-8 space-y-6 max-w-5xl">
 
       {/* Header */}
       <div className="flex items-start gap-3">
@@ -156,7 +174,7 @@ export function StudentAgendaCalendarView({ initialEvents, initialYear, initialM
 
       {/* Alertas de solicitações pendentes/recusadas */}
       {pendingRequests.length > 0 && (
-        <div className="bg-amber-500/5 border border-amber-500/20 rounded-xl px-4 py-3 flex items-center gap-3">
+        <div className="bg-amber-500/5 border border-amber-500/20 rounded-xl px-4 py-3 flex items-start gap-3">
           <AlertCircle size={16} className="text-amber-400 flex-shrink-0" />
           <p className="text-sm text-amber-300">
             {pendingRequests.length === 1
@@ -206,14 +224,14 @@ export function StudentAgendaCalendarView({ initialEvents, initialYear, initialM
       </div>
 
       {/* Grid principal */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
 
         {/* Calendário */}
         <div className="lg:col-span-2">
           <div className="bg-surface border border-surface-border rounded-2xl overflow-hidden">
 
             {/* Navegação do mês */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-surface-border">
+            <div className="flex items-center justify-between px-4 py-4 border-b border-surface-border sm:px-5">
               <button
                 onClick={() => navigate(-1)}
                 className="p-1.5 text-text-secondary hover:text-text-primary transition-colors rounded-lg hover:bg-surface-border/30"
@@ -234,7 +252,7 @@ export function StudentAgendaCalendarView({ initialEvents, initialYear, initialM
             {/* Dias da semana */}
             <div className="grid grid-cols-7 border-b border-surface-border">
               {WEEKDAYS.map(d => (
-                <div key={d} className="py-2 text-center text-xs font-body font-semibold text-text-secondary/60 uppercase tracking-wider">
+                <div key={d} className="py-2 text-center text-[10px] sm:text-xs font-body font-semibold text-text-secondary/60 uppercase tracking-wider">
                   {d}
                 </div>
               ))}
@@ -249,7 +267,7 @@ export function StudentAgendaCalendarView({ initialEvents, initialYear, initialM
               <div className="grid grid-cols-7">
                 {calDays.map((day, idx) => {
                   if (!day) {
-                    return <div key={`empty-${idx}`} className="min-h-[64px] border-b border-r border-surface-border/30" />
+                    return <div key={`empty-${idx}`} className="min-h-[52px] sm:min-h-[64px] border-b border-r border-surface-border/30" />
                   }
 
                   const ds         = dateStr(day)
@@ -262,11 +280,11 @@ export function StudentAgendaCalendarView({ initialEvents, initialYear, initialM
                     <button
                       key={ds}
                       onClick={() => setSelectedDate(isSelected ? null : ds)}
-                      className={`min-h-[64px] p-1.5 border-b border-r border-surface-border/30 text-left transition-all hover:bg-surface-border/20 ${
+                      className={`min-h-[52px] sm:min-h-[64px] p-1 sm:p-1.5 border-b border-r border-surface-border/30 text-left transition-all hover:bg-surface-border/20 ${
                         isSelected ? 'bg-brand-lime/10 border-brand-lime/20' : ''
                       }`}
                     >
-                      <span className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-body mb-1 ${
+                      <span className={`flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-full text-[10px] sm:text-xs font-body mb-1 ${
                         isToday
                           ? 'bg-brand-lime text-background font-bold'
                           : isSelected
@@ -359,7 +377,7 @@ export function StudentAgendaCalendarView({ initialEvents, initialYear, initialM
                         )}
 
                         {/* Título */}
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-start gap-2">
                           {cfg && <span className={`${cfg.color} flex-shrink-0`}>{cfg.icon}</span>}
                           <span className="text-text-primary text-sm font-medium">{ev.title}</span>
                         </div>

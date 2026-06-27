@@ -18,7 +18,7 @@ export default async function NovoAlunoPage({ searchParams }: Props) {
   const { error } = await searchParams
 
   return (
-    <div className="p-6 md:p-8 space-y-6 max-w-2xl">
+    <div className="p-4 md:p-8 space-y-6 max-w-2xl">
       {/* Voltar */}
       <Link
         href="/dashboard/alunos"
@@ -197,12 +197,14 @@ export default async function NovoAlunoPage({ searchParams }: Props) {
         </div>
 
         {/* Botão */}
-        <button
-          type="submit"
-          className="w-full py-3.5 rounded-xl bg-brand-lime text-background font-display font-bold uppercase tracking-widest text-sm hover:bg-brand-lime/90 transition-colors"
-        >
-          Cadastrar Aluno →
-        </button>
+        <div className="sticky bottom-20 md:bottom-6 z-10 rounded-2xl bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/70 p-2 -mx-2">
+          <button
+            type="submit"
+            className="w-full py-3.5 rounded-xl bg-brand-lime text-background font-display font-bold uppercase tracking-widest text-sm hover:bg-brand-lime/90 transition-colors"
+          >
+            Cadastrar Aluno →
+          </button>
+        </div>
       </form>
     </div>
   )

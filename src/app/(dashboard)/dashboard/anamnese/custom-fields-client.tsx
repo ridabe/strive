@@ -33,6 +33,9 @@ const CATEGORIES = [
   { value: 'outros',      label: 'Outros'                 },
 ]
 
+/**
+ * Renderiza o CRUD de campos personalizados com foco em uso operacional no mobile.
+ */
 export function CustomFieldsClient({ fields }: { fields: CustomField[] }) {
   const [items, setItems] = useState(fields)
   const [showForm, setShowForm] = useState(false)
@@ -66,7 +69,7 @@ export function CustomFieldsClient({ fields }: { fields: CustomField[] }) {
   }
 
   const input =
-    'w-full bg-background border border-surface-border rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-brand-lime/50 transition-colors'
+    'w-full rounded-xl border border-surface-border bg-background px-3 py-3 text-sm text-text-primary transition-colors focus:outline-none focus:border-brand-lime/50'
 
   return (
     <div className="space-y-4">
@@ -78,7 +81,7 @@ export function CustomFieldsClient({ fields }: { fields: CustomField[] }) {
       ) : (
         <div className="bg-surface border border-surface-border rounded-xl divide-y divide-surface-border overflow-hidden">
           {items.map((field) => (
-            <div key={field.id} className="flex items-center gap-4 px-5 py-3.5">
+            <div key={field.id} className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:gap-4 sm:px-5">
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-body font-medium text-text-primary">{field.label}</p>
                 <p className="text-xs text-text-secondary mt-0.5">
@@ -90,7 +93,7 @@ export function CustomFieldsClient({ fields }: { fields: CustomField[] }) {
               <button
                 onClick={() => handleToggle(field.id, field.is_active)}
                 disabled={isPending}
-                className={`flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border transition-all disabled:opacity-50 ${
+                className={`inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-sm font-medium transition-all disabled:opacity-50 sm:w-auto ${
                   field.is_active
                     ? 'text-status-success bg-status-success/10 border-status-success/20 hover:bg-status-success/20'
                     : 'text-text-secondary bg-background border-surface-border hover:border-brand-lime/30'
@@ -108,7 +111,7 @@ export function CustomFieldsClient({ fields }: { fields: CustomField[] }) {
       {showForm ? (
         <form
           action={handleAdd}
-          className="bg-surface border border-surface-border rounded-xl p-5 space-y-4"
+          className="rounded-2xl border border-surface-border bg-surface p-4 space-y-4 sm:p-5"
         >
           <h3 className="font-body font-semibold text-sm text-text-primary">Novo campo personalizado</h3>
 
@@ -118,7 +121,7 @@ export function CustomFieldsClient({ fields }: { fields: CustomField[] }) {
             </p>
           )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-1">
               <label className="text-xs text-text-secondary">Label do campo *</label>
               <input name="label" required className={input} placeholder="Ex: Histórico familiar" />
@@ -129,7 +132,7 @@ export function CustomFieldsClient({ fields }: { fields: CustomField[] }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-1">
               <label className="text-xs text-text-secondary">Tipo</label>
               <select
@@ -166,23 +169,27 @@ export function CustomFieldsClient({ fields }: { fields: CustomField[] }) {
             </div>
           )}
 
-          <div className="flex items-center gap-2">
+          <label className="flex min-h-11 items-center gap-3 rounded-xl border border-surface-border bg-background px-3 py-2.5">
             <input type="checkbox" id="required" name="required" value="true" className="accent-brand-lime" />
-            <label htmlFor="required" className="text-sm text-text-primary">Campo obrigatório</label>
-          </div>
+            <span className="text-sm text-text-primary">Campo obrigatório</span>
+          </label>
 
-          <div className="flex gap-3">
+          <p className="text-xs text-text-secondary">
+            Use nomes curtos e claros para facilitar o preenchimento no celular.
+          </p>
+
+          <div className="flex flex-col gap-3 pt-1 sm:flex-row">
             <button
               type="submit"
               disabled={isPending}
-              className="bg-brand-lime text-background font-body font-semibold text-sm px-4 py-2 rounded-lg hover:bg-brand-lime/90 transition-colors disabled:opacity-50"
+              className="inline-flex min-h-11 items-center justify-center rounded-xl bg-brand-lime px-4 py-2.5 text-sm font-body font-semibold text-background transition-colors hover:bg-brand-lime/90 disabled:opacity-50"
             >
               {isPending ? 'Salvando…' : 'Adicionar campo'}
             </button>
             <button
               type="button"
               onClick={() => { setShowForm(false); setError(null) }}
-              className="text-sm text-text-secondary hover:text-text-primary transition-colors px-3 py-2"
+              className="inline-flex min-h-11 items-center justify-center rounded-xl border border-surface-border px-3 py-2.5 text-sm text-text-secondary transition-colors hover:text-text-primary"
             >
               Cancelar
             </button>
@@ -191,7 +198,7 @@ export function CustomFieldsClient({ fields }: { fields: CustomField[] }) {
       ) : (
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 text-sm text-brand-lime hover:underline"
+          className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-brand-lime/30 bg-brand-lime/5 px-4 py-2.5 text-sm font-medium text-brand-lime transition-colors hover:bg-brand-lime/10"
         >
           <Plus size={14} />
           Adicionar campo personalizado

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Play, Clock, Target, Link2, CheckCircle, Zap } from 'lucide-react'
+import { ArrowLeft, Play, Clock, Target, Link2, CheckCircle, ChevronDown, ChevronUp, RefreshCcw } from 'lucide-react'
 import { VideoModal } from '@/components/student/VideoModal'
 import { muscleColor } from '@/lib/exercise-config'
 import type { WorkoutPlanWithRoutines } from '@/actions/workout-plans'
@@ -24,6 +24,9 @@ const GOAL_COLOR: Record<string, string> = {
   'Reabilitação':   'text-purple-400 bg-purple-400/10 border-purple-400/20',
 }
 
+/**
+ * Agrupa exercicios combinados para manter a mesma exibicao ja usada na tela do plano.
+ */
 function groupItemsByCombo(items: WorkoutItem[]): ItemBlock[] {
   const blocks: ItemBlock[] = []
   const seen = new Set<string>()
@@ -39,6 +42,9 @@ function groupItemsByCombo(items: WorkoutItem[]): ItemBlock[] {
   return blocks
 }
 
+/**
+ * Renderiza a miniatura do video ou GIF do exercicio.
+ */
 function VideoThumbnail({ url, name, onClick }: { url: string; name: string; onClick: () => void }) {
   const isGif = url.toLowerCase().includes('.gif')
   return (
@@ -70,6 +76,9 @@ function VideoThumbnail({ url, name, onClick }: { url: string; name: string; onC
   )
 }
 
+/**
+ * Exibe um exercicio individual com todas as informacoes de apoio da rotina.
+ */
 function ExerciseBlock({
   item,
   comboLetter,
@@ -141,11 +150,34 @@ function ExerciseBlock({
   )
 }
 
-export function PlanViewClient({ plan }: { plan: WorkoutPlanWithRoutines }) {
+/**
+ * Exibe o detalhe do plano separando cada rotina em um accordion fechado por padrao.
+ */
+export function PlanViewClient({
+  plan,
+  completedRoutineIds,
+}: {
+  plan: WorkoutPlanWithRoutines
+  completedRoutineIds: string[]
+}) {
   const searchParams = useSearchParams()
   const [videoModal, setVideoModal] = useState<{ url: string; name: string } | null>(null)
+  const [expandedRoutines, setExpandedRoutines] = useState<Set<string>>(new Set())
 
   const concluded = searchParams.get('concluido') === '1'
+  const completedSet = new Set(completedRoutineIds)
+
+  function toggleRoutine(routineId: string) {
+    setExpandedRoutines((prev) => {
+      const next = new Set(prev)
+      if (next.has(routineId)) {
+        next.delete(routineId)
+      } else {
+        next.add(routineId)
+      }
+      return next
+    })
+  }
 
   return (
     <div className="p-5 space-y-6">
@@ -189,73 +221,118 @@ export function PlanViewClient({ plan }: { plan: WorkoutPlanWithRoutines }) {
         {plan.description && (
           <p className="text-xs text-text-secondary leading-relaxed">{plan.description}</p>
         )}
+        <p className="text-xs text-text-secondary">
+          {plan.workout_routines.length} rotina{plan.workout_routines.length !== 1 ? 's' : ''} disponivel{plan.workout_routines.length !== 1 ? 'eis' : ''}
+        </p>
       </div>
 
-      {/* Botão único de iniciar treino */}
-      <Link
-        href={`/student/treinos/${plan.id}/executar`}
-        className="flex items-center justify-center gap-2 bg-brand-lime text-background font-display font-bold text-sm uppercase tracking-widest py-4 rounded-2xl hover:bg-brand-lime/90 transition-colors"
-      >
-        <Zap size={16} />
-        Iniciar Treino
-      </Link>
-
-      {/* Rotinas — apenas visualização */}
+      {/* Rotinas separadas para execução individual */}
       {plan.workout_routines.map((routine) => {
         const blocks = groupItemsByCombo(routine.workout_items)
+        const isExpanded = expandedRoutines.has(routine.id)
+        const isCompleted = completedSet.has(routine.id)
+
         return (
-          <div key={routine.id} className="space-y-3">
-            <div className="flex items-center gap-2 flex-wrap">
-              <div className="w-1.5 h-5 bg-brand-lime rounded-full flex-shrink-0" />
-              <h2 className="font-display font-bold text-text-primary uppercase tracking-widest text-sm">
-                {routine.name}
-              </h2>
-              {routine.day_of_week != null && (
-                <span className="text-xs text-text-secondary bg-surface border border-surface-border px-2 py-0.5 rounded-full">
-                  {DAY_LABELS[routine.day_of_week]}
-                </span>
-              )}
-              <span className="text-xs text-text-secondary">
-                {routine.workout_items.length} exercício{routine.workout_items.length !== 1 ? 's' : ''}
-              </span>
+          <div
+            key={routine.id}
+            className={`bg-surface border rounded-2xl overflow-hidden ${
+              isCompleted
+                ? 'border-brand-lime/30'
+                : 'border-surface-border'
+            }`}
+          >
+            <div className="flex items-center gap-3 p-4">
+              <button
+                type="button"
+                onClick={() => toggleRoutine(routine.id)}
+                className="flex flex-1 items-center gap-3 min-w-0 text-left"
+              >
+                {isCompleted ? (
+                  <CheckCircle size={18} className="text-brand-lime flex-shrink-0" />
+                ) : (
+                  <div className="w-2.5 h-2.5 rounded-full bg-brand-lime flex-shrink-0" />
+                )}
+
+                <div className="min-w-0 flex-1">
+                  <h2
+                    className={`font-display font-bold uppercase tracking-widest text-sm ${
+                      isCompleted
+                        ? 'text-text-primary line-through opacity-80'
+                        : 'text-text-primary'
+                    }`}
+                  >
+                    {routine.name}
+                  </h2>
+                  <p className="text-xs text-text-secondary mt-1">
+                    {routine.workout_items.length} exercício{routine.workout_items.length !== 1 ? 's' : ''}
+                    {routine.day_of_week != null ? ` · ${DAY_LABELS[routine.day_of_week]}` : ''}
+                  </p>
+                </div>
+
+                {isExpanded ? (
+                  <ChevronUp size={16} className="text-text-secondary flex-shrink-0" />
+                ) : (
+                  <ChevronDown size={16} className="text-text-secondary flex-shrink-0" />
+                )}
+              </button>
+
+              <Link
+                href={`/student/treinos/${plan.id}/executar/${routine.id}`}
+                className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold whitespace-nowrap transition-colors ${
+                  isCompleted
+                    ? 'bg-background border border-surface-border text-text-secondary hover:text-text-primary'
+                    : 'bg-brand-lime text-background hover:bg-brand-lime/90'
+                }`}
+              >
+                {isCompleted ? <RefreshCcw size={14} /> : <Play size={14} />}
+                {isCompleted ? 'Refazer rotina' : 'Iniciar rotina'}
+              </Link>
             </div>
 
-            <div className="space-y-2">
-              {blocks.map((block) => {
-                if (block.type === 'single') {
-                  return (
-                    <ExerciseBlock
-                      key={block.item.id}
-                      item={block.item}
-                      onVideoClick={(url, name) => setVideoModal({ url, name })}
-                    />
-                  )
-                }
-                return (
-                  <div key={block.comboGroupId} className="space-y-1">
-                    <div className="flex items-center gap-2 px-1">
-                      <Link2 size={12} className="text-brand-lime" />
-                      <span className="text-[10px] font-bold text-brand-lime tracking-widest">
-                        {COMBO_LABEL[block.comboType] ?? block.comboType.toUpperCase()}
-                      </span>
-                      <span className="text-[10px] text-text-secondary">
-                        — execute consecutivamente sem pausa
-                      </span>
-                    </div>
-                    <div className="pl-4 space-y-1 border-l-2 border-brand-lime/30">
-                      {block.items.map((item, idx) => (
+            {isExpanded && (
+              <div className="border-t border-surface-border p-4 space-y-3">
+                {blocks.length === 0 ? (
+                  <p className="text-sm text-text-secondary text-center py-3">
+                    Esta rotina ainda não possui exercícios cadastrados.
+                  </p>
+                ) : (
+                  blocks.map((block) => {
+                    if (block.type === 'single') {
+                      return (
                         <ExerciseBlock
-                          key={item.id}
-                          item={item}
-                          comboLetter={String.fromCharCode(65 + idx)}
+                          key={block.item.id}
+                          item={block.item}
                           onVideoClick={(url, name) => setVideoModal({ url, name })}
                         />
-                      ))}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
+                      )
+                    }
+                    return (
+                      <div key={block.comboGroupId} className="space-y-1">
+                        <div className="flex items-center gap-2 px-1">
+                          <Link2 size={12} className="text-brand-lime" />
+                          <span className="text-[10px] font-bold text-brand-lime tracking-widest">
+                            {COMBO_LABEL[block.comboType] ?? block.comboType.toUpperCase()}
+                          </span>
+                          <span className="text-[10px] text-text-secondary">
+                            — execute consecutivamente sem pausa
+                          </span>
+                        </div>
+                        <div className="pl-4 space-y-1 border-l-2 border-brand-lime/30">
+                          {block.items.map((item, idx) => (
+                            <ExerciseBlock
+                              key={item.id}
+                              item={item}
+                              comboLetter={String.fromCharCode(65 + idx)}
+                              onVideoClick={(url, name) => setVideoModal({ url, name })}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    )
+                  })
+                )}
+              </div>
+            )}
           </div>
         )
       })}

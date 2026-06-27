@@ -46,11 +46,11 @@ export function AppVersionForm({ data, platformLabel, platformIcon }: Props) {
   return (
     <form ref={formRef} onSubmit={handleSubmit} className="bg-surface border border-surface-border rounded-2xl overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-surface-border">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col gap-3 px-4 py-4 border-b border-surface-border sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <div className="flex items-center gap-3 min-w-0">
           {platformIcon}
-          <div>
-            <h2 className="font-body font-semibold text-text-primary text-sm">{platformLabel}</h2>
+          <div className="min-w-0">
+            <h2 className="font-body font-semibold text-text-primary text-sm truncate">{platformLabel}</h2>
             <p className="text-[11px] text-text-secondary mt-0.5">Atualizado em {updatedAt}</p>
           </div>
         </div>
@@ -59,7 +59,7 @@ export function AppVersionForm({ data, platformLabel, platformIcon }: Props) {
         <button
           type="button"
           onClick={() => setForceUpdate(v => !v)}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+          className={`inline-flex w-full items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-medium border transition-all sm:w-auto ${
             forceUpdate
               ? 'bg-status-error/10 border-status-error/30 text-status-error'
               : 'bg-surface-border/30 border-surface-border text-text-secondary hover:text-text-primary'
@@ -70,12 +70,12 @@ export function AppVersionForm({ data, platformLabel, platformIcon }: Props) {
         </button>
       </div>
 
-      <div className="p-6 space-y-5">
+      <div className="p-4 space-y-5 sm:p-6">
         {/* Versão + códigos */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-text-secondary uppercase tracking-wider">
-              Versão atual *
+              Versão Nova *
             </label>
             <input
               name="current_version"
@@ -88,7 +88,7 @@ export function AppVersionForm({ data, platformLabel, platformIcon }: Props) {
 
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-text-secondary uppercase tracking-wider">
-              Version code atual *
+              Version Code Novo *
             </label>
             <input
               name="current_version_code"
@@ -102,7 +102,7 @@ export function AppVersionForm({ data, platformLabel, platformIcon }: Props) {
 
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-text-secondary uppercase tracking-wider">
-              Version code mínimo *
+              Version Code Mínimo *
             </label>
             <input
               name="min_version_code"
@@ -113,7 +113,7 @@ export function AppVersionForm({ data, platformLabel, platformIcon }: Props) {
               className="w-full bg-background border border-surface-border rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-brand-lime/50"
             />
             <p className="text-[11px] text-text-secondary">
-              Abaixo disto → alerta no app
+              Abaixo deste valor o app exibe alerta ou bloqueio, conforme a regra.
             </p>
           </div>
         </div>
@@ -183,7 +183,7 @@ export function AppVersionForm({ data, platformLabel, platformIcon }: Props) {
         <button
           type="submit"
           disabled={pending}
-          className="flex items-center gap-2 bg-brand-lime text-background px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-lime/90 disabled:opacity-50 transition-all"
+          className="flex w-full items-center justify-center gap-2 bg-brand-lime text-background px-5 py-3 rounded-xl text-sm font-semibold hover:bg-brand-lime/90 disabled:opacity-50 transition-all sm:w-auto"
         >
           <Save size={15} />
           {pending ? 'Salvando...' : 'Salvar versão'}

@@ -11,6 +11,9 @@ interface Props {
   params: Promise<{ id: string }>
 }
 
+/**
+ * Exibe o resumo operacional do aluno com atalhos para os módulos mais usados.
+ */
 export default async function StudentDetailPage({ params }: Props) {
   const { id } = await params
   const supabase = await createClient()
@@ -122,33 +125,45 @@ export default async function StudentDetailPage({ params }: Props) {
   ]
 
   return (
-    <div className="p-6 md:p-8 space-y-6 max-w-3xl">
+    <div className="max-w-4xl space-y-5 p-4 sm:p-6 md:p-8">
 
       {/* Voltar */}
       <Link
         href="/dashboard/alunos"
-        className="inline-flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary transition-colors"
+        className="inline-flex min-h-11 items-center gap-2 rounded-lg px-2 text-sm text-text-secondary transition-colors hover:text-text-primary"
       >
         <ArrowLeft size={14} />
         Alunos
       </Link>
 
       {/* Header do aluno */}
-      <div className="flex items-center gap-4">
-        <div className="w-14 h-14 rounded-xl bg-brand-lime/10 border border-brand-lime/20 flex items-center justify-center flex-shrink-0">
-          <User size={24} className="text-brand-lime" />
+      <div className="flex flex-col gap-4 rounded-2xl border border-surface-border bg-surface p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+        <div className="flex items-start gap-3 sm:items-center sm:gap-4">
+          <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl border border-brand-lime/20 bg-brand-lime/10 sm:h-16 sm:w-16">
+            <User size={24} className="text-brand-lime" />
+          </div>
+          <div className="min-w-0 space-y-2">
+            <h1 className="break-words font-display text-xl font-bold uppercase tracking-widest text-text-primary sm:text-2xl">
+              {student.full_name}
+            </h1>
+            <span className={`inline-flex min-h-8 items-center rounded-full border px-2.5 py-1 text-xs font-medium ${
+              student.status === 'active'
+                ? 'text-status-success bg-status-success/10 border-status-success/20'
+                : 'text-text-secondary bg-background border-surface-border'
+            }`}>
+              {student.status === 'active' ? 'Ativo' : 'Inativo'}
+            </span>
+          </div>
         </div>
-        <div>
-          <h1 className="font-display text-2xl font-bold text-text-primary tracking-widest uppercase">
-            {student.full_name}
-          </h1>
-          <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${
-            student.status === 'active'
-              ? 'text-status-success bg-status-success/10 border-status-success/20'
-              : 'text-text-secondary bg-background border-surface-border'
-          }`}>
-            {student.status === 'active' ? 'Ativo' : 'Inativo'}
-          </span>
+        <div className="grid grid-cols-2 gap-2 sm:min-w-[220px]">
+          <div className="rounded-xl border border-surface-border bg-background px-3 py-3">
+            <p className="text-[11px] uppercase tracking-widest text-text-secondary">Treinos</p>
+            <p className="mt-1 text-lg font-display font-bold text-text-primary">{planCount ?? 0}</p>
+          </div>
+          <div className="rounded-xl border border-surface-border bg-background px-3 py-3">
+            <p className="text-[11px] uppercase tracking-widest text-text-secondary">Sessões</p>
+            <p className="mt-1 text-lg font-display font-bold text-text-primary">{sessionCount ?? 0}</p>
+          </div>
         </div>
       </div>
 
@@ -164,10 +179,12 @@ export default async function StudentDetailPage({ params }: Props) {
         ].filter((r) => r.value).map((row) => {
           const Icon = row.icon
           return (
-            <div key={row.label} className="flex items-center gap-3 px-5 py-3.5">
-              <Icon size={15} className="text-text-secondary flex-shrink-0" />
-              <span className="text-xs text-text-secondary w-20 flex-shrink-0">{row.label}</span>
-              <span className="text-sm text-text-primary">{row.value}</span>
+            <div key={row.label} className="flex flex-col gap-2 px-4 py-3.5 sm:flex-row sm:items-center sm:gap-3 sm:px-5">
+              <div className="flex items-center gap-2 sm:w-28 sm:flex-shrink-0">
+                <Icon size={15} className="text-text-secondary flex-shrink-0" />
+                <span className="text-xs text-text-secondary">{row.label}</span>
+              </div>
+              <span className="text-sm text-text-primary break-words">{row.value}</span>
             </div>
           )
         })}
@@ -180,7 +197,9 @@ export default async function StudentDetailPage({ params }: Props) {
             <KeyRound size={14} className="text-text-secondary" />
             <p className="text-xs font-body font-semibold text-text-secondary uppercase tracking-widest">Acesso</p>
           </div>
-          <ResetPasswordButton studentId={student.id} />
+          <div className="pt-1">
+            <ResetPasswordButton studentId={student.id} />
+          </div>
         </div>
       )}
 
@@ -189,27 +208,27 @@ export default async function StudentDetailPage({ params }: Props) {
         <h2 className="text-xs font-body font-semibold text-text-secondary uppercase tracking-widest mb-3">
           Módulos do aluno
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {quickLinks.map((link) => {
             const Icon = link.icon
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className="group bg-surface border border-surface-border rounded-xl p-4 flex items-center gap-4 hover:border-brand-lime/30 transition-all"
+                className="group flex min-h-[92px] items-center gap-3 rounded-xl border border-surface-border bg-surface p-4 transition-all hover:border-brand-lime/30 sm:gap-4"
               >
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center border flex-shrink-0 ${link.color}`}>
+                <div className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border ${link.color}`}>
                   <Icon size={18} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-body font-medium text-text-primary group-hover:text-brand-lime transition-colors">
+                  <p className="text-sm font-body font-medium text-text-primary transition-colors group-hover:text-brand-lime">
                     {link.label}
                   </p>
-                  <span className={`text-xs font-medium px-1.5 py-0.5 rounded-full border ${link.badgeColor}`}>
+                  <span className={`mt-2 inline-flex min-h-7 items-center rounded-full border px-2 py-0.5 text-xs font-medium ${link.badgeColor}`}>
                     {link.badge}
                   </span>
                 </div>
-                <ArrowLeft size={14} className="text-text-secondary rotate-180 flex-shrink-0" />
+                <ArrowLeft size={16} className="text-text-secondary rotate-180 flex-shrink-0" />
               </Link>
             )
           })}
@@ -220,20 +239,20 @@ export default async function StudentDetailPage({ params }: Props) {
       {hasMaxModule && (
         <Link
           href={`/dashboard/alunos/${id}/assistente-ia`}
-          className="group flex items-center gap-4 p-4 bg-violet-500/5 border border-violet-500/20 rounded-xl hover:border-violet-400/50 transition-all"
+          className="group flex min-h-[92px] flex-col items-start gap-3 rounded-xl border border-violet-500/20 bg-violet-500/5 p-4 transition-all hover:border-violet-400/50 sm:flex-row sm:items-center sm:gap-4"
         >
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-violet-500/15 border border-violet-500/30">
+          <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-violet-500/30 bg-violet-500/15">
             <Zap size={18} className="text-violet-400" />
           </div>
           <div className="flex-1">
-            <p className="text-sm font-body font-semibold text-text-primary group-hover:text-violet-400 transition-colors">
+            <p className="text-sm font-body font-semibold text-text-primary transition-colors group-hover:text-violet-400">
               Consultar Max Strive IA
             </p>
             <p className="text-xs text-text-secondary">
               Assistente inteligente — crie treinos, analise progresso e muito mais
             </p>
           </div>
-          <ArrowLeft size={14} className="text-violet-400 rotate-180 flex-shrink-0" />
+          <ArrowLeft size={16} className="text-violet-400 rotate-180 flex-shrink-0 self-end sm:self-auto" />
         </Link>
       )}
 

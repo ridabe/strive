@@ -118,7 +118,7 @@ export default async function ExecucaoPage() {
     .slice(0, 5)
 
   return (
-    <div className="p-6 md:p-8 space-y-6">
+    <div className="p-4 md:p-8 space-y-6">
 
       {/* Header */}
       <div>
@@ -132,7 +132,7 @@ export default async function ExecucaoPage() {
       </div>
 
       {/* KPIs do mês */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { label: 'Sessões no mês',      value: totalMes,     icon: Play,       color: 'text-brand-lime  bg-brand-lime/10  border-brand-lime/20'   },
           { label: 'Alunos ativos',       value: uniqueStudentsMes, icon: Users, color: 'text-blue-400   bg-blue-400/10   border-blue-400/20'    },
@@ -151,7 +151,7 @@ export default async function ExecucaoPage() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
 
         {/* Sessões recentes */}
         <div className="lg:col-span-2 bg-surface border border-surface-border rounded-xl overflow-hidden">
@@ -177,7 +177,7 @@ export default async function ExecucaoPage() {
                 const intColor = intensityColor(s.intensity as string | null)
 
                 return (
-                  <div key={s.id} className="flex items-center gap-3 px-5 py-3.5 hover:bg-surface-border/10 group">
+                  <div key={s.id} className="flex flex-col items-start gap-3 px-4 sm:px-5 py-3.5 hover:bg-surface-border/10 group sm:flex-row sm:items-center">
                     <div className="w-8 h-8 rounded-lg bg-brand-lime/10 border border-brand-lime/20 flex items-center justify-center flex-shrink-0">
                       <CheckCircle2 size={14} className="text-brand-lime" />
                     </div>
@@ -214,7 +214,7 @@ export default async function ExecucaoPage() {
                     {student && (
                       <Link
                         href={`/dashboard/alunos/${student.id}/progresso`}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity text-[11px] text-text-secondary hover:text-brand-lime flex-shrink-0"
+                        className="text-[11px] text-text-secondary hover:text-brand-lime transition-colors sm:opacity-0 sm:group-hover:opacity-100 flex-shrink-0"
                       >
                         Ver progresso →
                       </Link>

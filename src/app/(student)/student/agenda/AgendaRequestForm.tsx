@@ -116,7 +116,7 @@ export function AgendaRequestForm() {
   return (
     <div className="space-y-3">
       {success && (
-        <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl px-4 py-3 flex items-center justify-between gap-3">
+        <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl px-4 py-3 flex items-start justify-between gap-3">
           <p className="text-sm text-emerald-400">
             Solicitação enviada! Aguarde a confirmação do seu personal.
           </p>
@@ -147,7 +147,7 @@ export function AgendaRequestForm() {
           </p>
 
           {/* Data e Hora */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs text-text-secondary mb-1">Data *</label>
               <input
@@ -197,8 +197,8 @@ export function AgendaRequestForm() {
           </div>
 
           {/* Logradouro + Número */}
-          <div className="grid grid-cols-3 gap-3">
-            <div className="col-span-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="sm:col-span-2">
               <label className="block text-xs text-text-secondary mb-1">Logradouro *</label>
               <input
                 type="text"
@@ -235,7 +235,7 @@ export function AgendaRequestForm() {
           </div>
 
           {/* Bairro + Cidade/UF */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs text-text-secondary mb-1">Bairro</label>
               <input
@@ -246,8 +246,8 @@ export function AgendaRequestForm() {
                 className="w-full bg-background border border-surface-border rounded-lg px-3 py-2 text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-lime/50"
               />
             </div>
-            <div className="grid grid-cols-3 gap-2">
-              <div className="col-span-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div className="sm:col-span-2">
                 <label className="block text-xs text-text-secondary mb-1">Cidade</label>
                 <input
                   type="text"
@@ -289,18 +289,18 @@ export function AgendaRequestForm() {
             </p>
           )}
 
-          <div className="flex gap-3">
+          <div className="flex flex-col-reverse sm:flex-row gap-3">
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="flex-1 px-4 py-2 text-sm text-text-secondary border border-surface-border rounded-lg hover:border-text-secondary/30 transition-colors"
+              className="flex-1 px-4 py-2.5 text-sm text-text-secondary border border-surface-border rounded-lg hover:border-text-secondary/30 transition-colors"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={isPending}
-              className="flex-1 px-4 py-2 text-sm font-medium text-background bg-blue-500 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-2.5 text-sm font-medium text-background bg-blue-500 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {isPending ? <Loader2 size={14} className="animate-spin" /> : null}
               Enviar Solicitação

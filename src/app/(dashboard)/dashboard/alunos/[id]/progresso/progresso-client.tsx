@@ -376,7 +376,7 @@ function SessionList({ sessions }: { sessions: Session[] }) {
   return (
     <div className="space-y-2">
       {visible.map((s) => (
-        <div key={s.id} className="bg-background border border-surface-border rounded-xl px-4 py-3 flex items-center gap-4">
+        <div key={s.id} className="bg-background border border-surface-border rounded-xl px-4 py-3 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
           <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-brand-lime/10 border border-brand-lime/20 flex items-center justify-center">
             <Dumbbell size={16} className="text-brand-lime" />
           </div>
@@ -422,7 +422,7 @@ function PhotosSection({ entries }: { entries: ProgressEntry[] }) {
       {[...withPhotos].reverse().map((entry) => (
         <div key={entry.id} className="space-y-2">
           <p className="text-xs text-text-secondary">{fmtDate(entry.recorded_at)}</p>
-          <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
             {entry.photo_urls.map((url, i) => (
               <a
                 key={i}
@@ -540,13 +540,13 @@ export function ProgressoAlunoClient({
       )}
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-surface border border-surface-border rounded-xl p-1">
+      <div className="grid grid-cols-2 sm:flex gap-1 bg-surface border border-surface-border rounded-xl p-1">
         {TABS.map(({ id, label, icon: Icon }) => (
           <button
             key={id}
             onClick={() => setTab(id)}
             className={cn(
-              'flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-body font-semibold transition-all',
+              'flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-body font-semibold transition-all sm:flex-1',
               tab === id
                 ? 'bg-brand-lime/10 text-brand-lime border border-brand-lime/20'
                 : 'text-text-secondary hover:text-text-primary',
@@ -582,7 +582,7 @@ export function ProgressoAlunoClient({
                   <Trophy size={14} className="text-yellow-400" />
                   <p className="text-xs font-semibold text-text-secondary uppercase tracking-widest">Desempenho do Mês</p>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-5 divide-x divide-surface-border">
+                <div className="grid grid-cols-2 sm:grid-cols-5 border-t border-surface-border sm:border-t-0 sm:divide-x divide-surface-border">
                   {[
                     { label: 'Pontos',       value: monthlyPoints.total_points.toLocaleString('pt-BR'), icon: Trophy,   color: 'text-yellow-400' },
                     { label: 'Treinos',      value: monthlyPoints.workouts_completed, icon: Dumbbell, color: 'text-brand-lime' },

@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { joinOne } from '@/lib/supabase/join'
 import { DashboardSidebarNav, type EnabledModule } from '@/components/layout/dashboard-sidebar'
+import { DashboardMobileNav } from '@/components/layout/dashboard-mobile-nav'
 import { UserMenu } from '@/components/layout/user-menu'
 import { TenantLogoHeader } from '@/components/layout/tenant-logo-header'
 import { PendingAgendaBanner } from '@/components/agenda/PendingAgendaBanner'
@@ -88,6 +89,16 @@ export default async function DashboardLayout({
       className="min-h-screen bg-background flex"
       style={{ '--brand-lime': primaryColor } as React.CSSProperties}
     >
+      <DashboardMobileNav
+        logoUrl={tenantBranding?.logo_url ?? null}
+        businessName={tenantBranding?.business_name ?? 'Strive Personal'}
+        primaryColor={primaryColor}
+        userName={profile.full_name}
+        userEmail={profile.email}
+        userRole={profile.role}
+        modules={enabledModules}
+      />
+
       <aside className="hidden md:flex flex-col w-60 h-screen sticky top-0 border-r border-surface-border bg-surface px-4 py-5 gap-6 flex-shrink-0">
 
         <div className="flex-shrink-0">
@@ -119,7 +130,7 @@ export default async function DashboardLayout({
         </div>
       </aside>
 
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto pt-14 pb-20 md:pt-0 md:pb-0">
         <PendingAgendaBanner count={pendingAgendaCount} />
         {children}
       </main>

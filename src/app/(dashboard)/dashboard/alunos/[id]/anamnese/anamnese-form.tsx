@@ -32,6 +32,9 @@ function normalizeValue(v: unknown): string {
   return String(v ?? '')
 }
 
+/**
+ * Renderiza o formulário operacional da anamnese com salvamento parcial e finalização.
+ */
 export function AnamneseForm({
   studentId,
   fields,
@@ -67,11 +70,11 @@ export function AnamneseForm({
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
 
       {/* Banner */}
       {banner && (
-        <div className={`flex items-center gap-3 rounded-xl p-4 border ${
+        <div className={`flex items-start gap-3 rounded-xl p-4 border ${
           banner.type === 'success'
             ? 'bg-status-success/10 border-status-success/20 text-status-success'
             : 'bg-red-500/10 border-red-500/20 text-red-400'
@@ -88,7 +91,7 @@ export function AnamneseForm({
         const catFields = fields.filter((f) => f.category === cat.key)
         if (catFields.length === 0) return null
         return (
-          <section key={cat.key} className="space-y-4">
+          <section key={cat.key} className="space-y-4 rounded-2xl border border-surface-border bg-surface p-4 sm:p-5">
             <h2 className="font-body font-semibold text-xs uppercase tracking-widest text-text-secondary border-b border-surface-border pb-2">
               {cat.label}
             </h2>
@@ -107,11 +110,11 @@ export function AnamneseForm({
       })}
 
       {/* Botões */}
-      <div className="flex flex-wrap gap-3 pt-2">
+      <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:flex-wrap">
         <button
           onClick={() => void handleSave(false)}
           disabled={isPending}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-surface-border text-sm font-body font-medium text-text-primary hover:border-brand-lime/30 hover:text-brand-lime transition-all disabled:opacity-50"
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-surface-border px-4 py-3 text-sm font-body font-medium text-text-primary transition-all hover:border-brand-lime/30 hover:text-brand-lime disabled:opacity-50"
         >
           <Save size={15} />
           {isPending ? 'Salvando…' : 'Salvar rascunho'}
@@ -119,7 +122,7 @@ export function AnamneseForm({
         <button
           onClick={() => void handleSave(true)}
           disabled={isPending || !!completedAt}
-          className="flex items-center gap-2 bg-brand-lime text-background font-body font-semibold text-sm px-5 py-2.5 rounded-lg hover:bg-brand-lime/90 transition-colors disabled:opacity-50"
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-brand-lime px-5 py-3 text-sm font-body font-semibold text-background transition-colors hover:bg-brand-lime/90 disabled:opacity-50"
         >
           <CheckCircle2 size={15} />
           {completedAt ? 'Já finalizada' : isPending ? 'Salvando…' : 'Finalizar anamnese'}
@@ -141,26 +144,33 @@ function FieldInput({
   onChange: (v: unknown) => void
 }) {
   const base =
-    'w-full bg-background border border-surface-border rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-brand-lime/50 transition-colors'
+    'w-full rounded-xl border border-surface-border bg-background px-3 py-3 text-sm text-text-primary transition-colors focus:outline-none focus:border-brand-lime/50'
 
   const displayVal = normalizeValue(value)
 
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-2">
       <label className="text-sm text-text-primary font-body">
         {field.label}
         {field.required && <span className="text-status-error ml-0.5">*</span>}
         {field.tenant_id && (
-          <span className="ml-2 text-xs text-brand-lime/70 border border-brand-lime/20 rounded px-1">
+          <span className="ml-2 rounded border border-brand-lime/20 px-1.5 py-0.5 text-xs text-brand-lime/70">
             personalizado
           </span>
         )}
       </label>
 
       {field.field_type === 'boolean' && (
-        <div className="flex gap-3">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {['Sim', 'Não'].map((opt) => (
-            <label key={opt} className="flex items-center gap-1.5 cursor-pointer">
+            <label
+              key={opt}
+              className={`flex min-h-11 cursor-pointer items-center gap-2 rounded-xl border px-3 py-2.5 transition-colors ${
+                displayVal === opt
+                  ? 'border-brand-lime/40 bg-brand-lime/10'
+                  : 'border-surface-border bg-background'
+              }`}
+            >
               <input
                 type="radio"
                 name={field.field_key}
@@ -212,8 +222,8 @@ function FieldInput({
         <textarea
           value={displayVal}
           onChange={(e) => onChange(e.target.value)}
-          rows={3}
-          className={`${base} resize-none`}
+          rows={4}
+          className={`${base} min-h-28 resize-y`}
           placeholder={field.label}
         />
       )}

@@ -58,10 +58,10 @@ export default async function AdminBancoExerciciosPage({ searchParams }: Props) 
   }
 
   return (
-    <div className="p-6 md:p-8 space-y-6 max-w-6xl">
+    <div className="p-4 md:p-8 space-y-6 max-w-6xl">
 
       {/* Header */}
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="font-display text-2xl font-bold text-text-primary uppercase tracking-widest">
             Banco de Exercícios
@@ -72,7 +72,7 @@ export default async function AdminBancoExerciciosPage({ searchParams }: Props) 
         </div>
         <Link
           href="/admin/banco-de-exercicios/novo"
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-status-error text-white text-sm font-medium font-body hover:opacity-90 transition-opacity whitespace-nowrap"
+          className="flex w-full items-center justify-center gap-2 px-4 py-3 rounded-lg bg-status-error text-white text-sm font-medium font-body hover:opacity-90 transition-opacity whitespace-nowrap sm:w-auto"
         >
           <Plus size={15} />
           Novo exercício global
@@ -107,14 +107,14 @@ export default async function AdminBancoExerciciosPage({ searchParams }: Props) 
 
       {/* Busca + filtro grupo */}
       <div className="flex flex-wrap gap-3 items-center">
-        <form method="GET" className="relative">
+        <form method="GET" className="relative w-full sm:w-auto">
           {muscle && <input type="hidden" name="muscle" value={muscle} />}
           <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none" />
           <input
             name="q"
             defaultValue={q}
             placeholder="Buscar exercício..."
-            className="bg-surface border border-surface-border rounded-lg pl-9 pr-4 py-2.5 text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-lime transition-colors w-60"
+            className="w-full sm:w-60 bg-surface border border-surface-border rounded-lg pl-9 pr-4 py-2.5 text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-lime transition-colors"
           />
         </form>
 
@@ -157,7 +157,8 @@ export default async function AdminBancoExerciciosPage({ searchParams }: Props) 
         </div>
       ) : (
         <div className="bg-surface border border-surface-border rounded-xl overflow-hidden">
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full min-w-[720px] text-sm">
             <thead>
               <tr className="border-b border-surface-border">
                 <th className="text-left px-5 py-3 text-xs text-text-secondary font-body font-medium">Exercício</th>
@@ -232,6 +233,7 @@ export default async function AdminBancoExerciciosPage({ searchParams }: Props) 
               ))}
             </tbody>
           </table>
+          </div>
 
           <PaginationBar
             page={pageNum}

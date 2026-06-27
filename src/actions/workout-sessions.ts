@@ -177,6 +177,30 @@ export async function getStudentWorkoutCount() {
   return count ?? 0
 }
 
+/**
+ * Retorna as rotinas de um plano que o aluno ja concluiu em sessoes finalizadas.
+ */
+export async function getStudentCompletedRoutineIds(planId: string) {
+  const ctx = await getStudentCtx()
+  if (!ctx) return []
+
+  const { data } = await ctx.supabase
+    .from('workout_sessions')
+    .select('workout_routine_id')
+    .eq('student_id', ctx.studentId)
+    .eq('workout_plan_id', planId)
+    .not('finished_at', 'is', null)
+    .not('workout_routine_id', 'is', null)
+
+  return Array.from(
+    new Set(
+      (data ?? [])
+        .map((row) => row.workout_routine_id)
+        .filter((routineId): routineId is string => Boolean(routineId))
+    )
+  )
+}
+
 // ─── Evolução de carga por exercício (aluno) ──────────────────────────────────
 export async function getExerciseLoadHistory(exerciseId: string, limit = 10) {
   const ctx = await getStudentCtx()

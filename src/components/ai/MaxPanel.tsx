@@ -51,6 +51,9 @@ interface Props {
   studentName: string
 }
 
+/**
+ * Exibe atalhos operacionais do assistente com foco em leitura e toque no mobile.
+ */
 export function MaxPanel({ studentId, studentName }: Props) {
   const { text, isStreaming, error, conversationId, planId, trigger, reset } = useMaxStream()
   const [activeFeature, setActiveFeature] = useState<MaxFeature | null>(null)
@@ -70,21 +73,21 @@ export function MaxPanel({ studentId, studentName }: Props) {
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex items-center gap-3 p-4 bg-violet-500/5 border border-violet-500/20 rounded-xl">
+      <div className="flex items-start gap-3 rounded-xl border border-violet-500/20 bg-violet-500/5 p-4 sm:items-center">
         <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+          className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl"
           style={{ background: `${MAX_COLOR}22`, border: `1px solid ${MAX_COLOR}44` }}
         >
           <Zap size={20} style={{ color: MAX_COLOR }} />
         </div>
-        <div>
+        <div className="min-w-0">
           <p className="text-sm font-body font-semibold text-text-primary">Max Strive IA</p>
-          <p className="text-xs text-text-secondary">Assistente inteligente para {studentName}</p>
+          <p className="text-xs text-text-secondary break-words">Assistente inteligente para {studentName}</p>
         </div>
       </div>
 
       {/* Ações rápidas */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {ACTIONS.map((action) => {
           const Icon = action.icon
           const isActive = activeFeature === action.feature && isStreaming
@@ -94,9 +97,9 @@ export function MaxPanel({ studentId, studentName }: Props) {
               type="button"
               onClick={() => handleAction(action.feature)}
               disabled={isStreaming}
-              className={`flex items-center gap-3 p-3.5 rounded-xl border transition-all text-left disabled:opacity-50 disabled:cursor-not-allowed ${action.color}`}
+              className={`flex min-h-[88px] items-center gap-3 rounded-xl border p-4 text-left transition-all disabled:cursor-not-allowed disabled:opacity-50 ${action.color}`}
             >
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 border border-current/30 bg-current/10">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-current/30 bg-current/10">
                 {isActive ? (
                   <Loader2 size={15} className="animate-spin" />
                 ) : (
@@ -104,8 +107,8 @@ export function MaxPanel({ studentId, studentName }: Props) {
                 )}
               </div>
               <div className="min-w-0">
-                <p className="text-xs font-body font-semibold truncate">{action.label}</p>
-                <p className="text-xs opacity-70 truncate">{action.description}</p>
+                <p className="text-sm font-body font-semibold leading-snug">{action.label}</p>
+                <p className="mt-1 text-xs opacity-70 leading-relaxed">{action.description}</p>
               </div>
             </button>
           )
@@ -144,11 +147,11 @@ export function MaxPanel({ studentId, studentName }: Props) {
           </div>
 
           {!isStreaming && displayText && !error && (
-            <div className="flex items-center gap-2 px-4 py-3 border-t border-surface-border">
+            <div className="flex flex-col gap-2 border-t border-surface-border px-4 py-3 sm:flex-row sm:items-center">
               {planId && (
                 <Link
                   href={`/dashboard/treinos/${planId}`}
-                  className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border text-violet-400 border-violet-400/30 bg-violet-400/5 hover:bg-violet-400/10 transition-all"
+                  className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-violet-400/30 bg-violet-400/5 px-3 py-2.5 text-xs font-medium text-violet-400 transition-all hover:bg-violet-400/10"
                 >
                   <Dumbbell size={12} />
                   Ver plano criado
@@ -157,7 +160,7 @@ export function MaxPanel({ studentId, studentName }: Props) {
               <button
                 type="button"
                 onClick={handleReset}
-                className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border text-text-secondary border-surface-border hover:text-text-primary hover:bg-surface-border/30 transition-all"
+                className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-surface-border px-3 py-2.5 text-xs font-medium text-text-secondary transition-all hover:bg-surface-border/30 hover:text-text-primary"
               >
                 Limpar
               </button>
@@ -169,10 +172,10 @@ export function MaxPanel({ studentId, studentName }: Props) {
       {/* CTA Chat */}
       <Link
         href={`/dashboard/alunos/${studentId}/assistente-ia/chat${conversationId ? `?conv=${conversationId}` : ''}`}
-        className="flex items-center gap-3 p-4 bg-surface border border-surface-border rounded-xl hover:border-violet-400/30 transition-all group"
+        className="group flex min-h-[88px] items-center gap-3 rounded-xl border border-surface-border bg-surface p-4 transition-all hover:border-violet-400/30"
       >
         <div
-          className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
+          className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl"
           style={{ background: `${MAX_COLOR}15`, border: `1px solid ${MAX_COLOR}30` }}
         >
           <MessageSquare size={16} style={{ color: MAX_COLOR }} />

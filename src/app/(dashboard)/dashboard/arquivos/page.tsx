@@ -38,7 +38,7 @@ export default async function ArquivosPage() {
   const uniqueStudents = new Set(list.filter(f => f.student_id).map(f => f.student_id)).size
 
   return (
-    <div className="p-6 md:p-8 space-y-8 max-w-4xl">
+    <div className="p-4 md:p-8 space-y-8 max-w-4xl">
 
       {/* Header */}
       <div className="flex items-start gap-3">
@@ -56,7 +56,7 @@ export default async function ArquivosPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {[
           { label: 'Total de arquivos', value: list.length,    color: 'text-text-primary',   Icon: FolderOpen },
           { label: 'PDFs',              value: totalPdfs,      color: 'text-red-400',        Icon: FileText   },

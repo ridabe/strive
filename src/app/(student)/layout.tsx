@@ -1,9 +1,8 @@
 import { redirect } from 'next/navigation'
-import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 import { TenantLogoHeader } from '@/components/layout/tenant-logo-header'
 import { StudentSidebarNav } from '@/components/layout/student-sidebar'
-import { StudentBottomNav } from '@/components/layout/student-bottom-nav'
+import { StudentMobileNav } from '@/components/layout/student-mobile-nav'
 import { UserMenu } from '@/components/layout/user-menu'
 import { StudentAgendaBanner } from '@/components/agenda/StudentAgendaBanner'
 
@@ -53,6 +52,7 @@ export default async function StudentLayout({
   // Conta solicitações de agendamento pendentes/recusadas para o aluno
   let pendingAgendaCount  = 0
   let rejectedAgendaCount = 0
+  let latestAgendaNoticeAt: string | null = null
 
   const { data: studentRow } = await supabase
     .from('students')
@@ -68,7 +68,11 @@ export default async function StudentLayout({
   const gamificationActive = gamifSettings?.is_active ?? false
 
   if (studentRow) {
-    const [{ count: pending }, { count: rejected }] = await Promise.all([
+    const [
+      { count: pending },
+      { count: rejected },
+      { data: latestNoticeRow },
+    ] = await Promise.all([
       supabase
         .from('agenda_events')
         .select('id', { count: 'exact', head: true })
@@ -82,9 +86,19 @@ export default async function StudentLayout({
         .eq('status', 'rejected')
         .eq('origin', 'student')
         .gte('event_date', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]),
+      supabase
+        .from('agenda_events')
+        .select('updated_at')
+        .eq('student_id', studentRow.id)
+        .eq('origin', 'student')
+        .in('status', ['pending_confirmation', 'rejected'])
+        .order('updated_at', { ascending: false })
+        .limit(1)
+        .maybeSingle(),
     ])
     pendingAgendaCount  = pending  ?? 0
     rejectedAgendaCount = rejected ?? 0
+    latestAgendaNoticeAt = latestNoticeRow?.updated_at ?? null
   }
 
   return (
@@ -92,43 +106,16 @@ export default async function StudentLayout({
       className="bg-background"
       style={{ '--brand-lime': primaryColor } as React.CSSProperties}
     >
-      {/* ── Mobile header ─────────────────────────────────────────── */}
-      <header className="md:hidden fixed top-0 inset-x-0 z-40 h-14 bg-surface border-b border-surface-border flex items-center justify-between px-4">
-        <div className="flex items-center gap-2.5 min-w-0">
-          {tenantBranding?.logo_url ? (
-            <div className="relative h-8 w-28 flex-shrink-0">
-              <Image
-                src={tenantBranding.logo_url}
-                alt={businessName}
-                fill
-                className="object-contain object-left"
-                sizes="112px"
-                priority
-              />
-            </div>
-          ) : (
-            <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-black font-display font-black text-sm flex-shrink-0"
-              style={{ background: primaryColor }}
-            >
-              {businessName.charAt(0).toUpperCase()}
-            </div>
-          )}
-          {!tenantBranding?.logo_url && (
-            <span className="text-sm font-body font-semibold text-text-primary truncate">
-              {businessName}
-            </span>
-          )}
-        </div>
-
-        {/* Avatar inicial do aluno */}
-        <div
-          className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-display font-black text-black flex-shrink-0"
-          style={{ background: primaryColor }}
-        >
-          {(profile.full_name ?? profile.email).charAt(0).toUpperCase()}
-        </div>
-      </header>
+      <StudentMobileNav
+        logoUrl={tenantBranding?.logo_url ?? null}
+        businessName={businessName}
+        primaryColor={primaryColor}
+        userName={profile.full_name}
+        userEmail={profile.email}
+        userRole={profile.role}
+        personalName={personalName}
+        gamificationActive={gamificationActive}
+      />
 
       {/* ── Desktop sidebar ───────────────────────────────────────── */}
       <aside className="hidden md:flex flex-col w-60 fixed top-0 left-0 bottom-0 border-r border-surface-border bg-surface px-4 py-5 gap-6">
@@ -161,12 +148,11 @@ export default async function StudentLayout({
         <StudentAgendaBanner
           pendingCount={pendingAgendaCount}
           rejectedCount={rejectedAgendaCount}
+          latestNoticeAt={latestAgendaNoticeAt}
         />
         {children}
       </main>
 
-      {/* ── Mobile bottom navigation ──────────────────────────────── */}
-      <StudentBottomNav />
     </div>
   )
 }

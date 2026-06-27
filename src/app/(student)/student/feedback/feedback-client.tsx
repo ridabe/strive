@@ -178,12 +178,12 @@ export function FeedbackClient({ feedbacks, workoutPlans }: Props) {
 
       {/* Modal */}
       {open && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
           <div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={closeModal}
           />
-          <div className="relative bg-surface border border-surface-border rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-5">
+          <div className="relative bg-surface border border-surface-border rounded-t-2xl sm:rounded-2xl w-full max-w-md p-4 sm:p-6 shadow-2xl space-y-5 max-h-[88dvh] overflow-y-auto">
 
             <div className="flex items-center justify-between">
               <h2 className="font-display text-lg font-bold text-text-primary uppercase tracking-widest">
@@ -201,7 +201,7 @@ export function FeedbackClient({ feedbacks, workoutPlans }: Props) {
                 <label className="text-xs font-body font-medium text-text-secondary uppercase tracking-widest">
                   Nota do treino
                 </label>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
                   <StarRow
                     rating={rating}
                     hovered={hovered}
@@ -260,7 +260,7 @@ export function FeedbackClient({ feedbacks, workoutPlans }: Props) {
                 </div>
               )}
 
-              <div className="flex gap-3 pt-1">
+              <div className="flex flex-col-reverse gap-3 pt-1 sm:flex-row">
                 <button
                   type="button"
                   onClick={closeModal}
@@ -293,7 +293,7 @@ function FeedbackCard({ fb }: { fb: Feedback }) {
 
   return (
     <div className="bg-surface border border-surface-border rounded-2xl overflow-hidden">
-      <div className="flex items-center gap-4 px-5 py-4">
+      <div className="flex items-start gap-3 px-4 py-4 sm:px-5 sm:items-center sm:gap-4">
         {/* Data */}
         <div className="flex-shrink-0 text-center bg-background border border-surface-border rounded-lg px-3 py-2 min-w-[52px]">
           <p className="text-[10px] text-text-secondary uppercase leading-none">
@@ -309,7 +309,7 @@ function FeedbackCard({ fb }: { fb: Feedback }) {
 
         {/* Conteúdo */}
         <div className="flex-1 min-w-0 space-y-1">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <StarRow rating={fb.rating} size={13} />
             <span className={`text-xs font-display font-bold ${LABEL_COLORS[fb.rating]}`}>
               {LABELS[fb.rating]}

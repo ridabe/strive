@@ -8,8 +8,16 @@ import {
   ClipboardList, Activity, MessageSquare, Receipt, Utensils, UtensilsCrossed, Calendar, FolderOpen, History,
   Trophy,
 } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
-const BASE_NAV_ITEMS = [
+export interface StudentNavItem {
+  label: string
+  href: string
+  icon: LucideIcon
+  exact: boolean
+}
+
+const BASE_NAV_ITEMS: StudentNavItem[] = [
   { label: 'Início',          href: '/student',               icon: House,         exact: true },
   { label: 'Meus Treinos',   href: '/student/treinos',        icon: Dumbbell,      exact: false },
   { label: 'Histórico',      href: '/student/historico',      icon: History,       exact: false },
@@ -26,7 +34,7 @@ const BASE_NAV_ITEMS = [
   { label: 'Agenda',         href: '/student/agenda',         icon: Calendar,      exact: false },
 ]
 
-const RANKING_ITEM = {
+const RANKING_ITEM: StudentNavItem = {
   label: 'Ranking',
   href:  '/student/ranking',
   icon:  Trophy,
@@ -38,11 +46,21 @@ interface StudentSidebarNavProps {
   gamificationActive?: boolean
 }
 
-export function StudentSidebarNav({ personalName, gamificationActive }: StudentSidebarNavProps) {
-  const pathname = usePathname()
-  const NAV_ITEMS = gamificationActive
+/**
+ * Retorna a lista de rotas do aluno, incluindo o ranking quando o modulo estiver ativo.
+ */
+export function getStudentNavItems(gamificationActive?: boolean): StudentNavItem[] {
+  return gamificationActive
     ? [...BASE_NAV_ITEMS, RANKING_ITEM]
     : BASE_NAV_ITEMS
+}
+
+/**
+ * Renderiza a navegacao lateral completa da area do aluno.
+ */
+export function StudentSidebarNav({ personalName, gamificationActive }: StudentSidebarNavProps) {
+  const pathname = usePathname()
+  const NAV_ITEMS = getStudentNavItems(gamificationActive)
 
   return (
     <div className="flex flex-col h-full gap-4">

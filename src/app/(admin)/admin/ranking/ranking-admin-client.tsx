@@ -207,7 +207,7 @@ export function RankingAdminClient({
           <p className="text-xs text-text-secondary leading-relaxed">
             Registra oficialmente o Top 3, concede o badge de Campeão ao 1º lugar e salva o snapshot histórico.
           </p>
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <select
               value={closingMonth}
               onChange={e => setClosingMonth(Number(e.target.value))}
@@ -220,7 +220,7 @@ export function RankingAdminClient({
             <select
               value={closingYear}
               onChange={e => setClosingYear(Number(e.target.value))}
-              className="w-24 bg-background border border-surface-border rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-brand-lime/50"
+              className="w-full sm:w-24 bg-background border border-surface-border rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-brand-lime/50"
             >
               {[currentYear - 1, currentYear].map(y => (
                 <option key={y} value={y}>{y}</option>
@@ -259,7 +259,7 @@ export function RankingAdminClient({
 
       {/* ── Ranking atual ─────────────────────────────────────────────────────── */}
       <div className="bg-surface border border-surface-border rounded-xl overflow-hidden">
-        <div className="flex items-center justify-between px-5 py-3 border-b border-surface-border">
+        <div className="flex flex-col gap-1 px-4 sm:px-5 py-3 border-b border-surface-border sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
             <Trophy size={14} className="text-yellow-400" />
             <p className="text-xs font-semibold text-text-secondary uppercase tracking-widest">
@@ -279,7 +279,8 @@ export function RankingAdminClient({
         ) : (
           <>
             {/* Cabeçalho da tabela */}
-            <div className="grid grid-cols-[auto_1fr_auto_auto_auto_auto] gap-3 px-5 py-2 border-b border-surface-border/50 bg-surface-border/10">
+            <div className="overflow-x-auto">
+            <div className="grid min-w-[720px] grid-cols-[auto_1fr_auto_auto_auto_auto] gap-3 px-4 sm:px-5 py-2 border-b border-surface-border/50 bg-surface-border/10">
               <span className="text-xs text-text-secondary/50 w-8 text-center">#</span>
               <span className="text-xs text-text-secondary/50">Aluno</span>
               <span className="text-xs text-text-secondary/50 w-16 text-center hidden sm:block">Treinos</span>
@@ -288,11 +289,11 @@ export function RankingAdminClient({
               <span className="text-xs text-text-secondary/50 w-20 text-right">Pontos</span>
             </div>
 
-            <div className="divide-y divide-surface-border max-h-[600px] overflow-y-auto">
+            <div className="divide-y divide-surface-border max-h-[600px] overflow-y-auto min-w-[720px]">
               {ranking.map((row) => (
                 <div
                   key={row.student_id}
-                  className={`grid grid-cols-[auto_1fr_auto_auto_auto_auto] gap-3 items-center px-5 py-3 hover:bg-surface-border/10 transition-colors ${
+                  className={`grid grid-cols-[auto_1fr_auto_auto_auto_auto] gap-3 items-center px-4 sm:px-5 py-3 hover:bg-surface-border/10 transition-colors ${
                     row.rank_position <= 3 ? 'bg-yellow-400/2' : ''
                   }`}
                 >
@@ -313,6 +314,7 @@ export function RankingAdminClient({
                   </span>
                 </div>
               ))}
+            </div>
             </div>
           </>
         )}
@@ -372,7 +374,7 @@ export function RankingAdminClient({
 
       {/* ── Análise: mais ativos e maior evolução ─────────────────────────────── */}
       {initialRanking.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
 
           {/* Mais ativos (mais treinos) */}
           <div className="bg-surface border border-surface-border rounded-xl overflow-hidden">

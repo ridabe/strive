@@ -90,9 +90,9 @@ export function NewProgressForm() {
         <form
           ref={formRef}
           onSubmit={handleSubmit}
-          className="bg-surface border border-brand-lime/30 rounded-2xl p-5 space-y-5"
+          className="bg-surface border border-brand-lime/30 rounded-2xl p-4 space-y-5 sm:p-5"
         >
-          <div className="flex items-center justify-between">
+          <div className="flex items-start justify-between gap-3">
             <p className="text-sm font-display font-bold uppercase tracking-widest text-text-primary">
               Novo Registro de Progresso
             </p>
@@ -144,7 +144,7 @@ export function NewProgressForm() {
               min="0"
               max="500"
               placeholder="Ex: 75.5"
-              className={`w-40 ${inputCls}`}
+              className={`w-full sm:w-40 ${inputCls}`}
             />
           </div>
 
@@ -170,7 +170,7 @@ export function NewProgressForm() {
             </label>
 
             {previews.length > 0 && (
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-3 gap-2 sm:flex sm:flex-wrap">
                 {previews.map((src, i) => (
                   <div
                     key={i}
@@ -189,7 +189,7 @@ export function NewProgressForm() {
               </div>
             )}
 
-            <label className="flex items-center gap-2 w-fit cursor-pointer px-3 py-2 rounded-xl border border-dashed border-surface-border hover:border-brand-lime/40 text-xs text-text-secondary hover:text-text-primary transition-colors">
+            <label className="flex w-full sm:w-fit items-center justify-center gap-2 cursor-pointer px-3 py-2 rounded-xl border border-dashed border-surface-border hover:border-brand-lime/40 text-xs text-text-secondary hover:text-text-primary transition-colors">
               <ImagePlus size={14} />
               {previews.length === 0 ? 'Adicionar fotos' : 'Trocar fotos'}
               <input
@@ -204,7 +204,7 @@ export function NewProgressForm() {
             </label>
           </div>
 
-          <div className="flex gap-3 pt-1">
+          <div className="flex flex-col-reverse gap-3 pt-1 sm:flex-row">
             <button
               type="button"
               onClick={() => { setOpen(false); setPreviews([]) }}
@@ -250,8 +250,8 @@ export function ProgressEntryCard({ entry }: { entry: ProgressEntry }) {
   return (
     <div className="bg-surface border border-surface-border rounded-2xl overflow-hidden">
       {/* Linha principal */}
-      <div className="flex items-center justify-between px-5 py-4 gap-4">
-        <div className="flex items-center gap-4 min-w-0">
+      <div className="flex items-start justify-between px-4 py-4 gap-3 sm:px-5 sm:items-center sm:gap-4">
+        <div className="flex items-center gap-3 min-w-0 sm:gap-4">
           {/* Calendário mini */}
           <div className="flex-shrink-0 text-center bg-background border border-surface-border rounded-xl px-3 py-2 min-w-[52px]">
             <p className="text-[10px] text-text-secondary uppercase leading-none">
@@ -273,7 +273,7 @@ export function ProgressEntryCard({ entry }: { entry: ProgressEntry }) {
               </p>
             )}
             {entry.notes && (
-              <p className="text-sm text-text-secondary truncate max-w-[200px] sm:max-w-xs">
+              <p className="text-sm text-text-secondary truncate max-w-[140px] sm:max-w-xs">
                 {entry.notes}
               </p>
             )}
@@ -289,7 +289,7 @@ export function ProgressEntryCard({ entry }: { entry: ProgressEntry }) {
           </div>
         </div>
 
-        <div className="flex items-center gap-1 flex-shrink-0">
+        <div className="flex flex-col items-end gap-1 flex-shrink-0 sm:flex-row sm:items-center">
           {hasExtra && (
             <button
               onClick={() => setExpanded((e) => !e)}
@@ -312,13 +312,13 @@ export function ProgressEntryCard({ entry }: { entry: ProgressEntry }) {
 
       {/* Detalhes expandidos */}
       {expanded && hasExtra && (
-        <div className="border-t border-surface-border px-5 py-4 space-y-4">
+        <div className="border-t border-surface-border px-4 py-4 space-y-4 sm:px-5">
           {entry.photo_urls.length > 0 && (
             <div>
               <p className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-3">
                 Fotos
               </p>
-              <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                 {entry.photo_urls.map((url, i) => (
                   <a
                     key={i}

@@ -32,10 +32,10 @@ export default async function AlunosPage({
   const total = (activeCount ?? 0) + (inactiveCount ?? 0)
 
   return (
-    <div className="p-6 md:p-8 space-y-6">
+    <div className="p-4 md:p-8 space-y-6">
 
       {/* Header */}
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="font-display text-2xl font-bold text-text-primary uppercase tracking-widest">
             Alunos
@@ -46,7 +46,7 @@ export default async function AlunosPage({
         </div>
         <Link
           href="/dashboard/alunos/novo"
-          className="flex items-center gap-2 bg-brand-lime text-background font-body font-semibold text-sm px-4 py-2.5 rounded-lg hover:bg-brand-lime/90 transition-colors flex-shrink-0"
+          className="flex w-full items-center justify-center gap-2 bg-brand-lime text-background font-body font-semibold text-sm px-4 py-3 rounded-lg hover:bg-brand-lime/90 transition-colors flex-shrink-0 sm:w-auto"
         >
           <UserPlus size={16} />
           Novo aluno
@@ -54,7 +54,7 @@ export default async function AlunosPage({
       </div>
 
       {/* Stats rápidas */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {[
           { label: 'Total',    value: total,            icon: Users,      color: 'text-text-primary' },
           { label: 'Ativos',   value: activeCount ?? 0,   icon: UserCheck,  color: 'text-status-success' },
@@ -85,7 +85,7 @@ export default async function AlunosPage({
           />
           {params.status && <input type="hidden" name="status" value={params.status} />}
         </form>
-        <div className="flex gap-1">
+        <div className="grid grid-cols-3 gap-2 sm:flex sm:gap-1">
           {[
             { value: 'active',   label: 'Ativos'  },
             { value: 'inactive', label: 'Inativos' },
@@ -94,7 +94,7 @@ export default async function AlunosPage({
             <Link
               key={opt.value}
               href={`?status=${opt.value}${q ? `&q=${encodeURIComponent(q)}` : ''}`}
-              className={`px-3 py-2 rounded-lg text-sm font-body font-medium transition-colors ${
+                className={`px-3 py-2 rounded-lg text-center text-sm font-body font-medium transition-colors ${
                 status === opt.value
                   ? 'bg-brand-lime/10 text-brand-lime border border-brand-lime/20'
                   : 'text-text-secondary hover:text-text-primary border border-surface-border'
@@ -126,7 +126,7 @@ export default async function AlunosPage({
               <Link
                 key={student.id}
                 href={`/dashboard/alunos/${student.id}`}
-                className="flex items-center gap-4 px-5 py-4 hover:bg-surface-border/20 transition-colors"
+                className="flex items-start gap-3 px-4 py-4 hover:bg-surface-border/20 transition-colors sm:items-center sm:gap-4 sm:px-5"
               >
                 {/* Avatar inicial */}
                 <div className="w-9 h-9 rounded-full bg-brand-lime/10 border border-brand-lime/20 flex items-center justify-center flex-shrink-0">
@@ -144,20 +144,20 @@ export default async function AlunosPage({
                 </div>
 
                 {/* Goal */}
-                {student.goal && (
-                  <p className="hidden sm:block text-xs text-text-secondary/70 truncate max-w-[140px]">
-                    {student.goal}
-                  </p>
-                )}
-
-                {/* Status badge */}
-                <span className={`flex-shrink-0 text-xs font-medium px-2 py-0.5 rounded-full border ${
-                  student.status === 'active'
-                    ? 'text-status-success bg-status-success/10 border-status-success/20'
-                    : 'text-text-secondary bg-background border-surface-border'
-                }`}>
-                  {student.status === 'active' ? 'Ativo' : 'Inativo'}
-                </span>
+                <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                  {student.goal && (
+                    <p className="hidden sm:block text-xs text-text-secondary/70 truncate max-w-[140px] text-right">
+                      {student.goal}
+                    </p>
+                  )}
+                  <span className={`flex-shrink-0 text-xs font-medium px-2 py-0.5 rounded-full border ${
+                    student.status === 'active'
+                      ? 'text-status-success bg-status-success/10 border-status-success/20'
+                      : 'text-text-secondary bg-background border-surface-border'
+                  }`}>
+                    {student.status === 'active' ? 'Ativo' : 'Inativo'}
+                  </span>
+                </div>
               </Link>
             ))}
           </div>

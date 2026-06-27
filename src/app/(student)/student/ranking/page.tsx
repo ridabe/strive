@@ -128,7 +128,7 @@ export default async function StudentRankingPage() {
     <div className="p-4 md:p-8 space-y-6 max-w-3xl mx-auto">
 
       {/* ── Header ─────────────────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-display text-2xl font-black text-text-primary uppercase tracking-widest flex items-center gap-2">
             <Trophy size={22} className="text-yellow-400" />
@@ -143,7 +143,7 @@ export default async function StudentRankingPage() {
       {/* ── Meu Card ───────────────────────────────────────────────────────── */}
       {myCard && (
         <div className="bg-gradient-to-br from-brand-lime/10 via-surface to-surface border border-brand-lime/20 rounded-2xl p-5 space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3">
             <p className="text-xs text-brand-lime font-semibold uppercase tracking-widest">Minha posição</p>
             {myCard.myRank && myCard.myRank <= 3 && (
               <span className="text-xs font-bold text-yellow-400 bg-yellow-400/10 border border-yellow-400/20 px-2 py-0.5 rounded-full">
@@ -152,7 +152,7 @@ export default async function StudentRankingPage() {
             )}
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             <div className="w-16 h-16 rounded-2xl bg-brand-lime/10 border-2 border-brand-lime/30 flex items-center justify-center flex-shrink-0">
               {myCard.myRank ? (
                 <span className="font-display font-black text-2xl text-brand-lime">
@@ -180,7 +180,7 @@ export default async function StudentRankingPage() {
 
           {/* Stats rápidos */}
           {myCard.myPoints && (
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               {[
                 { label: 'Treinos', value: myCard.myPoints.workouts_completed, icon: Dumbbell },
                 { label: 'Exercícios', value: myCard.myPoints.exercises_completed, icon: Target },
@@ -245,7 +245,7 @@ export default async function StudentRankingPage() {
             <Medal size={12} />
             Pódio — {MONTH_NAMES[month]}
           </p>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             {/* 2º lugar */}
             {top3[1] ? (
               <div className="bg-zinc-400/5 border border-zinc-400/20 rounded-xl p-4 flex flex-col items-center gap-2 mt-4">
@@ -301,7 +301,7 @@ export default async function StudentRankingPage() {
         </div>
       ) : (
         <div className="bg-surface border border-surface-border rounded-xl overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-3 border-b border-surface-border">
+          <div className="flex flex-col gap-1 px-4 py-3 border-b border-surface-border sm:flex-row sm:items-center sm:justify-between sm:px-5">
             <p className="text-xs font-semibold text-text-secondary uppercase tracking-widest">
               Classificação Geral
             </p>
@@ -314,7 +314,7 @@ export default async function StudentRankingPage() {
               return (
                 <div
                   key={entry.student_id}
-                  className={`flex items-center gap-3 px-5 py-3 transition-colors ${
+                  className={`flex items-start gap-3 px-4 py-3 transition-colors sm:px-5 sm:items-center ${
                     isMe ? 'bg-brand-lime/5 border-l-2 border-brand-lime' : 'hover:bg-surface-border/10'
                   }`}
                 >
@@ -330,7 +330,7 @@ export default async function StudentRankingPage() {
                     <p className="text-xs text-text-secondary/60 truncate">{entry.trainer_name}</p>
                   </div>
 
-                  <div className="text-right flex-shrink-0">
+                  <div className="text-right flex-shrink-0 self-center">
                     <p className={`font-body font-bold text-sm ${isMe ? 'text-brand-lime' : 'text-text-primary'}`}>
                       {entry.total_points.toLocaleString('pt-BR')}
                       <span className="text-xs font-normal text-text-secondary ml-0.5">pts</span>
@@ -359,7 +359,7 @@ export default async function StudentRankingPage() {
               }>)?.[0]
               if (!top) return null
               return (
-                <div key={snap.id} className="flex items-center gap-4 px-5 py-3">
+                <div key={snap.id} className="flex items-center gap-3 px-4 py-3 sm:px-5 sm:gap-4">
                   <Crown size={14} className="text-yellow-400 flex-shrink-0" />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-text-primary font-medium truncate">{top.student_name}</p>
@@ -380,7 +380,7 @@ export default async function StudentRankingPage() {
         <div className="px-5 py-3 border-b border-surface-border">
           <p className="text-xs font-semibold text-text-secondary uppercase tracking-widest">Como Ganhar Pontos</p>
         </div>
-        <div className="p-5 grid grid-cols-2 gap-3">
+        <div className="p-4 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:p-5">
           {[
             { label: 'Treino concluído',      pts: `+${settings.pts_workout_completed}`,   icon: Dumbbell   },
             { label: 'Treino 100% completo',  pts: `+${settings.pts_workout_100_percent}`, icon: Target     },

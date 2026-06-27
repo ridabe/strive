@@ -21,7 +21,7 @@ export default async function ProgressoDashboardPage() {
   const totalStudents = studentSet.size
 
   return (
-    <div className="p-6 md:p-8 space-y-6">
+    <div className="p-4 md:p-8 space-y-6">
 
       {/* Header */}
       <div>
@@ -35,7 +35,7 @@ export default async function ProgressoDashboardPage() {
 
       {/* Stats */}
       {total > 0 && (
-        <div className="grid grid-cols-2 gap-3 max-w-xs">
+        <div className="grid grid-cols-2 gap-3 max-w-sm">
           <div className="bg-surface border border-surface-border rounded-xl p-4">
             <p className="font-display font-bold text-2xl text-brand-lime">{total}</p>
             <p className="text-xs text-text-secondary mt-0.5">
@@ -68,7 +68,8 @@ export default async function ProgressoDashboardPage() {
         </div>
       ) : (
         <div className="bg-surface border border-surface-border rounded-xl overflow-hidden">
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full min-w-[680px] text-sm">
             <thead>
               <tr className="border-b border-surface-border">
                 <th className="text-left px-5 py-3 text-xs text-text-secondary font-body font-medium">
@@ -132,6 +133,7 @@ export default async function ProgressoDashboardPage() {
               })}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>

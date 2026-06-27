@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { LogoHorizontal } from '@/components/logo'
 import { AdminSidebarNav } from '@/components/layout/admin-sidebar'
+import { AdminMobileNav } from '@/components/layout/admin-mobile-nav'
 import { UserMenu } from '@/components/layout/user-menu'
 
 export default async function AdminLayout({
@@ -28,6 +29,12 @@ export default async function AdminLayout({
 
   return (
     <div className="min-h-screen bg-background flex">
+      <AdminMobileNav
+        userName={profile.full_name}
+        userEmail={profile.email}
+        userRole={profile.role}
+      />
+
       <aside className="hidden md:flex flex-col w-60 h-screen sticky top-0 border-r border-status-error/20 bg-surface px-4 py-5 gap-6 flex-shrink-0">
         <div className="flex-shrink-0">
           <LogoHorizontal size="sm" />
@@ -50,7 +57,7 @@ export default async function AdminLayout({
         </div>
       </aside>
 
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto pt-14 pb-20 md:pt-0 md:pb-0">
         {children}
       </main>
     </div>

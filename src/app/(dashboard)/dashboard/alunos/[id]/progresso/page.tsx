@@ -75,9 +75,9 @@ export default async function AlunoProgressoPage({ params }: Props) {
     .limit(20)
 
   return (
-    <div className="p-6 md:p-8 space-y-6 max-w-5xl">
+    <div className="p-4 md:p-8 space-y-6 max-w-5xl">
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-text-secondary">
+      <div className="flex flex-wrap items-center gap-2 text-sm text-text-secondary">
         <Link href="/dashboard/alunos" className="hover:text-text-primary transition-colors">Alunos</Link>
         <span>/</span>
         <Link href={`/dashboard/alunos/${id}`} className="hover:text-text-primary transition-colors">
