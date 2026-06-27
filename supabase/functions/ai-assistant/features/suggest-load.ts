@@ -7,6 +7,7 @@ import { extractSsePayloads } from '../streaming.ts';
 const MODEL         = ANTHROPIC_EFFICIENT_MODEL;
 const MAX_TOKENS    = 420;
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
+const STREAM_IDLE_AFTER_TEXT_MS = 2500;
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -142,6 +143,26 @@ function buildSseResponse(
       const decoder = new TextDecoder();
       let buffer    = '';
 
+      /**
+       * Evita spinner infinito quando o provider para de emitir eventos
+       * depois de ja ter entregue o texto final, mas nao fecha o socket.
+       */
+      const readWithIdleTimeout = async (): Promise<ReadableStreamReadResult<Uint8Array> | null> => {
+        if (!fullText.trim()) return reader.read();
+
+        let timeoutId: ReturnType<typeof setTimeout> | null = null;
+        try {
+          return await Promise.race([
+            reader.read(),
+            new Promise<null>((resolve) => {
+              timeoutId = setTimeout(() => resolve(null), STREAM_IDLE_AFTER_TEXT_MS);
+            }),
+          ]);
+        } finally {
+          if (timeoutId) clearTimeout(timeoutId);
+        }
+      };
+
       const processRawEvent = (raw: string): boolean => {
         if (!raw || raw === '[DONE]') {
           messageCompleted = true;
@@ -174,6 +195,10 @@ function buildSseResponse(
             messageCompleted = true;
             return true;
           }
+          if (ev.type === 'content_block_stop' && fullText.trim()) {
+            messageCompleted = true;
+            return true;
+          }
           if (ev.type === 'content_block_delta' && ev.delta?.type === 'text_delta') {
             fullText += ev.delta.text;
             controller.enqueue(
@@ -191,7 +216,14 @@ function buildSseResponse(
 
       try {
         outer: while (true) {
-          const { done, value } = await reader.read();
+          const chunk = await readWithIdleTimeout();
+          if (chunk === null) {
+            messageCompleted = true;
+            await reader.cancel('idle-timeout-after-text').catch(() => {});
+            break;
+          }
+
+          const { done, value } = chunk;
           if (done) break;
 
           buffer += decoder.decode(value, { stream: true });

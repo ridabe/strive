@@ -10,6 +10,7 @@ import { extractSsePayloads } from '../streaming.ts';
 const MODEL         = ANTHROPIC_SMART_MODEL;
 const MAX_TOKENS    = 768;
 const HISTORY_LIMIT = 4;
+const STREAM_IDLE_AFTER_TEXT_MS = 2500;
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
 
 const CORS_HEADERS = {
@@ -160,6 +161,25 @@ function buildSseResponse(
       const decoder = new TextDecoder();
       let buffer    = '';
 
+      /**
+       * Fecha o stream quando ja houve resposta textual e o upstream fica ocioso.
+       */
+      const readWithIdleTimeout = async (): Promise<ReadableStreamReadResult<Uint8Array> | null> => {
+        if (!fullText.trim()) return reader.read();
+
+        let timeoutId: ReturnType<typeof setTimeout> | null = null;
+        try {
+          return await Promise.race([
+            reader.read(),
+            new Promise<null>((resolve) => {
+              timeoutId = setTimeout(() => resolve(null), STREAM_IDLE_AFTER_TEXT_MS);
+            }),
+          ]);
+        } finally {
+          if (timeoutId) clearTimeout(timeoutId);
+        }
+      };
+
       const processRawEvent = (raw: string): boolean => {
         if (!raw || raw === '[DONE]') {
           messageCompleted = true;
@@ -175,6 +195,10 @@ function buildSseResponse(
           }
           if (ev.type === 'message_delta' && typeof ev.usage?.output_tokens === 'number') {
             outputTokens = ev.usage.output_tokens;
+          }
+          if (ev.type === 'content_block_stop' && fullText.trim()) {
+            messageCompleted = true;
+            return true;
           }
           if (ev.type === 'content_block_delta' && ev.delta?.type === 'text_delta') {
             fullText += ev.delta.text;
@@ -193,7 +217,14 @@ function buildSseResponse(
 
       try {
         outer: while (true) {
-          const { done, value } = await reader.read();
+          const chunk = await readWithIdleTimeout();
+          if (chunk === null) {
+            messageCompleted = true;
+            await reader.cancel('idle-timeout-after-text').catch(() => {});
+            break;
+          }
+
+          const { done, value } = chunk;
           if (done) break;
 
           buffer += decoder.decode(value, { stream: true });
