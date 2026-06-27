@@ -77,7 +77,6 @@ type UsageRow = {
 
 export default async function IAAnalyticsPage() {
   const supabase = await createClient()
-  const sb = supabase as any
   const now      = new Date()
   const last30   = startOfDay(subDays(now, 30)).toISOString()
   const last60   = startOfDay(subDays(now, 60)).toISOString()
@@ -110,7 +109,7 @@ export default async function IAAnalyticsPage() {
     { data: usage30to60 },
   ] = await Promise.all([
     // Eventos de uso dos ultimos 90 dias
-    sb
+    supabase
       .from('ai_usage_events')
       .select('id, tenant_id, feature_type, provider, usage_kind, client_platform, model, status, input_tokens, output_tokens, latency_ms, error_message, metadata, created_at')
       .gte('created_at', last90)
@@ -127,7 +126,7 @@ export default async function IAAnalyticsPage() {
       : Promise.resolve({ data: [] }),
 
     // Eventos período anterior (30–60 dias) para variação
-    sb
+    supabase
       .from('ai_usage_events')
       .select('id, input_tokens, output_tokens')
       .gte('created_at', last60)

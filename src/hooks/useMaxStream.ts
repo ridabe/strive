@@ -128,6 +128,12 @@ export function useMaxStream(): UseMaxStreamResult {
           try {
             const parsed = JSON.parse(payload)
             if (parsed.error) throw new Error(parsed.error)
+            if (parsed.debug) {
+              // #region debug-point J:upstream-debug
+              fetch('http://127.0.0.1:7777/event', { method: 'POST', body: JSON.stringify({ sessionId: 'suggest-load-spinner', runId: debugRunId, hypothesisId: 'J', traceId, location: 'useMaxStream.ts:trigger:upstream-debug', msg: '[DEBUG] upstream debug event', data: parsed.debug, ts: Date.now() }) }).catch(() => {})
+              // #endregion
+              continue
+            }
             if (parsed.text) {
               accumulated += parsed.text
               setText(accumulated)

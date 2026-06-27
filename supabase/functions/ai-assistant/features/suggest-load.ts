@@ -150,6 +150,18 @@ function buildSseResponse(
 
         try {
           const ev = JSON.parse(raw);
+          // #region debug-point B:upstream-event
+          controller.enqueue(
+            encoder.encode(`data: ${JSON.stringify({
+              debug: {
+                source: 'suggest-load',
+                eventType: ev.type,
+                stopReason: ev.delta?.stop_reason ?? ev.message?.stop_reason ?? null,
+                outputTokens: ev.usage?.output_tokens ?? ev.message?.usage?.output_tokens ?? null,
+              },
+            })}\n\n`),
+          );
+          // #endregion
           if (ev.type === 'message_start') {
             modelName = ev.message?.model ?? modelName;
             inputTokens = ev.message?.usage?.input_tokens ?? inputTokens;
@@ -157,6 +169,10 @@ function buildSseResponse(
           }
           if (ev.type === 'message_delta' && typeof ev.usage?.output_tokens === 'number') {
             outputTokens = ev.usage.output_tokens;
+          }
+          if (ev.type === 'message_delta' && ev.delta?.stop_reason) {
+            messageCompleted = true;
+            return true;
           }
           if (ev.type === 'content_block_delta' && ev.delta?.type === 'text_delta') {
             fullText += ev.delta.text;
