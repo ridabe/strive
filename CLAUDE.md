@@ -4,6 +4,38 @@ Sistema de gerenciamento para personal trainers. Next.js 15 App Router · Supaba
 
 ---
 
+## 🧠 REGRA OBRIGATÓRIA: Graphify — Consulta antes de agir, atualização após salvar
+
+### Antes de qualquer alteração, melhoria, ajuste ou nova feature
+
+**Sempre invocar `/graphify` ou consultar o grafo semântico existente em `graphify-out/` antes de:**
+- Iniciar qualquer implementação, refatoração ou bugfix
+- Propor melhorias ou ajustes de arquitetura
+- Criar novos componentes, actions, rotas ou módulos
+
+O graphify mapeia relacionamentos reais entre arquivos, funções e módulos. Sem consultá-lo, é possível duplicar lógica, quebrar dependências ou ignorar padrões já estabelecidos no projeto.
+
+**Fluxo obrigatório antes de editar:**
+
+1. Verificar se `graphify-out/` existe no projeto
+2. Se existir, usar a skill graphify para consultar — ex.: `/graphify query "como funciona autenticação"` ou `/graphify path src/lib/auth.ts`
+3. Se não existir, rodar `/graphify` para indexar o projeto antes de prosseguir
+
+### Após salvar qualquer arquivo de código
+
+**Sempre atualizar o graphify ao final de uma sessão de edição que modificou arquivos `.ts` ou `.tsx`:**
+
+```bash
+/graphify update
+```
+
+Isso garante que o grafo semântico reflita o estado atual do código e futuras consultas sejam precisas.
+
+**Regra resumida:**
+> Consultar graphify → editar → salvar → atualizar graphify
+
+---
+
 ## ⚠️ REGRA OBRIGATÓRIA: Lint Guard após toda edição
 
 **Sempre que editar, criar ou modificar qualquer arquivo `.ts` ou `.tsx` neste projeto, execute uma verificação de lint antes de reportar o trabalho como concluído.**
