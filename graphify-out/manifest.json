@@ -145,9 +145,9 @@
     "semantic_hash": "152159d023e0a9ae20b025ea7e8fbe9b"
   },
   "src/actions/workout-routines.ts": {
-    "mtime": 1782066243.729124,
-    "ast_hash": "85544e1f2b245cd6a58b0210fe234779",
-    "semantic_hash": "85544e1f2b245cd6a58b0210fe234779"
+    "mtime": 1782865381.732886,
+    "ast_hash": "fe0b613be018b1745d7a41858e5b6162",
+    "semantic_hash": "fe0b613be018b1745d7a41858e5b6162"
   },
   "src/actions/workout-sessions.ts": {
     "mtime": 1782566719.1970956,
@@ -760,24 +760,24 @@
     "semantic_hash": "659de91031da7ebcc084d8c46d05767a"
   },
   "src/app/actions/agenda.ts": {
-    "mtime": 1782224084.3423326,
-    "ast_hash": "08be96d101da2856829f835f4cc39854",
-    "semantic_hash": "08be96d101da2856829f835f4cc39854"
+    "mtime": 1782864767.8983033,
+    "ast_hash": "331e3c8506f277d358abf385bf9a102b",
+    "semantic_hash": "331e3c8506f277d358abf385bf9a102b"
   },
   "src/app/actions/anamnese.ts": {
-    "mtime": 1781987813.9360073,
-    "ast_hash": "7eebdddf2c81d8c671899494321cc0f0",
-    "semantic_hash": "7eebdddf2c81d8c671899494321cc0f0"
+    "mtime": 1782865356.8351343,
+    "ast_hash": "e352dc34f7c28e995aa89b97ed23e04c",
+    "semantic_hash": "e352dc34f7c28e995aa89b97ed23e04c"
   },
   "src/app/actions/assessments.ts": {
-    "mtime": 1781990046.3236809,
-    "ast_hash": "714f2e46464ae46b7d7c41f073a2f996",
-    "semantic_hash": "714f2e46464ae46b7d7c41f073a2f996"
+    "mtime": 1782865394.895024,
+    "ast_hash": "20b188c56ffa3e79e75f2ab346efeafd",
+    "semantic_hash": "20b188c56ffa3e79e75f2ab346efeafd"
   },
   "src/app/actions/attendance.ts": {
-    "mtime": 1781991810.9083102,
-    "ast_hash": "a77c74acd30bdb05e3b908136fe9003f",
-    "semantic_hash": "a77c74acd30bdb05e3b908136fe9003f"
+    "mtime": 1782865362.256761,
+    "ast_hash": "8cd890a86698dc61eb485f2182763474",
+    "semantic_hash": "8cd890a86698dc61eb485f2182763474"
   },
   "src/app/actions/auth.ts": {
     "mtime": 1781889016.026665,
@@ -790,9 +790,9 @@
     "semantic_hash": "237af297a03463dab700976c89113120"
   },
   "src/app/actions/branding.ts": {
-    "mtime": 1781970931.8753178,
-    "ast_hash": "c236aaea36fc7c1ed30124370529ec53",
-    "semantic_hash": "c236aaea36fc7c1ed30124370529ec53"
+    "mtime": 1782865402.3181179,
+    "ast_hash": "1d3f325460f53595644c3450beac8705",
+    "semantic_hash": "1d3f325460f53595644c3450beac8705"
   },
   "src/app/actions/clients.ts": {
     "mtime": 1781965776.541249,
@@ -805,19 +805,19 @@
     "semantic_hash": "674ad949ea2e06f410e9ea56b771ce3e"
   },
   "src/app/actions/food-items.ts": {
-    "mtime": 1782232835.7697344,
-    "ast_hash": "da1fccb38c31139a3ddd9f26d41bc1ae",
-    "semantic_hash": "da1fccb38c31139a3ddd9f26d41bc1ae"
+    "mtime": 1782864666.868833,
+    "ast_hash": "7cef961ee19348d071124711fe765650",
+    "semantic_hash": "7cef961ee19348d071124711fe765650"
   },
   "src/app/actions/gamification.ts": {
-    "mtime": 1782408654.9056091,
-    "ast_hash": "b9293827cc319f5d4136dbfb594776cc",
-    "semantic_hash": "b9293827cc319f5d4136dbfb594776cc"
+    "mtime": 1782864750.134298,
+    "ast_hash": "73688d7d592355243b04cb0d829af321",
+    "semantic_hash": "73688d7d592355243b04cb0d829af321"
   },
   "src/app/actions/meal-plans.ts": {
-    "mtime": 1782233629.5566132,
-    "ast_hash": "7ae66982e57fe96d36688b1bfb3b8d5a",
-    "semantic_hash": "7ae66982e57fe96d36688b1bfb3b8d5a"
+    "mtime": 1782864660.998148,
+    "ast_hash": "1f85174184ac863ff0a632852ae335dd",
+    "semantic_hash": "1f85174184ac863ff0a632852ae335dd"
   },
   "src/app/actions/modules.ts": {
     "mtime": 1781887394.306019,
@@ -1643,5 +1643,10 @@
     "mtime": 1782830388.6404777,
     "ast_hash": "d0ef0a83cd09df84485503d3fa18a079",
     "semantic_hash": "d0ef0a83cd09df84485503d3fa18a079"
+  },
+  "src/lib/supabase/context.ts": {
+    "mtime": 1782864655.1124141,
+    "ast_hash": "f6ddef287a2819bbd674ffd555a70b58",
+    "semantic_hash": "f6ddef287a2819bbd674ffd555a70b58"
   }
 }

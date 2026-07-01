@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { createClient } from '@/lib/supabase/server'
+import { getCtx } from '@/lib/supabase/context'
 
 // ─── Salvar respostas da anamnese ─────────────────────────────────────────────
 export async function saveAnamneseResponse(
@@ -9,18 +9,9 @@ export async function saveAnamneseResponse(
   responses: Record<string, unknown>,
   markCompleted = false,
 ) {
-  const supabase = await createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: 'Não autenticado' }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('tenant_id')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile?.tenant_id) return { error: 'Tenant não encontrado' }
+  const ctx = await getCtx()
+  if (!ctx) return { error: 'Não autenticado' }
+  const { supabase, tenantId } = ctx
 
   const payload: {
     student_id: string
@@ -29,7 +20,7 @@ export async function saveAnamneseResponse(
     completed_at?: string
   } = {
     student_id: studentId,
-    tenant_id: profile.tenant_id,
+    tenant_id: tenantId,
     responses,
   }
   if (markCompleted) payload.completed_at = new Date().toISOString()
@@ -46,18 +37,9 @@ export async function saveAnamneseResponse(
 
 // ─── Adicionar campo customizado ──────────────────────────────────────────────
 export async function addCustomField(formData: FormData) {
-  const supabase = await createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: 'Não autenticado' }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('tenant_id')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile?.tenant_id) return { error: 'Tenant não encontrado' }
+  const ctx = await getCtx()
+  if (!ctx) return { error: 'Não autenticado' }
+  const { supabase, tenantId } = ctx
 
   const label      = String(formData.get('label') ?? '').trim()
   const field_key  = String(formData.get('field_key') ?? '').trim()
@@ -78,7 +60,7 @@ export async function addCustomField(formData: FormData) {
   }
 
   const { error } = await supabase.from('anamnese_templates').insert({
-    tenant_id: profile.tenant_id,
+    tenant_id: tenantId,
     label,
     field_key,
     field_type,
@@ -95,24 +77,15 @@ export async function addCustomField(formData: FormData) {
 
 // ─── Ativar / desativar campo customizado ─────────────────────────────────────
 export async function toggleCustomField(fieldId: string, isActive: boolean) {
-  const supabase = await createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: 'Não autenticado' }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('tenant_id')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile?.tenant_id) return { error: 'Tenant não encontrado' }
+  const ctx = await getCtx()
+  if (!ctx) return { error: 'Não autenticado' }
+  const { supabase, tenantId } = ctx
 
   const { error } = await supabase
     .from('anamnese_templates')
     .update({ is_active: isActive })
     .eq('id', fieldId)
-    .eq('tenant_id', profile.tenant_id) // só campos do próprio tenant
+    .eq('tenant_id', tenantId) // só campos do próprio tenant
 
   if (error) return { error: error.message }
 

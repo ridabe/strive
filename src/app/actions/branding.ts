@@ -1,28 +1,15 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { createClient } from '@/lib/supabase/server'
+import { getCtx } from '@/lib/supabase/context'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 // ─── Salvar branding do tenant (logo + cor primária) ─────────────────────────
 export async function saveBranding(formData: FormData) {
-  const supabase      = await createClient()
+  const ctx = await getCtx()
+  if (!ctx || ctx.role !== 'personal') return { error: 'Sem permissão.' }
+  const { tenantId } = ctx
   const adminSupabase = createAdminClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: 'Não autenticado.' }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('tenant_id, role')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile?.tenant_id || profile.role !== 'personal') {
-    return { error: 'Sem permissão.' }
-  }
-
-  const tenantId    = profile.tenant_id
   const primaryColor = (formData.get('primary_color') as string | null) ?? null
   const logoFile     = formData.get('logo') as File | null
   const removeLogo   = formData.get('remove_logo') === '1'

@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { getCtx } from '@/lib/supabase/context'
 import { revalidatePath } from 'next/cache'
 
 export type AgendaEventType =
@@ -82,24 +83,12 @@ export interface StudentPresencialRequestInput {
   notes?: string | null
 }
 
-// ─── Auth helper ──────────────────────────────────────────────
-async function requireAuth() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Não autenticado')
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role, tenant_id')
-    .eq('id', user.id)
-    .single()
-  if (!profile) throw new Error('Perfil não encontrado')
-  return { supabase, user, profile }
-}
-
 // ─── Listar eventos por mês (personal) ───────────────────────
 export async function getAgendaEvents(year: number, month: number): Promise<AgendaEvent[]> {
-  const { supabase, profile } = await requireAuth()
-  if (!['personal', 'global_admin'].includes(profile.role)) {
+  const ctx = await getCtx()
+  if (!ctx) throw new Error('Não autenticado')
+  const { supabase, role } = ctx
+  if (!['personal', 'global_admin'].includes(role)) {
     throw new Error('Acesso negado')
   }
 
@@ -120,8 +109,10 @@ export async function getAgendaEvents(year: number, month: number): Promise<Agen
 
 // ─── Listar eventos de um dia (personal) ─────────────────────
 export async function getAgendaEventsByDate(date: string): Promise<AgendaEvent[]> {
-  const { supabase, profile } = await requireAuth()
-  if (!['personal', 'global_admin'].includes(profile.role)) {
+  const ctx = await getCtx()
+  if (!ctx) throw new Error('Não autenticado')
+  const { supabase, role } = ctx
+  if (!['personal', 'global_admin'].includes(role)) {
     throw new Error('Acesso negado')
   }
 
@@ -137,8 +128,10 @@ export async function getAgendaEventsByDate(date: string): Promise<AgendaEvent[]
 
 // ─── Eventos de hoje (para notificação no dashboard) ─────────
 export async function getTodayAgendaEvents(): Promise<AgendaEvent[]> {
-  const { supabase, profile } = await requireAuth()
-  if (!['personal', 'global_admin'].includes(profile.role)) return []
+  const ctx = await getCtx()
+  if (!ctx) return []
+  const { supabase, role } = ctx
+  if (!['personal', 'global_admin'].includes(role)) return []
 
   const today = new Date().toISOString().split('T')[0]
 
@@ -155,14 +148,15 @@ export async function getTodayAgendaEvents(): Promise<AgendaEvent[]> {
 
 // ─── Criar evento (personal) ──────────────────────────────────
 export async function createAgendaEvent(input: CreateAgendaEventInput) {
-  const { supabase, profile } = await requireAuth()
-  if (!['personal', 'global_admin'].includes(profile.role)) {
+  const ctx = await getCtx()
+  if (!ctx) throw new Error('Não autenticado')
+  const { supabase, tenantId, role } = ctx
+  if (!['personal', 'global_admin'].includes(role)) {
     throw new Error('Acesso negado')
   }
-  if (!profile.tenant_id) throw new Error('Tenant não encontrado')
 
   const { error } = await supabase.from('agenda_events').insert({
-    tenant_id:    profile.tenant_id,
+    tenant_id:    tenantId,
     type:         input.type,
     title:        input.title,
     event_date:   input.event_date,
@@ -184,8 +178,10 @@ export async function createAgendaEvent(input: CreateAgendaEventInput) {
 
 // ─── Atualizar evento (personal) ─────────────────────────────
 export async function updateAgendaEvent(input: UpdateAgendaEventInput) {
-  const { supabase, profile } = await requireAuth()
-  if (!['personal', 'global_admin'].includes(profile.role)) {
+  const ctx = await getCtx()
+  if (!ctx) throw new Error('Não autenticado')
+  const { supabase, role } = ctx
+  if (!['personal', 'global_admin'].includes(role)) {
     throw new Error('Acesso negado')
   }
 
@@ -202,8 +198,10 @@ export async function updateAgendaEvent(input: UpdateAgendaEventInput) {
 
 // ─── Deletar evento (personal) ────────────────────────────────
 export async function deleteAgendaEvent(id: string) {
-  const { supabase, profile } = await requireAuth()
-  if (!['personal', 'global_admin'].includes(profile.role)) {
+  const ctx = await getCtx()
+  if (!ctx) throw new Error('Não autenticado')
+  const { supabase, role } = ctx
+  if (!['personal', 'global_admin'].includes(role)) {
     throw new Error('Acesso negado')
   }
 
@@ -218,8 +216,10 @@ export async function deleteAgendaEvent(id: string) {
 
 // ─── Confirmar solicitação do aluno (personal) ────────────────
 export async function confirmAgendaEvent(id: string) {
-  const { supabase, profile } = await requireAuth()
-  if (!['personal', 'global_admin'].includes(profile.role)) {
+  const ctx = await getCtx()
+  if (!ctx) throw new Error('Não autenticado')
+  const { supabase, role } = ctx
+  if (!['personal', 'global_admin'].includes(role)) {
     throw new Error('Acesso negado')
   }
 
@@ -236,8 +236,10 @@ export async function confirmAgendaEvent(id: string) {
 
 // ─── Recusar solicitação do aluno (personal) ──────────────────
 export async function rejectAgendaEvent(id: string, reason: string) {
-  const { supabase, profile } = await requireAuth()
-  if (!['personal', 'global_admin'].includes(profile.role)) {
+  const ctx = await getCtx()
+  if (!ctx) throw new Error('Não autenticado')
+  const { supabase, role } = ctx
+  if (!['personal', 'global_admin'].includes(role)) {
     throw new Error('Acesso negado')
   }
 

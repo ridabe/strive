@@ -2,24 +2,18 @@
 
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
+import { getCtx } from '@/lib/supabase/context'
 
 export async function createRoutine(planId: string, name: string, displayOrder: number) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: 'Não autenticado' }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('tenant_id')
-    .eq('id', user.id)
-    .single()
-  if (!profile?.tenant_id) return { error: 'Tenant não encontrado' }
+  const ctx = await getCtx()
+  if (!ctx) return { error: 'Não autenticado' }
+  const { supabase, tenantId } = ctx
 
   const { data, error } = await supabase
     .from('workout_routines')
     .insert({
       workout_plan_id: planId,
-      tenant_id: profile.tenant_id,
+      tenant_id: tenantId,
       name,
       display_order: displayOrder,
     })

@@ -1,23 +1,14 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { createClient } from '@/lib/supabase/server'
+import { getCtx } from '@/lib/supabase/context'
 import { calcBMI, calcBMR } from '@/lib/fitness-calc'
 
 // ─── Criar avaliação física ───────────────────────────────────────────────────
 export async function createAssessment(studentId: string, formData: FormData) {
-  const supabase = await createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: 'Não autenticado' }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('tenant_id')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile?.tenant_id) return { error: 'Tenant não encontrado' }
+  const ctx = await getCtx()
+  if (!ctx) return { error: 'Não autenticado' }
+  const { supabase, tenantId } = ctx
 
   const num = (key: string): number | null => {
     const val = formData.get(key)
@@ -62,7 +53,7 @@ export async function createAssessment(studentId: string, formData: FormData) {
 
   const { error } = await supabase.from('physical_assessments').insert({
     student_id: studentId,
-    tenant_id:  profile.tenant_id,
+    tenant_id:  tenantId,
     assessed_at,
     sex,
     weight,
@@ -87,24 +78,15 @@ export async function createAssessment(studentId: string, formData: FormData) {
 
 // ─── Excluir avaliação física ─────────────────────────────────────────────────
 export async function deleteAssessment(assessmentId: string, studentId: string) {
-  const supabase = await createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: 'Não autenticado' }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('tenant_id')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile?.tenant_id) return { error: 'Tenant não encontrado' }
+  const ctx = await getCtx()
+  if (!ctx) return { error: 'Não autenticado' }
+  const { supabase, tenantId } = ctx
 
   const { error } = await supabase
     .from('physical_assessments')
     .delete()
     .eq('id', assessmentId)
-    .eq('tenant_id', profile.tenant_id)
+    .eq('tenant_id', tenantId)
 
   if (error) return { error: error.message }
 

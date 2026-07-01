@@ -1,20 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { createClient } from '@/lib/supabase/server'
-
-async function getCtx() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return null
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('tenant_id, role')
-    .eq('id', user.id)
-    .single()
-  if (!profile?.tenant_id) return null
-  return { supabase, tenantId: profile.tenant_id, role: profile.role as string }
-}
+import { getCtx } from '@/lib/supabase/context'
 
 const BASE_PATH = '/dashboard/planos-alimentares'
 

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
+import { getCtx } from '@/lib/supabase/context'
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -82,20 +83,14 @@ export async function getGamificationSettings(): Promise<GamificationSettings | 
 export async function updateGamificationSettings(
   updates: Partial<Omit<GamificationSettings, 'id' | 'updated_at'>>,
 ) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: 'Não autenticado' }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-  if (profile?.role !== 'global_admin') return { error: 'Sem permissão' }
+  const ctx = await getCtx()
+  if (!ctx) return { error: 'Não autenticado' }
+  const { supabase, role } = ctx
+  if (role !== 'global_admin') return { error: 'Sem permissão' }
 
   const { error } = await supabase
     .from('gamification_settings')
-    .update({ ...updates, updated_at: new Date().toISOString(), updated_by: user.id })
+    .update({ ...updates, updated_at: new Date().toISOString() })
     .not('id', 'is', null)
 
   if (error) return { error: error.message }
