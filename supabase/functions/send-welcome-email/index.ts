@@ -91,9 +91,7 @@ function buildHtml(payload: WelcomeEmailPayload): string {
                       <tr>
                         <td style="padding-top:14px;">
                           <p style="margin:0 0 4px;font-size:11px;color:#B0B0C3;text-transform:uppercase;letter-spacing:1px;">Senha provisória</p>
-                          <p style="margin:0;font-size:22px;color:${accentColor};font-weight:700;letter-spacing:4px;font-family:monospace;">
-                            ${tempPassword}
-                          </p>
+                          <p style="margin:0;font-size:22px;color:${accentColor};font-weight:700;letter-spacing:4px;font-family:monospace;white-space:nowrap;">${tempPassword}</p>
                         </td>
                       </tr>
                     </table>

@@ -23,8 +23,8 @@ async function getClientIp(): Promise<string> {
 
 // ── Login ────────────────────────────────────────────────────────
 export async function signIn(formData: FormData) {
-  const email    = formData.get('email') as string
-  const password = formData.get('password') as string
+  const email    = (formData.get('email') as string)?.trim()
+  const password = (formData.get('password') as string)?.trim()
 
   const supabase = await createClient()
   const { error } = await supabase.auth.signInWithPassword({ email, password })
