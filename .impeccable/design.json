@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-02T18-30-00Z",
+  "title": "Design System: StrivePersonal",
+  "extensions": {
+    "colorMeta": {
+      "brand-lime": { "role": "primary", "displayName": "Lima Elétrico", "canonical": "#E8FF47", "tonalRamp": ["#2B2F00", "#4A5200", "#697500", "#889900", "#A8BC00", "#C8E600", "#E8FF47", "#F5FFA3"] },
+      "surface-deep": { "role": "neutral", "displayName": "Superfície Funda", "canonical": "#1A1A2E", "tonalRamp": ["#08080D", "#0E0E1A", "#141422", "#1A1A2E", "#25253C", "#33334F", "#4A4A66", "#6B6B85"] },
+      "max-violet": { "role": "secondary", "displayName": "Violeta Max", "canonical": "#7C3AED", "tonalRamp": ["#1E1033", "#331A55", "#4C2678", "#63329C", "#7C3AED", "#9760F0", "#A78BFA", "#C9B4FA"], "scope": "Exclusivo da identidade do assistente de IA Max (avatar, badge, CTA, feature cards). Nunca fora dessas menções." }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Títulos de marca e headers de destaque apenas." },
+      "body": { "displayName": "Body", "purpose": "Todo o texto operacional: formulários, tabelas, descrições." },
+      "label": { "displayName": "Label", "purpose": "Rótulos de campo, botões, badges de estado." }
+    },
+    "shadows": [
+      { "name": "overlay", "value": "0 25px 50px -12px rgba(0,0,0,0.5)", "purpose": "Modais e popups que precisam se destacar do conteúdo principal." },
+      { "name": "max-callout", "value": "0 16px 40px rgba(0,0,0,0.5)", "purpose": "Exceção escopada ao Max: card flutuante tipo callout/toast sobre outro conteúdo (ex.: sugestão do Max sobre o mockup do dashboard)." }
+    ],
+    "motion": [
+      { "name": "color-transition", "value": "150-250ms ease", "purpose": "Transições de hover/focus em botões, inputs e itens de navegação." },
+      { "name": "scroll-hint", "value": "1.8s cubic-bezier(0.22, 1, 0.36, 1) infinite", "purpose": "Indicador de scroll da home — substitui o bounce/elastic banido por um deslocamento suave." }
+    ],
+    "breakpoints": []
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ação primária de cada tela — envio de formulário, confirmação.",
+      "html": "<button class=\"ds-btn-primary\">Salvar</button>",
+      "css": ".ds-btn-primary { background: #E8FF47; color: #000000; padding: 12px 16px; border-radius: 12px; font-weight: 600; font-size: 0.875rem; border: none; transition: background-color 0.2s ease; } .ds-btn-primary:hover { background: #C8E600; } .ds-btn-primary:focus-visible { outline: 2px solid #E8FF47; outline-offset: 2px; } .ds-btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Ação secundária ao lado de uma ação primária.",
+      "html": "<button class=\"ds-btn-secondary\">Cancelar</button>",
+      "css": ".ds-btn-secondary { background: transparent; color: #E8FF47; padding: 10px 20px; border-radius: 12px; border: 1px solid rgba(232,255,71,0.4); font-weight: 600; font-size: 0.875rem; transition: background-color 0.2s ease; } .ds-btn-secondary:hover { background: rgba(232,255,71,0.1); }"
+    },
+    {
+      "name": "Input Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Campo de texto padrão em formulários.",
+      "html": "<input class=\"ds-input\" placeholder=\"Digite aqui\" />",
+      "css": ".ds-input { background: #0E0E1A; color: #FFFFFF; border: 1px solid #2A2A45; border-radius: 12px; padding: 10px 12px; font-size: 0.875rem; transition: border-color 0.2s ease; } .ds-input::placeholder { color: rgba(176,176,195,0.5); } .ds-input:focus { outline: none; border-color: #E8FF47; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Container de conteúdo padrão (painéis, listas, blocos de dashboard).",
+      "html": "<div class=\"ds-card\">Conteúdo</div>",
+      "css": ".ds-card { background: #1A1A2E; border: 1px solid #2A2A45; border-radius: 16px; padding: 24px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Performance Terminal",
+    "overview": "StrivePersonal é o painel de controle de alta performance do personal trainer: um ambiente escuro, disciplinado e técnico, onde cada tela existe para servir uma tarefa — montar um plano de treino, acompanhar um aluno, revisar dados. O breu de fundo (#0E0E1A) não é decoração atmosférica, é o silêncio de fundo de um terminal; o lima elétrico (#E8FF47) é o único sinal que se acende quando algo precisa de atenção: uma ação primária, um estado ativo, um foco de input. O sistema rejeita explicitamente o clichê de app fitness genérico (gradientes motivacionais, ícones de 'energia' decorativos, cores quentes de 'vibe de academia') em favor de uma estética de ferramenta profissional — mais Linear ou painel de trading do que Instagram fitness.",
+    "keyCharacteristics": [
+      "Tema escuro fixo, sem modo claro — o contraste é a linguagem",
+      "Um único accent (lima) usado com raridade, nunca como decoração",
+      "Hierarquia tipográfica curta: display (Syncopate, só títulos/marca) + body (DM Sans, tudo o mais)",
+      "Superfícies em camadas (void → surface → border), sem sombra",
+      "Tátil e confiante: bordas nítidas, estados de hover claros, zero ambiguidade sobre o que é clicável"
+    ],
+    "rules": [
+      { "name": "A Regra da Voz Única", "body": "O lima elétrico é usado em no máximo uma ação de destaque por tela. Sua raridade é o que o torna um sinal, não ruído.", "section": "colors" },
+      { "name": "A Regra do Segundo Sinal Contido", "body": "O violeta do Max é a única exceção à Voz Única — mas só existe dentro do bloco/identidade do Max. Se aparecer fora disso, é bug de design, não variação de marca.", "section": "colors" },
+      { "name": "A Regra do Display Raro", "body": "Syncopate nunca aparece em botões, labels ou dados — apenas em títulos de marca e headers de destaque.", "section": "typography" },
+      { "name": "A Regra do Flat-Por-Padrão", "body": "Superfícies são planas em repouso. Sombra só aparece quando um elemento precisa se destacar fisicamente do plano de fundo (modal, popup).", "section": "elevation" }
+    ],
+    "dos": [
+      "Do usar o lima elétrico (#E8FF47) apenas para a ação primária de cada tela.",
+      "Do manter cantos entre 8px e 16px conforme a escala definida.",
+      "Do usar transições de cor simples (150–250ms) em hover/focus.",
+      "Do reservar Syncopate para títulos e marca."
+    ],
+    "donts": [
+      "Don't usar gradientes motivacionais ou paleta quente de app de academia genérico.",
+      "Don't adicionar sombra em cards ou botões em repouso.",
+      "Don't usar Syncopate em texto operacional.",
+      "Don't usar o lima elétrico em mais de uma ação de destaque por tela."
+    ]
+  }
+}

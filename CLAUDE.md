@@ -4,6 +4,19 @@ Sistema de gerenciamento para personal trainers. Next.js 15 App Router · Supaba
 
 ---
 
+## 🎨 Design Context (skill impeccable)
+
+Este projeto tem `PRODUCT.md` (estratégico) e `DESIGN.md` (visual) na raiz, mantidos pela skill `impeccable` (`.agents/skills/impeccable/`).
+
+- **Registro**: product (ferramenta de trabalho para o personal trainer, não marketing)
+- **North Star visual**: "The Performance Terminal" — tema escuro, accent lima elétrico (`#E8FF47`) usado com raridade, flat por padrão (sem sombra)
+- **Anti-referência**: clichê de app fitness genérico (gradientes motivacionais, ícones de chama, paleta quente)
+- **Princípios**: a ferramenta desaparece na tarefa; energia com raridade; consistência entre admin/dashboard/cobrança; precisão antes de personalidade; multi-tenant sem parecer genérico
+
+Antes de criar ou alterar UI, consultar `PRODUCT.md` e `DESIGN.md`. Para novas telas ou iteração visual, usar os comandos da skill (`$impeccable craft`, `$impeccable critique`, `$impeccable live`, etc.) — ver `.agents/skills/impeccable/SKILL.md`.
+
+---
+
 ## 🧠 REGRA OBRIGATÓRIA: Graphify — Consulta antes de agir, atualização após salvar
 
 ### Antes de qualquer alteração, melhoria, ajuste ou nova feature

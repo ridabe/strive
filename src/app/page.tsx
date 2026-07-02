@@ -3,16 +3,17 @@ import Image from 'next/image'
 import {
   ArrowRight, Users, Dumbbell, TrendingUp, Calendar,
   MessageSquare, Trophy, Apple, BarChart2, CheckCircle,
-  ChevronDown, Smartphone, Globe, Zap, Star, Play,
+  ChevronDown, Smartphone, Globe, Star, Play,
   Bell, Shield, Clock, Sparkles
 } from 'lucide-react'
 import { LogoVertical, LogoHorizontal } from '@/components/logo'
 import { createClient } from '@/lib/supabase/server'
 
 // ─── Data ────────────────────────────────────────────────────────────────────
-
+// Max IA usa o accent violeta (tokens `max` / `max-light` em tailwind.config.ts),
+// documentado em DESIGN.md como accent secundário restrito a esta feature —
+// nunca fora do bloco/menções do Max.
 const MAX_COLOR = '#7C3AED'
-const MAX_COLOR_LIGHT = '#A78BFA'
 
 const NAV_LINKS = [
   { label: 'Funcionalidades', href: '#funcionalidades' },
@@ -48,7 +49,8 @@ const MAX_FEATURES = [
 const MODULES = [
   {
     id: 'treinos',
-    tag: '💪 Prescrição de Treinos',
+    icon: Dumbbell,
+    tag: 'Prescrição de Treinos',
     title: 'Monte fichas completas em minutos, não em horas.',
     desc: 'Banco de exercícios com vídeos, séries, cargas e repetições. Crie fichas personalizadas para cada aluno e envie direto para o app deles. Eles executam, você acompanha.',
     bullets: [
@@ -63,7 +65,8 @@ const MODULES = [
   },
   {
     id: 'nutricao',
-    tag: '🥗 Planos de Nutrição',
+    icon: Apple,
+    tag: 'Planos de Nutrição',
     title: 'Nutrição integrada ao treino, tudo no mesmo lugar.',
     desc: 'Crie planos alimentares e vincule direto ao perfil do aluno. Ele visualiza as refeições, registra o que comeu e você acompanha a aderência sem precisar ficar no WhatsApp.',
     bullets: [
@@ -78,7 +81,8 @@ const MODULES = [
   },
   {
     id: 'ranqueamento',
-    tag: '🏆 Ranqueamento',
+    icon: Trophy,
+    tag: 'Ranqueamento',
     title: 'Gamificação que retém. Ranking que motiva.',
     desc: 'Leaderboard mensal entre seus alunos. Os que mais treinam e seguem o plano sobem no ranking — medalhas para o top 3. Seus alunos viram uma comunidade competitiva e engajada.',
     bullets: [
@@ -93,7 +97,8 @@ const MODULES = [
   },
   {
     id: 'mensagens',
-    tag: '💬 Mensagens Diretas',
+    icon: MessageSquare,
+    tag: 'Mensagens Diretas',
     title: 'Canal direto com seu aluno. Sem misturar no WhatsApp.',
     desc: 'Chat integrado com cada aluno, dentro da plataforma. Histórico organizado, sem se perder em grupos. Você mantém o profissionalismo e o aluno tem suporte quando precisa.',
     bullets: [
@@ -108,7 +113,8 @@ const MODULES = [
   },
   {
     id: 'agenda',
-    tag: '📅 Agendamento',
+    icon: Calendar,
+    tag: 'Agendamento',
     title: 'Aluno agenda. Você confirma. Chega de marcar no zap.',
     desc: 'Configure sua disponibilidade semanal e deixe o aluno agendar sessões direto pelo app. Confirmações automáticas, lembretes de horário e visualização mensal da sua agenda.',
     bullets: [
@@ -155,7 +161,7 @@ const PLANS = [
     highlight: true,
     badge: 'MAIS POPULAR',
     features: [
-      'Alunos ilimitados',
+      'Até 30 alunos',
       'Planos de nutrição',
       'Ranqueamento de alunos',
       'Controle financeiro',
@@ -173,13 +179,13 @@ const PLANS = [
     highlight: false,
     features: [
       'Tudo do Pro, mais',
-      'Múltiplos personal (equipe)',
+      'Alunos Ilimitados',
       'Marca personalizada no app',
       'Acesso antecipado a novidades',
       'Implantação assistida',
-      'Garantia contratual de SLA',
+      'Acesso ao Assistente de Personal MAX IA',
     ],
-    cta: 'Falar com a equipe',
+    cta: 'Começar com Elite',
     href: '/register?plano=elite',
   },
 ]
@@ -243,9 +249,7 @@ function PhoneMockup({
     >
       <div
         className={`relative rounded-[2.4rem] overflow-hidden border-[3px] ${
-          featured
-            ? 'border-brand-lime shadow-[0_0_60px_rgba(232,255,71,0.25)]'
-            : 'border-surface-border shadow-[0_20px_60px_rgba(0,0,0,0.4)]'
+          featured ? 'border-brand-lime' : 'border-surface-border'
         } bg-surface`}
       >
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-20 h-5 bg-background rounded-b-2xl z-10" />
@@ -264,7 +268,7 @@ function PhoneMockup({
 
 function DashboardMockup() {
   return (
-    <div className="bg-surface border border-surface-border rounded-2xl overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.5)] w-full max-w-lg">
+    <div className="bg-surface border border-surface-border rounded-2xl overflow-hidden w-full max-w-lg">
       {/* Top bar */}
       <div className="flex items-center justify-between px-5 py-3 border-b border-surface-border">
         <div className="flex items-center gap-2">
@@ -389,11 +393,11 @@ export default async function HomePage() {
                   className="hidden sm:inline-flex items-center gap-1.5 text-xs font-body font-medium text-text-secondary hover:text-brand-lime border border-surface-border hover:border-brand-lime/40 rounded-full px-4 py-2 transition-colors"
                 >
                   <Dumbbell size={12} />
-                  Área de  Cadastro Personal Trainer
+                  Área de Cadastro Personal Trainer
                 </Link>
                 <Link
                   href="/login"
-                  className="inline-flex items-center gap-2 text-sm font-body font-semibold bg-brand-lime text-text-inverse px-5 py-2.5 rounded-full hover:bg-brand-dark transition-all hover:shadow-[0_0_20px_rgba(232,255,71,0.4)]"
+                  className="inline-flex items-center gap-2 text-sm font-body font-semibold bg-brand-lime text-text-inverse px-5 py-2.5 rounded-full hover:bg-brand-dark transition-colors"
                 >
                   Entrar
                   <ArrowRight size={14} />
@@ -415,9 +419,6 @@ export default async function HomePage() {
             backgroundSize: '60px 52px',
           }}
         />
-        <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] rounded-full bg-brand-lime/4 blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-1/4 left-1/4 w-80 h-80 rounded-full bg-brand-lime/3 blur-[80px] pointer-events-none" />
-
         <div className="relative z-10 max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
           {/* Left — copy */}
@@ -439,12 +440,9 @@ export default async function HomePage() {
                   priority
                 />
               </div>
-              <div
-                className="relative bg-surface border rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-sm"
-                style={{ borderColor: `${MAX_COLOR}35` }}
-              >
+              <div className="relative bg-surface border border-max/20 rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-sm">
                 <p className="text-xs sm:text-sm font-body text-text-primary leading-snug">
-                  <span className="font-semibold" style={{ color: MAX_COLOR_LIGHT }}>Oi, eu sou o Max 👋</span>{' '}
+                  <span className="font-semibold text-max-light">Oi, eu sou o Max 👋</span>{' '}
                   — a IA que ajuda personal trainers a treinar mais alunos, com mais qualidade.
                 </p>
               </div>
@@ -477,10 +475,7 @@ export default async function HomePage() {
                 { icon: <Calendar size={15} />, text: 'Agendamento direto pelo app, sem WhatsApp' },
               ].map((b) => (
                 <li key={b.text} className="flex items-center gap-3 text-sm font-body text-text-secondary">
-                  <span
-                    className={`flex-shrink-0 ${b.max ? '' : 'text-brand-lime'}`}
-                    style={b.max ? { color: MAX_COLOR_LIGHT } : undefined}
-                  >
+                  <span className={`flex-shrink-0 ${b.max ? 'text-max-light' : 'text-brand-lime'}`}>
                     {b.icon}
                   </span>
                   {b.text}
@@ -492,7 +487,7 @@ export default async function HomePage() {
             <div className="flex flex-col sm:flex-row items-start gap-3">
               <Link
                 href="/login"
-                className="inline-flex items-center justify-center gap-2 font-body font-semibold text-base bg-brand-lime text-text-inverse px-8 py-4 rounded-full hover:bg-brand-dark transition-all hover:shadow-[0_0_32px_rgba(232,255,71,0.4)] hover:scale-105"
+                className="inline-flex items-center justify-center gap-2 font-body font-semibold text-base bg-brand-lime text-text-inverse px-8 py-4 rounded-full hover:bg-brand-dark transition-all hover:scale-105"
               >
                 Entrar na plataforma
                 <ArrowRight size={18} />
@@ -515,8 +510,8 @@ export default async function HomePage() {
             </a>
 
             {/* Trust line */}
-            <p className="text-xs font-body text-text-secondary/50 flex items-center gap-2">
-              <Shield size={12} className="text-brand-lime/50" />
+            <p className="text-xs font-body text-text-secondary flex items-center gap-2">
+              <Shield size={12} className="text-brand-lime" />
               Alunos: acesse com o link do seu personal · Sem cartão · Cancele quando quiser
             </p>
           </div>
@@ -528,8 +523,7 @@ export default async function HomePage() {
             {/* Max — assistente de IA, "garoto propaganda" espiando o painel */}
             <a
               href="#max"
-              className="absolute -bottom-7 -right-7 flex items-center gap-3 bg-surface border rounded-2xl pl-2 pr-4 py-2.5 shadow-[0_16px_40px_rgba(0,0,0,0.5)] hover:scale-105 transition-transform"
-              style={{ borderColor: `${MAX_COLOR}40` }}
+              className="absolute -bottom-7 -right-7 flex items-center gap-3 bg-surface border border-max/30 rounded-2xl pl-2 pr-4 py-2.5 shadow-[0_16px_40px_rgba(0,0,0,0.5)] hover:scale-105 transition-transform"
             >
               <div className="relative w-11 h-11 flex-shrink-0">
                 <div
@@ -545,7 +539,7 @@ export default async function HomePage() {
                 />
               </div>
               <div className="text-left">
-                <p className="text-[11px] font-body font-semibold" style={{ color: MAX_COLOR_LIGHT }}>
+                <p className="text-[11px] font-body font-semibold text-max-light">
                   Max sugeriu +5kg pro Lucas
                 </p>
                 <p className="text-[10px] font-body text-text-secondary">
@@ -559,7 +553,7 @@ export default async function HomePage() {
         {/* Scroll indicator */}
         <a
           href="#stats"
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-text-secondary/30 hover:text-brand-lime transition-colors animate-bounce"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-text-secondary/30 hover:text-brand-lime transition-colors animate-scroll-hint"
           aria-label="Rolar para baixo"
         >
           <ChevronDown size={28} />
@@ -571,7 +565,7 @@ export default async function HomePage() {
         <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
           {STATS.map((s) => (
             <div key={s.label} className="py-2">
-              <div className="font-display font-bold text-3xl sm:text-4xl text-brand-lime mb-1">{s.value}</div>
+              <div className="font-display font-bold text-3xl sm:text-4xl text-text-primary mb-1">{s.value}</div>
               <div className="font-body text-text-secondary text-sm">{s.label}</div>
             </div>
           ))}
@@ -583,10 +577,6 @@ export default async function HomePage() {
         <div
           className="absolute inset-0"
           style={{ background: `radial-gradient(ellipse 60% 60% at 50% 0%, ${MAX_COLOR}14 0%, transparent 70%)` }}
-        />
-        <div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full blur-[140px] pointer-events-none"
-          style={{ background: `${MAX_COLOR}14` }}
         />
 
         <div className="relative z-10 max-w-5xl mx-auto">
@@ -611,10 +601,7 @@ export default async function HomePage() {
               />
             </div>
 
-            <div
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-xs font-body font-semibold uppercase tracking-wider mb-5"
-              style={{ color: MAX_COLOR_LIGHT, borderColor: `${MAX_COLOR}40`, background: `${MAX_COLOR}14` }}
-            >
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-max/25 bg-max/[0.08] text-xs font-body font-semibold uppercase tracking-wider mb-5 text-max-light">
               <Sparkles size={12} />
               Assistente de IA
             </div>
@@ -632,12 +619,9 @@ export default async function HomePage() {
             {MAX_FEATURES.map((f) => (
               <div
                 key={f.title}
-                className="bg-surface border border-surface-border rounded-2xl p-6 transition-all hover:shadow-[0_0_32px_rgba(124,58,237,0.08)]"
+                className="bg-surface border border-surface-border rounded-2xl p-6 transition-colors hover:border-max/30"
               >
-                <div
-                  className="w-11 h-11 rounded-xl flex items-center justify-center mb-4"
-                  style={{ background: `${MAX_COLOR}14`, color: MAX_COLOR_LIGHT }}
-                >
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-4 bg-max/[0.08] text-max-light">
                   <f.icon size={20} />
                 </div>
                 <h3 className="font-body font-semibold text-text-primary text-sm mb-1.5">{f.title}</h3>
@@ -649,8 +633,7 @@ export default async function HomePage() {
           <div className="text-center mt-12">
             <Link
               href="/register"
-              className="inline-flex items-center gap-2 font-body font-semibold text-base text-white px-8 py-4 rounded-full transition-all hover:scale-105"
-              style={{ background: MAX_COLOR, boxShadow: `0 0 32px ${MAX_COLOR}40` }}
+              className="inline-flex items-center gap-2 font-body font-semibold text-base text-white bg-max px-8 py-4 rounded-full transition-all hover:scale-105"
             >
               Quero o Max no meu painel
               <ArrowRight size={18} />
@@ -671,7 +654,8 @@ export default async function HomePage() {
 
               {/* Text side */}
               <div className="flex-1 flex flex-col gap-6">
-                <div className="inline-flex w-fit items-center gap-2 bg-brand-lime/10 border border-brand-lime/20 text-brand-lime text-xs font-body font-semibold px-4 py-1.5 rounded-full uppercase tracking-wider">
+                <div className="inline-flex w-fit items-center gap-2 bg-surface border border-surface-border text-text-secondary text-xs font-body font-semibold px-4 py-1.5 rounded-full uppercase tracking-wider">
+                  <mod.icon size={13} className="text-brand-lime" />
                   {mod.tag}
                 </div>
 
@@ -686,7 +670,7 @@ export default async function HomePage() {
                 <ul className="space-y-3 mt-2">
                   {mod.bullets.map((b) => (
                     <li key={b} className="flex items-start gap-3 text-sm font-body text-text-secondary">
-                      <CheckCircle size={16} className="text-brand-lime flex-shrink-0 mt-0.5" />
+                      <CheckCircle size={16} className="text-text-secondary flex-shrink-0 mt-0.5" />
                       {b}
                     </li>
                   ))}
@@ -746,9 +730,9 @@ export default async function HomePage() {
           ].map((item) => (
             <div
               key={item.title}
-              className="group bg-surface border border-surface-border rounded-2xl p-7 hover:border-brand-lime/25 transition-all hover:shadow-[0_0_32px_rgba(232,255,71,0.06)]"
+              className="group bg-surface border border-surface-border rounded-2xl p-7 hover:border-brand-lime/25 transition-colors"
             >
-              <div className={`w-13 h-13 rounded-xl ${item.bg} flex items-center justify-center ${item.color} mb-5`}>
+              <div className={`w-12 h-12 rounded-xl ${item.bg} flex items-center justify-center ${item.color} mb-5`}>
                 {item.icon}
               </div>
               <h3 className="font-body font-semibold text-text-primary text-base mb-2">{item.title}</h3>
@@ -791,7 +775,7 @@ export default async function HomePage() {
             </div>
 
             {/* After */}
-            <div className="bg-surface border border-brand-lime/20 rounded-2xl p-7 shadow-[0_0_40px_rgba(232,255,71,0.05)]">
+            <div className="bg-surface border border-brand-lime/20 rounded-2xl p-7">
               <div className="text-xs font-body font-semibold text-brand-lime uppercase tracking-widest mb-5">
                 Depois · StrivePersonal
               </div>
@@ -805,7 +789,7 @@ export default async function HomePage() {
                   'Profissionalismo em tudo que você entrega',
                 ].map((item) => (
                   <li key={item} className="flex items-center gap-3 text-sm font-body text-text-primary">
-                    <CheckCircle size={16} className="text-brand-lime flex-shrink-0" />
+                    <CheckCircle size={16} className="text-text-secondary flex-shrink-0" />
                     {item}
                   </li>
                 ))}
@@ -830,8 +814,8 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {STEPS.map((step) => (
               <div key={step.number} className="relative text-center flex flex-col items-center gap-4">
-                <div className="w-16 h-16 rounded-2xl bg-brand-lime/10 border border-brand-lime/20 flex items-center justify-center">
-                  <span className="font-display font-bold text-2xl text-brand-lime">{step.number}</span>
+                <div className="w-16 h-16 rounded-2xl bg-surface border border-surface-border flex items-center justify-center">
+                  <span className="font-display font-bold text-2xl text-text-primary">{step.number}</span>
                 </div>
                 <h3 className="font-body font-semibold text-text-primary text-base">{step.title}</h3>
                 <p className="font-body text-text-secondary text-sm leading-relaxed max-w-xs">{step.desc}</p>
@@ -842,7 +826,7 @@ export default async function HomePage() {
           <div className="text-center mt-12">
             <Link
               href="/register"
-              className="inline-flex items-center gap-2 font-body font-semibold text-base bg-brand-lime text-text-inverse px-8 py-4 rounded-full hover:bg-brand-dark transition-all hover:shadow-[0_0_24px_rgba(232,255,71,0.35)]"
+              className="inline-flex items-center gap-2 font-body font-semibold text-base bg-brand-lime text-text-inverse px-8 py-4 rounded-full hover:bg-brand-dark transition-colors"
             >
               Criar conta grátis agora
               <ArrowRight size={18} />
@@ -870,9 +854,9 @@ export default async function HomePage() {
             {PLANS.map((plan) => (
               <div
                 key={plan.name}
-                className={`relative flex flex-col rounded-2xl p-7 border transition-all ${
+                className={`relative flex flex-col rounded-2xl p-7 border transition-colors ${
                   plan.highlight
-                    ? 'bg-brand-lime text-text-inverse border-brand-lime shadow-[0_0_60px_rgba(232,255,71,0.2)]'
+                    ? 'bg-brand-lime text-text-inverse border-brand-lime'
                     : 'bg-surface border-surface-border hover:border-brand-lime/30'
                 }`}
               >
@@ -903,7 +887,7 @@ export default async function HomePage() {
                 <ul className="space-y-2.5 flex-1 mb-7">
                   {plan.features.map((f) => (
                     <li key={f} className={`flex items-start gap-2.5 text-sm font-body ${plan.highlight ? 'text-text-inverse/90' : 'text-text-secondary'}`}>
-                      <CheckCircle size={14} className={`flex-shrink-0 mt-0.5 ${plan.highlight ? 'text-text-inverse' : 'text-brand-lime'}`} />
+                      <CheckCircle size={14} className={`flex-shrink-0 mt-0.5 ${plan.highlight ? 'text-text-inverse' : 'text-text-secondary'}`} />
                       {f}
                     </li>
                   ))}
@@ -923,7 +907,7 @@ export default async function HomePage() {
             ))}
           </div>
 
-          <p className="text-center text-xs font-body text-text-secondary/50 mt-6">
+          <p className="text-center text-xs font-body text-text-secondary mt-6">
             Plano gratuito não expira · Upgrade quando quiser · Sem fidelidade
           </p>
         </div>
@@ -1066,7 +1050,7 @@ export default async function HomePage() {
             <p className="font-body text-text-secondary/40 text-xs">
               © {new Date().getFullYear()} Strive Personal. Todos os direitos reservados.
             </p>
-            <div className="flex items-center gap-2 text-text-secondary/40 text-xs font-body">
+            <div className="flex items-center gap-2 text-text-secondary text-xs font-body">
               <Shield size={12} />
               LGPD · Dados protegidos
             </div>

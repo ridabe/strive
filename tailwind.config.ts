@@ -20,6 +20,10 @@ const config: Config = {
           lime: '#E8FF47',
           dark: '#C8E600',
         },
+        max: {
+          DEFAULT: '#7C3AED',
+          light: '#A78BFA',
+        },
         text: {
           primary: '#FFFFFF',
           secondary: '#B0B0C3',
