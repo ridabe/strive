@@ -4,18 +4,45 @@ import {
   ArrowRight, Users, Dumbbell, TrendingUp, Calendar,
   MessageSquare, Trophy, Apple, BarChart2, CheckCircle,
   ChevronDown, Smartphone, Globe, Zap, Star, Play,
-  Bell, Shield, Clock
+  Bell, Shield, Clock, Sparkles
 } from 'lucide-react'
 import { LogoVertical, LogoHorizontal } from '@/components/logo'
 import { createClient } from '@/lib/supabase/server'
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
+const MAX_COLOR = '#7C3AED'
+const MAX_COLOR_LIGHT = '#A78BFA'
+
 const NAV_LINKS = [
   { label: 'Funcionalidades', href: '#funcionalidades' },
+  { label: 'Max IA',          href: '#max' },
   { label: 'Planos',          href: '#planos' },
   { label: 'Como funciona',   href: '#como-funciona' },
   { label: 'FAQ',             href: '#faq' },
+]
+
+const MAX_FEATURES = [
+  {
+    icon: Dumbbell,
+    title: 'Cria treinos em segundos',
+    desc: 'Descreva o objetivo do aluno e o Max monta a ficha completa, pronta para você revisar e enviar.',
+  },
+  {
+    icon: TrendingUp,
+    title: 'Ajusta cargas automaticamente',
+    desc: 'Com base no histórico de execução, o Max sugere os próximos ajustes de carga para cada aluno.',
+  },
+  {
+    icon: MessageSquare,
+    title: 'Motiva seus alunos',
+    desc: 'Mensagens de incentivo personalizadas, enviadas no momento certo — sem você precisar lembrar.',
+  },
+  {
+    icon: BarChart2,
+    title: 'Analisa o progresso individual',
+    desc: 'Relatórios automáticos mostram quem está evoluindo e quem precisa da sua atenção agora.',
+  },
 ]
 
 const MODULES = [
@@ -358,16 +385,18 @@ export default async function HomePage() {
             ) : (
               <>
                 <Link
-                  href="/login"
-                  className="hidden sm:block text-sm font-body text-text-secondary hover:text-text-primary transition-colors px-3 py-2"
+                  href="/register"
+                  className="hidden sm:inline-flex items-center gap-1.5 text-xs font-body font-medium text-text-secondary hover:text-brand-lime border border-surface-border hover:border-brand-lime/40 rounded-full px-4 py-2 transition-colors"
                 >
-                  Entrar
+                  <Dumbbell size={12} />
+                  Área de  Cadastro Personal Trainer
                 </Link>
                 <Link
-                  href="/register"
-                  className="text-sm font-body font-semibold bg-brand-lime text-text-inverse px-5 py-2.5 rounded-full hover:bg-brand-dark transition-all hover:shadow-[0_0_20px_rgba(232,255,71,0.4)]"
+                  href="/login"
+                  className="inline-flex items-center gap-2 text-sm font-body font-semibold bg-brand-lime text-text-inverse px-5 py-2.5 rounded-full hover:bg-brand-dark transition-all hover:shadow-[0_0_20px_rgba(232,255,71,0.4)]"
                 >
-                  Começar Grátis
+                  Entrar
+                  <ArrowRight size={14} />
                 </Link>
               </>
             )}
@@ -393,18 +422,40 @@ export default async function HomePage() {
 
           {/* Left — copy */}
           <div className="flex flex-col gap-7">
-            {/* Badge */}
-            <div className="inline-flex w-fit items-center gap-2 bg-brand-lime/10 border border-brand-lime/25 text-brand-lime text-xs font-body font-semibold px-4 py-1.5 rounded-full uppercase tracking-wider">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-lime animate-pulse" />
-              Plataforma para Personal Trainers
+            {/* Max — se apresenta, "garoto propaganda" falando pelo sistema */}
+            <div className="inline-flex items-start gap-3 w-fit">
+              <div className="relative w-14 h-14 flex-shrink-0">
+                <div
+                  className="absolute inset-0 rounded-full"
+                  style={{ background: `radial-gradient(circle, ${MAX_COLOR}45 0%, transparent 70%)` }}
+                />
+                <Image
+                  src="/max-avatar.png"
+                  alt="Max Strive IA"
+                  width={56}
+                  height={56}
+                  className="relative z-10 object-contain"
+                  style={{ filter: `drop-shadow(0 0 12px ${MAX_COLOR}55)` }}
+                  priority
+                />
+              </div>
+              <div
+                className="relative bg-surface border rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-sm"
+                style={{ borderColor: `${MAX_COLOR}35` }}
+              >
+                <p className="text-xs sm:text-sm font-body text-text-primary leading-snug">
+                  <span className="font-semibold" style={{ color: MAX_COLOR_LIGHT }}>Oi, eu sou o Max 👋</span>{' '}
+                  — a IA que ajuda personal trainers a treinar mais alunos, com mais qualidade.
+                </p>
+              </div>
             </div>
 
             {/* Headline */}
             <div>
-              <h1 className="font-display font-bold text-5xl sm:text-6xl text-text-primary uppercase leading-[0.88] tracking-tight">
+              <h1 className="font-display font-bold text-4xl sm:text-5xl text-text-primary uppercase leading-[0.9] tracking-tight">
                 Seu negócio,
               </h1>
-              <h1 className="font-display font-bold text-5xl sm:text-6xl text-brand-lime uppercase leading-[0.88] tracking-tight mt-1">
+              <h1 className="font-display font-bold text-4xl sm:text-5xl text-brand-lime uppercase leading-[0.9] tracking-tight mt-1">
                 no controle.
               </h1>
             </div>
@@ -412,19 +463,26 @@ export default async function HomePage() {
             {/* Sub */}
             <p className="font-body text-base sm:text-lg text-text-secondary max-w-md leading-relaxed">
               Gerencie treinos, nutrição, agenda, mensagens e financeiro num só painel.
-              Seus alunos executam pelo app — você vê tudo em tempo real.
+              Com o Max, seu assistente de IA, criando treinos, ajustando cargas e
+              acompanhando a evolução de cada aluno — você foca no que importa.
             </p>
 
             {/* Benefit list */}
             <ul className="space-y-3">
               {[
+                { icon: <Sparkles size={15} />, text: 'Max IA cria treinos e ajusta cargas automaticamente', max: true },
                 { icon: <Dumbbell size={15} />, text: 'Prescrição de treinos com banco de exercícios' },
                 { icon: <Apple size={15} />, text: 'Planos de nutrição integrados ao treino' },
                 { icon: <Trophy size={15} />, text: 'Ranqueamento que retém e motiva seus alunos' },
                 { icon: <Calendar size={15} />, text: 'Agendamento direto pelo app, sem WhatsApp' },
               ].map((b) => (
                 <li key={b.text} className="flex items-center gap-3 text-sm font-body text-text-secondary">
-                  <span className="text-brand-lime flex-shrink-0">{b.icon}</span>
+                  <span
+                    className={`flex-shrink-0 ${b.max ? '' : 'text-brand-lime'}`}
+                    style={b.max ? { color: MAX_COLOR_LIGHT } : undefined}
+                  >
+                    {b.icon}
+                  </span>
                   {b.text}
                 </li>
               ))}
@@ -433,31 +491,68 @@ export default async function HomePage() {
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-start gap-3">
               <Link
-                href="/register"
+                href="/login"
                 className="inline-flex items-center justify-center gap-2 font-body font-semibold text-base bg-brand-lime text-text-inverse px-8 py-4 rounded-full hover:bg-brand-dark transition-all hover:shadow-[0_0_32px_rgba(232,255,71,0.4)] hover:scale-105"
               >
-                Criar Conta Grátis
+                Entrar na plataforma
                 <ArrowRight size={18} />
               </Link>
-              <a
-                href="#funcionalidades"
+              <Link
+                href="/register"
                 className="inline-flex items-center justify-center gap-2 font-body font-medium text-base text-text-primary border border-surface-border px-8 py-4 rounded-full hover:border-brand-lime/50 hover:text-brand-lime transition-colors"
               >
-                <Play size={16} className="fill-current" />
-                Ver funcionalidades
-              </a>
+                <Dumbbell size={16} />
+                Cadastro de Personal — Criar conta
+              </Link>
             </div>
+
+            <a
+              href="#funcionalidades"
+              className="inline-flex items-center gap-1.5 text-xs font-body text-text-secondary/70 hover:text-brand-lime transition-colors w-fit -mt-2"
+            >
+              <Play size={12} className="fill-current" />
+              Ver funcionalidades
+            </a>
 
             {/* Trust line */}
             <p className="text-xs font-body text-text-secondary/50 flex items-center gap-2">
               <Shield size={12} className="text-brand-lime/50" />
-              Gratuito para começar · Sem cartão · Cancele quando quiser
+              Alunos: acesse com o link do seu personal · Sem cartão · Cancele quando quiser
             </p>
           </div>
 
           {/* Right — dashboard mockup */}
-          <div className="hidden lg:flex justify-center">
+          <div className="hidden lg:flex justify-center relative">
             <DashboardMockup />
+
+            {/* Max — assistente de IA, "garoto propaganda" espiando o painel */}
+            <a
+              href="#max"
+              className="absolute -bottom-7 -right-7 flex items-center gap-3 bg-surface border rounded-2xl pl-2 pr-4 py-2.5 shadow-[0_16px_40px_rgba(0,0,0,0.5)] hover:scale-105 transition-transform"
+              style={{ borderColor: `${MAX_COLOR}40` }}
+            >
+              <div className="relative w-11 h-11 flex-shrink-0">
+                <div
+                  className="absolute inset-0 rounded-full"
+                  style={{ background: `radial-gradient(circle, ${MAX_COLOR}40 0%, transparent 70%)` }}
+                />
+                <Image
+                  src="/max-avatar.png"
+                  alt="Max Strive IA"
+                  width={44}
+                  height={44}
+                  className="relative z-10 object-contain"
+                />
+              </div>
+              <div className="text-left">
+                <p className="text-[11px] font-body font-semibold" style={{ color: MAX_COLOR_LIGHT }}>
+                  Max sugeriu +5kg pro Lucas
+                </p>
+                <p className="text-[10px] font-body text-text-secondary">
+                  Conhecer o Max →
+                </p>
+              </div>
+            </a>
           </div>
         </div>
 
@@ -480,6 +575,87 @@ export default async function HomePage() {
               <div className="font-body text-text-secondary text-sm">{s.label}</div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* ── MAX — ASSISTENTE DE IA ── */}
+      <section id="max" className="relative py-24 px-6 overflow-hidden border-b border-surface-border">
+        <div
+          className="absolute inset-0"
+          style={{ background: `radial-gradient(ellipse 60% 60% at 50% 0%, ${MAX_COLOR}14 0%, transparent 70%)` }}
+        />
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full blur-[140px] pointer-events-none"
+          style={{ background: `${MAX_COLOR}14` }}
+        />
+
+        <div className="relative z-10 max-w-5xl mx-auto">
+          <div className="flex flex-col items-center text-center mb-14">
+            {/* Avatar */}
+            <div className="relative w-32 h-32 mb-6 flex items-center justify-center">
+              <div
+                className="absolute inset-0 rounded-full"
+                style={{ background: `radial-gradient(circle, ${MAX_COLOR}30 0%, transparent 70%)` }}
+              />
+              <div
+                className="absolute w-28 h-28 rounded-full border"
+                style={{ borderColor: `${MAX_COLOR}30`, background: `${MAX_COLOR}10` }}
+              />
+              <Image
+                src="/max-avatar.png"
+                alt="Max Strive IA"
+                width={112}
+                height={112}
+                className="relative z-10 object-contain"
+                style={{ filter: `drop-shadow(0 0 20px ${MAX_COLOR}60)` }}
+              />
+            </div>
+
+            <div
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-xs font-body font-semibold uppercase tracking-wider mb-5"
+              style={{ color: MAX_COLOR_LIGHT, borderColor: `${MAX_COLOR}40`, background: `${MAX_COLOR}14` }}
+            >
+              <Sparkles size={12} />
+              Assistente de IA
+            </div>
+
+            <h2 className="font-display font-bold text-3xl sm:text-5xl text-text-primary uppercase tracking-tight leading-[0.9] mb-4">
+              Este é o Max.<br />Seu novo parceiro de treino.
+            </h2>
+            <p className="font-body text-text-secondary text-base max-w-xl leading-relaxed">
+              O Max não substitui você — ele te dá mais tempo para o que importa.
+              Enquanto ele cuida da parte repetitiva, você foca na relação com seus alunos.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {MAX_FEATURES.map((f) => (
+              <div
+                key={f.title}
+                className="bg-surface border border-surface-border rounded-2xl p-6 transition-all hover:shadow-[0_0_32px_rgba(124,58,237,0.08)]"
+              >
+                <div
+                  className="w-11 h-11 rounded-xl flex items-center justify-center mb-4"
+                  style={{ background: `${MAX_COLOR}14`, color: MAX_COLOR_LIGHT }}
+                >
+                  <f.icon size={20} />
+                </div>
+                <h3 className="font-body font-semibold text-text-primary text-sm mb-1.5">{f.title}</h3>
+                <p className="font-body text-text-secondary text-xs leading-relaxed">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Link
+              href="/register"
+              className="inline-flex items-center gap-2 font-body font-semibold text-base text-white px-8 py-4 rounded-full transition-all hover:scale-105"
+              style={{ background: MAX_COLOR, boxShadow: `0 0 32px ${MAX_COLOR}40` }}
+            >
+              Quero o Max no meu painel
+              <ArrowRight size={18} />
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -856,9 +1032,9 @@ export default async function HomePage() {
               <div>
                 <p className="font-body font-semibold text-text-primary text-sm mb-3">Módulos</p>
                 <ul className="space-y-2">
-                  {['Treinos', 'Nutrição', 'Ranqueamento', 'Mensagens', 'Agenda'].map((l) => (
+                  {['Treinos', 'Nutrição', 'Max IA', 'Ranqueamento', 'Mensagens', 'Agenda'].map((l) => (
                     <li key={l}>
-                      <a href={`#${l.toLowerCase()}`} className="font-body text-text-secondary text-sm hover:text-text-primary transition-colors">
+                      <a href={l === 'Max IA' ? '#max' : `#${l.toLowerCase()}`} className="font-body text-text-secondary text-sm hover:text-text-primary transition-colors">
                         {l}
                       </a>
                     </li>

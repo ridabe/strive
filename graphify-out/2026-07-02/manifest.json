@@ -795,9 +795,9 @@
     "semantic_hash": "1d3f325460f53595644c3450beac8705"
   },
   "src/app/actions/clients.ts": {
-    "mtime": 1781965776.541249,
-    "ast_hash": "c5ecba5c990b34aa71b4bf55ced9d141",
-    "semantic_hash": "c5ecba5c990b34aa71b4bf55ced9d141"
+    "mtime": 1782997282.8752885,
+    "ast_hash": "201ba9398a182736ef6867cfccdde5ce",
+    "semantic_hash": ""
   },
   "src/app/actions/exercises.ts": {
     "mtime": 1781976448.8007996,
@@ -875,9 +875,9 @@
     "semantic_hash": "5acf96961f6d9db2d8573a53d79fc905"
   },
   "src/app/page.tsx": {
-    "mtime": 1782332974.001387,
-    "ast_hash": "5df275ab0218a1d623229e6dc204bec2",
-    "semantic_hash": "5df275ab0218a1d623229e6dc204bec2"
+    "mtime": 1782998560.1353986,
+    "ast_hash": "ca7a8b69e7a87ea5bc004414bc27a693",
+    "semantic_hash": ""
   },
   "src/components/admin/admin-profile-card.tsx": {
     "mtime": 1781882946.4943788,

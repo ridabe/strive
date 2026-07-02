@@ -875,9 +875,9 @@
     "semantic_hash": "5acf96961f6d9db2d8573a53d79fc905"
   },
   "src/app/page.tsx": {
-    "mtime": 1782332974.001387,
-    "ast_hash": "5df275ab0218a1d623229e6dc204bec2",
-    "semantic_hash": "5df275ab0218a1d623229e6dc204bec2"
+    "mtime": 1782999600.8753815,
+    "ast_hash": "75f90505b24ff33c188c511e593aeab2",
+    "semantic_hash": ""
   },
   "src/components/admin/admin-profile-card.tsx": {
     "mtime": 1781882946.4943788,
