@@ -130,12 +130,6 @@ const MODULES = [
   },
 ]
 
-const STATS = [
-  { value: 'Grátis',  label: 'para começar — sem cartão' },
-  { value: 'Web',     label: '+ App Android + instalar no celular' },
-  { value: '1 lugar', label: 'treino, nutrição, agenda e financeiro' },
-]
-
 const PLANS = [
   {
     name: 'Gratuito',
@@ -169,7 +163,7 @@ const PLANS = [
       'Relatórios de evolução',
       'Suporte prioritário',
     ],
-    cta: 'Começar com Pro',
+    cta: 'Criar conta Pro',
     href: '/register?plano=pro',
   },
   {
@@ -184,9 +178,9 @@ const PLANS = [
       'Marca personalizada no app',
       'Acesso antecipado a novidades',
       'Implantação assistida',
-      'Acesso ao Assistente de Personal MAX IA',
+      'Acesso ao Max, seu assistente de IA',
     ],
-    cta: 'Começar com Elite',
+    cta: 'Criar conta Elite',
     href: '/register?plano=elite',
   },
 ]
@@ -357,6 +351,8 @@ function DashboardMockup() {
 export default async function HomePage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  const [maxFlagship, ...maxSupporting] = MAX_FEATURES
+  const FlagshipIcon = maxFlagship.icon
 
   return (
     <div className="min-h-screen bg-background text-text-primary">
@@ -391,14 +387,14 @@ export default async function HomePage() {
               <>
                 <Link
                   href="/register"
-                  className="hidden sm:inline-flex items-center gap-1.5 text-xs font-body font-medium text-text-secondary hover:text-brand-lime border border-surface-border hover:border-brand-lime/40 rounded-full px-4 py-2 transition-colors"
+                  className="hidden sm:inline-flex items-center gap-1.5 text-xs font-body font-medium text-text-secondary hover:text-brand-lime border border-surface-border hover:border-brand-lime/40 rounded-full px-4 py-3.5 transition-colors"
                 >
                   <Dumbbell size={12} />
-                  Área de Cadastro Personal Trainer
+                  Criar conta de Personal Trainer
                 </Link>
                 <Link
                   href="/login"
-                  className="inline-flex items-center gap-2 text-sm font-body font-semibold bg-brand-lime text-text-inverse px-5 py-2.5 rounded-full hover:bg-brand-dark transition-colors"
+                  className="inline-flex items-center gap-2 text-sm font-body font-semibold bg-brand-lime text-text-inverse px-5 py-3 rounded-full hover:bg-brand-dark transition-colors"
                 >
                   Entrar
                   <ArrowRight size={14} />
@@ -427,7 +423,7 @@ export default async function HomePage() {
           {/* Left — copy */}
           <div className="flex flex-col gap-7">
             {/* Max — kicker discreto, subordinado ao headline (não compete pelo primeiro olhar) */}
-            <div className="inline-flex items-center gap-2 w-fit">
+            <div className="inline-flex items-center gap-2 w-fit animate-hero-in" style={{ '--hero-i': 0 } as React.CSSProperties}>
               <Image
                 src="/max-avatar.png"
                 alt=""
@@ -441,24 +437,20 @@ export default async function HomePage() {
             </div>
 
             {/* Headline */}
-            <div>
-              <h1 className="font-display font-bold text-4xl sm:text-5xl text-text-primary uppercase leading-[0.9] tracking-tight">
-                Seu negócio,
-              </h1>
-              <h1 className="font-display font-bold text-4xl sm:text-5xl text-brand-lime uppercase leading-[0.9] tracking-tight mt-1">
-                no controle.
-              </h1>
-            </div>
+            <h1 className="font-display font-bold text-4xl sm:text-5xl uppercase leading-[0.9] tracking-tight animate-hero-in" style={{ '--hero-i': 1 } as React.CSSProperties}>
+              <span className="text-text-primary">Seu negócio,</span>
+              <span className="block text-brand-lime mt-1">no controle.</span>
+            </h1>
 
             {/* Sub */}
-            <p className="font-body text-base sm:text-lg text-text-secondary max-w-md leading-relaxed">
+            <p className="font-body text-base sm:text-lg text-text-secondary max-w-md leading-relaxed animate-hero-in" style={{ '--hero-i': 2 } as React.CSSProperties}>
               Gerencie treinos, nutrição, agenda, mensagens e financeiro num só painel.
               Com o Max, seu assistente de IA, criando treinos, ajustando cargas e
               acompanhando a evolução de cada aluno — você foca no que importa.
             </p>
 
             {/* Benefit list — 3 itens, o essencial antes do scroll */}
-            <ul className="space-y-3">
+            <ul className="space-y-3 animate-hero-in" style={{ '--hero-i': 3 } as React.CSSProperties}>
               {[
                 { icon: <Sparkles size={15} />, text: 'Max IA cria treinos e ajusta cargas automaticamente', max: true },
                 { icon: <Dumbbell size={15} />, text: 'Prescrição de treinos com banco de exercícios' },
@@ -474,68 +466,40 @@ export default async function HomePage() {
             </ul>
 
             {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-start gap-3">
+            <div className="flex flex-col sm:flex-row items-start gap-3 animate-hero-in" style={{ '--hero-i': 4 } as React.CSSProperties}>
               <Link
                 href="/login"
-                className="inline-flex items-center justify-center gap-2 font-body font-semibold text-base bg-brand-lime text-text-inverse px-8 py-4 rounded-full hover:bg-brand-dark transition-all hover:scale-105"
+                className="inline-flex items-center justify-center gap-2 font-body font-semibold text-sm bg-brand-lime text-text-inverse px-6 py-3 rounded-full hover:bg-brand-dark transition-all hover:scale-105"
               >
                 Entrar na plataforma
-                <ArrowRight size={18} />
+                <ArrowRight size={15} />
               </Link>
               <Link
                 href="/register"
-                className="inline-flex items-center justify-center gap-2 font-body font-medium text-base text-text-primary border border-surface-border px-8 py-4 rounded-full hover:border-brand-lime/50 hover:text-brand-lime transition-colors"
+                className="inline-flex items-center justify-center gap-2 font-body font-medium text-sm text-text-primary border border-surface-border px-6 py-3 rounded-full hover:border-brand-lime/50 hover:text-brand-lime transition-colors"
               >
-                <Dumbbell size={16} />
-                Cadastro de Personal — Criar conta
+                <Dumbbell size={14} />
+                Criar conta de Personal Trainer
               </Link>
             </div>
 
             {/* Trust line */}
-            <p className="text-xs font-body text-text-secondary flex items-center gap-2">
+            {/* <p className="text-xs font-body text-text-secondary flex items-center gap-2 animate-hero-in" style={{ '--hero-i': 5 } as React.CSSProperties}>
               <Shield size={12} className="text-brand-lime" />
               Alunos: acesse com o link do seu personal · Sem cartão · Cancele quando quiser
-            </p>
+            </p> */}
           </div>
 
           {/* Right — dashboard mockup */}
-          <div className="hidden lg:flex justify-center relative">
+          <div className="hidden lg:flex justify-center relative animate-hero-in" style={{ '--hero-i': 2 } as React.CSSProperties}>
             <DashboardMockup />
-
-            {/* Max — assistente de IA, "garoto propaganda" espiando o painel */}
-            <a
-              href="#max"
-              className="absolute -bottom-7 -right-7 flex items-center gap-3 bg-surface border border-max/30 rounded-2xl pl-2 pr-4 py-2.5 shadow-[0_16px_40px_rgba(0,0,0,0.5)] hover:scale-105 transition-transform"
-            >
-              <div className="relative w-11 h-11 flex-shrink-0">
-                <div
-                  className="absolute inset-0 rounded-full"
-                  style={{ background: `radial-gradient(circle, ${MAX_COLOR}40 0%, transparent 70%)` }}
-                />
-                <Image
-                  src="/max-avatar.png"
-                  alt="Max Strive IA"
-                  width={44}
-                  height={44}
-                  className="relative z-10 object-contain"
-                />
-              </div>
-              <div className="text-left">
-                <p className="text-[11px] font-body font-semibold text-max-light">
-                  Max sugeriu +5kg pro Lucas
-                </p>
-                <p className="text-[10px] font-body text-text-secondary">
-                  Conhecer o Max →
-                </p>
-              </div>
-            </a>
           </div>
         </div>
 
         {/* Scroll indicator */}
         <a
           href="#stats"
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-text-secondary/30 hover:text-brand-lime transition-colors animate-scroll-hint"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-text-secondary/70 hover:text-brand-lime transition-colors animate-scroll-hint"
           aria-label="Rolar para baixo"
         >
           <ChevronDown size={28} />
@@ -543,19 +507,18 @@ export default async function HomePage() {
       </section>
 
       {/* ── STATS BAR ── */}
-      <section id="stats" className="border-y border-surface-border bg-surface/40 py-10 px-6">
-        <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
-          {STATS.map((s) => (
-            <div key={s.label} className="py-2">
-              <div className="font-display font-bold text-3xl sm:text-4xl text-text-primary mb-1">{s.value}</div>
-              <div className="font-body text-text-secondary text-sm">{s.label}</div>
-            </div>
-          ))}
+      <section id="stats" className="border-y border-surface-border bg-surface/40 py-6 px-6">
+        <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-center">
+          <p className="font-body text-sm text-text-secondary">Grátis para começar — sem cartão</p>
+          <span className="text-surface-border">·</span>
+          <p className="font-body text-sm text-text-secondary">Web + app Android + instalar no celular</p>
+          <span className="text-surface-border">·</span>
+          <p className="font-body text-sm text-text-secondary">Treino, nutrição, agenda e financeiro em 1 painel</p>
         </div>
       </section>
 
       {/* ── MAX — ASSISTENTE DE IA ── */}
-      <section id="max" className="relative py-24 px-6 overflow-hidden border-b border-surface-border">
+      <section id="max" className="relative pt-20 pb-12 px-6 overflow-hidden border-b border-surface-border">
         <div
           className="absolute inset-0"
           style={{ background: `radial-gradient(ellipse 60% 60% at 50% 0%, ${MAX_COLOR}14 0%, transparent 70%)` }}
@@ -575,7 +538,7 @@ export default async function HomePage() {
               />
               <Image
                 src="/max-avatar.png"
-                alt="Max Strive IA"
+                alt=""
                 width={112}
                 height={112}
                 className="relative z-10 object-contain"
@@ -588,7 +551,7 @@ export default async function HomePage() {
               Assistente de IA
             </div>
 
-            <h2 className="font-display font-bold text-3xl sm:text-5xl text-text-primary uppercase tracking-tight leading-[0.9] mb-4">
+            <h2 className="font-display font-bold text-3xl sm:text-4xl text-text-primary uppercase tracking-tight leading-[0.9] mb-4">
               Este é o Max.<br />Seu novo parceiro de treino.
             </h2>
             <p className="font-body text-text-secondary text-base max-w-xl leading-relaxed">
@@ -597,22 +560,34 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {MAX_FEATURES.map((f) => (
-              <div
-                key={f.title}
-                className="bg-surface border border-surface-border rounded-2xl p-6 transition-colors hover:border-max/30"
-              >
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-4 bg-max/[0.08] text-max-light">
-                  <f.icon size={20} />
-                </div>
-                <h3 className="font-body font-semibold text-text-primary text-sm mb-1.5">{f.title}</h3>
-                <p className="font-body text-text-secondary text-xs leading-relaxed">{f.desc}</p>
+          {/* Composição assimétrica: a feature de maior impacto vira a linha de cima (largura total), as demais ficam divididas embaixo — um único container, sem caixas de altura descasada */}
+          <div className="bg-surface border border-surface-border rounded-2xl divide-y divide-surface-border">
+            <div className="flex items-center gap-5 p-6">
+              <div className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 bg-max/[0.08] text-max-light">
+                <FlagshipIcon size={26} />
               </div>
-            ))}
+              <div>
+                <h3 className="font-body font-semibold text-text-primary text-lg mb-1">{maxFlagship.title}</h3>
+                <p className="font-body text-text-secondary text-sm leading-relaxed">{maxFlagship.desc}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-surface-border">
+              {maxSupporting.map((f) => (
+                <div key={f.title} className="flex items-start gap-3 p-5">
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 bg-max/[0.08] text-max-light">
+                    <f.icon size={16} />
+                  </div>
+                  <div>
+                    <h3 className="font-body font-semibold text-text-primary text-sm mb-1">{f.title}</h3>
+                    <p className="font-body text-text-secondary text-xs leading-relaxed">{f.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="text-center mt-12">
+          <div className="flex flex-col items-center gap-4 mt-4">
             <Link
               href="/register"
               className="inline-flex items-center gap-2 font-body font-semibold text-base text-white bg-max px-8 py-4 rounded-full transition-all hover:scale-105"
@@ -620,17 +595,30 @@ export default async function HomePage() {
               Quero o Max no meu painel
               <ArrowRight size={18} />
             </Link>
+
+            <div className="inline-flex items-center gap-2.5 bg-surface border border-max/20 rounded-full pl-1.5 pr-4 py-1.5">
+              <Image
+                src="/max-avatar.png"
+                alt=""
+                width={28}
+                height={28}
+                className="object-contain"
+              />
+              <p className="text-xs font-body text-text-secondary">
+                <span className="font-semibold text-max-light">Max sugeriu +5kg pro Lucas</span> — agora mesmo
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ── MODULE SECTIONS ── */}
-      <div id="funcionalidades" className="py-4">
+      <div id="funcionalidades">
         {MODULES.map((mod, i) => (
           <section
             key={mod.id}
             id={mod.id}
-            className={`py-20 px-6 ${i % 2 === 1 ? 'bg-surface/20' : ''}`}
+            className={`py-12 px-6 ${i % 2 === 1 ? 'bg-surface/20' : ''}`}
           >
             <div className={`max-w-6xl mx-auto flex flex-col ${mod.side === 'left' ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-14 items-center`}>
 
@@ -675,57 +663,48 @@ export default async function HomePage() {
       {/* ── ACESSO MULTIPLATAFORMA ── */}
       <section className="py-20 px-6 bg-surface/30 border-y border-surface-border">
         <div className="max-w-5xl mx-auto text-center mb-14">
-          <p className="font-body text-brand-lime text-xs font-semibold uppercase tracking-[0.25em] mb-3">
-            Acesse de qualquer lugar
-          </p>
           <h2 className="font-display font-bold text-3xl sm:text-4xl text-text-primary uppercase tracking-tight leading-[0.9] mb-4">
-            Web, Android e<br />tela inicial do celular.
+            Acesse de qualquer lugar: web, Android<br />e tela inicial do celular.
           </h2>
           <p className="font-body text-text-secondary text-base max-w-lg mx-auto leading-relaxed">
             Você e seus alunos acessam de qualquer dispositivo. Sem precisar baixar da loja, sem complicação.
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="max-w-4xl mx-auto bg-surface border border-surface-border rounded-2xl divide-y divide-surface-border sm:divide-y-0 sm:grid sm:grid-cols-3">
           {[
             {
-              icon: <Globe size={28} />,
+              icon: <Globe size={20} />,
               title: 'Acesso Web',
               desc: 'Funciona em qualquer navegador — Chrome, Safari, Edge. Acesse seu painel direto em app.strivepersonal.com.br.',
               color: 'text-brand-lime',
-              bg: 'bg-brand-lime/10',
             },
             {
-              icon: <Smartphone size={28} />,
+              icon: <Smartphone size={20} />,
               title: 'App Android',
               desc: 'Seus alunos baixam o app na Google Play, entram com o código e já começam a treinar.',
               color: 'text-status-success',
-              bg: 'bg-status-success/10',
             },
             {
-              icon: <Bell size={28} />,
+              icon: <Bell size={20} />,
               title: 'Instalar no celular',
               desc: 'No navegador mobile, basta tocar em "Adicionar à tela inicial". Funciona como um app nativo — sem precisar da loja.',
               color: 'text-status-warning',
-              bg: 'bg-status-warning/10',
             },
           ].map((item) => (
-            <div
-              key={item.title}
-              className="group bg-surface border border-surface-border rounded-2xl p-7 hover:border-brand-lime/25 transition-colors"
-            >
-              <div className={`w-12 h-12 rounded-xl ${item.bg} flex items-center justify-center ${item.color} mb-5`}>
-                {item.icon}
+            <div key={item.title} className="flex items-start gap-4 p-6 sm:border-l sm:first:border-l-0 border-surface-border">
+              <span className={`flex-shrink-0 mt-0.5 ${item.color}`}>{item.icon}</span>
+              <div>
+                <h3 className="font-body font-semibold text-text-primary text-base mb-1">{item.title}</h3>
+                <p className="font-body text-text-secondary text-sm leading-relaxed">{item.desc}</p>
               </div>
-              <h3 className="font-body font-semibold text-text-primary text-base mb-2">{item.title}</h3>
-              <p className="font-body text-text-secondary text-sm leading-relaxed">{item.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* ── BEFORE / AFTER ── */}
-      <section className="py-20 px-6">
+      <section className="py-6 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="font-display font-bold text-3xl sm:text-4xl text-text-primary uppercase tracking-tight leading-[0.9]">
@@ -785,9 +764,6 @@ export default async function HomePage() {
       <section id="como-funciona" className="py-20 px-6 bg-surface/20 border-y border-surface-border">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
-            <p className="font-body text-brand-lime text-xs font-semibold uppercase tracking-[0.25em] mb-3">
-              Como funciona
-            </p>
             <h2 className="font-display font-bold text-3xl sm:text-4xl text-text-primary uppercase tracking-tight leading-[0.9]">
               Três passos.<br />Você está rodando.
             </h2>
@@ -810,7 +786,7 @@ export default async function HomePage() {
               href="/register"
               className="inline-flex items-center gap-2 font-body font-semibold text-base bg-brand-lime text-text-inverse px-8 py-4 rounded-full hover:bg-brand-dark transition-colors"
             >
-              Criar conta grátis agora
+              Criar conta grátis
               <ArrowRight size={18} />
             </Link>
           </div>
@@ -818,12 +794,12 @@ export default async function HomePage() {
       </section>
 
       {/* ── PLANS ── */}
-      <section id="planos" className="py-20 px-6">
+      <section id="planos" className="py-8 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
-            <p className="font-body text-brand-lime text-xs font-semibold uppercase tracking-[0.25em] mb-3">
+            <span className="inline-block bg-brand-lime/10 border border-brand-lime/20 text-brand-lime text-xs font-body font-semibold px-3 py-1 rounded-full mb-4">
               Planos
-            </p>
+            </span>
             <h2 className="font-display font-bold text-3xl sm:text-4xl text-text-primary uppercase tracking-tight leading-[0.9] mb-4">
               Comece grátis.<br />Escale quando precisar.
             </h2>
@@ -836,15 +812,18 @@ export default async function HomePage() {
             {PLANS.map((plan) => (
               <div
                 key={plan.name}
-                className={`relative flex flex-col rounded-2xl p-7 border transition-colors ${
+                className={`relative flex flex-col rounded-2xl p-7 border transition-all duration-200 hover:-translate-y-1 ${
                   plan.highlight
-                    ? 'bg-brand-lime text-text-inverse border-brand-lime'
+                    ? 'bg-brand-lime text-text-inverse border-brand-lime hover:-translate-y-1.5'
                     : 'bg-surface border-surface-border hover:border-brand-lime/30'
                 }`}
               >
                 {plan.badge && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-background text-brand-lime text-[10px] font-body font-bold px-3 py-1 rounded-full border border-brand-lime/30 uppercase tracking-wider whitespace-nowrap">
-                    {plan.badge}
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex items-center justify-center">
+                    <span className="absolute inset-0 rounded-full bg-brand-lime/40 animate-badge-pulse" />
+                    <span className="relative bg-background text-brand-lime text-[10px] font-body font-bold px-3 py-1 rounded-full border border-brand-lime/30 uppercase tracking-wider whitespace-nowrap">
+                      {plan.badge}
+                    </span>
                   </div>
                 )}
 
@@ -877,7 +856,7 @@ export default async function HomePage() {
 
                 <Link
                   href={plan.href}
-                  className={`w-full text-center font-body font-semibold text-sm py-3.5 rounded-full transition-all ${
+                  className={`w-full text-center font-body font-semibold text-sm py-3.5 rounded-full transition-all hover:scale-[1.03] active:scale-[0.97] ${
                     plan.highlight
                       ? 'bg-background text-brand-lime hover:bg-surface'
                       : 'bg-brand-lime/10 border border-brand-lime/25 text-brand-lime hover:bg-brand-lime/20'
@@ -896,27 +875,22 @@ export default async function HomePage() {
       </section>
 
       {/* ── FAQ ── */}
-      <section id="faq" className="py-20 px-6 border-t border-surface-border">
+      <section id="faq" className="py-8 px-6 border-t border-surface-border">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12">
-            <p className="font-body text-brand-lime text-xs font-semibold uppercase tracking-[0.25em] mb-3">
+            <h2 className="font-display font-bold text-3xl sm:text-4xl text-text-primary uppercase tracking-tight leading-[0.9] mb-2">
               Perguntas frequentes
-            </p>
-            <h2 className="font-display font-bold text-3xl sm:text-4xl text-text-primary uppercase tracking-tight leading-[0.9]">
-              Sem letra miúda.
             </h2>
+            <p className="font-body text-text-secondary text-sm">Sem letra miúda.</p>
           </div>
 
-          <div className="space-y-4">
+          <div className="divide-y divide-surface-border border-t border-b border-surface-border">
             {FAQS.map((faq) => (
-              <div
-                key={faq.q}
-                className="bg-surface border border-surface-border rounded-xl p-6 hover:border-brand-lime/20 transition-colors"
-              >
-                <h3 className="font-body font-semibold text-text-primary text-sm mb-2">
+              <div key={faq.q} className="py-4">
+                <h3 className="font-body font-semibold text-text-primary text-base mb-2">
                   {faq.q}
                 </h3>
-                <p className="font-body text-text-secondary text-sm leading-relaxed">
+                <p className="font-body text-text-secondary text-base leading-relaxed max-w-[65ch]">
                   {faq.a}
                 </p>
               </div>
@@ -926,7 +900,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── FINAL CTA ── */}
-      <section className="py-24 px-6">
+      <section className="py-6 px-6">
         <div className="max-w-3xl mx-auto">
           <div className="relative bg-brand-lime rounded-2xl p-10 sm:p-16 text-center overflow-hidden">
             <div
@@ -942,7 +916,7 @@ export default async function HomePage() {
                   <Star key={s} size={16} className="text-text-inverse fill-text-inverse opacity-80" />
                 ))}
               </div>
-              <h2 className="font-display font-bold text-3xl sm:text-5xl text-text-inverse uppercase tracking-tight leading-[0.88] mb-4">
+              <h2 className="font-display font-bold text-3xl sm:text-4xl text-text-inverse uppercase tracking-tight leading-[0.88] mb-4">
                 O painel está pronto.<br />Só falta você.
               </h2>
               <p className="font-body text-text-inverse/60 text-base mb-8 max-w-md mx-auto">
@@ -953,7 +927,7 @@ export default async function HomePage() {
                   href="/register"
                   className="inline-flex items-center gap-2 font-body font-bold text-base bg-background text-brand-lime px-8 py-4 rounded-full hover:bg-surface transition-all hover:scale-105"
                 >
-                  Criar minha conta grátis
+                  Criar conta grátis
                   <ArrowRight size={18} />
                 </Link>
                 <div className="flex items-center gap-2 text-text-inverse/50 text-sm font-body">
@@ -1029,7 +1003,7 @@ export default async function HomePage() {
           </div>
 
           <div className="border-t border-surface-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="font-body text-text-secondary/40 text-xs">
+            <p className="font-body text-text-secondary/70 text-xs">
               © {new Date().getFullYear()} Strive Personal. Todos os direitos reservados.
             </p>
             <div className="flex items-center gap-2 text-text-secondary text-xs font-body">

@@ -49,6 +49,25 @@ a {
   animation: scrollHint 1.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
+/* Hero — entrada única e coreografada no load (não repetida por seção ao rolar) */
+@keyframes heroIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-hero-in {
+  animation: heroIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--hero-i, 0) * 90ms);
+}
+
+/* Badge "MAIS POPULAR" — único selo da página, ganha um respiro sutil de destaque */
+@keyframes badgePulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50%      { opacity: 0; transform: scale(1.6); }
+}
+.animate-badge-pulse {
+  animation: badgePulse 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
@@ -62,4 +81,16 @@ a {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #E8FF47;
+}
+
+/* Acessibilidade: usuários que pedem menos movimento recebem transições quase instantâneas em vez de nenhuma — nunca ignorar esta preferência */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -49,7 +49,7 @@ export function MobileNav({ links, isLoggedIn }: MobileNavProps) {
         aria-label={open ? 'Fechar menu' : 'Abrir menu'}
         aria-expanded={open ? 'true' : 'false'}
         aria-controls="mobile-nav-panel"
-        className="flex items-center justify-center w-9 h-9 rounded-lg text-text-secondary hover:text-text-primary transition-colors"
+        className="flex items-center justify-center w-11 h-11 -mr-1 rounded-lg text-text-secondary hover:text-text-primary transition-colors"
       >
         {open ? <X size={20} /> : <Menu size={20} />}
       </button>
@@ -65,7 +65,7 @@ export function MobileNav({ links, isLoggedIn }: MobileNavProps) {
               key={link.label}
               href={link.href}
               onClick={() => setOpen(false)}
-              className="text-sm font-body text-text-secondary hover:text-text-primary py-2.5 transition-colors"
+              className="text-sm font-body text-text-secondary hover:text-text-primary py-3 transition-colors"
             >
               {link.label}
             </a>
@@ -76,10 +76,10 @@ export function MobileNav({ links, isLoggedIn }: MobileNavProps) {
               <Link
                 href="/register"
                 onClick={() => setOpen(false)}
-                className="inline-flex items-center justify-center gap-1.5 w-full text-xs font-body font-medium text-text-secondary border border-surface-border rounded-full px-4 py-2.5"
+                className="inline-flex items-center justify-center gap-1.5 w-full text-xs font-body font-medium text-text-secondary border border-surface-border rounded-full px-4 py-3.5"
               >
                 <Dumbbell size={12} />
-                Área de Cadastro Personal Trainer
+                Criar conta de Personal Trainer
               </Link>
             </div>
           )}
