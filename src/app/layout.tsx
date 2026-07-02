@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from 'next'
 import { Syncopate, DM_Sans } from 'next/font/google'
 import './globals.css'
 import { IOSInstallPrompt } from '@/components/pwa/IOSInstallPrompt'
+import { AndroidInstallPrompt } from '@/components/pwa/AndroidInstallPrompt'
+import { createClient } from '@/lib/supabase/server'
 
 const syncopate = Syncopate({
   weight: ['400', '700'],
@@ -114,12 +116,26 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+async function getAndroidStoreUrl(): Promise<string | null> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('app_versions')
+    .select('store_url')
+    .eq('platform', 'android')
+    .single()
+
+  return data?.store_url ?? null
+}
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const androidStoreUrl = await getAndroidStoreUrl()
+
   return (
     <html lang="pt-BR" className={`${syncopate.variable} ${dmSans.variable}`}>
       <body className="font-body antialiased">
         {children}
         <IOSInstallPrompt />
+        <AndroidInstallPrompt storeUrl={androidStoreUrl} />
       </body>
     </html>
   )
