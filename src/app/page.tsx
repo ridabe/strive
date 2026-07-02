@@ -3,10 +3,11 @@ import Image from 'next/image'
 import {
   ArrowRight, Users, Dumbbell, TrendingUp, Calendar,
   MessageSquare, Trophy, Apple, BarChart2, CheckCircle,
-  ChevronDown, Smartphone, Globe, Star, Play,
+  ChevronDown, Smartphone, Globe, Star,
   Bell, Shield, Clock, Sparkles
 } from 'lucide-react'
 import { LogoVertical, LogoHorizontal } from '@/components/logo'
+import { MobileNav } from '@/components/landing/mobile-nav'
 import { createClient } from '@/lib/supabase/server'
 
 // ─── Data ────────────────────────────────────────────────────────────────────
@@ -404,6 +405,8 @@ export default async function HomePage() {
                 </Link>
               </>
             )}
+
+            <MobileNav links={NAV_LINKS} isLoggedIn={!!user} />
           </div>
         </div>
       </nav>
@@ -423,29 +426,18 @@ export default async function HomePage() {
 
           {/* Left — copy */}
           <div className="flex flex-col gap-7">
-            {/* Max — se apresenta, "garoto propaganda" falando pelo sistema */}
-            <div className="inline-flex items-start gap-3 w-fit">
-              <div className="relative w-14 h-14 flex-shrink-0">
-                <div
-                  className="absolute inset-0 rounded-full"
-                  style={{ background: `radial-gradient(circle, ${MAX_COLOR}45 0%, transparent 70%)` }}
-                />
-                <Image
-                  src="/max-avatar.png"
-                  alt="Max Strive IA"
-                  width={56}
-                  height={56}
-                  className="relative z-10 object-contain"
-                  style={{ filter: `drop-shadow(0 0 12px ${MAX_COLOR}55)` }}
-                  priority
-                />
-              </div>
-              <div className="relative bg-surface border border-max/20 rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-sm">
-                <p className="text-xs sm:text-sm font-body text-text-primary leading-snug">
-                  <span className="font-semibold text-max-light">Oi, eu sou o Max 👋</span>{' '}
-                  — a IA que ajuda personal trainers a treinar mais alunos, com mais qualidade.
-                </p>
-              </div>
+            {/* Max — kicker discreto, subordinado ao headline (não compete pelo primeiro olhar) */}
+            <div className="inline-flex items-center gap-2 w-fit">
+              <Image
+                src="/max-avatar.png"
+                alt=""
+                width={20}
+                height={20}
+                className="object-contain opacity-80"
+              />
+              <p className="text-xs font-body text-text-secondary">
+                <span className="font-semibold text-max-light">Max</span> — seu assistente de IA, incluso no painel
+              </p>
             </div>
 
             {/* Headline */}
@@ -465,14 +457,12 @@ export default async function HomePage() {
               acompanhando a evolução de cada aluno — você foca no que importa.
             </p>
 
-            {/* Benefit list */}
+            {/* Benefit list — 3 itens, o essencial antes do scroll */}
             <ul className="space-y-3">
               {[
                 { icon: <Sparkles size={15} />, text: 'Max IA cria treinos e ajusta cargas automaticamente', max: true },
                 { icon: <Dumbbell size={15} />, text: 'Prescrição de treinos com banco de exercícios' },
-                { icon: <Apple size={15} />, text: 'Planos de nutrição integrados ao treino' },
-                { icon: <Trophy size={15} />, text: 'Ranqueamento que retém e motiva seus alunos' },
-                { icon: <Calendar size={15} />, text: 'Agendamento direto pelo app, sem WhatsApp' },
+                { icon: <Calendar size={15} />, text: 'Nutrição, ranqueamento e agenda no mesmo painel' },
               ].map((b) => (
                 <li key={b.text} className="flex items-center gap-3 text-sm font-body text-text-secondary">
                   <span className={`flex-shrink-0 ${b.max ? 'text-max-light' : 'text-brand-lime'}`}>
@@ -500,14 +490,6 @@ export default async function HomePage() {
                 Cadastro de Personal — Criar conta
               </Link>
             </div>
-
-            <a
-              href="#funcionalidades"
-              className="inline-flex items-center gap-1.5 text-xs font-body text-text-secondary/70 hover:text-brand-lime transition-colors w-fit -mt-2"
-            >
-              <Play size={12} className="fill-current" />
-              Ver funcionalidades
-            </a>
 
             {/* Trust line */}
             <p className="text-xs font-body text-text-secondary flex items-center gap-2">
