@@ -241,7 +241,10 @@ export async function updateClient(tenantId: string, formData: FormData) {
     if (!uploadError) {
       const { data: { publicUrl } } = adminSupabase.storage
         .from('client-logos').getPublicUrl(path)
-      logoUrl = publicUrl
+      // Cache-bust para forçar recarregamento da imagem no browser
+      logoUrl = `${publicUrl}?v=${Date.now()}`
+    } else {
+      console.error('[updateClient] Logo upload falhou:', uploadError.message)
     }
   }
 

@@ -795,9 +795,9 @@
     "semantic_hash": "1d3f325460f53595644c3450beac8705"
   },
   "src/app/actions/clients.ts": {
-    "mtime": 1782997282.8752885,
-    "ast_hash": "201ba9398a182736ef6867cfccdde5ce",
-    "semantic_hash": ""
+    "mtime": 1781965776.541249,
+    "ast_hash": "c5ecba5c990b34aa71b4bf55ced9d141",
+    "semantic_hash": "c5ecba5c990b34aa71b4bf55ced9d141"
   },
   "src/app/actions/exercises.ts": {
     "mtime": 1781976448.8007996,
