@@ -7,6 +7,7 @@ import { UserMenu } from '@/components/layout/user-menu'
 import { TenantLogoHeader } from '@/components/layout/tenant-logo-header'
 import { PendingAgendaBanner } from '@/components/agenda/PendingAgendaBanner'
 import { MaxOnboardingModal } from '@/components/ai/MaxOnboardingModal'
+import { ModuleOnboardingPopup } from '@/components/onboarding/ModuleOnboardingPopup'
 
 export default async function DashboardLayout({
   children,
@@ -40,6 +41,8 @@ export default async function DashboardLayout({
 
   // Busca modulos habilitados para este tenant
   let enabledModules: EnabledModule[] = []
+  // Slugs habilitados para o loop de onboarding (inclui white-label, ao contrário do menu)
+  let onboardingSlugs: string[] = []
 
   if (profile.tenant_id) {
     const { data: tenantModules } = await supabase
@@ -58,16 +61,22 @@ export default async function DashboardLayout({
       .eq('tenant_id', profile.tenant_id)
       .eq('enabled', true)
 
-    enabledModules = (tenantModules ?? [])
+    const availableMods = (tenantModules ?? [])
       .flatMap((tm) => {
         const mod = joinOne<{
           slug: string; name: string; icon: string | null;
           sort_order: number; available: boolean; status: string
         }>(tm.system_modules)
-        // white-label integrado em Ajustes — nao exibir como item separado no menu
-        if (!mod || !mod.available || mod.status === 'coming_soon' || mod.slug === 'white-label') return []
-        return [{ slug: mod.slug, name: mod.name, icon: mod.icon }]
+        if (!mod || !mod.available || mod.status === 'coming_soon') return []
+        return [mod]
       })
+
+    onboardingSlugs = availableMods.map((mod) => mod.slug)
+
+    enabledModules = availableMods
+      // white-label integrado em Ajustes — nao exibir como item separado no menu
+      .filter((mod) => mod.slug !== 'white-label')
+      .map((mod) => ({ slug: mod.slug, name: mod.name, icon: mod.icon }))
   }
 
   const primaryColor = tenantBranding?.primary_color ?? '#E8FF47'
@@ -139,6 +148,9 @@ export default async function DashboardLayout({
       {enabledModules.some((m) => m.slug === 'assistente-ia') && (
         <MaxOnboardingModal userId={user.id} />
       )}
+
+      {/* Loop de onboarding por módulo — 1 popup por login (docs/modulos/onboarding-popup-modulos.md) */}
+      <ModuleOnboardingPopup role="personal" userId={user.id} enabledSlugs={onboardingSlugs} />
     </div>
   )
 }

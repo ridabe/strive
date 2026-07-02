@@ -1,11 +1,13 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { joinOne } from '@/lib/supabase/join'
 import { TenantLogoHeader } from '@/components/layout/tenant-logo-header'
 import { StudentSidebarNav } from '@/components/layout/student-sidebar'
 import { StudentMobileNav } from '@/components/layout/student-mobile-nav'
 import { UserMenu } from '@/components/layout/user-menu'
 import { StudentAgendaBanner } from '@/components/agenda/StudentAgendaBanner'
 import { StudentMessagesBanner } from '@/components/student/StudentMessagesBanner'
+import { ModuleOnboardingPopup } from '@/components/onboarding/ModuleOnboardingPopup'
 
 export default async function StudentLayout({
   children,
@@ -49,6 +51,25 @@ export default async function StudentLayout({
 
   const primaryColor = tenantBranding?.primary_color ?? '#E8FF47'
   const businessName = tenantBranding?.business_name ?? 'Strive Personal'
+
+  // Slugs de módulos habilitados no tenant — filtram o loop de onboarding do aluno.
+  // Se a RLS bloquear a leitura (retorno vazio), o popup usa a lista completa do perfil.
+  let onboardingSlugs: string[] | null = null
+  if (profile.tenant_id) {
+    const { data: tenantModules } = await supabase
+      .from('tenant_modules')
+      .select('enabled, system_modules ( slug, available, status )')
+      .eq('tenant_id', profile.tenant_id)
+      .eq('enabled', true)
+
+    if (tenantModules && tenantModules.length) {
+      onboardingSlugs = tenantModules.flatMap((tm) => {
+        const mod = joinOne<{ slug: string; available: boolean; status: string }>(tm.system_modules)
+        if (!mod || !mod.available || mod.status === 'coming_soon') return []
+        return [mod.slug]
+      })
+    }
+  }
 
   // Conta solicitações de agendamento pendentes/recusadas para o aluno
   let pendingAgendaCount  = 0
@@ -177,6 +198,8 @@ export default async function StudentLayout({
         {children}
       </main>
 
+      {/* Loop de onboarding por módulo — 1 popup por login (docs/modulos/onboarding-popup-modulos.md) */}
+      <ModuleOnboardingPopup role="student" userId={user.id} enabledSlugs={onboardingSlugs} />
     </div>
   )
 }
