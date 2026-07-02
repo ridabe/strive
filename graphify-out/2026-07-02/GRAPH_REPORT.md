@@ -1,16 +1,16 @@
 # Graph Report - strivePersonal  (2026-07-02)
 
 ## Corpus Check
-- 281 files · ~2,127,524 words
+- 281 files · ~2,128,085 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1643 nodes · 2667 edges · 167 communities (134 shown, 33 thin omitted)
+- 1644 nodes · 2668 edges · 158 communities (126 shown, 32 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 39 edges (avg confidence: 0.91)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `ee3ea4f2`
+- Built from commit: `38755b5c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -78,21 +78,16 @@
 - [[_COMMUNITY_Community 60|Community 60]]
 - [[_COMMUNITY_Community 61|Community 61]]
 - [[_COMMUNITY_Community 62|Community 62]]
-- [[_COMMUNITY_Community 63|Community 63]]
-- [[_COMMUNITY_Community 64|Community 64]]
 - [[_COMMUNITY_Community 65|Community 65]]
 - [[_COMMUNITY_Community 66|Community 66]]
 - [[_COMMUNITY_Community 67|Community 67]]
 - [[_COMMUNITY_Community 68|Community 68]]
 - [[_COMMUNITY_Community 69|Community 69]]
-- [[_COMMUNITY_Community 70|Community 70]]
 - [[_COMMUNITY_Community 71|Community 71]]
 - [[_COMMUNITY_Community 72|Community 72]]
 - [[_COMMUNITY_Community 73|Community 73]]
 - [[_COMMUNITY_Community 74|Community 74]]
 - [[_COMMUNITY_Community 75|Community 75]]
-- [[_COMMUNITY_Community 76|Community 76]]
-- [[_COMMUNITY_Community 77|Community 77]]
 - [[_COMMUNITY_Community 78|Community 78]]
 - [[_COMMUNITY_Community 79|Community 79]]
 - [[_COMMUNITY_Community 80|Community 80]]
@@ -138,18 +133,14 @@
 - [[_COMMUNITY_Community 129|Community 129]]
 - [[_COMMUNITY_Community 130|Community 130]]
 - [[_COMMUNITY_Community 131|Community 131]]
-- [[_COMMUNITY_Community 132|Community 132]]
 - [[_COMMUNITY_Community 133|Community 133]]
 - [[_COMMUNITY_Community 134|Community 134]]
 - [[_COMMUNITY_Community 135|Community 135]]
 - [[_COMMUNITY_Community 136|Community 136]]
 - [[_COMMUNITY_Community 137|Community 137]]
-- [[_COMMUNITY_Community 138|Community 138]]
 - [[_COMMUNITY_Community 139|Community 139]]
 - [[_COMMUNITY_Community 140|Community 140]]
 - [[_COMMUNITY_Community 141|Community 141]]
-- [[_COMMUNITY_Community 142|Community 142]]
-- [[_COMMUNITY_Community 143|Community 143]]
 - [[_COMMUNITY_Community 144|Community 144]]
 - [[_COMMUNITY_Community 145|Community 145]]
 - [[_COMMUNITY_Community 146|Community 146]]
@@ -201,11 +192,11 @@
 ## Import Cycles
 - 3-file cycle: `src/app/(admin)/admin/usuarios/page.tsx -> src/components/admin/users-table.tsx -> src/components/admin/user-actions-dropdown.tsx -> src/app/(admin)/admin/usuarios/page.tsx`
 
-## Communities (167 total, 33 thin omitted)
+## Communities (158 total, 32 thin omitted)
 
 ### Community 0 - "Workout Items & Exercises"
 Cohesion: 0.10
-Nodes (12): AlterarSenhaPage(), metadata, FAQS, HomePage(), MODULES, NAV_LINKS, PLANS, STATS (+4 more)
+Nodes (13): AlterarSenhaPage(), metadata, FAQS, HomePage(), MAX_FEATURES, MODULES, NAV_LINKS, PLANS (+5 more)
 
 ### Community 1 - "Student Profiles & Metrics"
 Cohesion: 0.08
@@ -213,11 +204,11 @@ Nodes (31): awardBadge(), BadgeType, checkMonthlyConsistency(), closeMonthlyRank
 
 ### Community 2 - "Auth & Tenant Context"
 Cohesion: 0.11
-Nodes (21): createWorkoutPlan(), deactivateWorkoutPlan(), deleteWorkoutPlan(), getStudentWorkoutPlans(), publishWorkoutPlan(), updateWorkoutPlan(), updateProfile(), GET() (+13 more)
+Nodes (20): createWorkoutPlan(), deactivateWorkoutPlan(), deleteWorkoutPlan(), getStudentWorkoutPlans(), updateWorkoutPlan(), updateProfile(), GET(), GET() (+12 more)
 
 ### Community 3 - "Meal Plans & Nutrition"
 Cohesion: 0.08
-Nodes (30): addWorkoutItem(), ExerciseRow, groupWorkoutItems(), removeWorkoutItem(), reorderWorkoutItems(), searchExercises(), ungroupWorkoutItems(), updateWorkoutItem() (+22 more)
+Nodes (31): addWorkoutItem(), ExerciseRow, groupWorkoutItems(), removeWorkoutItem(), reorderWorkoutItems(), searchExercises(), ungroupWorkoutItems(), updateWorkoutItem() (+23 more)
 
 ### Community 4 - "Agenda & Scheduling"
 Cohesion: 0.08
@@ -225,23 +216,23 @@ Nodes (25): Animatic HTML — Strive Personal 60s Ad, CENA 10 — 0:38–0:43 ·
 
 ### Community 5 - "Gamification & Rankings"
 Cohesion: 0.09
-Nodes (23): addExtraWorkoutItem(), groupExtraWorkoutItems(), removeExtraWorkoutItem(), reorderExtraWorkoutItems(), ungroupExtraWorkoutItems(), updateExtraWorkoutItem(), ExtraWorkoutItemData, AssistenteIaChatPage() (+15 more)
+Nodes (17): AssistenteIaChatPage(), Props, ArquivosPage(), AvaliacoesPage(), ExecucaoPage(), FinanceiroPage(), STATUS_CONFIG, currentStreak() (+9 more)
 
 ### Community 6 - "Attendance & Progress"
 Cohesion: 0.12
 Nodes (25): submitStudentAssessment(), createAssessment(), deleteAssessment(), Assessment, AssessmentCard(), CalcPreview(), CIRCUM_FIELDS, GENERAL_FIELDS (+17 more)
 
 ### Community 7 - "Branding & Config"
-Cohesion: 0.13
-Nodes (14): AgendaEventOrigin, AgendaEventStatus, AgendaEventType, confirmAgendaEvent(), createAgendaEvent(), deleteAgendaEvent(), getAgendaEvents(), getAgendaEventsByDate() (+6 more)
+Cohesion: 0.28
+Nodes (6): DashboardLayout(), PendingAgendaBanner(), Props, MaxOnboardingModal(), Props, STEPS
 
 ### Community 8 - "Payments & Billing"
 Cohesion: 0.18
 Nodes (18): addMeal(), addMealFood(), assignMealPlanToStudents(), createMealPlan(), deactivateMealPlan(), deleteMeal(), deleteMealFood(), deleteMealPlan() (+10 more)
 
 ### Community 9 - "Admin & Users"
-Cohesion: 0.14
-Nodes (21): activateUser(), createGlobalAdmin(), deleteUser(), generateTempPassword(), resetUserPassword(), suspendUser(), ROLE_FILTER_OPTIONS, STATUS_FILTER_OPTIONS (+13 more)
+Cohesion: 0.13
+Nodes (20): activateUser(), createGlobalAdmin(), deleteUser(), generateTempPassword(), resetUserPassword(), suspendUser(), ROLE_FILTER_OPTIONS, STATUS_FILTER_OPTIONS (+12 more)
 
 ### Community 10 - "Assessments & Fitness Calc"
 Cohesion: 0.07
@@ -252,32 +243,32 @@ Cohesion: 0.11
 Nodes (20): AssistenteIaPage(), Props, StudentMessagesPage(), StudentMessageItem, StudentMessagesClient(), StudentMessagesClientProps, MaxChatPanel(), Message (+12 more)
 
 ### Community 12 - "Supabase Server Clients"
-Cohesion: 0.14
-Nodes (13): assignTemplateToStudent(), createExtraWorkout(), deleteExtraWorkout(), ExtraWorkoutWithItems, getStudentExtraWorkouts(), getTenantExtraWorkouts(), updateExtraWorkout(), NovoTreinoExtraPage() (+5 more)
+Cohesion: 0.09
+Nodes (25): addExtraWorkoutItem(), groupExtraWorkoutItems(), removeExtraWorkoutItem(), reorderExtraWorkoutItems(), ungroupExtraWorkoutItems(), updateExtraWorkoutItem(), assignTemplateToStudent(), createExtraWorkout() (+17 more)
 
 ### Community 13 - "Next.js App Router"
-Cohesion: 0.17
-Nodes (9): AgendaEvent, EventStatus, EventType, MONTHS, Props, TYPE_CONFIG, WEEKDAYS, MapsPopup() (+1 more)
+Cohesion: 0.11
+Nodes (15): createStudentPresencialRequest(), AgendaRequestForm(), ViaCepResult, formatPhone(), StudentAgendaPage(), AgendaEvent, EventStatus, EventType (+7 more)
 
 ### Community 14 - "TypeScript Types & DB Schema"
-Cohesion: 0.11
-Nodes (19): disableAllModulesForTenant(), enableAllModulesForTenant(), ModuleCategory, ModuleStatus, toggleModuleAvailability(), toggleTenantModule(), updateModule(), CATEGORY_CONFIG (+11 more)
+Cohesion: 0.13
+Nodes (20): createModule(), disableAllModulesForTenant(), enableAllModulesForTenant(), ModuleCategory, ModuleStatus, toggleModuleAvailability(), toggleTenantModule(), updateModule() (+12 more)
 
 ### Community 15 - "Community 15"
 Cohesion: 0.16
 Nodes (20): Official Color Palette — Strive Personal (desing-system), Spacing, Grid & Elevation System — Strive Personal (desing-system), Official Typography System — Strive Personal (desing-system), Home Screen Mockup — Today's Workout Dashboard, Workout Execution Screen — Active Series Timer & Load Tracking, Evolution/Progress Screen — 30-Day Stats, Load Chart, Weekly Frequency, Splash / Onboarding Screen — Brand Hero & CTA, Official Color Palette — Strive Personal (docs) (+12 more)
 
 ### Community 16 - "Community 16"
-Cohesion: 0.16
-Nodes (16): ABACATE_PRODUCT_IDS, ensureAbacateProduct(), startSubscriptionCheckout(), togglePlanActive(), updatePlan(), PLAN_DOWNGRADE, POST(), recordEvent() (+8 more)
+Cohesion: 0.13
+Nodes (17): togglePlanActive(), updatePlan(), PLAN_ACCENT, PlanosPage(), PLAN_DOWNGRADE, POST(), recordEvent(), WebhookEvent (+9 more)
 
 ### Community 17 - "Community 17"
 Cohesion: 0.11
 Nodes (11): AlunoProgressoPage(), Props, Badge, BADGE_META, MonthlyPoints, ProgressEntry, ProgressoAlunoClient(), Props (+3 more)
 
 ### Community 18 - "Community 18"
-Cohesion: 0.14
-Nodes (17): signOut(), StudentLayout(), Props, StudentAgendaBanner(), AdminMobileNavProps, StudentMobileNav(), StudentMobileNavProps, BASE_NAV_ITEMS (+9 more)
+Cohesion: 0.16
+Nodes (12): StudentLayout(), Props, StudentAgendaBanner(), StudentMobileNav(), BASE_NAV_ITEMS, getStudentNavItems(), RANKING_ITEM, StudentNavItem (+4 more)
 
 ### Community 19 - "Community 19"
 Cohesion: 0.10
@@ -296,31 +287,31 @@ Cohesion: 0.11
 Nodes (17): compilerOptions, allowJs, esModuleInterop, isolatedModules, jsx, lib, module, moduleResolution (+9 more)
 
 ### Community 23 - "Community 23"
-Cohesion: 0.21
-Nodes (15): assignPlanToAllStudents(), assignPlanToStudents(), getActiveStudentsForTenant(), getAssignmentsForPlan(), getPersonalCtx(), getUnassignedPlansForStudent(), removePlanAssignment(), WorkoutBuilder() (+7 more)
+Cohesion: 0.10
+Nodes (26): assignPlanToAllStudents(), assignPlanToStudents(), getActiveStudentsForTenant(), getAssignmentsForPlan(), getPersonalCtx(), getUnassignedPlansForStudent(), removePlanAssignment(), getWorkoutPlan() (+18 more)
 
 ### Community 24 - "Community 24"
-Cohesion: 0.31
-Nodes (10): activateClient(), createClient_action(), deleteClient(), resendWelcomeEmail(), suspendClient(), updateClient(), ClientActionsProps, Dialog (+2 more)
+Cohesion: 0.15
+Nodes (12): activateClient(), suspendClient(), ClientesPage(), PLAN_COLORS, PLAN_LABELS, STATUS_COLORS, STATUS_LABELS, ClientActions() (+4 more)
 
 ### Community 25 - "Community 25"
 Cohesion: 0.18
-Nodes (10): AdminLayout(), AdminMobileNav(), QUICK_ITEMS, AdminSidebarNav(), NAV_ITEMS, NavItem, SidebarNavProps, BOTTOM_ITEMS (+2 more)
+Nodes (11): AdminLayout(), AdminMobileNav(), QUICK_ITEMS, AdminSidebarNav(), NAV_ITEMS, NavItem, SidebarNavProps, BOTTOM_ITEMS (+3 more)
 
 ### Community 26 - "Community 26"
-Cohesion: 0.14
-Nodes (10): ClientDetailPage(), PLAN_COLORS, PLAN_LABELS, STATUS_CONFIG, ClientDetailActions(), ClientEditForm(), PLAN_LABELS, Profile (+2 more)
+Cohesion: 0.15
+Nodes (9): ClientDetailPage(), PLAN_COLORS, PLAN_LABELS, STATUS_CONFIG, ClientEditForm(), PLAN_LABELS, Profile, Props (+1 more)
 
 ### Community 27 - "Community 27"
-Cohesion: 0.11
-Nodes (20): DashboardLayout(), PendingAgendaBanner(), Props, MaxOnboardingModal(), Props, STEPS, DashboardMobileNav(), DashboardMobileNavProps (+12 more)
+Cohesion: 0.17
+Nodes (12): DashboardMobileNav(), DashboardMobileNavProps, QUICK_ITEMS, CORE_BOTTOM, CORE_TOP, DashboardSidebarNav(), EnabledModule, ICON_MAP (+4 more)
 
 ### Community 28 - "Community 28"
 Cohesion: 0.19
 Nodes (14): AssessmentContext, calcAge(), fetchActivePlan(), fetchLatestAssessment(), fetchProgressSummary(), fetchRecentSessions(), fetchStudent(), fetchStudentContext() (+6 more)
 
 ### Community 29 - "Community 29"
-Cohesion: 0.20
+Cohesion: 0.22
 Nodes (11): registerAttendance(), removeAttendance(), AttendanceCalendar(), AttendanceRecord, MONTHS_PT, RegisterAttendanceForm(), WEEKDAYS, computeStreaks() (+3 more)
 
 ### Community 30 - "Community 30"
@@ -328,8 +319,8 @@ Cohesion: 0.16
 Nodes (10): addFeedback(), deleteFeedback(), AddFeedbackButton(), Props, Student, WorkoutPlan, FeedbacksPage(), Props (+2 more)
 
 ### Community 31 - "Community 31"
-Cohesion: 0.16
-Nodes (9): WorkoutPlanWithRoutines, COMBO_LABEL, DAY_LABELS, GOAL_COLOR, ItemBlock, WorkoutItem, Props, VideoPreviewButton() (+1 more)
+Cohesion: 0.12
+Nodes (15): WorkoutPlanWithRoutines, ExerciseState, formatTime(), INTENSITY_OPTIONS, IntensityValue, Routine, WItem, WorkoutExecutionClient() (+7 more)
 
 ### Community 32 - "Community 32"
 Cohesion: 0.24
@@ -352,16 +343,16 @@ Cohesion: 0.18
 Nodes (8): submitFeedback(), Feedback, FeedbackClient(), LABEL_COLORS, LABELS, Props, WorkoutPlan, FeedbackPage()
 
 ### Community 37 - "Community 37"
-Cohesion: 0.38
-Nodes (5): getWorkoutPlan(), PlanoTreinoPage(), Props, Props, WorkoutExecutionPage()
+Cohesion: 0.33
+Nodes (6): signOut(), AdminMobileNavProps, StudentMobileNavProps, ROLE_LABELS, UserMenuProps, AppRole
 
 ### Community 38 - "Community 38"
-Cohesion: 0.29
-Nodes (10): finishWorkoutSession(), getExerciseLoadHistory(), getStudentCompletedRoutineIds(), getStudentCtx(), getStudentWorkoutCount(), saveSessionExercise(), startWorkoutSession(), Props (+2 more)
+Cohesion: 0.18
+Nodes (14): finishWorkoutSession(), getExerciseLoadHistory(), getStudentCompletedRoutineIds(), getStudentCtx(), getStudentWorkoutCount(), getStudentWorkoutHistory(), saveSessionExercise(), startWorkoutSession() (+6 more)
 
 ### Community 39 - "Community 39"
-Cohesion: 0.19
-Nodes (10): createExercise(), createGlobalExercise(), deleteExercise(), deleteGlobalExercise(), updateExercise(), updateGlobalExercise(), NovoExercicioPage(), Exercise (+2 more)
+Cohesion: 0.13
+Nodes (13): createExercise(), createGlobalExercise(), deleteExercise(), deleteGlobalExercise(), updateExercise(), updateGlobalExercise(), DeleteGlobalExerciseButton(), Props (+5 more)
 
 ### Community 40 - "Community 40"
 Cohesion: 0.22
@@ -384,12 +375,12 @@ Cohesion: 0.21
 Nodes (7): markAttendanceToday(), FrequenciaClient(), MONTHS, Props, WEEKDAYS, currentStreak(), FrequenciaPage()
 
 ### Community 45 - "Community 45"
-Cohesion: 0.21
+Cohesion: 0.19
 Nodes (9): addCustomField(), saveAnamneseResponse(), toggleCustomField(), CATEGORIES, CustomField, CustomFieldsClient(), FIELD_TYPES, FieldType (+1 more)
 
 ### Community 46 - "Community 46"
 Cohesion: 0.18
-Nodes (10): createModule(), CATEGORY_CONFIG, CATEGORY_ORDER, ICONS, ModulosPage(), STATUS_CONFIG, CATEGORIES, CreateModuleDialog() (+2 more)
+Nodes (10): CATEGORY_CONFIG, CATEGORY_ORDER, ICONS, ModulosPage(), STATUS_CONFIG, CATEGORIES, CreateModuleDialog(), STATUSES (+2 more)
 
 ### Community 47 - "Community 47"
 Cohesion: 0.05
@@ -404,8 +395,8 @@ Cohesion: 0.22
 Nodes (6): saveAnamnese(), AnamneseField, AnamneseForm(), CATEGORIES, Props, AnamnesePage()
 
 ### Community 50 - "Community 50"
-Cohesion: 0.29
-Nodes (6): DeleteGlobalExerciseButton(), Props, AdminBancoExerciciosPage(), Props, SearchParams, MUSCLE_GROUPS
+Cohesion: 0.40
+Nodes (4): getTenantExtraWorkouts(), CATEGORY_COLOR, CATEGORY_LABEL, TreinosExtrasPage()
 
 ### Community 51 - "Community 51"
 Cohesion: 0.22
@@ -416,8 +407,8 @@ Cohesion: 0.24
 Nodes (9): AnamneseField, AnamneseForm(), FieldInput(), FieldType, normalizeValue(), Props, AnamnesePage(), CATEGORIES (+1 more)
 
 ### Community 53 - "Community 53"
-Cohesion: 0.29
-Nodes (6): createStudent(), resendStudentInvite(), updateStudent(), GOAL_OPTIONS, Props, generateTempPassword()
+Cohesion: 0.20
+Nodes (14): createStudent(), resendStudentInvite(), updateStudent(), ABACATE_PRODUCT_IDS, ensureAbacateProduct(), startSubscriptionCheckout(), createClient_action(), deleteClient() (+6 more)
 
 ### Community 54 - "Community 54"
 Cohesion: 0.24
@@ -432,36 +423,24 @@ Cohesion: 0.24
 Nodes (5): updateAppVersion(), AppVersion, AppVersionForm(), Props, AppVersaoPage()
 
 ### Community 57 - "Community 57"
-Cohesion: 0.16
-Nodes (13): getExtraWorkout(), ExtraWorkoutBuilder(), CATEGORY_COLOR, CATEGORY_LABEL, Props, TreinoExtraPage(), CATEGORY_COLOR, CATEGORY_LABEL (+5 more)
+Cohesion: 0.25
+Nodes (8): CATEGORY_COLOR, CATEGORY_LABEL, COMBO_LABEL, ExerciseBlock(), groupItemsByCombo(), ItemBlock, Props, StudentExtraWorkoutPage()
 
 ### Community 58 - "Community 58"
 Cohesion: 0.22
 Nodes (6): maskPng, OUTPUT_DIR, PUBLIC_DIR, require, { Resvg }, SIZES
-
-### Community 59 - "Community 59"
-Cohesion: 0.29
-Nodes (7): ExerciseState, formatTime(), INTENSITY_OPTIONS, IntensityValue, Routine, WItem, WorkoutExecutionClient()
 
 ### Community 60 - "Community 60"
 Cohesion: 0.25
 Nodes (7): getStudentSessionsForPersonal(), INTENSITY_COLOR, INTENSITY_LABEL, Props, Session, SessionExercise, StudentHistoricoPage()
 
 ### Community 61 - "Community 61"
-Cohesion: 0.24
-Nodes (7): DeleteExerciseButton(), Props, BancoDeExerciciosPage(), Props, SearchParams, PaginationBar(), Props
+Cohesion: 0.19
+Nodes (11): AdminBancoExerciciosPage(), Props, SearchParams, BancoDeExerciciosPage(), Props, SearchParams, Props, VideoPreviewButton() (+3 more)
 
 ### Community 62 - "Community 62"
-Cohesion: 0.33
-Nodes (10): AdminEditExercicioPage(), Props, ExercicioPage(), Props, ExerciseBlock(), ExerciseBlock(), countLabel(), loadEmoji() (+2 more)
-
-### Community 63 - "Community 63"
-Cohesion: 0.22
-Nodes (8): COMBO_TYPES, COUNT_TYPES, CountType, LOAD_TYPES, LoadType, MUSCLE_GROUP_COLOR, MuscleGroup, VIDEO_MIME_TYPES
-
-### Community 64 - "Community 64"
-Cohesion: 0.29
-Nodes (6): GOAL_COLOR, Plan, StudentPlanAssignPanel(), AlunoTreinosPage(), GOAL_COLOR, Props
+Cohesion: 0.19
+Nodes (17): AdminEditExercicioPage(), Props, ExercicioPage(), Props, ExerciseForm(), COMBO_TYPES, COUNT_TYPES, countLabel() (+9 more)
 
 ### Community 65 - "Community 65"
 Cohesion: 0.39
@@ -483,10 +462,6 @@ Nodes (4): OUTPUT_DIR, require, { Resvg }, SPLASH_SIZES
 Cohesion: 0.11
 Nodes (18): 1. Código órfão após fechamento de função, 2. Exports duplicados, 3. Imports não usados, 4. database.ts — nunca appendar, 5. Funções inexistentes, Antes de qualquer alteração, melhoria, ajuste ou nova feature, Após salvar qualquer arquivo de código, Arquitetura (+10 more)
 
-### Community 70 - "Community 70"
-Cohesion: 0.29
-Nodes (6): ClientesPage(), PLAN_COLORS, PLAN_LABELS, STATUS_COLORS, STATUS_LABELS, ClientActions()
-
 ### Community 71 - "Community 71"
 Cohesion: 0.33
 Nodes (5): AdminPage(), CATEGORY_COLORS, CATEGORY_LABELS, AdminProfileCard(), AdminProfileCardProps
@@ -506,10 +481,6 @@ Nodes (4): encodedPassword, env, forwardedArgs, hasDbUrl
 ### Community 75 - "Community 75"
 Cohesion: 0.47
 Nodes (5): fmtBRL(), GrowthBadge(), GrowthBadgeProps, MetricasPage(), pct()
-
-### Community 76 - "Community 76"
-Cohesion: 0.40
-Nodes (4): PLAN_ACCENT, PlanosPage(), EditPlanDialog(), Plan
 
 ### Community 78 - "Community 78"
 Cohesion: 0.40
@@ -576,8 +547,8 @@ Cohesion: 0.40
 Nodes (4): { createClient }, env, fs, sb
 
 ### Community 94 - "Community 94"
-Cohesion: 0.22
-Nodes (6): currentStreak(), daysBetween(), FrequenciaPage(), BADGE_META, MONTH_NAMES, RankingDashboardPage()
+Cohesion: 0.40
+Nodes (3): BADGE_META, MONTH_NAMES, RankingDashboardPage()
 
 ### Community 95 - "Community 95"
 Cohesion: 0.11
@@ -596,8 +567,8 @@ Cohesion: 0.12
 Nodes (16): 1. Resumo Executivo, 2.1 Estrutura de Dados, 2.2 Endpoints Principais, 2. Visão Geral da API, 3.1 Módulo de Banco de Exercícios, 3.2 Módulo de Plano de Treino, 3.3 Experiência do Aluno (App), 3. Integração com o StrivePersonal (+8 more)
 
 ### Community 116 - "Community 116"
-Cohesion: 0.12
-Nodes (12): AgendaEvent, CreateAgendaEventInput, AgendaCalendarView(), EventCardProps, EventModalProps, MONTHS, Props, STATUS_CONFIG (+4 more)
+Cohesion: 0.08
+Nodes (26): AgendaEvent, AgendaEventOrigin, AgendaEventStatus, AgendaEventType, confirmAgendaEvent(), createAgendaEvent(), CreateAgendaEventInput, deleteAgendaEvent() (+18 more)
 
 ### Community 117 - "Community 117"
 Cohesion: 0.20
@@ -659,10 +630,6 @@ Nodes (5): 1. Visão Geral, 7.1 Tela do Aluno (`/student/ranking`), 7.2 Tela Adm
 Cohesion: 0.33
 Nodes (6): Banco de Dados, Tabela: `food_items`, Tabela: `meal_plan_foods`, Tabela: `meal_plan_meals`, Tabela: `meal_plans`, Tabela: `student_meal_plan_assignments`
 
-### Community 132 - "Community 132"
-Cohesion: 0.40
-Nodes (4): getStudentWorkoutHistory(), HistoricoPage(), INTENSITY_COLOR, INTENSITY_LABEL
-
 ### Community 133 - "Community 133"
 Cohesion: 0.33
 Nodes (5): Deploy, Edge Function: send-welcome-email, Payload esperado (POST), Resposta, Variáveis de ambiente necessárias no Supabase
@@ -683,10 +650,6 @@ Nodes (5): 6.1 Backend (Next.js), 6.2 Frontend (Next.js), 6.3 Banco de Dados, 6.
 Cohesion: 0.40
 Nodes (5): 9.1 Por que o app não envia pontos prontos?, 9.2 Detecção de Anomalias, 9.3 Idempotência, 9.4 RLS como camada adicional, 9. Segurança e Confiabilidade
 
-### Community 138 - "Community 138"
-Cohesion: 0.40
-Nodes (3): createStudentPresencialRequest(), AgendaRequestForm(), ViaCepResult
-
 ### Community 139 - "Community 139"
 Cohesion: 0.50
 Nodes (4): 4.1 Gatilho Principal, 4.2 Fluxo Detalhado de `processWorkoutGamification`, 4.3 Cálculo de Posição (sem stored rank), 4. Fluxo de Cálculo de Pontuação
@@ -699,29 +662,25 @@ Nodes (4): 5.1 Opções de Fechamento, 5.2 O que acontece ao fechar, 5.3 Reabert
 Cohesion: 0.50
 Nodes (4): Alimentos Globais vs. do Tenant, Cálculo de Macronutrientes, Lógica de Negócio, Status do Plano
 
-### Community 143 - "Community 143"
-Cohesion: 0.67
-Nodes (3): formatPhone(), StudentAgendaPage(), StudentAgendaCalendarView()
-
 ## Knowledge Gaps
-- **736 isolated node(s):** `extends`, `fs`, `{ createClient }`, `env`, `sb` (+731 more)
+- **737 isolated node(s):** `extends`, `fs`, `{ createClient }`, `env`, `sb` (+732 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **33 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **32 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `createClient()` connect `Auth & Tenant Context` to `Workout Items & Exercises`, `Student Profiles & Metrics`, `Meal Plans & Nutrition`, `Gamification & Rankings`, `Attendance & Progress`, `Branding & Config`, `Payments & Billing`, `Admin & Users`, `Community 138`, `Anamnese & Forms`, `Supabase Server Clients`, `TypeScript Types & DB Schema`, `Community 143`, `Community 16`, `Community 17`, `Community 18`, `Community 20`, `Community 23`, `Community 24`, `Community 25`, `Community 26`, `Community 27`, `Community 29`, `Community 30`, `Community 36`, `Community 37`, `Community 38`, `Community 39`, `Community 41`, `Community 44`, `Community 45`, `Community 46`, `Community 49`, `Community 50`, `Community 51`, `Community 52`, `Community 53`, `Community 55`, `Community 56`, `Community 57`, `Community 60`, `Community 61`, `Community 62`, `Community 64`, `Community 70`, `Community 71`, `Community 75`, `Community 76`, `Community 77`, `Community 78`, `Community 84`, `Community 85`, `Community 94`, `Community 116`, `Community 117`?**
+- **Why does `createClient()` connect `Auth & Tenant Context` to `Workout Items & Exercises`, `Student Profiles & Metrics`, `Meal Plans & Nutrition`, `Gamification & Rankings`, `Attendance & Progress`, `Branding & Config`, `Payments & Billing`, `Admin & Users`, `Anamnese & Forms`, `Supabase Server Clients`, `Next.js App Router`, `TypeScript Types & DB Schema`, `Community 16`, `Community 17`, `Community 18`, `Community 20`, `Community 23`, `Community 24`, `Community 25`, `Community 26`, `Community 29`, `Community 30`, `Community 36`, `Community 37`, `Community 38`, `Community 39`, `Community 41`, `Community 44`, `Community 45`, `Community 46`, `Community 49`, `Community 50`, `Community 51`, `Community 52`, `Community 53`, `Community 55`, `Community 56`, `Community 60`, `Community 61`, `Community 62`, `Community 71`, `Community 75`, `Community 78`, `Community 84`, `Community 85`, `Community 94`, `Community 116`, `Community 117`?**
   _High betweenness centrality (0.206) - this node is a cross-community bridge._
-- **Why does `getCtx()` connect `Payments & Billing` to `Student Profiles & Metrics`, `Auth & Tenant Context`, `Meal Plans & Nutrition`, `Attendance & Progress`, `Branding & Config`, `Community 40`, `Community 45`, `Community 54`, `Community 118`, `Community 29`?**
+- **Why does `getCtx()` connect `Payments & Billing` to `Student Profiles & Metrics`, `Auth & Tenant Context`, `Meal Plans & Nutrition`, `Attendance & Progress`, `Community 40`, `Community 45`, `Community 116`, `Community 54`, `Community 118`, `Community 29`?**
   _High betweenness centrality (0.024) - this node is a cross-community bridge._
-- **Why does `createAdminClient()` connect `Admin & Users` to `Auth & Tenant Context`, `Community 39`, `Community 41`, `TypeScript Types & DB Schema`, `Community 46`, `Community 16`, `Community 53`, `Community 54`, `Community 55`, `Community 24`?**
-  _High betweenness centrality (0.006) - this node is a cross-community bridge._
+- **Why does `createAdminClient()` connect `Community 53` to `Auth & Tenant Context`, `Community 39`, `Admin & Users`, `Community 41`, `TypeScript Types & DB Schema`, `Community 16`, `Community 54`, `Community 55`?**
+  _High betweenness centrality (0.007) - this node is a cross-community bridge._
 - **What connects `extends`, `fs`, `{ createClient }` to the rest of the system?**
-  _743 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _744 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Workout Items & Exercises` be split into smaller, more focused modules?**
-  _Cohesion score 0.10476190476190476 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.09956709956709957 - nodes in this community are weakly interconnected._
 - **Should `Student Profiles & Metrics` be split into smaller, more focused modules?**
   _Cohesion score 0.08292682926829269 - nodes in this community are weakly interconnected._
 - **Should `Auth & Tenant Context` be split into smaller, more focused modules?**
-  _Cohesion score 0.11092436974789915 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.1140819964349376 - nodes in this community are weakly interconnected._

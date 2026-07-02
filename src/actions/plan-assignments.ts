@@ -39,6 +39,7 @@ export async function assignPlanToStudents(planId: string, studentIds: string[])
 
   revalidatePath('/dashboard/treinos')
   revalidatePath('/dashboard/alunos')
+  revalidatePath('/student/treinos')
   return { success: true }
 }
 
@@ -70,6 +71,7 @@ export async function assignPlanToAllStudents(planId: string) {
 
   revalidatePath('/dashboard/treinos')
   revalidatePath('/dashboard/alunos')
+  revalidatePath('/student/treinos')
   return { success: true }
 }
 
@@ -89,6 +91,7 @@ export async function removePlanAssignment(planId: string, studentId: string) {
 
   revalidatePath('/dashboard/treinos')
   revalidatePath('/dashboard/alunos')
+  revalidatePath('/student/treinos')
   return { success: true }
 }
 

@@ -5,6 +5,7 @@ import { WorkoutBuilder } from '../../alunos/[id]/treinos/_components/WorkoutBui
 import Link from 'next/link'
 import { ArrowLeft, ClipboardList, Calendar, Target } from 'lucide-react'
 import { PlanAssignPanel } from './plan-assign-panel'
+import { PlanDeleteButton } from './plan-delete-button'
 
 type Props = { params: Promise<{ planId: string }> }
 
@@ -28,13 +29,20 @@ export default async function PlanoPage({ params }: Props) {
 
   return (
     <div className="p-6 md:p-8 space-y-6 max-w-2xl">
-      <Link
-        href="/dashboard/treinos"
-        className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
-      >
-        <ArrowLeft size={14} />
-        Planos de Treino
-      </Link>
+      <div className="flex items-center justify-between gap-4">
+        <Link
+          href="/dashboard/treinos"
+          className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
+        >
+          <ArrowLeft size={14} />
+          Planos de Treino
+        </Link>
+        <PlanDeleteButton
+          planId={planId}
+          planName={plan.name}
+          assignedCount={assignments.length}
+        />
+      </div>
 
       {/* Cabeçalho */}
       <div className="bg-surface border border-surface-border rounded-2xl p-5 space-y-3">

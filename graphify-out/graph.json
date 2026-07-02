@@ -1430,7 +1430,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_actions_extra_workout_items",
-      "community": 12,
+      "community": 7,
       "norm_label": "extra-workout-items.ts"
     },
     {
@@ -1440,7 +1440,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_actions_extra_workout_items_addextraworkoutitem",
-      "community": 12,
+      "community": 7,
       "norm_label": "addextraworkoutitem()"
     },
     {
@@ -1450,7 +1450,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "src_actions_extra_workout_items_updateextraworkoutitem",
-      "community": 12,
+      "community": 7,
       "norm_label": "updateextraworkoutitem()"
     },
     {
@@ -1460,7 +1460,7 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "src_actions_extra_workout_items_removeextraworkoutitem",
-      "community": 12,
+      "community": 7,
       "norm_label": "removeextraworkoutitem()"
     },
     {
@@ -1470,7 +1470,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "src_actions_extra_workout_items_groupextraworkoutitems",
-      "community": 12,
+      "community": 7,
       "norm_label": "groupextraworkoutitems()"
     },
     {
@@ -1480,7 +1480,7 @@
       "source_location": "L96",
       "_origin": "ast",
       "id": "src_actions_extra_workout_items_ungroupextraworkoutitems",
-      "community": 12,
+      "community": 7,
       "norm_label": "ungroupextraworkoutitems()"
     },
     {
@@ -1490,7 +1490,7 @@
       "source_location": "L106",
       "_origin": "ast",
       "id": "src_actions_extra_workout_items_reorderextraworkoutitems",
-      "community": 12,
+      "community": 7,
       "norm_label": "reorderextraworkoutitems()"
     },
     {
@@ -1520,7 +1520,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "src_actions_extra_workouts_extraworkoutitemdata",
-      "community": 12,
+      "community": 7,
       "norm_label": "extraworkoutitemdata"
     },
     {
@@ -1550,7 +1550,7 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "src_actions_extra_workouts_gettenantextraworkouts",
-      "community": 50,
+      "community": 12,
       "norm_label": "gettenantextraworkouts()"
     },
     {
@@ -1647,7 +1647,7 @@
       "label": "assignPlanToAllStudents()",
       "file_type": "code",
       "source_file": "src/actions/plan-assignments.ts",
-      "source_location": "L46",
+      "source_location": "L47",
       "_origin": "ast",
       "id": "src_actions_plan_assignments_assignplantoallstudents",
       "community": 23,
@@ -1657,7 +1657,7 @@
       "label": "removePlanAssignment()",
       "file_type": "code",
       "source_file": "src/actions/plan-assignments.ts",
-      "source_location": "L77",
+      "source_location": "L79",
       "_origin": "ast",
       "id": "src_actions_plan_assignments_removeplanassignment",
       "community": 23,
@@ -1667,7 +1667,7 @@
       "label": "getAssignmentsForPlan()",
       "file_type": "code",
       "source_file": "src/actions/plan-assignments.ts",
-      "source_location": "L96",
+      "source_location": "L99",
       "_origin": "ast",
       "id": "src_actions_plan_assignments_getassignmentsforplan",
       "community": 23,
@@ -1677,7 +1677,7 @@
       "label": "getActiveStudentsForTenant()",
       "file_type": "code",
       "source_file": "src/actions/plan-assignments.ts",
-      "source_location": "L111",
+      "source_location": "L114",
       "_origin": "ast",
       "id": "src_actions_plan_assignments_getactivestudentsfortenant",
       "community": 23,
@@ -1687,7 +1687,7 @@
       "label": "getUnassignedPlansForStudent()",
       "file_type": "code",
       "source_file": "src/actions/plan-assignments.ts",
-      "source_location": "L126",
+      "source_location": "L129",
       "_origin": "ast",
       "id": "src_actions_plan_assignments_getunassignedplansforstudent",
       "community": 23,
@@ -1830,7 +1830,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_actions_workout_plans",
-      "community": 2,
+      "community": 37,
       "norm_label": "workout-plans.ts"
     },
     {
@@ -1840,7 +1840,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_actions_workout_plans_workoutplanwithroutines",
-      "community": 31,
+      "community": 38,
       "norm_label": "workoutplanwithroutines"
     },
     {
@@ -1850,7 +1850,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "src_actions_workout_plans_getworkoutplan",
-      "community": 23,
+      "community": 38,
       "norm_label": "getworkoutplan()"
     },
     {
@@ -1860,7 +1860,7 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "src_actions_workout_plans_getstudentworkoutplans",
-      "community": 2,
+      "community": 37,
       "norm_label": "getstudentworkoutplans()"
     },
     {
@@ -1870,7 +1870,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "src_actions_workout_plans_createworkoutplan",
-      "community": 2,
+      "community": 37,
       "norm_label": "createworkoutplan()"
     },
     {
@@ -1880,7 +1880,7 @@
       "source_location": "L169",
       "_origin": "ast",
       "id": "src_actions_workout_plans_updateworkoutplan",
-      "community": 2,
+      "community": 37,
       "norm_label": "updateworkoutplan()"
     },
     {
@@ -1900,7 +1900,7 @@
       "source_location": "L204",
       "_origin": "ast",
       "id": "src_actions_workout_plans_deactivateworkoutplan",
-      "community": 2,
+      "community": 37,
       "norm_label": "deactivateworkoutplan()"
     },
     {
@@ -1910,7 +1910,7 @@
       "source_location": "L218",
       "_origin": "ast",
       "id": "src_actions_workout_plans_deleteworkoutplan",
-      "community": 2,
+      "community": 23,
       "norm_label": "deleteworkoutplan()"
     },
     {
@@ -2030,7 +2030,7 @@
       "source_location": "L133",
       "_origin": "ast",
       "id": "src_actions_workout_sessions_getstudentsessionsforpersonal",
-      "community": 60,
+      "community": 38,
       "norm_label": "getstudentsessionsforpersonal()"
     },
     {
@@ -2200,7 +2200,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_admin_admin_banco_de_exercicios_delete_button",
-      "community": 39,
+      "community": 62,
       "norm_label": "delete-button.tsx"
     },
     {
@@ -2210,7 +2210,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_app_admin_admin_banco_de_exercicios_delete_button_props",
-      "community": 39,
+      "community": 62,
       "norm_label": "props"
     },
     {
@@ -2220,7 +2220,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_app_admin_admin_banco_de_exercicios_delete_button_deleteglobalexercisebutton",
-      "community": 39,
+      "community": 62,
       "norm_label": "deleteglobalexercisebutton()"
     },
     {
@@ -2230,7 +2230,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_admin_admin_banco_de_exercicios_novo_page",
-      "community": 39,
+      "community": 62,
       "norm_label": "page.tsx"
     },
     {
@@ -2240,7 +2240,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_admin_admin_banco_de_exercicios_novo_page_adminnovoexerciciopage",
-      "community": 39,
+      "community": 62,
       "norm_label": "adminnovoexerciciopage()"
     },
     {
@@ -2250,7 +2250,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_admin_admin_banco_de_exercicios_page",
-      "community": 61,
+      "community": 62,
       "norm_label": "page.tsx"
     },
     {
@@ -2260,7 +2260,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_app_admin_admin_banco_de_exercicios_page_searchparams",
-      "community": 61,
+      "community": 62,
       "norm_label": "searchparams"
     },
     {
@@ -2270,7 +2270,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_app_admin_admin_banco_de_exercicios_page_props",
-      "community": 61,
+      "community": 62,
       "norm_label": "props"
     },
     {
@@ -2280,7 +2280,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_app_admin_admin_banco_de_exercicios_page_adminbancoexerciciospage",
-      "community": 61,
+      "community": 62,
       "norm_label": "adminbancoexerciciospage()"
     },
     {
@@ -2820,7 +2820,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_admin_admin_planos_page",
-      "community": 16,
+      "community": 31,
       "norm_label": "page.tsx"
     },
     {
@@ -2830,7 +2830,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_admin_admin_planos_page_plan_accent",
-      "community": 16,
+      "community": 31,
       "norm_label": "plan_accent"
     },
     {
@@ -2840,7 +2840,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_app_admin_admin_planos_page_planospage",
-      "community": 16,
+      "community": 31,
       "norm_label": "planospage()"
     },
     {
@@ -3050,7 +3050,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_auth_alterar_senha_page",
-      "community": 0,
+      "community": 117,
       "norm_label": "page.tsx"
     },
     {
@@ -3060,7 +3060,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_app_auth_alterar_senha_page_alterarsenhapage",
-      "community": 0,
+      "community": 117,
       "norm_label": "alterarsenhapage()"
     },
     {
@@ -3690,7 +3690,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_alunos_id_historico_page",
-      "community": 60,
+      "community": 38,
       "norm_label": "page.tsx"
     },
     {
@@ -3700,7 +3700,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_alunos_id_historico_page_intensity_label",
-      "community": 60,
+      "community": 38,
       "norm_label": "intensity_label"
     },
     {
@@ -3710,7 +3710,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_alunos_id_historico_page_intensity_color",
-      "community": 60,
+      "community": 38,
       "norm_label": "intensity_color"
     },
     {
@@ -3720,7 +3720,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_alunos_id_historico_page_formatduration",
-      "community": 60,
+      "community": 38,
       "norm_label": "formatduration()"
     },
     {
@@ -3730,7 +3730,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_alunos_id_historico_page_sessionexercise",
-      "community": 60,
+      "community": 38,
       "norm_label": "sessionexercise"
     },
     {
@@ -3740,7 +3740,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_alunos_id_historico_page_session",
-      "community": 60,
+      "community": 38,
       "norm_label": "session"
     },
     {
@@ -3750,7 +3750,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_alunos_id_historico_page_props",
-      "community": 60,
+      "community": 38,
       "norm_label": "props"
     },
     {
@@ -3760,7 +3760,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_alunos_id_historico_page_studenthistoricopage",
-      "community": 60,
+      "community": 38,
       "norm_label": "studenthistoricopage()"
     },
     {
@@ -4070,7 +4070,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_alunos_id_treinos_extras_components_extraworkoutbuilder",
-      "community": 12,
+      "community": 7,
       "norm_label": "extraworkoutbuilder.tsx"
     },
     {
@@ -4080,7 +4080,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_alunos_id_treinos_extras_components_extraworkoutbuilder_exercise",
-      "community": 12,
+      "community": 7,
       "norm_label": "exercise"
     },
     {
@@ -4090,7 +4090,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_alunos_id_treinos_extras_components_extraworkoutbuilder_props",
-      "community": 12,
+      "community": 7,
       "norm_label": "props"
     },
     {
@@ -4100,7 +4100,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_alunos_id_treinos_extras_components_extraworkoutbuilder_toworkoutitemdata",
-      "community": 12,
+      "community": 7,
       "norm_label": "toworkoutitemdata()"
     },
     {
@@ -4110,7 +4110,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_alunos_id_treinos_extras_components_extraworkoutbuilder_combo_label",
-      "community": 12,
+      "community": 7,
       "norm_label": "combo_label"
     },
     {
@@ -4160,7 +4160,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_alunos_id_treinos_planid_page",
-      "community": 23,
+      "community": 38,
       "norm_label": "page.tsx"
     },
     {
@@ -4170,7 +4170,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_alunos_id_treinos_planid_page_props",
-      "community": 23,
+      "community": 38,
       "norm_label": "props"
     },
     {
@@ -4180,7 +4180,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_alunos_id_treinos_planid_page_planotreinopage",
-      "community": 23,
+      "community": 38,
       "norm_label": "planotreinopage()"
     },
     {
@@ -4410,7 +4410,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_alunos_id_treinos_components_workoutbuilder_workoutbuilder",
-      "community": 23,
+      "community": 38,
       "norm_label": "workoutbuilder()"
     },
     {
@@ -4480,7 +4480,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_alunos_id_treinos_novo_page",
-      "community": 2,
+      "community": 37,
       "norm_label": "page.tsx"
     },
     {
@@ -4490,7 +4490,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_alunos_id_treinos_novo_page_props",
-      "community": 2,
+      "community": 37,
       "norm_label": "props"
     },
     {
@@ -4500,7 +4500,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_alunos_id_treinos_novo_page_novoplanopage",
-      "community": 2,
+      "community": 37,
       "norm_label": "novoplanopage()"
     },
     {
@@ -4890,7 +4890,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_banco_de_exercicios_delete_button",
-      "community": 39,
+      "community": 62,
       "norm_label": "delete-button.tsx"
     },
     {
@@ -4900,7 +4900,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_banco_de_exercicios_delete_button_props",
-      "community": 39,
+      "community": 62,
       "norm_label": "props"
     },
     {
@@ -4910,7 +4910,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_banco_de_exercicios_delete_button_deleteexercisebutton",
-      "community": 39,
+      "community": 62,
       "norm_label": "deleteexercisebutton()"
     },
     {
@@ -4920,7 +4920,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_banco_de_exercicios_novo_page",
-      "community": 39,
+      "community": 2,
       "norm_label": "page.tsx"
     },
     {
@@ -4930,7 +4930,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_banco_de_exercicios_novo_page_novoexerciciopage",
-      "community": 39,
+      "community": 2,
       "norm_label": "novoexerciciopage()"
     },
     {
@@ -4940,7 +4940,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_banco_de_exercicios_page",
-      "community": 61,
+      "community": 62,
       "norm_label": "page.tsx"
     },
     {
@@ -4950,7 +4950,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_banco_de_exercicios_page_searchparams",
-      "community": 61,
+      "community": 62,
       "norm_label": "searchparams"
     },
     {
@@ -4960,7 +4960,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_banco_de_exercicios_page_props",
-      "community": 61,
+      "community": 62,
       "norm_label": "props"
     },
     {
@@ -4970,7 +4970,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_banco_de_exercicios_page_bancodeexerciciospage",
-      "community": 61,
+      "community": 62,
       "norm_label": "bancodeexerciciospage()"
     },
     {
@@ -5440,7 +5440,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_planos_page",
-      "community": 78,
+      "community": 16,
       "norm_label": "page.tsx"
     },
     {
@@ -5450,7 +5450,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_planos_page_plan_style",
-      "community": 78,
+      "community": 16,
       "norm_label": "plan_style"
     },
     {
@@ -5460,7 +5460,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_planos_page_planosdashboardpage",
-      "community": 78,
+      "community": 16,
       "norm_label": "planosdashboardpage()"
     },
     {
@@ -5490,7 +5490,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_ranking_page",
-      "community": 94,
+      "community": 2,
       "norm_label": "page.tsx"
     },
     {
@@ -5500,7 +5500,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_ranking_page_month_names",
-      "community": 94,
+      "community": 2,
       "norm_label": "month_names"
     },
     {
@@ -5510,7 +5510,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_ranking_page_badge_meta",
-      "community": 94,
+      "community": 2,
       "norm_label": "badge_meta"
     },
     {
@@ -5520,7 +5520,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_ranking_page_medalicon",
-      "community": 94,
+      "community": 2,
       "norm_label": "medalicon()"
     },
     {
@@ -5530,7 +5530,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_ranking_page_rankingdashboardpage",
-      "community": 94,
+      "community": 2,
       "norm_label": "rankingdashboardpage()"
     },
     {
@@ -5540,7 +5540,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_treinos_extras_page",
-      "community": 50,
+      "community": 12,
       "norm_label": "page.tsx"
     },
     {
@@ -5550,7 +5550,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_treinos_extras_page_category_label",
-      "community": 50,
+      "community": 12,
       "norm_label": "category_label"
     },
     {
@@ -5560,7 +5560,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_treinos_extras_page_category_color",
-      "community": 50,
+      "community": 12,
       "norm_label": "category_color"
     },
     {
@@ -5570,7 +5570,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_treinos_extras_page_treinosextraspage",
-      "community": 50,
+      "community": 12,
       "norm_label": "treinosextraspage()"
     },
     {
@@ -5580,7 +5580,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_treinos_extras_page_workoutcard",
-      "community": 50,
+      "community": 12,
       "norm_label": "workoutcard()"
     },
     {
@@ -5597,7 +5597,7 @@
       "label": "Props",
       "file_type": "code",
       "source_file": "src/app/(dashboard)/dashboard/treinos/[planId]/page.tsx",
-      "source_location": "L9",
+      "source_location": "L10",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_treinos_planid_page_props",
       "community": 23,
@@ -5607,7 +5607,7 @@
       "label": "GOAL_COLOR",
       "file_type": "code",
       "source_file": "src/app/(dashboard)/dashboard/treinos/[planId]/page.tsx",
-      "source_location": "L11",
+      "source_location": "L12",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_treinos_planid_page_goal_color",
       "community": 23,
@@ -5617,7 +5617,7 @@
       "label": "PlanoPage()",
       "file_type": "code",
       "source_file": "src/app/(dashboard)/dashboard/treinos/[planId]/page.tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_treinos_planid_page_planopage",
       "community": 23,
@@ -5674,13 +5674,43 @@
       "norm_label": "planassignpanel()"
     },
     {
+      "label": "plan-delete-button.tsx",
+      "file_type": "code",
+      "source_file": "src/app/(dashboard)/dashboard/treinos/[planId]/plan-delete-button.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_app_dashboard_dashboard_treinos_planid_plan_delete_button",
+      "community": 23,
+      "norm_label": "plan-delete-button.tsx"
+    },
+    {
+      "label": "Props",
+      "file_type": "code",
+      "source_file": "src/app/(dashboard)/dashboard/treinos/[planId]/plan-delete-button.tsx",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "src_app_dashboard_dashboard_treinos_planid_plan_delete_button_props",
+      "community": 23,
+      "norm_label": "props"
+    },
+    {
+      "label": "PlanDeleteButton()",
+      "file_type": "code",
+      "source_file": "src/app/(dashboard)/dashboard/treinos/[planId]/plan-delete-button.tsx",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "src_app_dashboard_dashboard_treinos_planid_plan_delete_button_plandeletebutton",
+      "community": 23,
+      "norm_label": "plandeletebutton()"
+    },
+    {
       "label": "page.tsx",
       "file_type": "code",
       "source_file": "src/app/(dashboard)/dashboard/treinos/novo/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_treinos_novo_page",
-      "community": 2,
+      "community": 37,
       "norm_label": "page.tsx"
     },
     {
@@ -5690,7 +5720,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_dashboard_dashboard_treinos_novo_page_novoplanopage",
-      "community": 2,
+      "community": 37,
       "norm_label": "novoplanopage()"
     },
     {
@@ -5730,7 +5760,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_dashboard_layout",
-      "community": 7,
+      "community": 27,
       "norm_label": "layout.tsx"
     },
     {
@@ -5740,7 +5770,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_app_dashboard_layout_dashboardlayout",
-      "community": 7,
+      "community": 27,
       "norm_label": "dashboardlayout()"
     },
     {
@@ -5750,7 +5780,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_marketing_privacidade_page",
-      "community": 0,
+      "community": 50,
       "norm_label": "page.tsx"
     },
     {
@@ -5760,7 +5790,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_marketing_privacidade_page_metadata",
-      "community": 0,
+      "community": 50,
       "norm_label": "metadata"
     },
     {
@@ -5770,7 +5800,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_app_marketing_privacidade_page_privacidadepage",
-      "community": 0,
+      "community": 50,
       "norm_label": "privacidadepage()"
     },
     {
@@ -5780,7 +5810,7 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "src_app_marketing_privacidade_page_section",
-      "community": 0,
+      "community": 50,
       "norm_label": "section()"
     },
     {
@@ -5830,7 +5860,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_student_layout",
-      "community": 18,
+      "community": 39,
       "norm_label": "layout.tsx"
     },
     {
@@ -5840,7 +5870,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_app_student_layout_studentlayout",
-      "community": 18,
+      "community": 39,
       "norm_label": "studentlayout()"
     },
     {
@@ -6860,7 +6890,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_extras_extraid_page",
-      "community": 57,
+      "community": 62,
       "norm_label": "page.tsx"
     },
     {
@@ -6870,7 +6900,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_extras_extraid_page_props",
-      "community": 57,
+      "community": 62,
       "norm_label": "props"
     },
     {
@@ -6880,7 +6910,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_extras_extraid_page_itemblock",
-      "community": 57,
+      "community": 62,
       "norm_label": "itemblock"
     },
     {
@@ -6890,7 +6920,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_extras_extraid_page_groupitemsbycombo",
-      "community": 57,
+      "community": 62,
       "norm_label": "groupitemsbycombo()"
     },
     {
@@ -6900,7 +6930,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_extras_extraid_page_combo_label",
-      "community": 57,
+      "community": 62,
       "norm_label": "combo_label"
     },
     {
@@ -6910,7 +6940,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_extras_extraid_page_category_label",
-      "community": 57,
+      "community": 62,
       "norm_label": "category_label"
     },
     {
@@ -6920,7 +6950,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_extras_extraid_page_category_color",
-      "community": 57,
+      "community": 62,
       "norm_label": "category_color"
     },
     {
@@ -6930,7 +6960,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_extras_extraid_page_exerciseblock",
-      "community": 57,
+      "community": 62,
       "norm_label": "exerciseblock()"
     },
     {
@@ -6940,7 +6970,7 @@
       "source_location": "L107",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_extras_extraid_page_studentextraworkoutpage",
-      "community": 57,
+      "community": 62,
       "norm_label": "studentextraworkoutpage()"
     },
     {
@@ -7010,7 +7040,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_planid_executar_routineid_page",
-      "community": 23,
+      "community": 38,
       "norm_label": "page.tsx"
     },
     {
@@ -7020,7 +7050,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_planid_executar_routineid_page_props",
-      "community": 23,
+      "community": 38,
       "norm_label": "props"
     },
     {
@@ -7030,7 +7060,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_planid_executar_routineid_page_workoutexecutionpage",
-      "community": 23,
+      "community": 38,
       "norm_label": "workoutexecutionpage()"
     },
     {
@@ -7040,7 +7070,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_planid_executar_routineid_workout_execution_client",
-      "community": 31,
+      "community": 38,
       "norm_label": "workout-execution-client.tsx"
     },
     {
@@ -7050,7 +7080,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_planid_executar_routineid_workout_execution_client_routine",
-      "community": 31,
+      "community": 38,
       "norm_label": "routine"
     },
     {
@@ -7060,7 +7090,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_planid_executar_routineid_workout_execution_client_witem",
-      "community": 31,
+      "community": 38,
       "norm_label": "witem"
     },
     {
@@ -7070,7 +7100,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_planid_executar_routineid_workout_execution_client_intensity_options",
-      "community": 31,
+      "community": 38,
       "norm_label": "intensity_options"
     },
     {
@@ -7080,7 +7110,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_planid_executar_routineid_workout_execution_client_intensityvalue",
-      "community": 31,
+      "community": 38,
       "norm_label": "intensityvalue"
     },
     {
@@ -7090,7 +7120,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_planid_executar_routineid_workout_execution_client_exercisestate",
-      "community": 31,
+      "community": 38,
       "norm_label": "exercisestate"
     },
     {
@@ -7100,7 +7130,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_planid_executar_routineid_workout_execution_client_formattime",
-      "community": 31,
+      "community": 38,
       "norm_label": "formattime()"
     },
     {
@@ -7110,7 +7140,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_planid_executar_routineid_workout_execution_client_workoutexecutionclient",
-      "community": 31,
+      "community": 38,
       "norm_label": "workoutexecutionclient()"
     },
     {
@@ -7167,7 +7197,7 @@
       "label": "StudentPlanPage()",
       "file_type": "code",
       "source_file": "src/app/(student)/student/treinos/[planId]/page.tsx",
-      "source_location": "L9",
+      "source_location": "L11",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_planid_page_studentplanpage",
       "community": 38,
@@ -7180,7 +7210,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_planid_plan_view_client",
-      "community": 31,
+      "community": 62,
       "norm_label": "plan-view-client.tsx"
     },
     {
@@ -7190,7 +7220,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_planid_plan_view_client_workoutitem",
-      "community": 31,
+      "community": 62,
       "norm_label": "workoutitem"
     },
     {
@@ -7200,7 +7230,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_planid_plan_view_client_itemblock",
-      "community": 31,
+      "community": 62,
       "norm_label": "itemblock"
     },
     {
@@ -7210,7 +7240,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_planid_plan_view_client_day_labels",
-      "community": 31,
+      "community": 62,
       "norm_label": "day_labels"
     },
     {
@@ -7220,7 +7250,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_planid_plan_view_client_combo_label",
-      "community": 31,
+      "community": 62,
       "norm_label": "combo_label"
     },
     {
@@ -7230,7 +7260,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_planid_plan_view_client_goal_color",
-      "community": 31,
+      "community": 62,
       "norm_label": "goal_color"
     },
     {
@@ -7240,7 +7270,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_planid_plan_view_client_groupitemsbycombo",
-      "community": 31,
+      "community": 62,
       "norm_label": "groupitemsbycombo()"
     },
     {
@@ -7250,7 +7280,7 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_planid_plan_view_client_videothumbnail",
-      "community": 31,
+      "community": 62,
       "norm_label": "videothumbnail()"
     },
     {
@@ -7260,7 +7290,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_planid_plan_view_client_exerciseblock",
-      "community": 31,
+      "community": 62,
       "norm_label": "exerciseblock()"
     },
     {
@@ -7287,7 +7317,7 @@
       "label": "StudentTreinosPage()",
       "file_type": "code",
       "source_file": "src/app/(student)/student/treinos/page.tsx",
-      "source_location": "L5",
+      "source_location": "L7",
       "_origin": "ast",
       "id": "src_app_student_student_treinos_page_studenttreinospage",
       "community": 2,
@@ -7630,7 +7660,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "src_app_actions_auth_signout",
-      "community": 37,
+      "community": 25,
       "norm_label": "signout()"
     },
     {
@@ -7640,7 +7670,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_actions_billing",
-      "community": 53,
+      "community": 16,
       "norm_label": "billing.ts"
     },
     {
@@ -7650,7 +7680,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_app_actions_billing_abacate_product_ids",
-      "community": 53,
+      "community": 16,
       "norm_label": "abacate_product_ids"
     },
     {
@@ -7660,7 +7690,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_app_actions_billing_ensureabacateproduct",
-      "community": 53,
+      "community": 16,
       "norm_label": "ensureabacateproduct()"
     },
     {
@@ -7670,7 +7700,7 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "src_app_actions_billing_startsubscriptioncheckout",
-      "community": 53,
+      "community": 16,
       "norm_label": "startsubscriptioncheckout()"
     },
     {
@@ -7720,7 +7750,7 @@
       "source_location": "L157",
       "_origin": "ast",
       "id": "src_app_actions_clients_suspendclient",
-      "community": 24,
+      "community": 53,
       "norm_label": "suspendclient()"
     },
     {
@@ -7730,7 +7760,7 @@
       "source_location": "L180",
       "_origin": "ast",
       "id": "src_app_actions_clients_activateclient",
-      "community": 24,
+      "community": 53,
       "norm_label": "activateclient()"
     },
     {
@@ -7770,7 +7800,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_actions_exercises",
-      "community": 39,
+      "community": 62,
       "norm_label": "exercises.ts"
     },
     {
@@ -7780,7 +7810,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_app_actions_exercises_createexercise",
-      "community": 39,
+      "community": 62,
       "norm_label": "createexercise()"
     },
     {
@@ -7790,7 +7820,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "src_app_actions_exercises_updateexercise",
-      "community": 39,
+      "community": 62,
       "norm_label": "updateexercise()"
     },
     {
@@ -7800,7 +7830,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "src_app_actions_exercises_deleteexercise",
-      "community": 39,
+      "community": 62,
       "norm_label": "deleteexercise()"
     },
     {
@@ -7810,7 +7840,7 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "src_app_actions_exercises_createglobalexercise",
-      "community": 39,
+      "community": 62,
       "norm_label": "createglobalexercise()"
     },
     {
@@ -7820,7 +7850,7 @@
       "source_location": "L149",
       "_origin": "ast",
       "id": "src_app_actions_exercises_updateglobalexercise",
-      "community": 39,
+      "community": 62,
       "norm_label": "updateglobalexercise()"
     },
     {
@@ -7830,7 +7860,7 @@
       "source_location": "L188",
       "_origin": "ast",
       "id": "src_app_actions_exercises_deleteglobalexercise",
-      "community": 39,
+      "community": 62,
       "norm_label": "deleteglobalexercise()"
     },
     {
@@ -8360,7 +8390,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_app_actions_modules_createmodule",
-      "community": 14,
+      "community": 46,
       "norm_label": "createmodule()"
     },
     {
@@ -8380,7 +8410,7 @@
       "source_location": "L87",
       "_origin": "ast",
       "id": "src_app_actions_modules_togglemoduleavailability",
-      "community": 14,
+      "community": 46,
       "norm_label": "togglemoduleavailability()"
     },
     {
@@ -8420,7 +8450,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_actions_plans",
-      "community": 16,
+      "community": 31,
       "norm_label": "plans.ts"
     },
     {
@@ -8430,7 +8460,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_app_actions_plans_updateplan",
-      "community": 16,
+      "community": 31,
       "norm_label": "updateplan()"
     },
     {
@@ -8440,7 +8470,7 @@
       "source_location": "L85",
       "_origin": "ast",
       "id": "src_app_actions_plans_toggleplanactive",
-      "community": 16,
+      "community": 31,
       "norm_label": "toggleplanactive()"
     },
     {
@@ -8930,7 +8960,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_admin_client_actions",
-      "community": 24,
+      "community": 53,
       "norm_label": "client-actions.tsx"
     },
     {
@@ -8940,7 +8970,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_components_admin_client_actions_clientactionsprops",
-      "community": 24,
+      "community": 53,
       "norm_label": "clientactionsprops"
     },
     {
@@ -8960,7 +8990,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_admin_client_detail_actions",
-      "community": 24,
+      "community": 53,
       "norm_label": "client-detail-actions.tsx"
     },
     {
@@ -8970,7 +9000,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_components_admin_client_detail_actions_props",
-      "community": 24,
+      "community": 53,
       "norm_label": "props"
     },
     {
@@ -8980,7 +9010,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "src_components_admin_client_detail_actions_dialog",
-      "community": 24,
+      "community": 53,
       "norm_label": "dialog"
     },
     {
@@ -8990,7 +9020,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "src_components_admin_client_detail_actions_clientdetailactions",
-      "community": 24,
+      "community": 53,
       "norm_label": "clientdetailactions()"
     },
     {
@@ -9140,7 +9170,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_admin_edit_plan_dialog",
-      "community": 16,
+      "community": 31,
       "norm_label": "edit-plan-dialog.tsx"
     },
     {
@@ -9150,7 +9180,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_components_admin_edit_plan_dialog_plan",
-      "community": 16,
+      "community": 31,
       "norm_label": "plan"
     },
     {
@@ -9160,7 +9190,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_components_admin_edit_plan_dialog_editplandialog",
-      "community": 16,
+      "community": 31,
       "norm_label": "editplandialog()"
     },
     {
@@ -9440,7 +9470,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_agenda_pendingagendabanner",
-      "community": 7,
+      "community": 27,
       "norm_label": "pendingagendabanner.tsx"
     },
     {
@@ -9450,7 +9480,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_components_agenda_pendingagendabanner_props",
-      "community": 7,
+      "community": 27,
       "norm_label": "props"
     },
     {
@@ -9460,7 +9490,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_components_agenda_pendingagendabanner_pendingagendabanner",
-      "community": 7,
+      "community": 27,
       "norm_label": "pendingagendabanner()"
     },
     {
@@ -9470,7 +9500,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_agenda_studentagendabanner",
-      "community": 18,
+      "community": 39,
       "norm_label": "studentagendabanner.tsx"
     },
     {
@@ -9480,7 +9510,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_components_agenda_studentagendabanner_props",
-      "community": 18,
+      "community": 39,
       "norm_label": "props"
     },
     {
@@ -9490,7 +9520,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "src_components_agenda_studentagendabanner_markagendanoticeasseen",
-      "community": 18,
+      "community": 39,
       "norm_label": "markagendanoticeasseen()"
     },
     {
@@ -9500,7 +9530,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "src_components_agenda_studentagendabanner_studentagendabanner",
-      "community": 18,
+      "community": 39,
       "norm_label": "studentagendabanner()"
     },
     {
@@ -9550,7 +9580,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ai_maxonboardingmodal",
-      "community": 7,
+      "community": 27,
       "norm_label": "maxonboardingmodal.tsx"
     },
     {
@@ -9560,7 +9590,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_components_ai_maxonboardingmodal_steps",
-      "community": 7,
+      "community": 27,
       "norm_label": "steps"
     },
     {
@@ -9570,7 +9600,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "src_components_ai_maxonboardingmodal_props",
-      "community": 7,
+      "community": 27,
       "norm_label": "props"
     },
     {
@@ -9580,7 +9610,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "src_components_ai_maxonboardingmodal_maxonboardingmodal",
-      "community": 7,
+      "community": 27,
       "norm_label": "maxonboardingmodal()"
     },
     {
@@ -9710,7 +9740,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_dashboard_plan_upgrade_button",
-      "community": 78,
+      "community": 16,
       "norm_label": "plan-upgrade-button.tsx"
     },
     {
@@ -9720,7 +9750,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_components_dashboard_plan_upgrade_button_props",
-      "community": 78,
+      "community": 16,
       "norm_label": "props"
     },
     {
@@ -9730,7 +9760,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_components_dashboard_plan_upgrade_button_planupgradebutton",
-      "community": 78,
+      "community": 16,
       "norm_label": "planupgradebutton()"
     },
     {
@@ -9740,7 +9770,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_exercises_videopreviewbutton",
-      "community": 61,
+      "community": 62,
       "norm_label": "videopreviewbutton.tsx"
     },
     {
@@ -9750,7 +9780,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_components_exercises_videopreviewbutton_props",
-      "community": 61,
+      "community": 62,
       "norm_label": "props"
     },
     {
@@ -9760,7 +9790,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_components_exercises_videopreviewbutton_videopreviewbutton",
-      "community": 61,
+      "community": 62,
       "norm_label": "videopreviewbutton()"
     },
     {
@@ -9770,7 +9800,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_exercises_exercise_form",
-      "community": 39,
+      "community": 62,
       "norm_label": "exercise-form.tsx"
     },
     {
@@ -9780,7 +9810,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_components_exercises_exercise_form_exercise",
-      "community": 39,
+      "community": 62,
       "norm_label": "exercise"
     },
     {
@@ -9790,7 +9820,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "src_components_exercises_exercise_form_props",
-      "community": 39,
+      "community": 62,
       "norm_label": "props"
     },
     {
@@ -9820,7 +9850,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_components_layout_admin_mobile_nav_adminmobilenavprops",
-      "community": 37,
+      "community": 25,
       "norm_label": "adminmobilenavprops"
     },
     {
@@ -10000,7 +10030,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_layout_sidebar_nav",
-      "community": 25,
+      "community": 18,
       "norm_label": "sidebar-nav.tsx"
     },
     {
@@ -10010,7 +10040,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_components_layout_sidebar_nav_navitem",
-      "community": 25,
+      "community": 18,
       "norm_label": "navitem"
     },
     {
@@ -10020,7 +10050,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_components_layout_sidebar_nav_sidebarnavprops",
-      "community": 25,
+      "community": 18,
       "norm_label": "sidebarnavprops"
     },
     {
@@ -10030,7 +10060,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_components_layout_sidebar_nav_sidebarnav",
-      "community": 25,
+      "community": 18,
       "norm_label": "sidebarnav()"
     },
     {
@@ -10040,7 +10070,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_layout_student_bottom_nav",
-      "community": 25,
+      "community": 18,
       "norm_label": "student-bottom-nav.tsx"
     },
     {
@@ -10050,7 +10080,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_components_layout_student_bottom_nav_bottom_items",
-      "community": 25,
+      "community": 18,
       "norm_label": "bottom_items"
     },
     {
@@ -10060,7 +10090,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_components_layout_student_bottom_nav_studentbottomnav",
-      "community": 25,
+      "community": 18,
       "norm_label": "studentbottomnav()"
     },
     {
@@ -10080,7 +10110,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_components_layout_student_mobile_nav_studentmobilenavprops",
-      "community": 37,
+      "community": 25,
       "norm_label": "studentmobilenavprops"
     },
     {
@@ -10170,7 +10200,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_layout_tenant_logo_header",
-      "community": 18,
+      "community": 39,
       "norm_label": "tenant-logo-header.tsx"
     },
     {
@@ -10180,7 +10210,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "src_components_layout_tenant_logo_header_props",
-      "community": 18,
+      "community": 39,
       "norm_label": "props"
     },
     {
@@ -10190,7 +10220,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_components_layout_tenant_logo_header_tenantlogoheader",
-      "community": 18,
+      "community": 39,
       "norm_label": "tenantlogoheader()"
     },
     {
@@ -10200,7 +10230,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_layout_user_menu",
-      "community": 37,
+      "community": 25,
       "norm_label": "user-menu.tsx"
     },
     {
@@ -10210,7 +10240,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_components_layout_user_menu_role_labels",
-      "community": 37,
+      "community": 25,
       "norm_label": "role_labels"
     },
     {
@@ -10220,7 +10250,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_components_layout_user_menu_usermenuprops",
-      "community": 37,
+      "community": 25,
       "norm_label": "usermenuprops"
     },
     {
@@ -10240,7 +10270,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_logo",
-      "community": 0,
+      "community": 117,
       "norm_label": "logo.tsx"
     },
     {
@@ -10250,7 +10280,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_logo_logoiconprops",
-      "community": 0,
+      "community": 117,
       "norm_label": "logoiconprops"
     },
     {
@@ -10260,7 +10290,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_components_logo_logoicon",
-      "community": 0,
+      "community": 117,
       "norm_label": "logoicon()"
     },
     {
@@ -10270,7 +10300,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "src_components_logo_logoprops",
-      "community": 0,
+      "community": 117,
       "norm_label": "logoprops"
     },
     {
@@ -10280,7 +10310,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "src_components_logo_logovertical",
-      "community": 0,
+      "community": 117,
       "norm_label": "logovertical()"
     },
     {
@@ -10640,7 +10670,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_student_videomodal",
-      "community": 31,
+      "community": 62,
       "norm_label": "videomodal.tsx"
     },
     {
@@ -10650,7 +10680,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_components_student_videomodal_videomodal",
-      "community": 31,
+      "community": 62,
       "norm_label": "videomodal()"
     },
     {
@@ -10660,7 +10690,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_paginationbar",
-      "community": 61,
+      "community": 62,
       "norm_label": "paginationbar.tsx"
     },
     {
@@ -10670,7 +10700,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_components_ui_paginationbar_props",
-      "community": 61,
+      "community": 62,
       "norm_label": "props"
     },
     {
@@ -10680,7 +10710,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_components_ui_paginationbar_paginationbar",
-      "community": 61,
+      "community": 62,
       "norm_label": "paginationbar()"
     },
     {
@@ -10820,7 +10850,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_admin_audit",
-      "community": 14,
+      "community": 31,
       "norm_label": "audit.ts"
     },
     {
@@ -10830,7 +10860,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_lib_admin_audit_auditlogentry",
-      "community": 14,
+      "community": 31,
       "norm_label": "auditlogentry"
     },
     {
@@ -10840,7 +10870,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_lib_admin_audit_logadminaction",
-      "community": 14,
+      "community": 9,
       "norm_label": "logadminaction()"
     },
     {
@@ -10850,7 +10880,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "src_lib_admin_audit_auditactions",
-      "community": 14,
+      "community": 31,
       "norm_label": "auditactions"
     },
     {
@@ -10870,7 +10900,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_exercise_config_muscle_groups",
-      "community": 61,
+      "community": 62,
       "norm_label": "muscle_groups"
     },
     {
@@ -11220,7 +11250,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_utils",
-      "community": 25,
+      "community": 18,
       "norm_label": "utils.ts"
     },
     {
@@ -11230,7 +11260,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_lib_utils_cn",
-      "community": 25,
+      "community": 18,
       "norm_label": "cn()"
     },
     {
@@ -11370,7 +11400,7 @@
       "source_location": "L2173",
       "_origin": "ast",
       "id": "src_types_database_approle",
-      "community": 37,
+      "community": 25,
       "norm_label": "approle"
     },
     {
@@ -11400,7 +11430,7 @@
       "source_location": "L2176",
       "_origin": "ast",
       "id": "src_types_database_audit_category",
-      "community": 14,
+      "community": 31,
       "norm_label": "audit_category"
     },
     {
@@ -18732,7 +18762,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/actions/plan-assignments.ts",
-      "source_location": "L46",
+      "source_location": "L47",
       "weight": 1.0,
       "source": "src_actions_plan_assignments",
       "target": "src_actions_plan_assignments_assignplantoallstudents",
@@ -18752,7 +18782,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/actions/plan-assignments.ts",
-      "source_location": "L111",
+      "source_location": "L114",
       "weight": 1.0,
       "source": "src_actions_plan_assignments",
       "target": "src_actions_plan_assignments_getactivestudentsfortenant",
@@ -18762,7 +18792,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/actions/plan-assignments.ts",
-      "source_location": "L96",
+      "source_location": "L99",
       "weight": 1.0,
       "source": "src_actions_plan_assignments",
       "target": "src_actions_plan_assignments_getassignmentsforplan",
@@ -18782,7 +18812,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/actions/plan-assignments.ts",
-      "source_location": "L126",
+      "source_location": "L129",
       "weight": 1.0,
       "source": "src_actions_plan_assignments",
       "target": "src_actions_plan_assignments_getunassignedplansforstudent",
@@ -18792,7 +18822,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/actions/plan-assignments.ts",
-      "source_location": "L77",
+      "source_location": "L79",
       "weight": 1.0,
       "source": "src_actions_plan_assignments",
       "target": "src_actions_plan_assignments_removeplanassignment",
@@ -18858,7 +18888,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/actions/plan-assignments.ts",
-      "source_location": "L47",
+      "source_location": "L48",
       "weight": 1.0,
       "source": "src_actions_plan_assignments_assignplantoallstudents",
       "target": "src_actions_plan_assignments_getpersonalctx",
@@ -18880,7 +18910,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/actions/plan-assignments.ts",
-      "source_location": "L112",
+      "source_location": "L115",
       "weight": 1.0,
       "source": "src_actions_plan_assignments_getactivestudentsfortenant",
       "target": "src_actions_plan_assignments_getpersonalctx",
@@ -18891,7 +18921,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/actions/plan-assignments.ts",
-      "source_location": "L97",
+      "source_location": "L100",
       "weight": 1.0,
       "source": "src_actions_plan_assignments_getassignmentsforplan",
       "target": "src_actions_plan_assignments_getpersonalctx",
@@ -18913,7 +18943,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/actions/plan-assignments.ts",
-      "source_location": "L127",
+      "source_location": "L130",
       "weight": 1.0,
       "source": "src_actions_plan_assignments_getunassignedplansforstudent",
       "target": "src_actions_plan_assignments_getpersonalctx",
@@ -18924,7 +18954,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/actions/plan-assignments.ts",
-      "source_location": "L78",
+      "source_location": "L80",
       "weight": 1.0,
       "source": "src_actions_plan_assignments_removeplanassignment",
       "target": "src_actions_plan_assignments_getpersonalctx",
@@ -18991,7 +19021,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/(dashboard)/dashboard/treinos/[planId]/page.tsx",
-      "source_location": "L24",
+      "source_location": "L25",
       "weight": 1.0,
       "source": "src_app_dashboard_dashboard_treinos_planid_page_planopage",
       "target": "src_actions_plan_assignments_getassignmentsforplan"
@@ -19013,7 +19043,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/(dashboard)/dashboard/treinos/[planId]/page.tsx",
-      "source_location": "L25",
+      "source_location": "L26",
       "weight": 1.0,
       "source": "src_app_dashboard_dashboard_treinos_planid_page_planopage",
       "target": "src_actions_plan_assignments_getactivestudentsfortenant"
@@ -19674,6 +19704,17 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/app/(dashboard)/dashboard/treinos/[planId]/plan-delete-button.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "src_app_dashboard_dashboard_treinos_planid_plan_delete_button",
+      "target": "src_actions_workout_plans",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/app/(student)/student/treinos/[planId]/executar/[routineId]/page.tsx",
       "source_location": "L2",
       "weight": 1.0,
@@ -19797,7 +19838,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/(dashboard)/dashboard/treinos/[planId]/page.tsx",
-      "source_location": "L23",
+      "source_location": "L24",
       "weight": 1.0,
       "source": "src_app_dashboard_dashboard_treinos_planid_page_planopage",
       "target": "src_actions_workout_plans_getworkoutplan"
@@ -19841,7 +19882,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/(student)/student/treinos/[planId]/page.tsx",
-      "source_location": "L12",
+      "source_location": "L14",
       "weight": 1.0,
       "source": "src_app_student_student_treinos_planid_page_studentplanpage",
       "target": "src_actions_workout_plans_getworkoutplan"
@@ -19944,6 +19985,17 @@
       "weight": 1.0,
       "source": "src_actions_workout_plans_deleteworkoutplan",
       "target": "src_lib_supabase_server_createclient"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/(dashboard)/dashboard/treinos/[planId]/plan-delete-button.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "src_app_dashboard_dashboard_treinos_planid_plan_delete_button",
+      "target": "src_actions_workout_plans_deleteworkoutplan",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -20510,7 +20562,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/(student)/student/treinos/[planId]/page.tsx",
-      "source_location": "L13",
+      "source_location": "L15",
       "weight": 1.0,
       "source": "src_app_student_student_treinos_planid_page_studentplanpage",
       "target": "src_actions_workout_sessions_getstudentcompletedroutineids"
@@ -28015,7 +28067,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/(dashboard)/dashboard/treinos/[planId]/page.tsx",
-      "source_location": "L11",
+      "source_location": "L12",
       "weight": 1.0,
       "source": "src_app_dashboard_dashboard_treinos_planid_page",
       "target": "src_app_dashboard_dashboard_treinos_planid_page_goal_color",
@@ -28025,7 +28077,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/(dashboard)/dashboard/treinos/[planId]/page.tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0,
       "source": "src_app_dashboard_dashboard_treinos_planid_page",
       "target": "src_app_dashboard_dashboard_treinos_planid_page_planopage",
@@ -28035,7 +28087,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/(dashboard)/dashboard/treinos/[planId]/page.tsx",
-      "source_location": "L9",
+      "source_location": "L10",
       "weight": 1.0,
       "source": "src_app_dashboard_dashboard_treinos_planid_page",
       "target": "src_app_dashboard_dashboard_treinos_planid_page_props",
@@ -28061,6 +28113,28 @@
       "weight": 1.0,
       "source": "src_app_dashboard_dashboard_treinos_planid_page",
       "target": "src_app_dashboard_dashboard_treinos_planid_plan_assign_panel_planassignpanel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/(dashboard)/dashboard/treinos/[planId]/page.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "src_app_dashboard_dashboard_treinos_planid_page",
+      "target": "src_app_dashboard_dashboard_treinos_planid_plan_delete_button",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/(dashboard)/dashboard/treinos/[planId]/page.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "src_app_dashboard_dashboard_treinos_planid_page",
+      "target": "src_app_dashboard_dashboard_treinos_planid_plan_delete_button_plandeletebutton",
       "confidence_score": 1.0
     },
     {
@@ -28123,6 +28197,26 @@
       "weight": 1.0,
       "source": "src_app_dashboard_dashboard_treinos_planid_plan_assign_panel",
       "target": "src_lib_supabase_join_joinone",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/(dashboard)/dashboard/treinos/[planId]/plan-delete-button.tsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "src_app_dashboard_dashboard_treinos_planid_plan_delete_button",
+      "target": "src_app_dashboard_dashboard_treinos_planid_plan_delete_button_plandeletebutton",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/(dashboard)/dashboard/treinos/[planId]/plan-delete-button.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "src_app_dashboard_dashboard_treinos_planid_plan_delete_button",
+      "target": "src_app_dashboard_dashboard_treinos_planid_plan_delete_button_props",
       "confidence_score": 1.0
     },
     {
@@ -30831,7 +30925,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/(student)/student/treinos/[planId]/page.tsx",
-      "source_location": "L9",
+      "source_location": "L11",
       "weight": 1.0,
       "source": "src_app_student_student_treinos_planid_page",
       "target": "src_app_student_student_treinos_planid_page_studentplanpage",
@@ -31008,7 +31102,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/(student)/student/treinos/page.tsx",
-      "source_location": "L5",
+      "source_location": "L7",
       "weight": 1.0,
       "source": "src_app_student_student_treinos_page",
       "target": "src_app_student_student_treinos_page_studenttreinospage",
@@ -31042,7 +31136,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/(student)/student/treinos/page.tsx",
-      "source_location": "L6",
+      "source_location": "L8",
       "weight": 1.0,
       "source": "src_app_student_student_treinos_page_studenttreinospage",
       "target": "src_lib_supabase_server_createclient"
@@ -44584,5 +44678,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "38755b5c0fa5b268e33d16ec305f5208389be450"
+  "built_at_commit": "72b80704ac166b9e23b8d2f456a788524e69761e"
 }

@@ -780,9 +780,9 @@
     "semantic_hash": "8cd890a86698dc61eb485f2182763474"
   },
   "src/app/actions/auth.ts": {
-    "mtime": 1781889016.026665,
-    "ast_hash": "6ff9f1798edcf9c0bc0899d6be8d055c",
-    "semantic_hash": "6ff9f1798edcf9c0bc0899d6be8d055c"
+    "mtime": 1783002474.3540852,
+    "ast_hash": "0ce8724e1d05e7f2ad2f904e2242d2f1",
+    "semantic_hash": ""
   },
   "src/app/actions/billing.ts": {
     "mtime": 1781965427.526224,
@@ -875,8 +875,8 @@
     "semantic_hash": "5acf96961f6d9db2d8573a53d79fc905"
   },
   "src/app/page.tsx": {
-    "mtime": 1782998560.1353986,
-    "ast_hash": "ca7a8b69e7a87ea5bc004414bc27a693",
+    "mtime": 1782999600.8753815,
+    "ast_hash": "75f90505b24ff33c188c511e593aeab2",
     "semantic_hash": ""
   },
   "src/components/admin/admin-profile-card.tsx": {
@@ -1255,9 +1255,9 @@
     "semantic_hash": "43490711fa97373fb49cde48affe5a87"
   },
   "supabase/functions/send-welcome-email/index.ts": {
-    "mtime": 1781884122.0692954,
-    "ast_hash": "75452ced96f8ad592fb3584d8dce36da",
-    "semantic_hash": "75452ced96f8ad592fb3584d8dce36da"
+    "mtime": 1783002469.8505812,
+    "ast_hash": "ab5706a216f4300bb9aee02f1790ded9",
+    "semantic_hash": ""
   },
   "supabase/migrations/20260620_workout_module.sql": {
     "mtime": 1781977210.9505782,

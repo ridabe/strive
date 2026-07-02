@@ -215,8 +215,17 @@ export async function deactivateWorkoutPlan(planId: string, studentId: string) {
   return { success: true }
 }
 
-export async function deleteWorkoutPlan(planId: string, studentId: string) {
+export async function deleteWorkoutPlan(planId: string) {
   const supabase = await createClient()
+
+  // student_plan_assignments tem ON DELETE CASCADE em plan_id — os alunos são
+  // desvinculados automaticamente. Buscamos os ids antes só para revalidar as
+  // páginas de perfil deles.
+  const { data: assignments } = await supabase
+    .from('student_plan_assignments')
+    .select('student_id')
+    .eq('plan_id', planId)
+
   const { error } = await supabase
     .from('workout_plans')
     .delete()
@@ -224,7 +233,10 @@ export async function deleteWorkoutPlan(planId: string, studentId: string) {
 
   if (error) return { error: error.message }
 
-  revalidatePath(`/dashboard/alunos/${studentId}`)
   revalidatePath('/dashboard/treinos')
+  revalidatePath('/dashboard/alunos')
+  for (const a of assignments ?? []) {
+    revalidatePath(`/dashboard/alunos/${a.student_id}`)
+  }
   return { success: true }
 }
