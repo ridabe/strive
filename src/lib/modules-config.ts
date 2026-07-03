@@ -18,6 +18,7 @@ export const MODULE_ROUTES: Record<string, { href: string; label: string }> = {
   'minha-agenda':        { href: '/dashboard/agenda',              label: 'Minha Agenda'        },
   'planos-alimentares':  { href: '/dashboard/planos-alimentares',  label: 'Planos Alimentares'  },
   'assistente-ia':       { href: '/dashboard/alunos',              label: 'Max Strive IA'       },
+  'desafios':            { href: '/dashboard/desafios',            label: 'Desafios'            },
 }
 
 // Módulos principais para a grid do dashboard home (ícone SVG path inline)

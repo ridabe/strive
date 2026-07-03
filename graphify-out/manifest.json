@@ -600,9 +600,9 @@
     "semantic_hash": "db53040e5fed1136157eae095222ab93"
   },
   "src/app/(student)/layout.tsx": {
-    "mtime": 1783033271.6877227,
-    "ast_hash": "a4cd17684a45e81813e2e4ed4d722715",
-    "semantic_hash": "a4cd17684a45e81813e2e4ed4d722715"
+    "mtime": 1783090696.3998666,
+    "ast_hash": "c06893769db8d27e76b4525ccae0f177",
+    "semantic_hash": "c06893769db8d27e76b4525ccae0f177"
   },
   "src/app/(student)/student/agenda/AgendaRequestForm.tsx": {
     "mtime": 1782567301.852559,
@@ -1015,9 +1015,9 @@
     "semantic_hash": "832224527f064d8d2558270991cef138"
   },
   "src/components/layout/dashboard-sidebar.tsx": {
-    "mtime": 1782495140.3284028,
-    "ast_hash": "9676096f580abca04b7e83c8e4c5a5ca",
-    "semantic_hash": "9676096f580abca04b7e83c8e4c5a5ca"
+    "mtime": 1783088058.0241365,
+    "ast_hash": "9eec8dd14082d2e427ec46a363b77cca",
+    "semantic_hash": "9eec8dd14082d2e427ec46a363b77cca"
   },
   "src/components/layout/sidebar-nav.tsx": {
     "mtime": 1781881846.9665177,
@@ -1030,14 +1030,14 @@
     "semantic_hash": "d66cb6fa9716d9a07e755b83fbdf98d2"
   },
   "src/components/layout/student-mobile-nav.tsx": {
-    "mtime": 1782574778.1638584,
-    "ast_hash": "3710c27b9d516aa3ed9e9662bc769ba0",
-    "semantic_hash": "3710c27b9d516aa3ed9e9662bc769ba0"
+    "mtime": 1783090663.9728625,
+    "ast_hash": "0ebb5a269c14d55e94f1ade55cf39657",
+    "semantic_hash": "0ebb5a269c14d55e94f1ade55cf39657"
   },
   "src/components/layout/student-sidebar.tsx": {
-    "mtime": 1782574766.7081783,
-    "ast_hash": "2080f463aeee0427fa7e58475cd2f16b",
-    "semantic_hash": "2080f463aeee0427fa7e58475cd2f16b"
+    "mtime": 1783090632.196599,
+    "ast_hash": "dc56885d6c5cc97a447957ad31d82fff",
+    "semantic_hash": "dc56885d6c5cc97a447957ad31d82fff"
   },
   "src/components/layout/tenant-logo-header.tsx": {
     "mtime": 1781970170.5752854,
@@ -1120,9 +1120,9 @@
     "semantic_hash": "9ba8da6679c7d2483e48c1e3f5e5a5cd"
   },
   "src/lib/modules-config.ts": {
-    "mtime": 1782495456.0641172,
-    "ast_hash": "f67f73fffe1b18932241c7e1ec6bf908",
-    "semantic_hash": "f67f73fffe1b18932241c7e1ec6bf908"
+    "mtime": 1783088045.2245452,
+    "ast_hash": "e5070a019c350eaf7f8a347c2b24e4cb",
+    "semantic_hash": "e5070a019c350eaf7f8a347c2b24e4cb"
   },
   "src/lib/supabase/admin.ts": {
     "mtime": 1781884139.1924806,
@@ -1140,7 +1140,7 @@
     "semantic_hash": "c76e8fda4b3789b1744cb14bf30678e1"
   },
   "src/lib/supabase/middleware.ts": {
-    "mtime": 1781909721.112431,
+    "mtime": 1783034894.8023438,
     "ast_hash": "8d0f039774199d22197cd64e79922261",
     "semantic_hash": "8d0f039774199d22197cd64e79922261"
   },
@@ -1160,9 +1160,9 @@
     "semantic_hash": "ea05d023d1d73438a811c3570ad890dd"
   },
   "src/types/database.ts": {
-    "mtime": 1782233210.9955842,
-    "ast_hash": "8be88eea85287d62a8b8da5f969b8aa6",
-    "semantic_hash": "8be88eea85287d62a8b8da5f969b8aa6"
+    "mtime": 1783089735.469894,
+    "ast_hash": "5e054f95d07b8a4bcad6d4a6380e47c1",
+    "semantic_hash": "5e054f95d07b8a4bcad6d4a6380e47c1"
   },
   "src/types/index.ts": {
     "mtime": 1781835992.5139256,
@@ -2010,9 +2010,9 @@
     "semantic_hash": "7aa3faaddbdeec59a1a944c72a015382"
   },
   "src/components/onboarding/ModuleOnboardingPopup.tsx": {
-    "mtime": 1783033226.8628526,
-    "ast_hash": "6c92a0a63f4396efdbde478795dcc392",
-    "semantic_hash": "6c92a0a63f4396efdbde478795dcc392"
+    "mtime": 1783034641.7650714,
+    "ast_hash": "5476c3f9336293b85bec143a46f75c0f",
+    "semantic_hash": "5476c3f9336293b85bec143a46f75c0f"
   },
   "src/components/pwa/AndroidInstallPrompt.tsx": {
     "mtime": 1783021447.0558176,
@@ -2203,5 +2203,125 @@
     "mtime": 1783033292.7313113,
     "ast_hash": "b787cc1a644769720201c112973a17b3",
     "semantic_hash": "b787cc1a644769720201c112973a17b3"
+  },
+  "src/app/(dashboard)/dashboard/desafios/[id]/AddDayButton.tsx": {
+    "mtime": 1783089094.7219596,
+    "ast_hash": "bac501895a04c1bd5083a5807851bf8b",
+    "semantic_hash": "bac501895a04c1bd5083a5807851bf8b"
+  },
+  "src/app/(dashboard)/dashboard/desafios/[id]/AddDayItemButton.tsx": {
+    "mtime": 1783089078.994574,
+    "ast_hash": "ba5ef8553eb1903a6cb56b41fcca06d8",
+    "semantic_hash": "ba5ef8553eb1903a6cb56b41fcca06d8"
+  },
+  "src/app/(dashboard)/dashboard/desafios/[id]/AddParticipantButton.tsx": {
+    "mtime": 1783088171.7904856,
+    "ast_hash": "c0c566b4ae30ffdedcb299f9c9ca1745",
+    "semantic_hash": "c0c566b4ae30ffdedcb299f9c9ca1745"
+  },
+  "src/app/(dashboard)/dashboard/desafios/[id]/ChallengeCoverUpload.tsx": {
+    "mtime": 1783090079.1110182,
+    "ast_hash": "3c92a0cd7038deecb5a4c90eab42809a",
+    "semantic_hash": "3c92a0cd7038deecb5a4c90eab42809a"
+  },
+  "src/app/(dashboard)/dashboard/desafios/[id]/ChallengeDaysSection.tsx": {
+    "mtime": 1783089123.938128,
+    "ast_hash": "f371dd1872a5e404d89209b727b9de58",
+    "semantic_hash": "f371dd1872a5e404d89209b727b9de58"
+  },
+  "src/app/(dashboard)/dashboard/desafios/[id]/ChallengeDetailClient.tsx": {
+    "mtime": 1783093711.083732,
+    "ast_hash": "47c90a11288947e09ca57d5f023087f2",
+    "semantic_hash": "47c90a11288947e09ca57d5f023087f2"
+  },
+  "src/app/(dashboard)/dashboard/desafios/[id]/ChallengeMessagesSection.tsx": {
+    "mtime": 1783091074.4455414,
+    "ast_hash": "0be7546cb2fa11081c3ae5ff4fc7425b",
+    "semantic_hash": "0be7546cb2fa11081c3ae5ff4fc7425b"
+  },
+  "src/app/(dashboard)/dashboard/desafios/[id]/ChallengeTrackingSection.tsx": {
+    "mtime": 1783092229.5360904,
+    "ast_hash": "4ca888ad11f1e5fdf74b1350bc4c8c6c",
+    "semantic_hash": "4ca888ad11f1e5fdf74b1350bc4c8c6c"
+  },
+  "src/app/(dashboard)/dashboard/desafios/[id]/DeleteChallengeButton.tsx": {
+    "mtime": 1783093279.4518685,
+    "ast_hash": "542e414c702491fa1519c6775ae9d873",
+    "semantic_hash": "542e414c702491fa1519c6775ae9d873"
+  },
+  "src/app/(dashboard)/dashboard/desafios/[id]/EditChallengeButton.tsx": {
+    "mtime": 1783092791.22772,
+    "ast_hash": "602cab75b0d4d2e97a7477aec166978b",
+    "semantic_hash": "602cab75b0d4d2e97a7477aec166978b"
+  },
+  "src/app/(dashboard)/dashboard/desafios/[id]/FinalDataButton.tsx": {
+    "mtime": 1783093650.0447083,
+    "ast_hash": "7aecd6d4522fd367f1bf621d73b9d715",
+    "semantic_hash": "7aecd6d4522fd367f1bf621d73b9d715"
+  },
+  "src/app/(dashboard)/dashboard/desafios/[id]/FinishChallengeButton.tsx": {
+    "mtime": 1783093659.5603368,
+    "ast_hash": "cf59bf5f90d788d47dc4745eea99cbd0",
+    "semantic_hash": "cf59bf5f90d788d47dc4745eea99cbd0"
+  },
+  "src/app/(dashboard)/dashboard/desafios/[id]/PublishResultsButton.tsx": {
+    "mtime": 1783093675.431882,
+    "ast_hash": "f3753bb26c30627b88d60f427fb10cf8",
+    "semantic_hash": "f3753bb26c30627b88d60f427fb10cf8"
+  },
+  "src/app/(dashboard)/dashboard/desafios/[id]/page.tsx": {
+    "mtime": 1783092217.891116,
+    "ast_hash": "df51e4a9b51becf911986f423807745b",
+    "semantic_hash": "df51e4a9b51becf911986f423807745b"
+  },
+  "src/app/(dashboard)/dashboard/desafios/novo/novo-desafio-form.tsx": {
+    "mtime": 1783088992.241438,
+    "ast_hash": "0a993a3d6f8ae9b2f5d22ff4bcd0a3d4",
+    "semantic_hash": "0a993a3d6f8ae9b2f5d22ff4bcd0a3d4"
+  },
+  "src/app/(dashboard)/dashboard/desafios/novo/page.tsx": {
+    "mtime": 1783088102.0743976,
+    "ast_hash": "89563654f21d934ee4408e2e29db3514",
+    "semantic_hash": "89563654f21d934ee4408e2e29db3514"
+  },
+  "src/app/(dashboard)/dashboard/desafios/page.tsx": {
+    "mtime": 1783089906.6007257,
+    "ast_hash": "e2c1bbae3184e27d91e953c1c30e5f50",
+    "semantic_hash": "e2c1bbae3184e27d91e953c1c30e5f50"
+  },
+  "src/app/(student)/student/desafios/StudentChallengeActiveView.tsx": {
+    "mtime": 1783090749.979691,
+    "ast_hash": "5a898a61c53d18f64745c08732e3e7c4",
+    "semantic_hash": "5a898a61c53d18f64745c08732e3e7c4"
+  },
+  "src/app/(student)/student/desafios/StudentChallengeResultsView.tsx": {
+    "mtime": 1783090762.7356684,
+    "ast_hash": "0dffa23d2e14eb5a8c625e33586a6003",
+    "semantic_hash": "0dffa23d2e14eb5a8c625e33586a6003"
+  },
+  "src/app/(student)/student/desafios/page.tsx": {
+    "mtime": 1783090724.1262069,
+    "ast_hash": "1488b9e1f4fd283ae0486ec4dd677e55",
+    "semantic_hash": "1488b9e1f4fd283ae0486ec4dd677e55"
+  },
+  "src/app/actions/challenges.ts": {
+    "mtime": 1783092748.7948492,
+    "ast_hash": "7d2e6a3e043ec43ed3c775bd9a76ad48",
+    "semantic_hash": "7d2e6a3e043ec43ed3c775bd9a76ad48"
+  },
+  "src/lib/challenge-constants.ts": {
+    "mtime": 1783090062.797205,
+    "ast_hash": "a82cc57d350853c338fd613deed85d26",
+    "semantic_hash": "a82cc57d350853c338fd613deed85d26"
+  },
+  "supabase/migrations/20260703_challenge_cover_image.sql": {
+    "mtime": 1783094489.579561,
+    "ast_hash": "36942b155412cc74166316441af7a012",
+    "semantic_hash": "36942b155412cc74166316441af7a012"
+  },
+  "supabase/migrations/20260703_challenges_module.sql": {
+    "mtime": 1783086593.7390592,
+    "ast_hash": "19845a98ae2190567b5ec0f5beda3770",
+    "semantic_hash": "19845a98ae2190567b5ec0f5beda3770"
   }
 }

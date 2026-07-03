@@ -34,7 +34,7 @@ import {
 const ICON_MAP: Record<string, LucideIcon> = {
   Dumbbell, ClipboardList, Zap, Play, Ruler, FileHeart,
   TrendingUp, CalendarCheck, CalendarDays, MessageSquare, Receipt,
-  FolderOpen, Bell, Palette, UtensilsCrossed,
+  FolderOpen, Bell, Palette, UtensilsCrossed, Trophy,
 }
 
 export type EnabledModule = {
@@ -51,7 +51,7 @@ const MODULE_GROUPS: { label: string; slugs: string[] }[] = [
   },
   {
     label: 'Acompanhamento',
-    slugs: ['avaliacoes-fisicas', 'anamnese', 'meu-progresso', 'frequencia', 'feedbacks', 'planos-alimentares'],
+    slugs: ['avaliacoes-fisicas', 'anamnese', 'meu-progresso', 'frequencia', 'feedbacks', 'planos-alimentares', 'desafios'],
   },
   {
     label: 'Financeiro',

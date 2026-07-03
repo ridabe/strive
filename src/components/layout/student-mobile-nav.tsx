@@ -20,6 +20,7 @@ interface StudentMobileNavProps {
   personalName: string | null
   gamificationActive?: boolean
   unreadMessageCount?: number
+  hasChallenge?: boolean
 }
 
 /**
@@ -36,10 +37,11 @@ export function StudentMobileNav({
   personalName,
   gamificationActive,
   unreadMessageCount = 0,
+  hasChallenge,
 }: StudentMobileNavProps) {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const navItems = getStudentNavItems(gamificationActive)
+  const navItems = getStudentNavItems(gamificationActive, hasChallenge)
   const bottomItems = navItems.slice(0, 4)
 
   useEffect(() => {

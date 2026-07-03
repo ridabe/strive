@@ -8,6 +8,7 @@ import { UserMenu } from '@/components/layout/user-menu'
 import { StudentAgendaBanner } from '@/components/agenda/StudentAgendaBanner'
 import { StudentMessagesBanner } from '@/components/student/StudentMessagesBanner'
 import { ModuleOnboardingPopup } from '@/components/onboarding/ModuleOnboardingPopup'
+import { hasVisibleStudentChallenge } from '@/app/actions/challenges'
 
 export default async function StudentLayout({
   children,
@@ -91,6 +92,9 @@ export default async function StudentLayout({
     .single()
   const gamificationActive = gamifSettings?.is_active ?? false
 
+  // Aluno participa de algum desafio ativo ou com resultado publicado?
+  const hasChallenge = await hasVisibleStudentChallenge()
+
   if (studentRow) {
     const [
       { count: pending },
@@ -149,6 +153,7 @@ export default async function StudentLayout({
         personalName={personalName}
         gamificationActive={gamificationActive}
         unreadMessageCount={unreadMessageCount}
+        hasChallenge={hasChallenge}
       />
 
       {/* ── Desktop sidebar ───────────────────────────────────────── */}
@@ -171,6 +176,7 @@ export default async function StudentLayout({
             personalName={personalName}
             gamificationActive={gamificationActive}
             unreadMessageCount={unreadMessageCount}
+            hasChallenge={hasChallenge}
           />
         </div>
 

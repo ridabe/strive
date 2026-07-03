@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 import {
   House, Dumbbell, Zap, TrendingUp, CalendarCheck,
   ClipboardList, Activity, MessageSquare, Receipt, Utensils, UtensilsCrossed, Calendar, FolderOpen, History, Bell,
-  Trophy,
+  Trophy, Flag,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -42,19 +42,29 @@ const RANKING_ITEM: StudentNavItem = {
   exact: false,
 }
 
+const CHALLENGES_ITEM: StudentNavItem = {
+  label: 'Desafios',
+  href:  '/student/desafios',
+  icon:  Flag,
+  exact: false,
+}
+
 interface StudentSidebarNavProps {
   personalName: string | null
   gamificationActive?: boolean
   unreadMessageCount?: number
+  hasChallenge?: boolean
 }
 
 /**
- * Retorna a lista de rotas do aluno, incluindo o ranking quando o modulo estiver ativo.
+ * Retorna a lista de rotas do aluno, incluindo o ranking quando o modulo estiver ativo
+ * e Desafios quando o aluno participa de um desafio ativo ou com resultado publicado.
  */
-export function getStudentNavItems(gamificationActive?: boolean): StudentNavItem[] {
-  return gamificationActive
-    ? [...BASE_NAV_ITEMS, RANKING_ITEM]
-    : BASE_NAV_ITEMS
+export function getStudentNavItems(gamificationActive?: boolean, hasChallenge?: boolean): StudentNavItem[] {
+  let items = BASE_NAV_ITEMS
+  if (hasChallenge) items = [...items, CHALLENGES_ITEM]
+  if (gamificationActive) items = [...items, RANKING_ITEM]
+  return items
 }
 
 /**
@@ -64,9 +74,10 @@ export function StudentSidebarNav({
   personalName,
   gamificationActive,
   unreadMessageCount = 0,
+  hasChallenge,
 }: StudentSidebarNavProps) {
   const pathname = usePathname()
-  const NAV_ITEMS = getStudentNavItems(gamificationActive)
+  const NAV_ITEMS = getStudentNavItems(gamificationActive, hasChallenge)
 
   return (
     <div className="flex flex-col h-full gap-4">

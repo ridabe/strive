@@ -1,8 +1,3 @@
-// Auto-gerado via: supabase gen types typescript --project-id lodetzmtsymvnjffmvat
-// Atualizar apos migrations: use o MCP do Supabase (generate_typescript_types) ou
-// pnpm supabase gen types typescript --project-id lodetzmtsymvnjffmvat > src/types/database.ts
-// Ultima atualizacao: 2026-06-23 (adicionado student_meal_plan_assignments)
-
 export type Json =
   | string
   | number
@@ -145,6 +140,199 @@ export type Database = {
             foreignKeyName: "agenda_events_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "agenda_events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_conversations: {
+        Row: {
+          created_at: string
+          feature_type: string
+          id: string
+          student_id: string
+          tenant_id: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          feature_type: string
+          id?: string
+          student_id: string
+          tenant_id: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          feature_type?: string
+          id?: string
+          student_id?: string
+          tenant_id?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_conversations_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_conversations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "ai_conversations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          metadata: Json
+          role: string
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          role: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_usage_events: {
+        Row: {
+          actor_profile_id: string | null
+          client_platform: string
+          conversation_id: string | null
+          created_at: string
+          error_message: string | null
+          feature_type: string
+          id: string
+          input_tokens: number
+          latency_ms: number | null
+          metadata: Json
+          model: string | null
+          output_tokens: number
+          provider: string
+          request_count: number
+          status: string
+          student_id: string | null
+          tenant_id: string
+          usage_kind: string
+        }
+        Insert: {
+          actor_profile_id?: string | null
+          client_platform?: string
+          conversation_id?: string | null
+          created_at?: string
+          error_message?: string | null
+          feature_type: string
+          id?: string
+          input_tokens?: number
+          latency_ms?: number | null
+          metadata?: Json
+          model?: string | null
+          output_tokens?: number
+          provider: string
+          request_count?: number
+          status?: string
+          student_id?: string | null
+          tenant_id: string
+          usage_kind: string
+        }
+        Update: {
+          actor_profile_id?: string | null
+          client_platform?: string
+          conversation_id?: string | null
+          created_at?: string
+          error_message?: string | null
+          feature_type?: string
+          id?: string
+          input_tokens?: number
+          latency_ms?: number | null
+          metadata?: Json
+          model?: string | null
+          output_tokens?: number
+          provider?: string
+          request_count?: number
+          status?: string
+          student_id?: string | null
+          tenant_id?: string
+          usage_kind?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_usage_events_actor_profile_id_fkey"
+            columns: ["actor_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_usage_events_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_usage_events_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_usage_events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "ai_usage_events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
@@ -185,6 +373,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "students"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "anamnese_responses_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
           },
           {
             foreignKeyName: "anamnese_responses_tenant_id_fkey"
@@ -236,6 +431,13 @@ export type Database = {
           tenant_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "anamnese_templates_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
           {
             foreignKeyName: "anamnese_templates_tenant_id_fkey"
             columns: ["tenant_id"]
@@ -321,6 +523,13 @@ export type Database = {
             foreignKeyName: "attendance_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "attendance_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
@@ -329,6 +538,416 @@ export type Database = {
             columns: ["workout_plan_id"]
             isOneToOne: false
             referencedRelation: "workout_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenge_day_items: {
+        Row: {
+          challenge_day_id: string
+          content: string | null
+          created_at: string
+          exercise_id: string | null
+          file_url: string | null
+          id: string
+          item_type: string
+          sort_order: number
+          tenant_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          challenge_day_id: string
+          content?: string | null
+          created_at?: string
+          exercise_id?: string | null
+          file_url?: string | null
+          id?: string
+          item_type: string
+          sort_order?: number
+          tenant_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          challenge_day_id?: string
+          content?: string | null
+          created_at?: string
+          exercise_id?: string | null
+          file_url?: string | null
+          id?: string
+          item_type?: string
+          sort_order?: number
+          tenant_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_day_items_challenge_day_id_fkey"
+            columns: ["challenge_day_id"]
+            isOneToOne: false
+            referencedRelation: "challenge_days"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "challenge_day_items_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "challenge_day_items_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "challenge_day_items_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenge_days: {
+        Row: {
+          challenge_id: string
+          created_at: string
+          day_number: number
+          id: string
+          release_date: string | null
+          status: string
+          tenant_id: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          challenge_id: string
+          created_at?: string
+          day_number: number
+          id?: string
+          release_date?: string | null
+          status?: string
+          tenant_id: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          challenge_id?: string
+          created_at?: string
+          day_number?: number
+          id?: string
+          release_date?: string | null
+          status?: string
+          tenant_id?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_days_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "challenge_days_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "challenge_days_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenge_item_progress: {
+        Row: {
+          challenge_day_item_id: string
+          completed_at: string
+          id: string
+          participant_id: string
+          tenant_id: string
+        }
+        Insert: {
+          challenge_day_item_id: string
+          completed_at?: string
+          id?: string
+          participant_id: string
+          tenant_id: string
+        }
+        Update: {
+          challenge_day_item_id?: string
+          completed_at?: string
+          id?: string
+          participant_id?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_item_progress_challenge_day_item_id_fkey"
+            columns: ["challenge_day_item_id"]
+            isOneToOne: false
+            referencedRelation: "challenge_day_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "challenge_item_progress_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "challenge_participants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "challenge_item_progress_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "challenge_item_progress_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenge_messages: {
+        Row: {
+          challenge_id: string
+          created_at: string
+          id: string
+          message: string
+          tenant_id: string
+        }
+        Insert: {
+          challenge_id: string
+          created_at?: string
+          id?: string
+          message: string
+          tenant_id: string
+        }
+        Update: {
+          challenge_id?: string
+          created_at?: string
+          id?: string
+          message?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_messages_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "challenge_messages_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "challenge_messages_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenge_participants: {
+        Row: {
+          challenge_id: string
+          created_at: string
+          final_arm: number | null
+          final_body_fat: number | null
+          final_chest: number | null
+          final_hip: number | null
+          final_notes: string | null
+          final_thigh: number | null
+          final_waist: number | null
+          final_weight: number | null
+          id: string
+          initial_age: number | null
+          initial_arm: number | null
+          initial_body_fat: number | null
+          initial_chest: number | null
+          initial_hip: number | null
+          initial_thigh: number | null
+          initial_waist: number | null
+          initial_weight: number | null
+          result_delta_pp: number | null
+          result_rank: number | null
+          student_id: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          challenge_id: string
+          created_at?: string
+          final_arm?: number | null
+          final_body_fat?: number | null
+          final_chest?: number | null
+          final_hip?: number | null
+          final_notes?: string | null
+          final_thigh?: number | null
+          final_waist?: number | null
+          final_weight?: number | null
+          id?: string
+          initial_age?: number | null
+          initial_arm?: number | null
+          initial_body_fat?: number | null
+          initial_chest?: number | null
+          initial_hip?: number | null
+          initial_thigh?: number | null
+          initial_waist?: number | null
+          initial_weight?: number | null
+          result_delta_pp?: number | null
+          result_rank?: number | null
+          student_id: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          challenge_id?: string
+          created_at?: string
+          final_arm?: number | null
+          final_body_fat?: number | null
+          final_chest?: number | null
+          final_hip?: number | null
+          final_notes?: string | null
+          final_thigh?: number | null
+          final_waist?: number | null
+          final_weight?: number | null
+          id?: string
+          initial_age?: number | null
+          initial_arm?: number | null
+          initial_body_fat?: number | null
+          initial_chest?: number | null
+          initial_hip?: number | null
+          initial_thigh?: number | null
+          initial_waist?: number | null
+          initial_weight?: number | null
+          result_delta_pp?: number | null
+          result_rank?: number | null
+          student_id?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_participants_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "challenge_participants_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "challenge_participants_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "challenge_participants_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenges: {
+        Row: {
+          cover_image_url: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          duration_days: number
+          id: string
+          name: string
+          prizes: string | null
+          release_mode: string
+          results_published_at: string | null
+          rules: string | null
+          show_results_to_students: boolean
+          start_date: string | null
+          status: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          duration_days: number
+          id?: string
+          name: string
+          prizes?: string | null
+          release_mode?: string
+          results_published_at?: string | null
+          rules?: string | null
+          show_results_to_students?: boolean
+          start_date?: string | null
+          status?: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          duration_days?: number
+          id?: string
+          name?: string
+          prizes?: string | null
+          release_mode?: string
+          results_published_at?: string | null
+          rules?: string | null
+          show_results_to_students?: boolean
+          start_date?: string | null
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenges_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "challenges_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
         ]
@@ -412,6 +1031,65 @@ export type Database = {
             foreignKeyName: "exercise_combos_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "exercise_combos_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exercise_embeddings: {
+        Row: {
+          content: string
+          created_at: string
+          embedding: string
+          exercise_id: string
+          id: string
+          tenant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          embedding: string
+          exercise_id: string
+          id?: string
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          embedding?: string
+          exercise_id?: string
+          id?: string
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exercise_embeddings_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exercise_embeddings_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "exercise_embeddings_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
@@ -425,6 +1103,7 @@ export type Database = {
           default_duration_secs: number | null
           default_reps: string | null
           default_sets: number | null
+          external_id: string | null
           id: string
           instructions: string | null
           is_global: boolean
@@ -432,6 +1111,7 @@ export type Database = {
           muscle_group: string
           name: string
           secondary_muscles: string[]
+          source: string
           tenant_id: string | null
           updated_at: string
           video_path: string | null
@@ -444,6 +1124,7 @@ export type Database = {
           default_duration_secs?: number | null
           default_reps?: string | null
           default_sets?: number | null
+          external_id?: string | null
           id?: string
           instructions?: string | null
           is_global?: boolean
@@ -451,6 +1132,7 @@ export type Database = {
           muscle_group: string
           name: string
           secondary_muscles?: string[]
+          source?: string
           tenant_id?: string | null
           updated_at?: string
           video_path?: string | null
@@ -463,6 +1145,7 @@ export type Database = {
           default_duration_secs?: number | null
           default_reps?: string | null
           default_sets?: number | null
+          external_id?: string | null
           id?: string
           instructions?: string | null
           is_global?: boolean
@@ -470,6 +1153,7 @@ export type Database = {
           muscle_group?: string
           name?: string
           secondary_muscles?: string[]
+          source?: string
           tenant_id?: string | null
           updated_at?: string
           video_path?: string | null
@@ -482,6 +1166,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exercises_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
           },
           {
             foreignKeyName: "exercises_tenant_id_fkey"
@@ -563,6 +1254,13 @@ export type Database = {
             foreignKeyName: "extra_workout_items_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "extra_workout_items_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
@@ -612,6 +1310,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "students"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "extra_workouts_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
           },
           {
             foreignKeyName: "extra_workouts_tenant_id_fkey"
@@ -669,6 +1374,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "students"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_plans_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
           },
           {
             foreignKeyName: "financial_plans_tenant_id_fkey"
@@ -733,10 +1445,148 @@ export type Database = {
             foreignKeyName: "food_items_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "food_items_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
         ]
+      }
+      gamification_events: {
+        Row: {
+          created_at: string | null
+          event_month: number
+          event_type: string
+          event_year: number
+          id: string
+          is_suspicious: boolean | null
+          metadata: Json | null
+          points: number
+          session_id: string | null
+          student_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          event_month: number
+          event_type: string
+          event_year: number
+          id?: string
+          is_suspicious?: boolean | null
+          metadata?: Json | null
+          points?: number
+          session_id?: string | null
+          student_id: string
+        }
+        Update: {
+          created_at?: string | null
+          event_month?: number
+          event_type?: string
+          event_year?: number
+          id?: string
+          is_suspicious?: boolean | null
+          metadata?: Json | null
+          points?: number
+          session_id?: string | null
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gamification_events_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "workout_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gamification_events_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gamification_settings: {
+        Row: {
+          id: string
+          is_active: boolean
+          max_minutes_per_session: number
+          max_pts_per_session: number
+          min_session_duration_secs: number
+          pts_exercise_completed: number
+          pts_load_increase: number
+          pts_monthly_consistency: number
+          pts_per_minute_active: number
+          pts_weekly_bonus: number
+          pts_workout_100_percent: number
+          pts_workout_completed: number
+          ranking_timezone: string
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          id?: string
+          is_active?: boolean
+          max_minutes_per_session?: number
+          max_pts_per_session?: number
+          min_session_duration_secs?: number
+          pts_exercise_completed?: number
+          pts_load_increase?: number
+          pts_monthly_consistency?: number
+          pts_per_minute_active?: number
+          pts_weekly_bonus?: number
+          pts_workout_100_percent?: number
+          pts_workout_completed?: number
+          ranking_timezone?: string
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          id?: string
+          is_active?: boolean
+          max_minutes_per_session?: number
+          max_pts_per_session?: number
+          min_session_duration_secs?: number
+          pts_exercise_completed?: number
+          pts_load_increase?: number
+          pts_monthly_consistency?: number
+          pts_per_minute_active?: number
+          pts_weekly_bonus?: number
+          pts_workout_100_percent?: number
+          pts_workout_completed?: number
+          ranking_timezone?: string
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gamification_settings_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      internal_config: {
+        Row: {
+          key: string
+          value: string
+        }
+        Insert: {
+          key: string
+          value: string
+        }
+        Update: {
+          key?: string
+          value?: string
+        }
+        Relationships: []
       }
       meal_plan_foods: {
         Row: {
@@ -803,6 +1653,13 @@ export type Database = {
             foreignKeyName: "meal_plan_foods_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "meal_plan_foods_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
@@ -852,6 +1709,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "meal_plans"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meal_plan_meals_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
           },
           {
             foreignKeyName: "meal_plan_meals_tenant_id_fkey"
@@ -917,7 +1781,129 @@ export type Database = {
             foreignKeyName: "meal_plans_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "meal_plans_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      monthly_points: {
+        Row: {
+          active_minutes: number
+          consistency_bonuses: number
+          exercises_completed: number
+          id: string
+          last_calculated_at: string | null
+          load_increases: number
+          month: number
+          student_id: string
+          tenant_id: string | null
+          total_points: number
+          weekly_bonuses: number
+          workouts_completed: number
+          year: number
+        }
+        Insert: {
+          active_minutes?: number
+          consistency_bonuses?: number
+          exercises_completed?: number
+          id?: string
+          last_calculated_at?: string | null
+          load_increases?: number
+          month: number
+          student_id: string
+          tenant_id?: string | null
+          total_points?: number
+          weekly_bonuses?: number
+          workouts_completed?: number
+          year: number
+        }
+        Update: {
+          active_minutes?: number
+          consistency_bonuses?: number
+          exercises_completed?: number
+          id?: string
+          last_calculated_at?: string | null
+          load_increases?: number
+          month?: number
+          student_id?: string
+          tenant_id?: string | null
+          total_points?: number
+          weekly_bonuses?: number
+          workouts_completed?: number
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "monthly_points_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "monthly_points_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "monthly_points_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      monthly_ranking_snapshots: {
+        Row: {
+          champion_id: string | null
+          closed_at: string | null
+          closed_by: string | null
+          id: string
+          month: number
+          rankings: Json
+          year: number
+        }
+        Insert: {
+          champion_id?: string | null
+          closed_at?: string | null
+          closed_by?: string | null
+          id?: string
+          month: number
+          rankings?: Json
+          year: number
+        }
+        Update: {
+          champion_id?: string | null
+          closed_at?: string | null
+          closed_by?: string | null
+          id?: string
+          month?: number
+          rankings?: Json
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "monthly_ranking_snapshots_champion_id_fkey"
+            columns: ["champion_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "monthly_ranking_snapshots_closed_by_fkey"
+            columns: ["closed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -987,6 +1973,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "students"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "physical_assessments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
           },
           {
             foreignKeyName: "physical_assessments_tenant_id_fkey"
@@ -1084,7 +2077,46 @@ export type Database = {
             foreignKeyName: "profiles_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "profiles_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      session_heart_rate_series: {
+        Row: {
+          bpm: number
+          id: string
+          recorded_at: string
+          session_id: string
+          spo2: number | null
+        }
+        Insert: {
+          bpm: number
+          id?: string
+          recorded_at: string
+          session_id: string
+          spo2?: number | null
+        }
+        Update: {
+          bpm?: number
+          id?: string
+          recorded_at?: string
+          session_id?: string
+          spo2?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_heart_rate_series_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "workout_sessions"
             referencedColumns: ["id"]
           },
         ]
@@ -1138,7 +2170,52 @@ export type Database = {
             foreignKeyName: "shared_files_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "shared_files_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_badges: {
+        Row: {
+          badge_type: string
+          earned_at: string | null
+          id: string
+          metadata: Json | null
+          month: number | null
+          student_id: string
+          year: number | null
+        }
+        Insert: {
+          badge_type: string
+          earned_at?: string | null
+          id?: string
+          metadata?: Json | null
+          month?: number | null
+          student_id: string
+          year?: number | null
+        }
+        Update: {
+          badge_type?: string
+          earned_at?: string | null
+          id?: string
+          metadata?: Json | null
+          month?: number | null
+          student_id?: string
+          year?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_badges_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
             referencedColumns: ["id"]
           },
         ]
@@ -1185,6 +2262,71 @@ export type Database = {
           },
           {
             foreignKeyName: "student_meal_plan_assignments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "student_meal_plan_assignments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_messages: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          message_type: string
+          read_at: string | null
+          student_id: string
+          tenant_id: string
+          title: string | null
+          trainer_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          message_type?: string
+          read_at?: string | null
+          student_id: string
+          tenant_id: string
+          title?: string | null
+          trainer_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          message_type?: string
+          read_at?: string | null
+          student_id?: string
+          tenant_id?: string
+          title?: string | null
+          trainer_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_messages_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_messages_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "student_messages_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
@@ -1236,6 +2378,13 @@ export type Database = {
             foreignKeyName: "student_plan_assignments_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "student_plan_assignments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
@@ -1279,6 +2428,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "students"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_progress_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
           },
           {
             foreignKeyName: "student_progress_tenant_id_fkey"
@@ -1336,6 +2492,13 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "students_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
           {
             foreignKeyName: "students_tenant_id_fkey"
             columns: ["tenant_id"]
@@ -1402,6 +2565,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "plans"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscriptions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
           },
           {
             foreignKeyName: "subscriptions_tenant_id_fkey"
@@ -1488,6 +2658,13 @@ export type Database = {
             foreignKeyName: "tenant_modules_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "tenant_modules_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
@@ -1501,6 +2678,7 @@ export type Database = {
           contact_email: string | null
           contact_phone: string | null
           created_at: string
+          cref: string | null
           id: string
           logo_url: string | null
           max_students: number
@@ -1518,6 +2696,7 @@ export type Database = {
           contact_email?: string | null
           contact_phone?: string | null
           created_at?: string
+          cref?: string | null
           id?: string
           logo_url?: string | null
           max_students?: number
@@ -1535,6 +2714,7 @@ export type Database = {
           contact_email?: string | null
           contact_phone?: string | null
           created_at?: string
+          cref?: string | null
           id?: string
           logo_url?: string | null
           max_students?: number
@@ -1613,6 +2793,13 @@ export type Database = {
             foreignKeyName: "workout_exercises_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "workout_exercises_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
@@ -1660,6 +2847,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "students"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_feedbacks_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
           },
           {
             foreignKeyName: "workout_feedbacks_tenant_id_fkey"
@@ -1751,6 +2945,13 @@ export type Database = {
             foreignKeyName: "workout_items_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "workout_items_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
@@ -1808,6 +3009,13 @@ export type Database = {
             foreignKeyName: "workout_plans_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "workout_plans_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
@@ -1848,6 +3056,13 @@ export type Database = {
           workout_plan_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "workout_routines_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
           {
             foreignKeyName: "workout_routines_tenant_id_fkey"
             columns: ["tenant_id"]
@@ -1924,41 +3139,68 @@ export type Database = {
       }
       workout_sessions: {
         Row: {
+          calories_active: number | null
           created_at: string
+          distance_meters: number | null
           duration_seconds: number | null
           finished_at: string | null
+          heart_rate_avg: number | null
+          heart_rate_max: number | null
+          heart_rate_min: number | null
           id: string
           intensity: string | null
           notes: string | null
+          spo2_avg: number | null
           started_at: string
+          steps: number | null
           student_id: string
           tenant_id: string
+          wearable_device: string | null
+          wearable_source: string | null
           workout_plan_id: string | null
           workout_routine_id: string | null
         }
         Insert: {
+          calories_active?: number | null
           created_at?: string
+          distance_meters?: number | null
           duration_seconds?: number | null
           finished_at?: string | null
+          heart_rate_avg?: number | null
+          heart_rate_max?: number | null
+          heart_rate_min?: number | null
           id?: string
           intensity?: string | null
           notes?: string | null
+          spo2_avg?: number | null
           started_at?: string
+          steps?: number | null
           student_id: string
           tenant_id: string
+          wearable_device?: string | null
+          wearable_source?: string | null
           workout_plan_id?: string | null
           workout_routine_id?: string | null
         }
         Update: {
+          calories_active?: number | null
           created_at?: string
+          distance_meters?: number | null
           duration_seconds?: number | null
           finished_at?: string | null
+          heart_rate_avg?: number | null
+          heart_rate_max?: number | null
+          heart_rate_min?: number | null
           id?: string
           intensity?: string | null
           notes?: string | null
+          spo2_avg?: number | null
           started_at?: string
+          steps?: number | null
           student_id?: string
           tenant_id?: string
+          wearable_device?: string | null
+          wearable_source?: string | null
           workout_plan_id?: string | null
           workout_routine_id?: string | null
         }
@@ -1969,6 +3211,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "students"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_sessions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
           },
           {
             foreignKeyName: "workout_sessions_tenant_id_fkey"
@@ -1995,9 +3244,45 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      current_ranking: {
+        Row: {
+          active_minutes: number | null
+          consistency_bonuses: number | null
+          exercises_completed: number | null
+          load_increases: number | null
+          month: number | null
+          rank_position: number | null
+          student_avatar: string | null
+          student_id: string | null
+          student_name: string | null
+          tenant_id: string | null
+          total_points: number | null
+          trainer_name: string | null
+          weekly_bonuses: number | null
+          workouts_completed: number | null
+          year: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "monthly_points_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
+      award_workout_points: {
+        Args: {
+          p_all_done: boolean
+          p_duration_secs: number
+          p_exercises_count: number
+          p_student_id: string
+        }
+        Returns: Json
+      }
       generate_tenant_slug: { Args: { p_name: string }; Returns: string }
       get_admin_last_sign_in: { Args: { p_user_id: string }; Returns: string }
       get_my_role: {
@@ -2015,6 +3300,20 @@ export type Database = {
           plan_name: string
         }[]
       }
+      match_exercises: {
+        Args: {
+          match_count?: number
+          match_threshold?: number
+          p_tenant_id: string
+          query_embedding: string
+        }
+        Returns: {
+          content: string
+          exercise_id: string
+          similarity: number
+        }[]
+      }
+      notify_sales_set_secret: { Args: { secret: string }; Returns: undefined }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
     }
