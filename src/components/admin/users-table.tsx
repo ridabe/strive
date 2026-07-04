@@ -8,16 +8,18 @@ import {
 } from 'lucide-react'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import type { UserRow } from '@/app/(admin)/admin/usuarios/page'
+import type { TenantOption, UserRow } from '@/app/(admin)/admin/usuarios/page'
 import { UserActionsDropdown } from './user-actions-dropdown'
 
 interface FilterOption { value: string; label: string }
 
 interface Props {
   users: UserRow[]
-  tenants: { id: string; business_name: string }[]
+  tenants: TenantOption[]
   total: number
   page: number
+  pageSize: number
+  pageSizeOptions: number[]
   totalPages: number
   currentFilters: { role: string; status: string; q: string; tenant: string }
   roleOptions: FilterOption[]
@@ -36,11 +38,37 @@ const STATUS_CONFIG = {
   suspended: { label: 'Suspenso', color: 'text-status-error bg-status-error/10 border-status-error/20' },
 }
 
+const ACCOUNT_STATE_CONFIG = {
+  managed: { label: 'Conta ativa', color: 'text-status-success bg-status-success/10 border-status-success/20' },
+  missing_auth: { label: 'Sem acesso', color: 'text-status-warning bg-status-warning/10 border-status-warning/20' },
+  missing_profile: { label: 'Conta sem perfil', color: 'text-status-warning bg-status-warning/10 border-status-warning/20' },
+}
+
+/**
+ * Gera a janela de páginas visíveis para manter a navegação enxuta.
+ */
+function getVisiblePages(page: number, totalPages: number): number[] {
+  const firstPage = Math.max(1, page - 2)
+  const lastPage = Math.min(totalPages, page + 2)
+  const pages: number[] = []
+
+  for (let currentPage = firstPage; currentPage <= lastPage; currentPage += 1) {
+    pages.push(currentPage)
+  }
+
+  return pages
+}
+
+/**
+ * Renderiza a tabela paginada e filtrável da área global de usuários.
+ */
 export function UsersTable({
   users,
   tenants,
   total,
   page,
+  pageSize,
+  pageSizeOptions,
   totalPages,
   currentFilters,
   roleOptions,
@@ -51,6 +79,9 @@ export function UsersTable({
   const sp          = useSearchParams()
   const [, startTransition] = useTransition()
 
+  /**
+   * Atualiza a query string preservando o restante do estado da tela.
+   */
   function updateParam(key: string, value: string) {
     const params = new URLSearchParams(sp.toString())
     if (value) params.set(key, value)
@@ -59,14 +90,18 @@ export function UsersTable({
     startTransition(() => router.push(`${pathname}?${params.toString()}`))
   }
 
+  /**
+   * Dispara a busca textual por nome ou e-mail.
+   */
   function handleSearch(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const q = (e.currentTarget.elements.namedItem('q') as HTMLInputElement).value
     updateParam('q', q)
   }
 
-  const start = total === 0 ? 0 : (page - 1) * 20 + 1
-  const end   = Math.min(page * 20, total)
+  const start = total === 0 ? 0 : (page - 1) * pageSize + 1
+  const end   = Math.min(page * pageSize, total)
+  const visiblePages = getVisiblePages(page, totalPages)
 
   return (
     <div className="bg-surface border border-surface-border rounded-xl overflow-hidden">
@@ -130,9 +165,20 @@ export function UsersTable({
           ))}
         </select>
 
+        {/* Tamanho da página */}
+        <select
+          value={String(pageSize)}
+          onChange={(e) => updateParam('pageSize', e.target.value)}
+          className="text-sm bg-background border border-surface-border rounded-lg px-3 py-2 text-text-primary focus:outline-none focus:border-brand-lime/50"
+        >
+          {pageSizeOptions.map((size) => (
+            <option key={size} value={size}>{size} linhas</option>
+          ))}
+        </select>
+
         {/* Total */}
         <span className="ml-auto text-xs text-text-secondary flex-shrink-0">
-          {total} usuário{total !== 1 ? 's' : ''}
+          {total} registro{total !== 1 ? 's' : ''}
         </span>
       </div>
 
@@ -150,6 +196,7 @@ export function UsersTable({
                 <th className="text-left px-4 py-3 text-xs text-text-secondary font-semibold uppercase tracking-wide">Usuário</th>
                 <th className="text-left px-4 py-3 text-xs text-text-secondary font-semibold uppercase tracking-wide">Papel</th>
                 <th className="text-left px-4 py-3 text-xs text-text-secondary font-semibold uppercase tracking-wide">Cliente</th>
+                <th className="text-left px-4 py-3 text-xs text-text-secondary font-semibold uppercase tracking-wide">Acesso</th>
                 <th className="text-left px-4 py-3 text-xs text-text-secondary font-semibold uppercase tracking-wide">Status</th>
                 <th className="text-left px-4 py-3 text-xs text-text-secondary font-semibold uppercase tracking-wide">Criado em</th>
                 <th className="text-right px-4 py-3 text-xs text-text-secondary font-semibold uppercase tracking-wide">Ações</th>
@@ -159,7 +206,10 @@ export function UsersTable({
               {users.map((user) => {
                 const roleCfg   = ROLE_CONFIG[user.role as keyof typeof ROLE_CONFIG]
                 const statusCfg = STATUS_CONFIG[user.status as keyof typeof STATUS_CONFIG]
+                const accountCfg = ACCOUNT_STATE_CONFIG[user.account_state]
                 const RoleIcon  = roleCfg?.icon ?? GraduationCap
+                const displayName = user.full_name ?? user.email ?? 'Sem identificação'
+                const displayInitial = displayName.charAt(0).toUpperCase()
 
                 return (
                   <tr key={user.id} className="hover:bg-background/50 transition-colors">
@@ -168,13 +218,13 @@ export function UsersTable({
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold ${roleCfg?.color ?? ''} border`}>
-                          {(user.full_name ?? user.email)[0].toUpperCase()}
+                          {displayInitial}
                         </div>
                         <div className="min-w-0">
                           <p className="font-medium text-text-primary truncate">
-                            {user.full_name ?? '—'}
+                            {displayName}
                           </p>
-                          <p className="text-xs text-text-secondary truncate">{user.email}</p>
+                          <p className="text-xs text-text-secondary truncate">{user.email ?? 'Sem e-mail'}</p>
                           {user.must_change_password && (
                             <span className="text-xs text-status-warning">• Deve alterar senha</span>
                           )}
@@ -199,6 +249,13 @@ export function UsersTable({
                       )}
                     </td>
 
+                    {/* Acesso */}
+                    <td className="px-4 py-3">
+                      <span className={`inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full border ${accountCfg.color}`}>
+                        {accountCfg.label}
+                      </span>
+                    </td>
+
                     {/* Status */}
                     <td className="px-4 py-3">
                       <span className={`inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full border ${statusCfg?.color ?? ''}`}>
@@ -213,7 +270,7 @@ export function UsersTable({
 
                     {/* Ações */}
                     <td className="px-4 py-3 text-right">
-                      <UserActionsDropdown user={user} />
+                      <UserActionsDropdown user={user} tenants={tenants} />
                     </td>
                   </tr>
                 )
@@ -232,20 +289,44 @@ export function UsersTable({
           <div className="flex items-center gap-2">
             <button
               disabled={page <= 1}
+              onClick={() => updateParam('page', '1')}
+              className="px-2.5 py-1.5 rounded-lg border border-surface-border text-xs text-text-secondary hover:text-text-primary hover:border-brand-lime/40 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              Primeira
+            </button>
+            <button
+              disabled={page <= 1}
               onClick={() => updateParam('page', String(page - 1))}
               className="p-1.5 rounded-lg border border-surface-border text-text-secondary hover:text-text-primary hover:border-brand-lime/40 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             >
               <ChevronLeft size={16} />
             </button>
-            <span className="text-xs text-text-secondary px-2">
-              {page} / {totalPages}
-            </span>
+            {visiblePages.map((visiblePage) => (
+              <button
+                key={visiblePage}
+                onClick={() => updateParam('page', String(visiblePage))}
+                className={`min-w-8 px-2.5 py-1.5 rounded-lg border text-xs transition-colors ${
+                  visiblePage === page
+                    ? 'border-brand-lime bg-brand-lime text-background'
+                    : 'border-surface-border text-text-secondary hover:text-text-primary hover:border-brand-lime/40'
+                }`}
+              >
+                {visiblePage}
+              </button>
+            ))}
             <button
               disabled={page >= totalPages}
               onClick={() => updateParam('page', String(page + 1))}
               className="p-1.5 rounded-lg border border-surface-border text-text-secondary hover:text-text-primary hover:border-brand-lime/40 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             >
               <ChevronRight size={16} />
+            </button>
+            <button
+              disabled={page >= totalPages}
+              onClick={() => updateParam('page', String(totalPages))}
+              className="px-2.5 py-1.5 rounded-lg border border-surface-border text-xs text-text-secondary hover:text-text-primary hover:border-brand-lime/40 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              Última
             </button>
           </div>
         </div>
