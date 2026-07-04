@@ -6,6 +6,7 @@ import {
   ClipboardList, FileHeart, Receipt, TrendingUp, CalendarCheck, History, KeyRound, Zap,
 } from 'lucide-react'
 import { ResetPasswordButton } from './reset-password-button'
+import { StudentStatusButton } from './student-status-button'
 
 interface Props {
   params: Promise<{ id: string }>
@@ -197,8 +198,9 @@ export default async function StudentDetailPage({ params }: Props) {
             <KeyRound size={14} className="text-text-secondary" />
             <p className="text-xs font-body font-semibold text-text-secondary uppercase tracking-widest">Acesso</p>
           </div>
-          <div className="pt-1">
+          <div className="pt-1 flex flex-wrap items-center gap-4">
             <ResetPasswordButton studentId={student.id} />
+            <StudentStatusButton studentId={student.id} studentName={student.full_name} status={student.status} />
           </div>
         </div>
       )}

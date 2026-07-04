@@ -1,6 +1,7 @@
 'use server'
 
 import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient, generateTempPassword } from '@/lib/supabase/admin'
 
@@ -65,42 +66,115 @@ export async function createStudent(formData: FormData) {
   // ── 5. Criar auth user (apenas se e-mail fornecido) ─────────────────────
   let userId: string | null = null
   let tempPassword: string | null = null
+  let reusingAccount = false
 
   if (email) {
-    tempPassword = generateTempPassword()
+    // ── 5a. Já existe um aluno com esse e-mail NESTE tenant? ──────────────
+    const { data: sameTenantStudent } = await adminSupabase
+      .from('students')
+      .select('id, user_id, status')
+      .eq('tenant_id', tenantId)
+      .eq('email', email)
+      .maybeSingle()
 
-    const { data: authData, error: authError } = await adminSupabase.auth.admin.createUser({
-      email,
-      password: tempPassword,
-      email_confirm: true,
-      user_metadata: {
-        full_name: fullName,
-        role: 'student',
-      },
-    })
+    if (sameTenantStudent) {
+      if (sameTenantStudent.status === 'active') {
+        redirect('/dashboard/alunos/novo?error=' + encodeURIComponent('Já existe um aluno com esse e-mail.'))
+      }
 
-    if (authError || !authData.user) {
-      redirect('/dashboard/alunos/novo?error=' + encodeURIComponent(
-        `Erro ao criar acesso: ${authError?.message ?? 'desconhecido'}`
-      ))
+      // Aluno já existiu neste tenant e foi excluído — reativa em vez de duplicar.
+      const { error: reactivateError } = await adminSupabase
+        .from('students')
+        .update({ full_name: fullName, phone, birth_date: birthDate || null, goal, notes, status: 'active' })
+        .eq('id', sameTenantStudent.id)
+
+      if (reactivateError) {
+        redirect('/dashboard/alunos/novo?error=' + encodeURIComponent(
+          `Erro ao reativar aluno: ${reactivateError.message}`
+        ))
+      }
+
+      if (sendInvite && sameTenantStudent.user_id) {
+        const { error: emailError } = await supabase.functions.invoke('send-student-welcome', {
+          body: {
+            email,
+            studentName: fullName,
+            personalName: personalProfile.full_name ?? tenant.business_name,
+            businessName: tenant.business_name,
+            logoUrl: tenant.logo_url,
+            primaryColor: tenant.primary_color,
+            reusingAccount: true,
+          },
+        })
+        if (emailError) console.error('[createStudent] Falha ao enviar e-mail:', emailError.message)
+      }
+
+      redirect(`/dashboard/alunos/${sameTenantStudent.id}`)
     }
 
-    userId = authData.user.id
+    // ── 5b. Já existe conta com esse e-mail em OUTRO tenant (ativo ou não)? ─
+    // Reaproveita a conta em vez de tentar criar um auth.users duplicado —
+    // o aluno continua com a mesma senha, sem precisar de nova senha temporária.
+    const { data: existingElsewhere } = await adminSupabase
+      .from('students')
+      .select('user_id')
+      .eq('email', email)
+      .neq('tenant_id', tenantId)
+      .not('user_id', 'is', null)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
 
-    // ── 6. Vincular perfil ao tenant + forçar troca de senha ────────────
-    const { error: profileError } = await adminSupabase
-      .from('profiles')
-      .update({
-        tenant_id: tenantId,
-        must_change_password: true,
+    if (existingElsewhere?.user_id) {
+      userId = existingElsewhere.user_id
+      reusingAccount = true
+
+      const { error: profileError } = await adminSupabase
+        .from('profiles')
+        .update({ tenant_id: tenantId })
+        .eq('id', userId)
+
+      if (profileError) {
+        redirect('/dashboard/alunos/novo?error=' + encodeURIComponent(
+          `Erro ao vincular aluno existente: ${profileError.message}`
+        ))
+      }
+    } else {
+      tempPassword = generateTempPassword()
+
+      const { data: authData, error: authError } = await adminSupabase.auth.admin.createUser({
+        email,
+        password: tempPassword,
+        email_confirm: true,
+        user_metadata: {
+          full_name: fullName,
+          role: 'student',
+        },
       })
-      .eq('id', userId)
 
-    if (profileError) {
-      await adminSupabase.auth.admin.deleteUser(userId)
-      redirect('/dashboard/alunos/novo?error=' + encodeURIComponent(
-        `Erro ao configurar perfil: ${profileError.message}`
-      ))
+      if (authError || !authData.user) {
+        redirect('/dashboard/alunos/novo?error=' + encodeURIComponent(
+          `Erro ao criar acesso: ${authError?.message ?? 'desconhecido'}`
+        ))
+      }
+
+      userId = authData.user.id
+
+      // ── 6. Vincular perfil ao tenant + forçar troca de senha ────────────
+      const { error: profileError } = await adminSupabase
+        .from('profiles')
+        .update({
+          tenant_id: tenantId,
+          must_change_password: true,
+        })
+        .eq('id', userId)
+
+      if (profileError) {
+        await adminSupabase.auth.admin.deleteUser(userId)
+        redirect('/dashboard/alunos/novo?error=' + encodeURIComponent(
+          `Erro ao configurar perfil: ${profileError.message}`
+        ))
+      }
     }
   }
 
@@ -122,21 +196,22 @@ export async function createStudent(formData: FormData) {
     .single()
 
   if (studentError || !student) {
-    if (userId) await adminSupabase.auth.admin.deleteUser(userId)
+    if (userId && !reusingAccount) await adminSupabase.auth.admin.deleteUser(userId)
     redirect('/dashboard/alunos/novo?error=' + encodeURIComponent(
       `Erro ao cadastrar aluno: ${studentError?.message ?? 'desconhecido'}`
     ))
   }
 
   // ── 8. Enviar e-mail de boas-vindas (best-effort) ───────────────────────
-  if (sendInvite && email && tempPassword) {
+  if (sendInvite && email && (tempPassword || reusingAccount)) {
     const { error: emailError } = await supabase.functions.invoke('send-student-welcome', {
       body: {
         email,
         studentName: fullName,
         personalName: personalProfile.full_name ?? tenant.business_name,
         businessName: tenant.business_name,
-        tempPassword,
+        ...(tempPassword ? { tempPassword } : {}),
+        reusingAccount,
         logoUrl: tenant.logo_url,
         primaryColor: tenant.primary_color,
       },
@@ -169,6 +244,9 @@ export async function updateStudent(
     .eq('id', studentId)
 
   if (error) return { error: error.message }
+
+  revalidatePath(`/dashboard/alunos/${studentId}`)
+  revalidatePath('/dashboard/alunos')
   return {}
 }
 

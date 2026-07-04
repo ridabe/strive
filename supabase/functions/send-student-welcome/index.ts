@@ -14,9 +14,12 @@ interface StudentWelcomePayload {
   studentName: string
   personalName: string
   businessName: string
-  tempPassword: string
+  tempPassword?: string
   logoUrl?: string | null
   primaryColor?: string | null
+  // true quando o aluno já tinha conta (ativa ou inativa em outro estúdio) e foi
+  // apenas vinculado a este tenant — mantém a senha atual, sem senha provisória.
+  reusingAccount?: boolean
 }
 
 function buildHtml(p: StudentWelcomePayload): string {
@@ -76,6 +79,39 @@ function buildHtml(p: StudentWelcomePayload): string {
                   </td>
                 </tr>
 
+                ${p.reusingAccount ? `
+                <!-- Conta já existente — mantém a senha atual -->
+                <tr>
+                  <td style="padding-bottom:28px;">
+                    <table width="100%" cellpadding="0" cellspacing="0"
+                      style="background-color:#0E0E1A;border:1px solid #2A2A45;border-radius:12px;padding:20px 24px;">
+                      <tr>
+                        <td>
+                          <p style="margin:0 0 4px;font-size:11px;color:#B0B0C3;text-transform:uppercase;letter-spacing:1px;">Seu e-mail de acesso</p>
+                          <p style="margin:0;font-size:15px;color:#FFFFFF;font-weight:600;">${p.email}</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <!-- Aviso: já tem conta -->
+                <tr>
+                  <td style="padding-bottom:28px;">
+                    <table width="100%" cellpadding="0" cellspacing="0"
+                      style="background-color:rgba(232,255,71,0.06);border:1px solid rgba(232,255,71,0.2);border-radius:10px;padding:14px 18px;">
+                      <tr>
+                        <td>
+                          <p style="margin:0;font-size:13px;color:#E8FF47;font-weight:600;">✅ Seu acesso já existe</p>
+                          <p style="margin:4px 0 0;font-size:13px;color:#B0B0C3;line-height:1.5;">
+                            Você já tem uma conta no Strive Personal — entre com o mesmo e-mail e senha que já usa.
+                            Não é preciso criar uma senha nova.
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>` : `
                 <!-- Credenciais -->
                 <tr>
                   <td style="padding-bottom:28px;">
@@ -115,7 +151,7 @@ function buildHtml(p: StudentWelcomePayload): string {
                       </tr>
                     </table>
                   </td>
-                </tr>
+                </tr>`}
 
                 <!-- O que você terá acesso -->
                 <tr>
@@ -206,9 +242,10 @@ serve(async (req: Request) => {
 
     const payload: StudentWelcomePayload = await req.json()
 
-    if (!payload.email || !payload.studentName || !payload.tempPassword || !payload.businessName) {
+    const missingCredential = !payload.reusingAccount && !payload.tempPassword
+    if (!payload.email || !payload.studentName || !payload.businessName || missingCredential) {
       return new Response(
-        JSON.stringify({ error: 'Campos obrigatórios ausentes: email, studentName, tempPassword, businessName' }),
+        JSON.stringify({ error: 'Campos obrigatórios ausentes: email, studentName, businessName' + (missingCredential ? ', tempPassword' : '') }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }

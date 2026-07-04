@@ -1,5 +1,7 @@
 import { redirect } from 'next/navigation'
+import { UserX } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
+import { signOut } from '@/app/actions/auth'
 import { joinOne } from '@/lib/supabase/join'
 import { TenantLogoHeader } from '@/components/layout/tenant-logo-header'
 import { StudentSidebarNav } from '@/components/layout/student-sidebar'
@@ -84,9 +86,39 @@ export default async function StudentLayout({
 
   const { data: studentRow } = await supabase
     .from('students')
-    .select('id')
+    .select('id, status')
     .eq('user_id', user.id)
-    .single()
+    .eq('tenant_id', profile.tenant_id ?? '')
+    .maybeSingle()
+
+  // Sem vínculo ativo com este personal — não renderiza o dashboard normal.
+  if (!studentRow || studentRow.status !== 'active') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background px-4">
+        <div className="max-w-sm w-full text-center space-y-4 bg-surface border border-surface-border rounded-2xl p-8">
+          <div className="w-12 h-12 rounded-xl bg-surface-border/40 flex items-center justify-center mx-auto">
+            <UserX size={22} className="text-text-secondary" />
+          </div>
+          <div className="space-y-1.5">
+            <p className="font-display text-lg font-bold text-text-primary uppercase tracking-widest">
+              Sem mentoria ativa
+            </p>
+            <p className="text-sm text-text-secondary">
+              Você não tem nenhum personal trainer ativo no momento. Entre em contato com seu personal para retomar o acompanhamento.
+            </p>
+          </div>
+          <form action={signOut}>
+            <button
+              type="submit"
+              className="w-full min-h-11 rounded-xl border border-surface-border text-sm font-body font-medium text-text-secondary hover:text-text-primary hover:border-text-secondary/30 transition-colors"
+            >
+              Sair
+            </button>
+          </form>
+        </div>
+      </div>
+    )
+  }
 
   // Status da gamificação
   const { data: gamifSettings } = await supabase
