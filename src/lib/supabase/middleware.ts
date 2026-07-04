@@ -4,7 +4,7 @@ import type { AppRole } from '@/types/database'
 
 const PUBLIC_PATHS = [
   '/', '/login', '/register', '/forgot-password',
-  '/reset-password', '/termos', '/privacidade',
+  '/reset-password', '/termos', '/privacidade', '/preview-banner-test-tmp',
 ]
 
 // Rota de troca obrigatória — acessível para autenticados

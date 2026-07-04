@@ -116,26 +116,29 @@ export const metadata: Metadata = {
   },
 }
 
-async function getAndroidStoreUrl(): Promise<string | null> {
+async function getAndroidInstallPromptConfig(): Promise<{ storeUrl: string | null; enabled: boolean }> {
   const supabase = await createClient()
   const { data } = await supabase
     .from('app_versions')
-    .select('store_url')
+    .select('store_url, show_install_prompt')
     .eq('platform', 'android')
     .single()
 
-  return data?.store_url ?? null
+  return {
+    storeUrl: data?.store_url ?? null,
+    enabled: data?.show_install_prompt ?? false,
+  }
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const androidStoreUrl = await getAndroidStoreUrl()
+  const { storeUrl: androidStoreUrl, enabled: androidPromptEnabled } = await getAndroidInstallPromptConfig()
 
   return (
     <html lang="pt-BR" className={`${syncopate.variable} ${dmSans.variable}`}>
       <body className="font-body antialiased">
         {children}
         <IOSInstallPrompt />
-        <AndroidInstallPrompt storeUrl={androidStoreUrl} />
+        <AndroidInstallPrompt storeUrl={androidStoreUrl} enabled={androidPromptEnabled} />
       </body>
     </html>
   )

@@ -50,9 +50,9 @@
     "semantic_hash": "006fbb9cdddf584d92a9104acd5139e0"
   },
   "package.json": {
-    "mtime": 1783018467.507086,
-    "ast_hash": "618349aba915feda660a14f22a572f94",
-    "semantic_hash": "618349aba915feda660a14f22a572f94"
+    "mtime": 1783177793.0621934,
+    "ast_hash": "561ee4d0d52dfaeee735fdb9f94c1005",
+    "semantic_hash": "561ee4d0d52dfaeee735fdb9f94c1005"
   },
   "postcss.config.js": {
     "mtime": 1781835937.258387,
@@ -155,19 +155,19 @@
     "semantic_hash": "2ea1d4a597bf8dbc6d6a66a6286166d4"
   },
   "src/app/(admin)/admin/app-versao/actions.ts": {
-    "mtime": 1782215065.9721444,
-    "ast_hash": "19b45163798f00bb7882ea44308323c3",
-    "semantic_hash": "19b45163798f00bb7882ea44308323c3"
+    "mtime": 1783178132.569462,
+    "ast_hash": "45afa3869ee38f70100d197712c4cec9",
+    "semantic_hash": "45afa3869ee38f70100d197712c4cec9"
   },
   "src/app/(admin)/admin/app-versao/app-version-form.tsx": {
-    "mtime": 1782566896.33067,
-    "ast_hash": "d74d6c72adf67cfae93721d62d153b25",
-    "semantic_hash": "d74d6c72adf67cfae93721d62d153b25"
+    "mtime": 1783178167.2339208,
+    "ast_hash": "c04d7c3e188b5b005980efe147fd545b",
+    "semantic_hash": "c04d7c3e188b5b005980efe147fd545b"
   },
   "src/app/(admin)/admin/app-versao/page.tsx": {
-    "mtime": 1782215119.8873284,
-    "ast_hash": "8f7dc71114fcbff32d4a9b708ed3afeb",
-    "semantic_hash": "8f7dc71114fcbff32d4a9b708ed3afeb"
+    "mtime": 1783178172.1583536,
+    "ast_hash": "26cbb2c89fae86ab6514506f03f6332f",
+    "semantic_hash": "26cbb2c89fae86ab6514506f03f6332f"
   },
   "src/app/(admin)/admin/banco-de-exercicios/[id]/page.tsx": {
     "mtime": 1782326938.1118782,
@@ -870,9 +870,9 @@
     "semantic_hash": "7161543ef08898ed7384357dea003aef"
   },
   "src/app/layout.tsx": {
-    "mtime": 1783021458.3134065,
-    "ast_hash": "166eb5db81ff63f755022ff1a44fe089",
-    "semantic_hash": "166eb5db81ff63f755022ff1a44fe089"
+    "mtime": 1783178181.628018,
+    "ast_hash": "efe6a524b9affd82c43725b3fea8fb96",
+    "semantic_hash": "efe6a524b9affd82c43725b3fea8fb96"
   },
   "src/app/page.tsx": {
     "mtime": 1783021148.9100945,
@@ -1160,9 +1160,9 @@
     "semantic_hash": "ea05d023d1d73438a811c3570ad890dd"
   },
   "src/types/database.ts": {
-    "mtime": 1783176572.3827646,
-    "ast_hash": "28743772a402022f53249cf73b8d6638",
-    "semantic_hash": "28743772a402022f53249cf73b8d6638"
+    "mtime": 1783178123.80165,
+    "ast_hash": "75b533ba686e6440bef00e1f6317ae78",
+    "semantic_hash": "75b533ba686e6440bef00e1f6317ae78"
   },
   "src/types/index.ts": {
     "mtime": 1781835992.5139256,
@@ -2015,9 +2015,9 @@
     "semantic_hash": "5476c3f9336293b85bec143a46f75c0f"
   },
   "src/components/pwa/AndroidInstallPrompt.tsx": {
-    "mtime": 1783021447.0558176,
-    "ast_hash": "1f2f66b60857090f2e0c9cda1ad02973",
-    "semantic_hash": "1f2f66b60857090f2e0c9cda1ad02973"
+    "mtime": 1783178225.1591089,
+    "ast_hash": "60528863de51592eaf64ac4b361b3c3d",
+    "semantic_hash": "60528863de51592eaf64ac4b361b3c3d"
   },
   "src/lib/module-onboarding.ts": {
     "mtime": 1783033198.8044796,
@@ -2343,5 +2343,10 @@
     "mtime": 1783176120.4811592,
     "ast_hash": "96df2fbaf68d50b75ccff4e404b85a6f",
     "semantic_hash": "96df2fbaf68d50b75ccff4e404b85a6f"
+  },
+  "supabase/migrations/20260704_app_versions_install_prompt_toggle.sql": {
+    "mtime": 1783178098.897419,
+    "ast_hash": "bb0cdaf2b5d9ae6d3087d327f08ff5a6",
+    "semantic_hash": "bb0cdaf2b5d9ae6d3087d327f08ff5a6"
   }
 }

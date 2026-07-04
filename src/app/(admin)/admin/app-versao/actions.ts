@@ -21,6 +21,7 @@ export async function updateAppVersion(platform: 'android' | 'ios', formData: Fo
   const current_version_code = parseInt(formData.get('current_version_code') as string)
   const min_version_code     = parseInt(formData.get('min_version_code') as string)
   const force_update         = formData.get('force_update') === 'true'
+  const show_install_prompt  = formData.get('show_install_prompt') === 'true'
   const store_url            = (formData.get('store_url') as string).trim() || null
   const release_notes        = (formData.get('release_notes') as string).trim() || null
 
@@ -38,6 +39,7 @@ export async function updateAppVersion(platform: 'android' | 'ios', formData: Fo
       current_version_code,
       min_version_code,
       force_update,
+      show_install_prompt,
       store_url,
       release_notes,
       updated_at: new Date().toISOString(),

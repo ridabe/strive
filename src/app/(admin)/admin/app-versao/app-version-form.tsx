@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState, useTransition } from 'react'
-import { Save, AlertTriangle, Check } from 'lucide-react'
+import { Save, AlertTriangle, Check, Download } from 'lucide-react'
 import { updateAppVersion } from './actions'
 
 interface AppVersion {
@@ -10,6 +10,7 @@ interface AppVersion {
   current_version_code: number
   min_version_code: number
   force_update: boolean
+  show_install_prompt: boolean
   store_url: string | null
   release_notes: string | null
   updated_at: string
@@ -19,19 +20,22 @@ interface Props {
   data: AppVersion
   platformLabel: string
   platformIcon: React.ReactNode
+  showInstallPromptToggle?: boolean
 }
 
-export function AppVersionForm({ data, platformLabel, platformIcon }: Props) {
+export function AppVersionForm({ data, platformLabel, platformIcon, showInstallPromptToggle = false }: Props) {
   const formRef = useRef<HTMLFormElement>(null)
   const [pending, startTransition] = useTransition()
   const [result, setResult] = useState<{ success?: boolean; error?: string } | null>(null)
   const [forceUpdate, setForceUpdate] = useState(data.force_update)
+  const [showInstallPrompt, setShowInstallPrompt] = useState(data.show_install_prompt)
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setResult(null)
     const fd = new FormData(formRef.current!)
     fd.set('force_update', forceUpdate ? 'true' : 'false')
+    fd.set('show_install_prompt', showInstallPrompt ? 'true' : 'false')
     startTransition(async () => {
       const res = await updateAppVersion(data.platform, fd)
       setResult(res)
@@ -55,19 +59,36 @@ export function AppVersionForm({ data, platformLabel, platformIcon }: Props) {
           </div>
         </div>
 
-        {/* Força atualização toggle */}
-        <button
-          type="button"
-          onClick={() => setForceUpdate(v => !v)}
-          className={`inline-flex w-full items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-medium border transition-all sm:w-auto ${
-            forceUpdate
-              ? 'bg-status-error/10 border-status-error/30 text-status-error'
-              : 'bg-surface-border/30 border-surface-border text-text-secondary hover:text-text-primary'
-          }`}
-        >
-          <AlertTriangle size={13} />
-          {forceUpdate ? 'Atualização obrigatória' : 'Atualização opcional'}
-        </button>
+        <div className="flex flex-col gap-2 w-full sm:w-auto sm:flex-row">
+          {showInstallPromptToggle && (
+            <button
+              type="button"
+              onClick={() => setShowInstallPrompt(v => !v)}
+              className={`inline-flex w-full items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-medium border transition-all sm:w-auto ${
+                showInstallPrompt
+                  ? 'bg-brand-lime/10 border-brand-lime/30 text-brand-lime'
+                  : 'bg-surface-border/30 border-surface-border text-text-secondary hover:text-text-primary'
+              }`}
+            >
+              <Download size={13} />
+              {showInstallPrompt ? 'Sugestão de instalação ativa' : 'Sugestão de instalação desativada'}
+            </button>
+          )}
+
+          {/* Força atualização toggle */}
+          <button
+            type="button"
+            onClick={() => setForceUpdate(v => !v)}
+            className={`inline-flex w-full items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-medium border transition-all sm:w-auto ${
+              forceUpdate
+                ? 'bg-status-error/10 border-status-error/30 text-status-error'
+                : 'bg-surface-border/30 border-surface-border text-text-secondary hover:text-text-primary'
+            }`}
+          >
+            <AlertTriangle size={13} />
+            {forceUpdate ? 'Atualização obrigatória' : 'Atualização opcional'}
+          </button>
+        </div>
       </div>
 
       <div className="p-4 space-y-5 sm:p-6">
@@ -162,6 +183,12 @@ export function AppVersionForm({ data, platformLabel, platformIcon }: Props) {
               <span className="text-brand-lime mt-0.5">→</span>
               Se instalado ≥ mínimo mas &lt; atual: exibe banner informativo (sem bloqueio).
             </li>
+            {showInstallPromptToggle && (
+              <li className="flex items-start gap-2">
+                <span className="text-brand-lime mt-0.5">→</span>
+                Com a <strong className="text-text-primary">sugestão de instalação ativa</strong>, quem acessa pelo navegador (Android ou computador) e ainda não tem o app instalado vê um banner com o Max sugerindo baixar na Play Store.
+              </li>
+            )}
           </ul>
         </div>
 

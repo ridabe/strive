@@ -1,8 +1,12 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { FileHeart, X } from 'lucide-react'
+import { X } from 'lucide-react'
+
+// Violeta é a identidade exclusiva do Max (DESIGN.md) — usado só no avatar/nome/glow dele.
+const MAX_VIOLET = '#7C3AED'
 
 interface Props {
   hasTemplates: boolean
@@ -24,9 +28,23 @@ export function AnamnesePendingBanner({ hasTemplates, isCompleted }: Props) {
 
   return (
     <div className="bg-rose-400/10 border-b border-rose-400/20 px-4 py-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex items-start gap-2 min-w-0">
-        <FileHeart size={15} className="text-rose-400 flex-shrink-0 mt-0.5" />
-        <p className="text-sm text-rose-300">
+      <div className="flex items-center gap-3 min-w-0">
+        <div className="relative w-9 h-9 flex-shrink-0 flex items-center justify-center">
+          <div
+            className="absolute inset-0 rounded-full"
+            style={{ background: `radial-gradient(circle, ${MAX_VIOLET}30 0%, transparent 70%)` }}
+          />
+          <Image
+            src="/max-avatar.png"
+            alt="Max Strive IA"
+            width={36}
+            height={36}
+            className="relative z-10 object-contain"
+            style={{ filter: `drop-shadow(0 0 8px ${MAX_VIOLET}55)` }}
+          />
+        </div>
+        <p className="text-sm text-rose-300 min-w-0">
+          <span className="font-semibold" style={{ color: MAX_VIOLET }}>Max: </span>
           Sua anamnese ainda não foi preenchida. Complete sua ficha de saúde para seu personal te acompanhar melhor.
         </p>
       </div>

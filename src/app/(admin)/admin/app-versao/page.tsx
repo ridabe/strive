@@ -64,6 +64,7 @@ export default async function AppVersaoPage() {
             data={android}
             platformLabel="Android (Google Play)"
             platformIcon={<AndroidIcon />}
+            showInstallPromptToggle
           />
         )}
         {ios && (

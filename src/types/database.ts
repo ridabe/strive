@@ -455,6 +455,7 @@ export type Database = {
           min_version_code: number
           platform: string
           release_notes: string | null
+          show_install_prompt: boolean
           store_url: string | null
           updated_at: string
           updated_by: string | null
@@ -466,6 +467,7 @@ export type Database = {
           min_version_code: number
           platform: string
           release_notes?: string | null
+          show_install_prompt?: boolean
           store_url?: string | null
           updated_at?: string
           updated_by?: string | null
@@ -477,6 +479,7 @@ export type Database = {
           min_version_code?: number
           platform?: string
           release_notes?: string | null
+          show_install_prompt?: boolean
           store_url?: string | null
           updated_at?: string
           updated_by?: string | null
