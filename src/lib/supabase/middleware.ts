@@ -4,11 +4,12 @@ import type { AppRole } from '@/types/database'
 
 const PUBLIC_PATHS = [
   '/', '/login', '/register', '/forgot-password',
-  '/reset-password', '/termos', '/privacidade',
+  '/reset-password', '/auth/confirm', '/termos', '/privacidade',
 ]
 
 // Rota de troca obrigatória — acessível para autenticados
 const CHANGE_PASSWORD_PATH = '/alterar-senha'
+const RESET_PASSWORD_PATH = '/reset-password'
 
 const ROLE_ROUTES: Record<AppRole, string> = {
   global_admin: '/admin',
@@ -43,6 +44,7 @@ export async function updateSession(request: NextRequest) {
     (p) => pathname === p || (p !== '/' && pathname.startsWith(p))
   )
   const isChangePasswordPath = pathname === CHANGE_PASSWORD_PATH
+  const isResetPasswordPath = pathname === RESET_PASSWORD_PATH
 
   // ── 1. Não autenticado ─────────────────────────────────────────────────
   if (!user) {
@@ -76,7 +78,7 @@ export async function updateSession(request: NextRequest) {
   // Só bloqueia se não estiver autenticado (tratado acima)
 
   // ── 4. Roteamento por role ──────────────────────────────────────────────
-  if (isPublicPath && user) {
+  if (isPublicPath && user && !isResetPasswordPath) {
     const url = request.nextUrl.clone()
     url.pathname = allowedPrefix
     return NextResponse.redirect(url)
@@ -88,7 +90,7 @@ export async function updateSession(request: NextRequest) {
   // Verifica se está acessando área do role correto
   // isChangePasswordPath é sempre permitido para qualquer role autenticado
   const isInCorrectArea = pathname.startsWith(allowedPrefix)
-  if (!isInCorrectArea && !isPublicPath && !isChangePasswordPath) {
+  if (!isInCorrectArea && !isPublicPath && !isChangePasswordPath && !isResetPasswordPath) {
     const url = request.nextUrl.clone()
     url.pathname = allowedPrefix
     return NextResponse.redirect(url)
