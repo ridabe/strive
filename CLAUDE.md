@@ -34,18 +34,24 @@ O graphify mapeia relacionamentos reais entre arquivos, funções e módulos. Se
 2. Se existir, usar a skill graphify para consultar — ex.: `/graphify query "como funciona autenticação"` ou `/graphify path src/lib/auth.ts`
 3. Se não existir, rodar `/graphify` para indexar o projeto antes de prosseguir
 
-### Após salvar qualquer arquivo de código
+### Após salvar qualquer arquivo de código — atualizar seletivamente
 
-**Sempre atualizar o graphify ao final de uma sessão de edição que modificou arquivos `.ts` ou `.tsx`:**
+**Não atualizar o graphify após toda edição.** Isso tornava o processo lento (pipeline manual multi-etapas). Atualizar apenas quando a mudança for:
+
+- **Crítica**: autenticação, RLS/multi-tenant, pagamentos (AbacatePay), webhooks, estrutura de rotas
+- **Feature nova que faça sentido estar mapeada**: novo módulo, nova entidade de domínio, nova action/rota que outras partes do sistema vão passar a depender
+- Não atualizar para: fixes pontuais, ajustes de estilo/UI, pequenos refactors locais, correções de bug isoladas (como o fix de canal duplicado do Realtime) — essas não mudam a topologia do grafo o suficiente para justificar o custo
+
+**Quando for atualizar, usar a própria habilidade nativa do graphify — não o fluxo manual passo a passo da skill:**
 
 ```bash
-/graphify update
+graphify update .
 ```
 
-Isso garante que o grafo semântico reflita o estado atual do código e futuras consultas sejam precisas.
+Esse comando é auto-contido: re-extrai só os arquivos `.ts`/`.tsx` alterados via AST (sem LLM, ~15-20s) e já regenera `graph.json`, `graph.html` e `GRAPH_REPORT.md` sozinho. Só cair no fluxo manual da skill (`/graphify --update` com subagents) se a mudança envolver docs/papers/imagens, que exigem extração semântica.
 
 **Regra resumida:**
-> Consultar graphify → editar → salvar → atualizar graphify
+> Consultar graphify antes de mudanças críticas → editar → só atualizar (`graphify update .`) se a mudança for crítica ou uma feature nova relevante para o mapa
 
 ---
 
