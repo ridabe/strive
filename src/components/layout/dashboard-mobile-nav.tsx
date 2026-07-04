@@ -19,6 +19,7 @@ interface DashboardMobileNavProps {
   userEmail: string
   userRole: AppRole
   modules: EnabledModule[]
+  notificationBell?: React.ReactNode
 }
 
 const QUICK_ITEMS = [
@@ -39,6 +40,7 @@ export function DashboardMobileNav({
   userEmail,
   userRole,
   modules,
+  notificationBell,
 }: DashboardMobileNavProps) {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -99,11 +101,14 @@ export function DashboardMobileNav({
           )}
         </div>
 
-        <div
-          className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-display font-black text-black flex-shrink-0"
-          style={{ background: primaryColor }}
-        >
-          {(userName ?? userEmail).charAt(0).toUpperCase()}
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {notificationBell}
+          <div
+            className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-display font-black text-black flex-shrink-0"
+            style={{ background: primaryColor }}
+          >
+            {(userName ?? userEmail).charAt(0).toUpperCase()}
+          </div>
         </div>
       </header>
 

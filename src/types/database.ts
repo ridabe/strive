@@ -2727,6 +2727,58 @@ export type Database = {
         }
         Relationships: []
       }
+      trainer_notifications: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          student_id: string | null
+          tenant_id: string
+          title: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          student_id?: string | null
+          tenant_id: string
+          title: string
+          type?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          student_id?: string | null
+          tenant_id?: string
+          title?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trainer_notifications_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trainer_notifications_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "trainer_notifications_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       webhook_events: {
         Row: {
           event: string
@@ -3299,6 +3351,10 @@ export type Database = {
           plan: string
           plan_name: string
         }[]
+      }
+      mark_challenge_item_complete: {
+        Args: { p_item_id: string }
+        Returns: Json
       }
       match_exercises: {
         Args: {

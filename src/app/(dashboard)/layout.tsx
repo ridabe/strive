@@ -8,6 +8,8 @@ import { TenantLogoHeader } from '@/components/layout/tenant-logo-header'
 import { PendingAgendaBanner } from '@/components/agenda/PendingAgendaBanner'
 import { MaxOnboardingModal } from '@/components/ai/MaxOnboardingModal'
 import { ModuleOnboardingPopup } from '@/components/onboarding/ModuleOnboardingPopup'
+import { TrainerNotificationBell } from '@/components/notifications/TrainerNotificationBell'
+import { getTrainerNotifications } from '@/app/actions/trainer-notifications'
 
 export default async function DashboardLayout({
   children,
@@ -93,6 +95,8 @@ export default async function DashboardLayout({
     pendingAgendaCount = count ?? 0
   }
 
+  const trainerNotifications = await getTrainerNotifications()
+
   return (
     <div
       className="min-h-screen bg-background flex"
@@ -106,16 +110,22 @@ export default async function DashboardLayout({
         userEmail={profile.email}
         userRole={profile.role}
         modules={enabledModules}
+        notificationBell={profile.tenant_id ? (
+          <TrainerNotificationBell tenantId={profile.tenant_id} initialNotifications={trainerNotifications} />
+        ) : null}
       />
 
       <aside className="hidden md:flex flex-col w-60 h-screen sticky top-0 border-r border-surface-border bg-surface px-4 py-5 gap-6 flex-shrink-0">
 
-        <div className="flex-shrink-0">
+        <div className="flex-shrink-0 flex items-center justify-between gap-2">
           <TenantLogoHeader
             logoUrl={tenantBranding?.logo_url ?? null}
             businessName={tenantBranding?.business_name ?? 'Strive Personal'}
             primaryColor={primaryColor}
           />
+          {profile.tenant_id && (
+            <TrainerNotificationBell tenantId={profile.tenant_id} initialNotifications={trainerNotifications} />
+          )}
         </div>
 
         <div className="flex-1 overflow-y-auto">

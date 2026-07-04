@@ -7,6 +7,7 @@ import { StudentMobileNav } from '@/components/layout/student-mobile-nav'
 import { UserMenu } from '@/components/layout/user-menu'
 import { StudentAgendaBanner } from '@/components/agenda/StudentAgendaBanner'
 import { StudentMessagesBanner } from '@/components/student/StudentMessagesBanner'
+import { AnamnesePendingBanner } from '@/components/student/AnamnesePendingBanner'
 import { ModuleOnboardingPopup } from '@/components/onboarding/ModuleOnboardingPopup'
 import { hasVisibleStudentChallenge } from '@/app/actions/challenges'
 
@@ -78,6 +79,8 @@ export default async function StudentLayout({
   let latestAgendaNoticeAt: string | null = null
   let unreadMessageCount = 0
   let latestMessageTitle: string | null = null
+  let anamneseHasTemplates = false
+  let anamneseCompleted = false
 
   const { data: studentRow } = await supabase
     .from('students')
@@ -101,6 +104,8 @@ export default async function StudentLayout({
       { count: rejected },
       { data: latestNoticeRow },
       { data: unreadMessages },
+      { count: templateCount },
+      { data: anamneseResponse },
     ] = await Promise.all([
       supabase
         .from('agenda_events')
@@ -130,12 +135,26 @@ export default async function StudentLayout({
         .eq('student_id', studentRow.id)
         .is('read_at', null)
         .order('created_at', { ascending: false }),
+      profile.tenant_id
+        ? supabase
+            .from('anamnese_templates')
+            .select('id', { count: 'exact', head: true })
+            .eq('is_active', true)
+            .or(`tenant_id.is.null,tenant_id.eq.${profile.tenant_id}`)
+        : Promise.resolve({ count: 0 }),
+      supabase
+        .from('anamnese_responses')
+        .select('completed_at')
+        .eq('student_id', studentRow.id)
+        .maybeSingle(),
     ])
     pendingAgendaCount  = pending  ?? 0
     rejectedAgendaCount = rejected ?? 0
     latestAgendaNoticeAt = latestNoticeRow?.updated_at ?? null
     unreadMessageCount = unreadMessages?.length ?? 0
     latestMessageTitle = unreadMessages?.[0]?.title ?? null
+    anamneseHasTemplates = (templateCount ?? 0) > 0
+    anamneseCompleted = !!anamneseResponse?.completed_at
   }
 
   return (
@@ -193,6 +212,10 @@ export default async function StudentLayout({
           pendingCount={pendingAgendaCount}
           rejectedCount={rejectedAgendaCount}
           latestNoticeAt={latestAgendaNoticeAt}
+        />
+        <AnamnesePendingBanner
+          hasTemplates={anamneseHasTemplates}
+          isCompleted={anamneseCompleted}
         />
         {studentRow && (
           <StudentMessagesBanner
