@@ -139,6 +139,7 @@ const PLANS = [
     highlight: false,
     features: [
       'Até 5 alunos ativos',
+      'Marca personalizada no app',
       'Prescrição de treinos',
       'Banco de exercícios',
       'App para seus alunos',
@@ -158,6 +159,7 @@ const PLANS = [
     features: [
       'Até 30 alunos',
       'Planos de nutrição',
+      'Marca personalizada no app',
       'Ranqueamento de alunos',
       'Controle financeiro',
       'Relatórios de evolução',
@@ -175,7 +177,7 @@ const PLANS = [
     features: [
       'Tudo do Pro, mais',
       'Alunos Ilimitados',
-      'Marca personalizada no app',
+      'Criar e disponibilizar Desafios',      
       'Acesso antecipado a novidades',
       'Implantação assistida',
       'Acesso ao Max, seu assistente de IA',
