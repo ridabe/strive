@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import Link from 'next/link'
 import { Bell, X } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -18,6 +18,7 @@ export function TrainerNotificationBell({ tenantId, initialNotifications }: Prop
   const [notifications, setNotifications] = useState(initialNotifications)
   const [isOpen, setIsOpen] = useState(false)
   const [pendingId, setPendingId] = useState<string | null>(null)
+  const instanceId = useId()
 
   useEffect(() => {
     setNotifications(initialNotifications)
@@ -38,7 +39,7 @@ export function TrainerNotificationBell({ tenantId, initialNotifications }: Prop
     }
 
     const channel = supabase
-      .channel(`trainer-notifications:${tenantId}`)
+      .channel(`trainer-notifications:${tenantId}:${instanceId}`)
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'trainer_notifications', filter: `tenant_id=eq.${tenantId}` },
@@ -51,7 +52,7 @@ export function TrainerNotificationBell({ tenantId, initialNotifications }: Prop
     return () => {
       void supabase.removeChannel(channel)
     }
-  }, [tenantId])
+  }, [tenantId, instanceId])
 
   async function handleDismiss(id: string) {
     setPendingId(id)

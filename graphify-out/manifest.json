@@ -875,9 +875,9 @@
     "semantic_hash": "efe6a524b9affd82c43725b3fea8fb96"
   },
   "src/app/page.tsx": {
-    "mtime": 1783021148.9100945,
-    "ast_hash": "3f0df348b04e2d7e86182c52a28f6e8b",
-    "semantic_hash": "3f0df348b04e2d7e86182c52a28f6e8b"
+    "mtime": 1783179311.4218783,
+    "ast_hash": "3b81cf5d6bd623bc550e9f062a4a50fe",
+    "semantic_hash": "3b81cf5d6bd623bc550e9f062a4a50fe"
   },
   "src/components/admin/admin-profile-card.tsx": {
     "mtime": 1781882946.4943788,
@@ -1140,7 +1140,7 @@
     "semantic_hash": "c76e8fda4b3789b1744cb14bf30678e1"
   },
   "src/lib/supabase/middleware.ts": {
-    "mtime": 1783034894.8023438,
+    "mtime": 1783178696.5201411,
     "ast_hash": "8d0f039774199d22197cd64e79922261",
     "semantic_hash": "8d0f039774199d22197cd64e79922261"
   },
@@ -2330,14 +2330,14 @@
     "semantic_hash": "1bebc2be76acdc3eb2c38d4e49bda268"
   },
   "src/components/notifications/TrainerNotificationBell.tsx": {
-    "mtime": 1783176319.7121654,
-    "ast_hash": "8810d7eec10b68c9d9287663658ee98b",
-    "semantic_hash": "8810d7eec10b68c9d9287663658ee98b"
+    "mtime": 1783179826.8538082,
+    "ast_hash": "437d55e3953c463153886551940fb4d7",
+    "semantic_hash": "437d55e3953c463153886551940fb4d7"
   },
   "src/components/student/AnamnesePendingBanner.tsx": {
-    "mtime": 1783176229.1206565,
-    "ast_hash": "4b708f801bee78d277709971058c67a3",
-    "semantic_hash": "4b708f801bee78d277709971058c67a3"
+    "mtime": 1783178328.774154,
+    "ast_hash": "8addae0ab5d11458799ba5a10c23a9c2",
+    "semantic_hash": "8addae0ab5d11458799ba5a10c23a9c2"
   },
   "supabase/migrations/20260704_trainer_notifications.sql": {
     "mtime": 1783176120.4811592,
