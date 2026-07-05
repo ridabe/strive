@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { getActiveStudentRow } from '@/lib/supabase/student-context'
 import Link from 'next/link'
 import { ClipboardList, Target, Calendar, ChevronRight } from 'lucide-react'
 
@@ -9,11 +10,7 @@ export default async function StudentTreinosPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
 
-  const { data: student } = await supabase
-    .from('students')
-    .select('id')
-    .eq('user_id', user.id)
-    .single()
+  const student = await getActiveStudentRow(supabase, user.id)
 
   // Planos atribuídos e ativos para este aluno
   const assignments = student

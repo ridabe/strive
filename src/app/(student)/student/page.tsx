@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+import { getActiveStudentRow } from '@/lib/supabase/student-context'
 import {
   Dumbbell, Zap, TrendingUp, CalendarCheck,
   ClipboardList, Activity, MessageSquare, Target, ChevronRight,
@@ -11,9 +12,9 @@ export default async function StudentHomePage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const [{ data: profile }, { data: student }] = await Promise.all([
+  const [{ data: profile }, student] = await Promise.all([
     supabase.from('profiles').select('full_name, tenant_id').eq('id', user.id).single(),
-    supabase.from('students').select('id, full_name').eq('user_id', user.id).maybeSingle(),
+    getActiveStudentRow(supabase, user.id),
   ])
 
   const fullName = profile?.full_name || student?.full_name || ''

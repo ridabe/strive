@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
-import { UserX } from 'lucide-react'
+import Link from 'next/link'
+import { UserX, ArrowLeftRight } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { signOut } from '@/app/actions/auth'
 import { joinOne } from '@/lib/supabase/join'
@@ -30,21 +31,49 @@ export default async function StudentLayout({
 
   if (!profile || profile.role !== 'student') redirect('/login')
 
+  // Busca TODOS os vínculos ativos do aluno — ele pode ter mais de um
+  // personal simultaneamente (ex: reativado por um antigo enquanto já ativo
+  // em outro).
+  const { data: activeRows } = await supabase
+    .from('students')
+    .select('id, tenant_id, status')
+    .eq('user_id', user.id)
+    .eq('status', 'active')
+
+  const activeRelationships = activeRows ?? []
+  const hasMultipleActiveTenants = activeRelationships.length > 1
+
+  let studentRow: { id: string; status: string } | null = null
+  let tenantId: string | null = null
+
+  if (activeRelationships.length === 1) {
+    studentRow = activeRelationships[0]
+    tenantId = activeRelationships[0].tenant_id
+    if (profile.tenant_id !== tenantId) {
+      await supabase.from('profiles').update({ tenant_id: tenantId }).eq('id', user.id)
+    }
+  } else if (activeRelationships.length > 1) {
+    const current = activeRelationships.find((r) => r.tenant_id === profile.tenant_id)
+    if (!current) redirect('/student/trocar-personal')
+    studentRow = current
+    tenantId = current.tenant_id
+  }
+
   // Tenant branding + personal name
   let tenantBranding: { logo_url: string | null; primary_color: string | null; business_name: string; cref?: string | null } | null = null
   let personalName: string | null = null
 
-  if (profile.tenant_id) {
+  if (tenantId) {
     const [{ data: tenant }, { data: personal }] = await Promise.all([
       supabase
         .from('tenants')
         .select('logo_url, primary_color, business_name, cref')
-        .eq('id', profile.tenant_id)
+        .eq('id', tenantId)
         .single(),
       supabase
         .from('profiles')
         .select('full_name')
-        .eq('tenant_id', profile.tenant_id)
+        .eq('tenant_id', tenantId)
         .eq('role', 'personal')
         .limit(1)
         .single(),
@@ -59,11 +88,11 @@ export default async function StudentLayout({
   // Slugs de módulos habilitados no tenant — filtram o loop de onboarding do aluno.
   // Se a RLS bloquear a leitura (retorno vazio), o popup usa a lista completa do perfil.
   let onboardingSlugs: string[] | null = null
-  if (profile.tenant_id) {
+  if (tenantId) {
     const { data: tenantModules } = await supabase
       .from('tenant_modules')
       .select('enabled, system_modules ( slug, available, status )')
-      .eq('tenant_id', profile.tenant_id)
+      .eq('tenant_id', tenantId)
       .eq('enabled', true)
 
     if (tenantModules && tenantModules.length) {
@@ -84,15 +113,8 @@ export default async function StudentLayout({
   let anamneseHasTemplates = false
   let anamneseCompleted = false
 
-  const { data: studentRow } = await supabase
-    .from('students')
-    .select('id, status')
-    .eq('user_id', user.id)
-    .eq('tenant_id', profile.tenant_id ?? '')
-    .maybeSingle()
-
-  // Sem vínculo ativo com este personal — não renderiza o dashboard normal.
-  if (!studentRow || studentRow.status !== 'active') {
+  // Sem vínculo ativo com nenhum personal — não renderiza o dashboard normal.
+  if (!studentRow) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background px-4">
         <div className="max-w-sm w-full text-center space-y-4 bg-surface border border-surface-border rounded-2xl p-8">
@@ -167,17 +189,17 @@ export default async function StudentLayout({
         .eq('student_id', studentRow.id)
         .is('read_at', null)
         .order('created_at', { ascending: false }),
-      profile.tenant_id
+      tenantId
         ? supabase
             .from('anamnese_templates')
             .select('id', { count: 'exact', head: true })
             .eq('is_active', true)
-            .or(`tenant_id.is.null,tenant_id.eq.${profile.tenant_id}`)
+            .or(`tenant_id.is.null,tenant_id.eq.${tenantId}`)
         : Promise.resolve({ count: 0 }),
       supabase
         .from('anamnese_responses')
         .select('completed_at')
-        .eq('student_id', studentRow.id)
+        .eq('user_id', user.id)
         .maybeSingle(),
     ])
     pendingAgendaCount  = pending  ?? 0
@@ -205,6 +227,7 @@ export default async function StudentLayout({
         gamificationActive={gamificationActive}
         unreadMessageCount={unreadMessageCount}
         hasChallenge={hasChallenge}
+        hasMultipleActiveTenants={hasMultipleActiveTenants}
       />
 
       {/* ── Desktop sidebar ───────────────────────────────────────── */}
@@ -230,6 +253,16 @@ export default async function StudentLayout({
             hasChallenge={hasChallenge}
           />
         </div>
+
+        {hasMultipleActiveTenants && (
+          <Link
+            href="/student/trocar-personal"
+            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-body font-medium text-text-secondary hover:text-brand-lime hover:bg-brand-lime/10 transition-colors"
+          >
+            <ArrowLeftRight size={15} />
+            Trocar de Personal
+          </Link>
+        )}
 
         <UserMenu
           name={profile.full_name}

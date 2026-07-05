@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { getActiveStudentRow } from '@/lib/supabase/student-context'
 import Link from 'next/link'
 import { Zap, Tag } from 'lucide-react'
 
@@ -36,11 +37,7 @@ export default async function StudentTreinosExtrasPage() {
   }[] = []
 
   if (user.user) {
-    const { data: student } = await supabase
-      .from('students')
-      .select('id')
-      .eq('user_id', user.user.id)
-      .single()
+    const student = await getActiveStudentRow(supabase, user.user.id)
 
     if (student) {
       const { data } = await supabase

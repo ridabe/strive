@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { getActiveStudentRow } from '@/lib/supabase/student-context'
 import { UtensilsCrossed, Target, Flame } from 'lucide-react'
 import { StudentMealPlanView } from '@/components/meal-plans/StudentMealPlanView'
 import type { MealPlanWithMeals } from '@/app/actions/meal-plans'
@@ -8,11 +9,7 @@ export default async function StudentPlanosAlimentaresPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
 
-  const { data: student } = await supabase
-    .from('students')
-    .select('id')
-    .eq('user_id', user.id)
-    .single()
+  const student = await getActiveStudentRow(supabase, user.id)
 
   const assignments = student
     ? (await supabase

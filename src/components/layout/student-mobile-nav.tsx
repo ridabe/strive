@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, MoreHorizontal } from 'lucide-react'
+import { Menu, X, MoreHorizontal, ArrowLeftRight } from 'lucide-react'
 import type { AppRole } from '@/types/database'
 import { cn } from '@/lib/utils'
 import { getStudentNavItems } from '@/components/layout/student-sidebar'
@@ -21,6 +21,7 @@ interface StudentMobileNavProps {
   gamificationActive?: boolean
   unreadMessageCount?: number
   hasChallenge?: boolean
+  hasMultipleActiveTenants?: boolean
 }
 
 /**
@@ -38,6 +39,7 @@ export function StudentMobileNav({
   gamificationActive,
   unreadMessageCount = 0,
   hasChallenge,
+  hasMultipleActiveTenants,
 }: StudentMobileNavProps) {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -186,7 +188,16 @@ export function StudentMobileNav({
             )}
           </div>
 
-          <div className="border-t border-surface-border p-4">
+          <div className="border-t border-surface-border p-4 flex flex-col gap-2">
+            {hasMultipleActiveTenants && (
+              <Link
+                href="/student/trocar-personal"
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-body font-medium text-text-secondary hover:text-brand-lime hover:bg-brand-lime/10 transition-colors"
+              >
+                <ArrowLeftRight size={15} />
+                Trocar de Personal
+              </Link>
+            )}
             <UserMenu
               name={userName}
               email={userEmail}

@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { getActiveStudentRow } from '@/lib/supabase/student-context'
 import { StudentAgendaCalendarView } from './StudentAgendaCalendarView'
 
 function formatPhone(phone: string | null | undefined): string | null {
@@ -21,11 +22,7 @@ export default async function StudentAgendaPage() {
   if (!profile || profile.role !== 'student') redirect('/login')
 
   // students.id do aluno logado
-  const { data: studentRow } = await supabase
-    .from('students')
-    .select('id')
-    .eq('user_id', user.id)
-    .single()
+  const studentRow = await getActiveStudentRow(supabase, user.id)
 
   // Telefone do personal (para botão WhatsApp em solicitações recusadas)
   const { data: tenantRow } = profile.tenant_id

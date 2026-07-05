@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { Bell } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
+import { getActiveStudentRow } from '@/lib/supabase/student-context'
 import { StudentMessagesClient } from './student-messages-client'
 
 /**
@@ -11,11 +12,7 @@ export default async function StudentMessagesPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: student } = await supabase
-    .from('students')
-    .select('id')
-    .eq('user_id', user.id)
-    .maybeSingle()
+  const student = await getActiveStudentRow(supabase, user.id)
 
   if (!student) redirect('/student')
 

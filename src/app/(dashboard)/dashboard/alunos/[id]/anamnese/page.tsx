@@ -34,7 +34,7 @@ export default async function AnamnesePage({ params }: Props) {
 
   const { data: student } = await supabase
     .from('students')
-    .select('full_name, status')
+    .select('full_name, status, user_id')
     .eq('id', id)
     .single()
 
@@ -48,13 +48,21 @@ export default async function AnamnesePage({ params }: Props) {
     .eq('is_active', true)
     .order('sort_order', { ascending: true })
 
-  // Respostas existentes
-  const { data: anamneseRow } = await supabase
-    .from('anamnese_responses')
-    .select('responses, completed_at')
-    .eq('student_id', id)
-    .eq('tenant_id', profile.tenant_id)
-    .maybeSingle()
+  // Respostas existentes — compartilhadas pela pessoa (user_id) quando o
+  // aluno tem conta; sem conta, não há como compartilhar entre tenants,
+  // então cai de volta pro vínculo aluno/tenant.
+  const { data: anamneseRow } = student.user_id
+    ? await supabase
+        .from('anamnese_responses')
+        .select('responses, completed_at')
+        .eq('user_id', student.user_id)
+        .maybeSingle()
+    : await supabase
+        .from('anamnese_responses')
+        .select('responses, completed_at')
+        .eq('student_id', id)
+        .eq('tenant_id', profile.tenant_id)
+        .maybeSingle()
 
   const fields: AnamneseField[] = (templateRows ?? []).map((r) => ({
     id:         r.id,

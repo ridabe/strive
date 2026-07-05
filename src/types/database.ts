@@ -347,6 +347,7 @@ export type Database = {
           student_id: string
           tenant_id: string
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           completed_at?: string | null
@@ -356,6 +357,7 @@ export type Database = {
           student_id: string
           tenant_id: string
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           completed_at?: string | null
@@ -365,6 +367,7 @@ export type Database = {
           student_id?: string
           tenant_id?: string
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -386,6 +389,13 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "anamnese_responses_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]

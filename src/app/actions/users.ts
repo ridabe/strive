@@ -110,7 +110,9 @@ export async function updateStudentRecordStatus(
 }
 
 /**
- * Move um aluno para outro personal/tenant mantendo a conta vinculada quando existir.
+ * Vincula um aluno a outro personal/tenant. Nunca move o cadastro original —
+ * cria (ou reativa) um cadastro no tenant de destino e preserva o cadastro de
+ * origem intacto (o aluno continua aparecendo, inativo, para o personal antigo).
  */
 export async function reassignStudentTenant(
   studentId: string,
@@ -125,7 +127,7 @@ export async function reassignStudentTenant(
     const [{ data: student, error: studentError }, { data: tenant, error: tenantError }] = await Promise.all([
       adminClient
         .from('students')
-        .select('id, user_id, full_name, tenant_id')
+        .select('id, user_id, full_name, email, phone, birth_date, goal, notes, avatar_url, tenant_id')
         .eq('id', studentId)
         .single(),
       adminClient
@@ -138,17 +140,58 @@ export async function reassignStudentTenant(
     if (studentError || !student) return { error: studentError?.message ?? 'Aluno não encontrado.' }
     if (tenantError || !tenant) return { error: tenantError?.message ?? 'Tenant não encontrado.' }
 
-    const { error: updateStudentError } = await adminClient
-      .from('students')
-      .update({ tenant_id: tenantId })
-      .eq('id', studentId)
+    if (student.tenant_id === tenantId) {
+      return { error: 'O aluno já está vinculado a este estúdio.' }
+    }
 
-    if (updateStudentError) return { error: updateStudentError.message }
+    // Já existe um cadastro deste aluno no tenant de destino (ex: ele já foi aluno lá antes)?
+    let targetStudentId: string | null = null
+    if (student.email) {
+      const { data: existingAtTarget } = await adminClient
+        .from('students')
+        .select('id')
+        .eq('tenant_id', tenantId)
+        .eq('email', student.email)
+        .maybeSingle()
+
+      if (existingAtTarget) {
+        const { error: reactivateError } = await adminClient
+          .from('students')
+          .update({ status: 'active' })
+          .eq('id', existingAtTarget.id)
+        if (reactivateError) return { error: reactivateError.message }
+        targetStudentId = existingAtTarget.id
+      }
+    }
+
+    if (!targetStudentId) {
+      // Sem cadastro anterior no destino — cria um novo, preservando o cadastro
+      // original (que permanece como estava) no estúdio de origem para histórico.
+      const { data: created, error: insertError } = await adminClient
+        .from('students')
+        .insert({
+          tenant_id: tenantId,
+          user_id: student.user_id,
+          full_name: student.full_name,
+          email: student.email,
+          phone: student.phone,
+          birth_date: student.birth_date,
+          goal: student.goal,
+          notes: student.notes,
+          avatar_url: student.avatar_url,
+          status: 'active',
+        })
+        .select('id')
+        .single()
+
+      if (insertError || !created) return { error: insertError?.message ?? 'Erro ao vincular aluno ao novo estúdio.' }
+      targetStudentId = created.id
+    }
 
     if (student.user_id) {
       const { error: updateProfileError } = await adminClient
         .from('profiles')
-        .update({ tenant_id: tenantId })
+        .update({ tenant_id: tenantId, status: 'active' })
         .eq('id', student.user_id)
 
       if (updateProfileError) return { error: updateProfileError.message }
@@ -158,8 +201,8 @@ export async function reassignStudentTenant(
       action: 'STUDENT_TENANT_REASSIGNED',
       category: 'user',
       description: `Aluno ${student.full_name} vinculado ao tenant ${tenant.business_name}`,
-      targetId: studentId,
-      metadata: { fromTenantId: student.tenant_id, toTenantId: tenantId },
+      targetId: targetStudentId,
+      metadata: { fromTenantId: student.tenant_id, toTenantId: tenantId, originalStudentId: studentId },
     })
 
     revalidatePath('/admin/usuarios')

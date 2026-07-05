@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { getActiveStudentRow } from '@/lib/supabase/student-context'
 import { TrendingUp } from 'lucide-react'
 import { NewProgressForm, ProgressEntryCard, type ProgressEntry } from './progress-form'
 
@@ -8,11 +9,7 @@ export default async function ProgressoPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: student } = await supabase
-    .from('students')
-    .select('id, full_name')
-    .eq('user_id', user.id)
-    .maybeSingle()
+  const student = await getActiveStudentRow(supabase, user.id)
 
   if (!student) redirect('/student')
 

@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { getActiveStudentRow } from '@/lib/supabase/student-context'
 import { ClipboardList } from 'lucide-react'
 import { NewAssessmentForm, AssessmentHistoryCard, type Assessment } from './assessment-form'
 
@@ -8,11 +9,7 @@ export default async function AvaliacaoPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: student } = await supabase
-    .from('students')
-    .select('id, birth_date')
-    .eq('user_id', user.id)
-    .maybeSingle()
+  const student = await getActiveStudentRow(supabase, user.id)
 
   if (!student) redirect('/student')
 

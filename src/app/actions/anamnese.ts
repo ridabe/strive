@@ -13,11 +13,18 @@ export async function saveAnamneseResponse(
   if (!ctx) return { error: 'Não autenticado' }
   const { supabase, tenantId } = ctx
 
+  const { data: student } = await supabase
+    .from('students')
+    .select('user_id')
+    .eq('id', studentId)
+    .maybeSingle()
+
   const payload: {
     student_id: string
     tenant_id: string
     responses: Record<string, unknown>
     completed_at?: string
+    user_id?: string
   } = {
     student_id: studentId,
     tenant_id: tenantId,
@@ -25,9 +32,16 @@ export async function saveAnamneseResponse(
   }
   if (markCompleted) payload.completed_at = new Date().toISOString()
 
-  const { error } = await supabase
-    .from('anamnese_responses')
-    .upsert(payload, { onConflict: 'student_id,tenant_id' })
+  // Aluno com conta: anamnese é compartilhada pela pessoa (user_id), então o
+  // upsert precisa mirar a linha única da pessoa. Sem conta: não há como
+  // compartilhar entre tenants, mantém o vínculo antigo por aluno/tenant.
+  const { error } = student?.user_id
+    ? await supabase
+        .from('anamnese_responses')
+        .upsert({ ...payload, user_id: student.user_id }, { onConflict: 'user_id' })
+    : await supabase
+        .from('anamnese_responses')
+        .upsert(payload, { onConflict: 'student_id,tenant_id' })
 
   if (error) return { error: error.message }
 

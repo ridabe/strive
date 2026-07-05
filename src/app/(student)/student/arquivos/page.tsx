@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { getActiveStudentRow } from '@/lib/supabase/student-context'
 import { FolderOpen, FileText, ImageIcon, ExternalLink, Download } from 'lucide-react'
 
 interface SharedFile {
@@ -95,11 +96,7 @@ export default async function ArquivosStudentPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: student } = await supabase
-    .from('students')
-    .select('id')
-    .eq('user_id', user.id)
-    .maybeSingle()
+  const student = await getActiveStudentRow(supabase, user.id)
 
   if (!student) redirect('/student')
 

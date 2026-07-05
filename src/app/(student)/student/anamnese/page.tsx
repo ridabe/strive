@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { getActiveStudentRow } from '@/lib/supabase/student-context'
 import { FileHeart, CheckCircle } from 'lucide-react'
 import { AnamneseForm } from './anamnese-form'
 
@@ -8,11 +9,7 @@ export default async function AnamnesePage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: student } = await supabase
-    .from('students')
-    .select('id, tenant_id')
-    .eq('user_id', user.id)
-    .maybeSingle()
+  const student = await getActiveStudentRow(supabase, user.id)
 
   if (!student) redirect('/student')
 
@@ -27,7 +24,7 @@ export default async function AnamnesePage() {
     supabase
       .from('anamnese_responses')
       .select('id, responses, completed_at')
-      .eq('student_id', student.id)
+      .eq('user_id', user.id)
       .maybeSingle(),
   ])
 
