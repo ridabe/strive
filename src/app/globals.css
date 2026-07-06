@@ -124,4 +124,13 @@ a {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+
+  /* Mantem o ticker funcional com movimento bem mais suave para respeitar
+     reduced-motion sem "matar" completamente o marquee da landing. */
+  .animate-marquee {
+    animation-name: marqueeScroll !important;
+    animation-duration: 90s !important;
+    animation-timing-function: linear !important;
+    animation-iteration-count: infinite !important;
+  }
 }

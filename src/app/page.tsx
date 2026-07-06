@@ -538,7 +538,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── PARA QUEM É (dores) ── */}
-      <section className="py-20 px-6">
+      <section className="pt-20 pb-6 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12" data-reveal>
             <span className="inline-block bg-surface border border-surface-border text-text-secondary text-xs font-body font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-4">
@@ -569,7 +569,7 @@ export default async function HomePage() {
             ))}
           </div>
 
-          <p className="text-center font-body text-brand-lime text-sm font-semibold mt-8" data-reveal>
+          <p className="text-center font-body text-brand-lime text-sm font-semibold mt-6">
             É exatamente isso que o Strive resolve. ↓
           </p>
         </div>
