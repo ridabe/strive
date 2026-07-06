@@ -1,8 +1,6 @@
 // Marquee / ticker — divisor de seção com movimento contínuo.
-// Identidade "performance terminal": palavras em texto-contorno (ghost), o lima
-// aparece apenas nos pontos separadores — energia com raridade (DESIGN.md).
-// Componente estático: a animação é 100% CSS (ver globals.css .animate-marquee),
-// por isso não precisa de 'use client'.
+// A animação vive em tailwind.config.ts (utilitário `animate-marquee`), gerada
+// na camada de utilities do Tailwind. Componente estático, sem 'use client'.
 
 const DEFAULT_WORDS = ['Simplifique', 'Profissionalize', 'Escale']
 
@@ -21,9 +19,7 @@ export function Marquee({ words = DEFAULT_WORDS }: { words?: string[] }) {
           <div key={copy} className="flex shrink-0 items-center">
             {sequence.map((word, i) => (
               <span key={`${copy}-${i}`} className="flex items-center">
-                <span
-                  className="px-2 font-display text-lg font-bold uppercase tracking-tight text-text-primary/90 sm:text-lg"
-                >
+                <span className="px-2 font-display text-lg font-bold uppercase tracking-tight text-text-primary/90">
                   {word}
                 </span>
                 <span className="h-1 w-1 shrink-0 rounded-full bg-brand-lime/90" />

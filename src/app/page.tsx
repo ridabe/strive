@@ -365,11 +365,34 @@ function DashboardMockup() {
 
 // ─── Page ────────────────────────────────────────────────────────────────────
 
+/** Extrai o ID do vídeo de qualquer formato de URL do YouTube. */
+function extractYoutubeId(url: string): string | null {
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=)([\w-]{11})/,
+    /(?:youtu\.be\/)([\w-]{11})/,
+    /(?:youtube\.com\/embed\/)([\w-]{11})/,
+    /(?:youtube\.com\/shorts\/)([\w-]{11})/,
+  ]
+  for (const pattern of patterns) {
+    const match = url.match(pattern)
+    if (match) return match[1]
+  }
+  return null
+}
+
 export default async function HomePage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   const [maxFlagship, ...maxSupporting] = MAX_FEATURES
   const FlagshipIcon = maxFlagship.icon
+
+  const { data: homeVideo } = await supabase
+    .from('home_video_config')
+    .select('youtube_url, title')
+    .eq('id', true)
+    .single()
+
+  const homeVideoId = homeVideo?.youtube_url ? extractYoutubeId(homeVideo.youtube_url) : null
 
   return (
     <div className="min-h-screen bg-background text-text-primary">
@@ -568,6 +591,27 @@ export default async function HomePage() {
               </div>
             ))}
           </div>
+
+          {/* Vídeo institucional — só aparece se configurado pelo admin global */}
+          {homeVideoId && (
+            <div className="mt-14 max-w-3xl mx-auto" data-reveal>
+              {homeVideo?.title && (
+                <h3 className="text-center font-display font-bold text-2xl sm:text-3xl text-text-primary uppercase tracking-tight leading-[0.9] mb-6">
+                  {homeVideo.title}
+                </h3>
+              )}
+              <div className="aspect-video w-full rounded-2xl overflow-hidden border border-surface-border bg-surface">
+                <iframe
+                  src={`https://www.youtube.com/embed/${homeVideoId}`}
+                  title={homeVideo?.title ?? 'Vídeo Strive'}
+                  className="w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          )}
 
           <p className="text-center font-body text-brand-lime text-sm font-semibold mt-6">
             É exatamente isso que o Strive resolve. ↓

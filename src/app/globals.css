@@ -68,16 +68,8 @@ a {
   animation: badgePulse 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* Marquee / ticker — divisor de seção com deslocamento contínuo e linear.
-   A faixa é renderizada em duas cópias idênticas; -50% completa exatamente
-   uma cópia, tornando o loop imperceptível. Pausa ao passar o mouse. */
-@keyframes marqueeScroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-.animate-marquee {
-  animation: marqueeScroll 30s linear infinite;
-}
+/* Marquee / ticker — pausa o deslocamento ao passar o mouse.
+   A animação em si vive em tailwind.config.ts (utilitário animate-marquee). */
 .marquee-wrap:hover .marquee-track {
   animation-play-state: paused;
 }
@@ -123,14 +115,5 @@ a {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-
-  /* Mantem o ticker funcional com movimento bem mais suave para respeitar
-     reduced-motion sem "matar" completamente o marquee da landing. */
-  .animate-marquee {
-    animation-name: marqueeScroll !important;
-    animation-duration: 90s !important;
-    animation-timing-function: linear !important;
-    animation-iteration-count: infinite !important;
   }
 }

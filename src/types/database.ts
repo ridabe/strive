@@ -1586,6 +1586,30 @@ export type Database = {
           },
         ]
       }
+      home_video_config: {
+        Row: {
+          id: boolean
+          title: string | null
+          updated_at: string
+          updated_by: string | null
+          youtube_url: string | null
+        }
+        Insert: {
+          id?: boolean
+          title?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          youtube_url?: string | null
+        }
+        Update: {
+          id?: boolean
+          title?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          youtube_url?: string | null
+        }
+        Relationships: []
+      }
       internal_config: {
         Row: {
           key: string

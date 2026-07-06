@@ -15,6 +15,7 @@ import {
   Smartphone,
   Trophy,
   Zap,
+  Youtube,
 } from 'lucide-react'
 
 const NAV_ITEMS = [
@@ -27,6 +28,7 @@ const NAV_ITEMS = [
   { label: 'Ranking',      href: '/admin/ranking',               icon: Trophy },
   { label: 'Usuários',     href: '/admin/usuarios',              icon: Users },
   { label: 'Versão App',   href: '/admin/app-versao',            icon: Smartphone },
+  { label: 'Vídeo Home',   href: '/admin/video-home',            icon: Youtube },
   { label: 'Métricas',     href: '/admin/metricas',              icon: BarChart2 },
   { label: 'Logs',         href: '/admin/logs',                  icon: ScrollText },
 ]
