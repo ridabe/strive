@@ -30,12 +30,12 @@ export default async function DashboardLayout({
   if (!profile || profile.role !== 'personal') redirect('/login')
 
   // Busca branding do tenant
-  let tenantBranding: { logo_url: string | null; primary_color: string | null; business_name: string } | null = null
+  let tenantBranding: { logo_url: string | null; primary_color: string | null; accent_text_color: string | null; on_primary_text_color: string | null; business_name: string } | null = null
 
   if (profile.tenant_id) {
     const { data: tenant } = await supabase
       .from('tenants')
-      .select('logo_url, primary_color, business_name')
+      .select('logo_url, primary_color, accent_text_color, on_primary_text_color, business_name')
       .eq('id', profile.tenant_id)
       .single()
     tenantBranding = tenant
@@ -82,6 +82,7 @@ export default async function DashboardLayout({
   }
 
   const primaryColor = tenantBranding?.primary_color ?? '#E8FF47'
+  const accentTextColor = tenantBranding?.accent_text_color ?? '#FFFFFF'
 
   // Conta solicitações de agendamento presencial pendentes dos alunos
   let pendingAgendaCount = 0
@@ -100,12 +101,14 @@ export default async function DashboardLayout({
   return (
     <div
       className="min-h-screen bg-background flex"
-      style={{ '--brand-lime': primaryColor } as React.CSSProperties}
+      style={{ '--brand-lime': primaryColor, '--accent-text': accentTextColor } as React.CSSProperties}
     >
       <DashboardMobileNav
         logoUrl={tenantBranding?.logo_url ?? null}
         businessName={tenantBranding?.business_name ?? 'Strive Personal'}
         primaryColor={primaryColor}
+        accentTextColor={accentTextColor}
+        onPrimaryTextColor={tenantBranding?.on_primary_text_color ?? null}
         userName={profile.full_name}
         userEmail={profile.email}
         userRole={profile.role}
@@ -122,6 +125,7 @@ export default async function DashboardLayout({
             logoUrl={tenantBranding?.logo_url ?? null}
             businessName={tenantBranding?.business_name ?? 'Strive Personal'}
             primaryColor={primaryColor}
+            onPrimaryTextColor={tenantBranding?.on_primary_text_color ?? null}
           />
           {profile.tenant_id && (
             <TrainerNotificationBell tenantId={profile.tenant_id} initialNotifications={trainerNotifications} />
@@ -129,7 +133,7 @@ export default async function DashboardLayout({
         </div>
 
         <div className="flex-1 overflow-y-auto">
-          <DashboardSidebarNav modules={enabledModules} />
+          <DashboardSidebarNav modules={enabledModules} accentTextColor={accentTextColor} />
         </div>
 
         <div className="flex flex-col gap-3 flex-shrink-0">

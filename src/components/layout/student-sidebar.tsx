@@ -54,6 +54,7 @@ interface StudentSidebarNavProps {
   gamificationActive?: boolean
   unreadMessageCount?: number
   hasChallenge?: boolean
+  accentTextColor?: string
 }
 
 /**
@@ -75,6 +76,7 @@ export function StudentSidebarNav({
   gamificationActive,
   unreadMessageCount = 0,
   hasChallenge,
+  accentTextColor = '#FFFFFF',
 }: StudentSidebarNavProps) {
   const pathname = usePathname()
   const NAV_ITEMS = getStudentNavItems(gamificationActive, hasChallenge)
@@ -95,9 +97,10 @@ export function StudentSidebarNav({
               className={cn(
                 'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-body font-medium transition-all',
                 active
-                  ? 'bg-brand-lime/10 text-brand-lime border border-brand-lime/20'
+                  ? 'bg-brand-lime/10 border border-brand-lime/20'
                   : 'text-text-secondary hover:text-text-primary hover:bg-surface-border/30 border border-transparent',
               )}
+              style={active ? { color: accentTextColor } : undefined}
             >
               <Icon size={16} />
               <span className="flex-1">{item.label}</span>

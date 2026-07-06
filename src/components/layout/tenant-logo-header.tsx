@@ -1,12 +1,14 @@
 import Image from 'next/image'
+import { resolveTextColor } from '@/lib/color-contrast'
 
 interface Props {
   logoUrl: string | null
   businessName: string
   primaryColor: string
+  onPrimaryTextColor?: string | null
 }
 
-export function TenantLogoHeader({ logoUrl, businessName, primaryColor }: Props) {
+export function TenantLogoHeader({ logoUrl, businessName, primaryColor, onPrimaryTextColor }: Props) {
   const initial = businessName.charAt(0).toUpperCase()
 
   if (logoUrl) {
@@ -30,8 +32,8 @@ export function TenantLogoHeader({ logoUrl, businessName, primaryColor }: Props)
   return (
     <div className="flex items-center gap-3 min-h-[48px]">
       <div
-        className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-black font-display font-black text-lg"
-        style={{ background: primaryColor }}
+        className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 font-display font-black text-lg"
+        style={{ background: primaryColor, color: resolveTextColor(primaryColor, onPrimaryTextColor) }}
       >
         {initial}
       </div>

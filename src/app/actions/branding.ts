@@ -10,11 +10,13 @@ export async function saveBranding(formData: FormData) {
   if (!ctx || ctx.role !== 'personal') return { error: 'Sem permissão.' }
   const { tenantId } = ctx
   const adminSupabase = createAdminClient()
-  const primaryColor = (formData.get('primary_color') as string | null) ?? null
+  const primaryColor    = (formData.get('primary_color') as string | null) ?? null
+  const accentTextColor = (formData.get('accent_text_color') as string | null) ?? null
+  const onPrimaryTextColor = (formData.get('on_primary_text_color') as string | null) ?? null
   const logoFile     = formData.get('logo') as File | null
   const removeLogo   = formData.get('remove_logo') === '1'
 
-  const updates: { primary_color?: string | null; logo_url?: string | null } = {}
+  const updates: { primary_color?: string | null; accent_text_color?: string | null; on_primary_text_color?: string | null; logo_url?: string | null } = {}
 
   // ── Cor primária ─────────────────────────────────────────────────────────
   if (primaryColor) {
@@ -23,6 +25,25 @@ export async function saveBranding(formData: FormData) {
       return { error: 'Cor inválida. Use formato hex #RRGGBB.' }
     }
     updates.primary_color = primaryColor
+  }
+
+  // ── Cor da fonte de destaque ─────────────────────────────────────────────
+  if (accentTextColor) {
+    if (!/^#[0-9A-Fa-f]{6}$/.test(accentTextColor)) {
+      return { error: 'Cor da fonte inválida. Use formato hex #RRGGBB.' }
+    }
+    updates.accent_text_color = accentTextColor
+  }
+
+  // ── Cor do texto sobre a cor primária (auto ou override manual) ──────────
+  if (onPrimaryTextColor) {
+    if (onPrimaryTextColor === 'auto') {
+      updates.on_primary_text_color = null
+    } else if (/^#[0-9A-Fa-f]{6}$/.test(onPrimaryTextColor)) {
+      updates.on_primary_text_color = onPrimaryTextColor
+    } else {
+      return { error: 'Valor inválido para cor do texto sobre a cor primária.' }
+    }
   }
 
   // ── Logo ─────────────────────────────────────────────────────────────────

@@ -82,9 +82,10 @@ const CORE_BOTTOM: { label: string; href: string; icon: LucideIcon }[] = [
 // ─── Componente principal ─────────────────────────────────────────────────────
 interface Props {
   modules: EnabledModule[]
+  accentTextColor?: string
 }
 
-export function DashboardSidebarNav({ modules }: Props) {
+export function DashboardSidebarNav({ modules, accentTextColor = '#FFFFFF' }: Props) {
   const pathname = usePathname()
 
   const isActive = (href: string) =>
@@ -119,9 +120,10 @@ export function DashboardSidebarNav({ modules }: Props) {
         className={cn(
           'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-body font-medium transition-all',
           active
-            ? 'bg-brand-lime/10 text-brand-lime border border-brand-lime/20'
+            ? 'bg-brand-lime/10 border border-brand-lime/20'
             : 'text-text-secondary hover:text-text-primary hover:bg-surface-border/30',
         )}
+        style={active ? { color: accentTextColor } : undefined}
       >
         <Icon size={18} />
         {item.label}
@@ -159,10 +161,9 @@ export function DashboardSidebarNav({ modules }: Props) {
                   onClick={() => toggle(group.label)}
                   className={cn(
                     'w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-body font-semibold uppercase tracking-widest transition-all select-none',
-                    groupHasActive
-                      ? 'text-brand-lime'
-                      : 'text-text-secondary/60 hover:text-text-secondary',
+                    !groupHasActive && 'text-text-secondary/60 hover:text-text-secondary',
                   )}
+                  style={groupHasActive ? { color: accentTextColor } : undefined}
                 >
                   {group.label}
                   <ChevronDown
@@ -195,9 +196,10 @@ export function DashboardSidebarNav({ modules }: Props) {
                             className={cn(
                               'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-body font-medium transition-all',
                               active
-                                ? 'bg-brand-lime/10 text-brand-lime border border-brand-lime/20'
+                                ? 'bg-brand-lime/10 border border-brand-lime/20'
                                 : 'text-text-secondary hover:text-text-primary hover:bg-surface-border/30',
                             )}
+                            style={active ? { color: accentTextColor } : undefined}
                           >
                             <Icon size={16} />
                             {route.label}

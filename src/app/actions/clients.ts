@@ -208,10 +208,13 @@ export async function updateClient(tenantId: string, formData: FormData) {
   const fullName     = (formData.get('full_name') as string)?.trim()
   const contactEmail = (formData.get('contact_email') as string)?.trim() || null
   const contactPhone = (formData.get('contact_phone') as string)?.trim() || null
-  const plan         = formData.get('plan') as 'free' | 'pro' | 'premium'
-  const primaryColor = formData.get('primary_color') as string
-  const notes        = (formData.get('notes') as string)?.trim() || null
-  const logoFile     = formData.get('logo') as File | null
+  const plan          = formData.get('plan') as 'free' | 'pro' | 'premium'
+  const primaryColor  = formData.get('primary_color') as string
+  const accentTextColor = (formData.get('accent_text_color') as string) || null
+  const onPrimaryRaw    = (formData.get('on_primary_text_color') as string) || 'auto'
+  const onPrimaryTextColor = onPrimaryRaw === 'auto' ? null : onPrimaryRaw
+  const notes         = (formData.get('notes') as string)?.trim() || null
+  const logoFile      = formData.get('logo') as File | null
 
   if (!businessName) return { error: 'Nome do negócio é obrigatório.' }
 
@@ -255,6 +258,8 @@ export async function updateClient(tenantId: string, formData: FormData) {
       business_name: businessName,
       plan,
       primary_color: primaryColor,
+      accent_text_color: accentTextColor,
+      on_primary_text_color: onPrimaryTextColor,
       contact_email: contactEmail,
       contact_phone: contactPhone,
       notes,

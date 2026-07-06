@@ -4,12 +4,17 @@ import { useState, useRef, useTransition } from 'react'
 import Image from 'next/image'
 import { Upload, Trash2, Loader2, Check, Palette, ImageIcon } from 'lucide-react'
 import { saveBranding } from '@/app/actions/branding'
+import { resolveTextColor } from '@/lib/color-contrast'
 
 interface Props {
   initialLogoUrl: string | null
   initialColor: string
+  initialTextColor: string
+  initialOnPrimaryTextColor: string | null
   businessName: string
 }
+
+type PrimaryTextMode = 'auto' | '#000000' | '#FFFFFF'
 
 const PRESET_COLORS = [
   '#E8FF47',
@@ -24,10 +29,23 @@ const PRESET_COLORS = [
   '#84CC16',
 ]
 
-export function BrandingForm({ initialLogoUrl, initialColor, businessName }: Props) {
+const TEXT_PRESET_COLORS = [
+  '#FFFFFF',
+  '#E8FF47',
+  '#3B82F6',
+  '#10B981',
+  '#F59E0B',
+  '#EC4899',
+]
+
+export function BrandingForm({ initialLogoUrl, initialColor, initialTextColor, initialOnPrimaryTextColor, businessName }: Props) {
   const [logoUrl,      setLogoUrl]      = useState<string | null>(initialLogoUrl)
   const [logoPreview,  setLogoPreview]  = useState<string | null>(null)
   const [color,        setColor]        = useState(initialColor)
+  const [textColor,    setTextColor]    = useState(initialTextColor)
+  const [primaryTextMode, setPrimaryTextMode] = useState<PrimaryTextMode>(
+    (initialOnPrimaryTextColor as PrimaryTextMode) ?? 'auto',
+  )
   const [removeLogo,   setRemoveLogo]   = useState(false)
   const [error,        setError]        = useState<string | null>(null)
   const [saved,        setSaved]        = useState(false)
@@ -36,6 +54,7 @@ export function BrandingForm({ initialLogoUrl, initialColor, businessName }: Pro
 
   const previewLogo = logoPreview ?? (removeLogo ? null : logoUrl)
   const initial     = businessName.charAt(0).toUpperCase()
+  const onPrimaryText = resolveTextColor(color, primaryTextMode === 'auto' ? null : primaryTextMode)
 
   function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -60,6 +79,8 @@ export function BrandingForm({ initialLogoUrl, initialColor, businessName }: Pro
     setSaved(false)
     if (removeLogo) formData.set('remove_logo', '1')
     formData.set('primary_color', color)
+    formData.set('accent_text_color', textColor)
+    formData.set('on_primary_text_color', primaryTextMode)
 
     startTransition(async () => {
       const result = await saveBranding(formData)
@@ -95,8 +116,8 @@ export function BrandingForm({ initialLogoUrl, initialColor, businessName }: Pro
               ) : (
                 <>
                   <div
-                    className="w-7 h-7 rounded-lg flex items-center justify-center text-black font-bold text-xs flex-shrink-0"
-                    style={{ background: color }}
+                    className="w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs flex-shrink-0"
+                    style={{ background: color, color: onPrimaryText }}
                   >
                     {initial}
                   </div>
@@ -109,7 +130,7 @@ export function BrandingForm({ initialLogoUrl, initialColor, businessName }: Pro
                 key={item}
                 className="flex items-center gap-2 px-2 py-1 rounded-md text-xs"
                 style={i === 0
-                  ? { background: `${color}20`, color, border: `1px solid ${color}40` }
+                  ? { background: `${color}20`, color: textColor, border: `1px solid ${color}40` }
                   : { color: '#888' }
                 }
               >
@@ -140,8 +161,8 @@ export function BrandingForm({ initialLogoUrl, initialColor, businessName }: Pro
               </div>
             ) : (
               <div
-                className="w-9 h-9 rounded-lg flex items-center justify-center text-black font-display font-black text-base"
-                style={{ background: color }}
+                className="w-9 h-9 rounded-lg flex items-center justify-center font-display font-black text-base"
+                style={{ background: color, color: onPrimaryText }}
               >
                 {initial}
               </div>
@@ -182,7 +203,7 @@ export function BrandingForm({ initialLogoUrl, initialColor, businessName }: Pro
         <div className="flex items-center gap-2">
           <Palette size={14} className="text-brand-lime" />
           <span className="text-sm font-body font-medium text-text-primary">Cor primaria</span>
-          <span className="text-xs text-text-secondary">Botoes, links ativos e destaques</span>
+          <span className="text-xs text-text-secondary">Botoes e fundos de destaque</span>
         </div>
 
         <div className="flex flex-wrap gap-2">
@@ -215,6 +236,84 @@ export function BrandingForm({ initialLogoUrl, initialColor, businessName }: Pro
             onChange={(e) => {
               const v = e.target.value
               if (/^#[0-9A-Fa-f]{0,6}$/.test(v)) setColor(v)
+            }}
+            maxLength={7}
+            className="w-24 bg-background border border-surface-border rounded-lg px-3 py-2 text-xs font-mono text-text-primary focus:outline-none focus:border-brand-lime/60"
+          />
+        </div>
+      </div>
+
+      {/* Texto sobre a cor primária (badges, avatar, botões) */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-2">
+          <Palette size={14} className="text-brand-lime" />
+          <span className="text-sm font-body font-medium text-text-primary">Texto sobre a cor primária</span>
+          <span className="text-xs text-text-secondary">Iniciais, topo e botões coloridos com a cor primária</span>
+        </div>
+
+        <div className="flex gap-2">
+          {([
+            { value: 'auto', label: 'Automático' },
+            { value: '#000000', label: 'Preto' },
+            { value: '#FFFFFF', label: 'Branco' },
+          ] as { value: PrimaryTextMode; label: string }[]).map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => setPrimaryTextMode(opt.value)}
+              className={`px-3 py-2 rounded-lg text-xs font-body font-medium border transition-colors ${
+                primaryTextMode === opt.value
+                  ? 'border-brand-lime text-brand-lime bg-brand-lime/10'
+                  : 'border-surface-border text-text-secondary hover:text-text-primary'
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+        <p className="text-xs text-text-secondary/70">
+          Automático escolhe preto ou branco pelo contraste com a cor primária. Use as opções manuais se a escolha automática não ficar legível.
+        </p>
+      </div>
+
+      {/* Cor da fonte de destaque */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-2">
+          <Palette size={14} className="text-brand-lime" />
+          <span className="text-sm font-body font-medium text-text-primary">Cor da fonte</span>
+          <span className="text-xs text-text-secondary">Texto de itens ativos e links</span>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          {TEXT_PRESET_COLORS.map((c) => (
+            <button
+              key={c}
+              type="button"
+              onClick={() => setTextColor(c)}
+              title={c}
+              className="w-7 h-7 rounded-full border-2 transition-all hover:scale-110"
+              style={{
+                background: c,
+                borderColor: textColor === c ? '#fff' : 'transparent',
+                boxShadow: textColor === c ? `0 0 0 2px ${c}` : 'none',
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="flex items-center gap-3">
+          <input
+            type="color"
+            value={textColor}
+            onChange={(e) => setTextColor(e.target.value)}
+            className="h-9 w-14 bg-background border border-surface-border rounded-lg p-1 cursor-pointer"
+          />
+          <input
+            type="text"
+            value={textColor}
+            onChange={(e) => {
+              const v = e.target.value
+              if (/^#[0-9A-Fa-f]{0,6}$/.test(v)) setTextColor(v)
             }}
             maxLength={7}
             className="w-24 bg-background border border-surface-border rounded-lg px-3 py-2 text-xs font-mono text-text-primary focus:outline-none focus:border-brand-lime/60"

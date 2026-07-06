@@ -24,7 +24,7 @@ export default async function AjustesPage({
   const { data: tenant } = profile?.tenant_id
     ? await supabase
         .from('tenants')
-        .select('business_name, contact_email, contact_phone, primary_color, logo_url, plan, cref')
+        .select('business_name, contact_email, contact_phone, primary_color, accent_text_color, on_primary_text_color, logo_url, plan, cref')
         .eq('id', profile.tenant_id)
         .single()
     : { data: null }
@@ -136,6 +136,8 @@ export default async function AjustesPage({
           <BrandingForm
             initialLogoUrl={tenant?.logo_url ?? null}
             initialColor={tenant?.primary_color ?? '#E8FF47'}
+            initialTextColor={tenant?.accent_text_color ?? '#FFFFFF'}
+            initialOnPrimaryTextColor={tenant?.on_primary_text_color ?? null}
             businessName={tenant?.business_name ?? 'Meu Negocio'}
           />
         </div>

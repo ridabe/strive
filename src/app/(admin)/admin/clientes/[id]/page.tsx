@@ -32,7 +32,7 @@ export default async function ClientDetailPage({
   const { data: tenant } = await supabase
     .from('tenants')
     .select(`
-      id, business_name, slug, plan, status, primary_color,
+      id, business_name, slug, plan, status, primary_color, accent_text_color, on_primary_text_color,
       logo_url, max_students, contact_email, contact_phone,
       notes, created_at, updated_at
     `)
@@ -172,6 +172,8 @@ export default async function ClientDetailPage({
           business_name: tenant.business_name,
           plan:          tenant.plan as 'free' | 'pro' | 'premium',
           primary_color: tenant.primary_color,
+          accent_text_color: tenant.accent_text_color,
+          on_primary_text_color: tenant.on_primary_text_color,
           logo_url:      tenant.logo_url,
           contact_email: tenant.contact_email,
           contact_phone: tenant.contact_phone,

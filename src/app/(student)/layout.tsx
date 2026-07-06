@@ -60,14 +60,14 @@ export default async function StudentLayout({
   }
 
   // Tenant branding + personal name
-  let tenantBranding: { logo_url: string | null; primary_color: string | null; business_name: string; cref?: string | null } | null = null
+  let tenantBranding: { logo_url: string | null; primary_color: string | null; accent_text_color: string | null; on_primary_text_color: string | null; business_name: string; cref?: string | null } | null = null
   let personalName: string | null = null
 
   if (tenantId) {
     const [{ data: tenant }, { data: personal }] = await Promise.all([
       supabase
         .from('tenants')
-        .select('logo_url, primary_color, business_name, cref')
+        .select('logo_url, primary_color, accent_text_color, on_primary_text_color, business_name, cref')
         .eq('id', tenantId)
         .single(),
       supabase
@@ -83,6 +83,7 @@ export default async function StudentLayout({
   }
 
   const primaryColor = tenantBranding?.primary_color ?? '#E8FF47'
+  const accentTextColor = tenantBranding?.accent_text_color ?? '#FFFFFF'
   const businessName = tenantBranding?.business_name ?? 'Strive Personal'
 
   // Slugs de módulos habilitados no tenant — filtram o loop de onboarding do aluno.
@@ -214,12 +215,14 @@ export default async function StudentLayout({
   return (
     <div
       className="bg-background"
-      style={{ '--brand-lime': primaryColor } as React.CSSProperties}
+      style={{ '--brand-lime': primaryColor, '--accent-text': accentTextColor } as React.CSSProperties}
     >
       <StudentMobileNav
         logoUrl={tenantBranding?.logo_url ?? null}
         businessName={businessName}
         primaryColor={primaryColor}
+        accentTextColor={accentTextColor}
+        onPrimaryTextColor={tenantBranding?.on_primary_text_color ?? null}
         userName={profile.full_name}
         userEmail={profile.email}
         userRole={profile.role}
@@ -237,6 +240,7 @@ export default async function StudentLayout({
             logoUrl={tenantBranding?.logo_url ?? null}
             businessName={businessName}
             primaryColor={primaryColor}
+            onPrimaryTextColor={tenantBranding?.on_primary_text_color ?? null}
           />
           {tenantBranding?.cref && (
             <p className="text-[10px] text-text-secondary/60 font-body mt-1 px-1">
@@ -251,13 +255,14 @@ export default async function StudentLayout({
             gamificationActive={gamificationActive}
             unreadMessageCount={unreadMessageCount}
             hasChallenge={hasChallenge}
+            accentTextColor={accentTextColor}
           />
         </div>
 
         {hasMultipleActiveTenants && (
           <Link
             href="/student/trocar-personal"
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-body font-medium text-text-secondary hover:text-brand-lime hover:bg-brand-lime/10 transition-colors"
+            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-body font-medium text-text-secondary hover:text-[var(--accent-text)] hover:bg-brand-lime/10 transition-colors"
           >
             <ArrowLeftRight size={15} />
             Trocar de Personal

@@ -5,11 +5,15 @@ import { Pencil, X, Upload, Loader2, Check } from 'lucide-react'
 import Image from 'next/image'
 import { updateClient } from '@/app/actions/clients'
 
+type PrimaryTextMode = 'auto' | '#000000' | '#FFFFFF'
+
 interface Tenant {
   id: string
   business_name: string
   plan: 'free' | 'pro' | 'premium'
   primary_color: string | null
+  accent_text_color: string | null
+  on_primary_text_color: string | null
   logo_url: string | null
   contact_email: string | null
   contact_phone: string | null
@@ -32,6 +36,9 @@ export function ClientEditForm({ tenant, profile }: Props) {
   const [editing, setEditing] = useState(false)
   const [preview, setPreview] = useState<string | null>(null)
   const [error, setError]     = useState<string | null>(null)
+  const [primaryTextMode, setPrimaryTextMode] = useState<PrimaryTextMode>(
+    (tenant.on_primary_text_color as PrimaryTextMode) ?? 'auto',
+  )
   const [isPending, startTransition] = useTransition()
   const fileRef = useRef<HTMLInputElement>(null)
 
@@ -47,6 +54,7 @@ export function ClientEditForm({ tenant, profile }: Props) {
 
   function handleSubmit(formData: FormData) {
     setError(null)
+    formData.set('on_primary_text_color', primaryTextMode)
     startTransition(async () => {
       const result = await updateClient(tenant.id, formData)
       if (result?.error) {
@@ -77,7 +85,7 @@ export function ClientEditForm({ tenant, profile }: Props) {
           <Field label="E-mail de contato" value={tenant.contact_email ?? '—'} />
           <Field label="Telefone" value={tenant.contact_phone ?? '—'} />
           <Field label="Plano" value={PLAN_LABELS[tenant.plan as keyof typeof PLAN_LABELS]} />
-          <div className="space-y-1 sm:col-span-2">
+          <div className="space-y-1">
             <p className="text-xs text-text-secondary uppercase tracking-wide font-medium">Cor primária</p>
             <div className="flex items-center gap-2">
               <span
@@ -88,6 +96,28 @@ export function ClientEditForm({ tenant, profile }: Props) {
                 {tenant.primary_color ?? '#E8FF47'}
               </span>
             </div>
+          </div>
+          <div className="space-y-1">
+            <p className="text-xs text-text-secondary uppercase tracking-wide font-medium">Cor da fonte</p>
+            <div className="flex items-center gap-2">
+              <span
+                className="w-6 h-6 rounded-md border border-surface-border flex-shrink-0"
+                style={{ background: tenant.accent_text_color ?? '#FFFFFF' }}
+              />
+              <span className="text-sm text-text-primary font-mono">
+                {tenant.accent_text_color ?? '#FFFFFF'}
+              </span>
+            </div>
+          </div>
+          <div className="space-y-1">
+            <p className="text-xs text-text-secondary uppercase tracking-wide font-medium">Texto sobre a cor primária</p>
+            <p className="text-sm text-text-primary">
+              {tenant.on_primary_text_color === '#000000'
+                ? 'Preto (manual)'
+                : tenant.on_primary_text_color === '#FFFFFF'
+                  ? 'Branco (manual)'
+                  : 'Automático'}
+            </p>
           </div>
           {tenant.notes && (
             <div className="space-y-1 sm:col-span-2">
@@ -190,6 +220,47 @@ export function ClientEditForm({ tenant, profile }: Props) {
                 className="h-11 w-20 bg-background border border-surface-border rounded-lg p-1 cursor-pointer"
               />
             </div>
+          </div>
+          <div className="space-y-1.5">
+            <label htmlFor="accent_text_color" className="block text-sm font-body font-medium text-text-secondary">
+              Cor da fonte
+            </label>
+            <div className="flex items-center gap-3">
+              <input
+                id="accent_text_color"
+                name="accent_text_color"
+                type="color"
+                defaultValue={tenant.accent_text_color ?? '#FFFFFF'}
+                className="h-11 w-20 bg-background border border-surface-border rounded-lg p-1 cursor-pointer"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="block text-sm font-body font-medium text-text-secondary">
+            Texto sobre a cor primária
+          </label>
+          <p className="text-xs text-text-secondary/70">Iniciais, topo e botões coloridos com a cor primária.</p>
+          <div className="flex gap-2">
+            {([
+              { value: 'auto', label: 'Automático' },
+              { value: '#000000', label: 'Preto' },
+              { value: '#FFFFFF', label: 'Branco' },
+            ] as { value: PrimaryTextMode; label: string }[]).map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => setPrimaryTextMode(opt.value)}
+                className={`px-3 py-2 rounded-lg text-xs font-body font-medium border transition-colors ${
+                  primaryTextMode === opt.value
+                    ? 'border-brand-lime text-brand-lime bg-brand-lime/10'
+                    : 'border-surface-border text-text-secondary hover:text-text-primary'
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
           </div>
         </div>
 

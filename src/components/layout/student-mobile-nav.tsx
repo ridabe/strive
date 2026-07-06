@@ -9,11 +9,14 @@ import type { AppRole } from '@/types/database'
 import { cn } from '@/lib/utils'
 import { getStudentNavItems } from '@/components/layout/student-sidebar'
 import { UserMenu } from '@/components/layout/user-menu'
+import { resolveTextColor } from '@/lib/color-contrast'
 
 interface StudentMobileNavProps {
   logoUrl: string | null
   businessName: string
   primaryColor: string
+  accentTextColor?: string
+  onPrimaryTextColor?: string | null
   userName: string | null
   userEmail: string
   userRole: AppRole
@@ -32,6 +35,8 @@ export function StudentMobileNav({
   logoUrl,
   businessName,
   primaryColor,
+  accentTextColor = '#FFFFFF',
+  onPrimaryTextColor,
   userName,
   userEmail,
   userRole,
@@ -43,6 +48,7 @@ export function StudentMobileNav({
 }: StudentMobileNavProps) {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const onPrimaryText = resolveTextColor(primaryColor, onPrimaryTextColor)
   const navItems = getStudentNavItems(gamificationActive, hasChallenge)
   const bottomItems = navItems.slice(0, 4)
 
@@ -88,8 +94,8 @@ export function StudentMobileNav({
             </div>
           ) : (
             <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-black font-display font-black text-sm flex-shrink-0"
-              style={{ background: primaryColor }}
+              className="w-8 h-8 rounded-lg flex items-center justify-center font-display font-black text-sm flex-shrink-0"
+              style={{ background: primaryColor, color: onPrimaryText }}
             >
               {businessName.charAt(0).toUpperCase()}
             </div>
@@ -103,8 +109,8 @@ export function StudentMobileNav({
         </div>
 
         <div
-          className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-display font-black text-black flex-shrink-0"
-          style={{ background: primaryColor }}
+          className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-display font-black flex-shrink-0"
+          style={{ background: primaryColor, color: onPrimaryText }}
         >
           {(userName ?? userEmail).charAt(0).toUpperCase()}
         </div>
@@ -165,9 +171,10 @@ export function StudentMobileNav({
                     className={cn(
                       'flex items-center gap-3 rounded-lg border px-3 py-3 text-sm font-body font-medium transition-all',
                       active
-                        ? 'bg-brand-lime/10 text-brand-lime border-brand-lime/20'
+                        ? 'bg-brand-lime/10 border-brand-lime/20'
                         : 'border-transparent text-text-secondary hover:bg-surface-border/30 hover:text-text-primary',
                     )}
+                    style={active ? { color: accentTextColor } : undefined}
                   >
                     <Icon size={18} />
                     <span className="flex-1 truncate">{item.label}</span>
@@ -192,7 +199,7 @@ export function StudentMobileNav({
             {hasMultipleActiveTenants && (
               <Link
                 href="/student/trocar-personal"
-                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-body font-medium text-text-secondary hover:text-brand-lime hover:bg-brand-lime/10 transition-colors"
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-body font-medium text-text-secondary hover:text-[var(--accent-text)] hover:bg-brand-lime/10 transition-colors"
               >
                 <ArrowLeftRight size={15} />
                 Trocar de Personal
@@ -220,8 +227,9 @@ export function StudentMobileNav({
               href={item.href}
               className={cn(
                 'flex-1 flex min-w-0 flex-col items-center justify-center py-3 gap-0.5 transition-colors',
-                active ? 'text-brand-lime' : 'text-text-secondary',
+                !active && 'text-text-secondary',
               )}
+              style={active ? { color: accentTextColor } : undefined}
             >
               <Icon size={20} strokeWidth={active ? 2.5 : 1.75} />
               <span className="text-[10px] font-medium">{item.label}</span>
@@ -236,8 +244,9 @@ export function StudentMobileNav({
           onClick={() => setIsMenuOpen(true)}
           className={cn(
             'flex-1 flex min-w-0 flex-col items-center justify-center py-3 gap-0.5 transition-colors',
-            isMenuOpen ? 'text-brand-lime' : 'text-text-secondary',
+            !isMenuOpen && 'text-text-secondary',
           )}
+          style={isMenuOpen ? { color: accentTextColor } : undefined}
         >
           <MoreHorizontal size={20} strokeWidth={isMenuOpen ? 2.5 : 1.75} />
           <span className="text-[10px] font-medium">Menu</span>

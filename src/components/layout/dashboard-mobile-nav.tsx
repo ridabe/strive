@@ -10,11 +10,14 @@ import { cn } from '@/lib/utils'
 import type { EnabledModule } from '@/components/layout/dashboard-sidebar'
 import { DashboardSidebarNav } from '@/components/layout/dashboard-sidebar'
 import { UserMenu } from '@/components/layout/user-menu'
+import { resolveTextColor } from '@/lib/color-contrast'
 
 interface DashboardMobileNavProps {
   logoUrl: string | null
   businessName: string
   primaryColor: string
+  accentTextColor?: string
+  onPrimaryTextColor?: string | null
   userName: string | null
   userEmail: string
   userRole: AppRole
@@ -36,6 +39,8 @@ export function DashboardMobileNav({
   logoUrl,
   businessName,
   primaryColor,
+  accentTextColor = '#FFFFFF',
+  onPrimaryTextColor,
   userName,
   userEmail,
   userRole,
@@ -44,6 +49,7 @@ export function DashboardMobileNav({
 }: DashboardMobileNavProps) {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const onPrimaryText = resolveTextColor(primaryColor, onPrimaryTextColor)
 
   useEffect(() => {
     setIsMenuOpen(false)
@@ -87,8 +93,8 @@ export function DashboardMobileNav({
             </div>
           ) : (
             <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-black font-display font-black text-sm flex-shrink-0"
-              style={{ background: primaryColor }}
+              className="w-8 h-8 rounded-lg flex items-center justify-center font-display font-black text-sm flex-shrink-0"
+              style={{ background: primaryColor, color: onPrimaryText }}
             >
               {businessName.charAt(0).toUpperCase()}
             </div>
@@ -104,8 +110,8 @@ export function DashboardMobileNav({
         <div className="flex items-center gap-2 flex-shrink-0">
           {notificationBell}
           <div
-            className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-display font-black text-black flex-shrink-0"
-            style={{ background: primaryColor }}
+            className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-display font-black flex-shrink-0"
+            style={{ background: primaryColor, color: onPrimaryText }}
           >
             {(userName ?? userEmail).charAt(0).toUpperCase()}
           </div>
@@ -153,7 +159,7 @@ export function DashboardMobileNav({
           </div>
 
           <div className="flex-1 overflow-y-auto px-3 py-4">
-            <DashboardSidebarNav modules={modules} />
+            <DashboardSidebarNav modules={modules} accentTextColor={accentTextColor} />
           </div>
 
           <div className="border-t border-surface-border p-4">
@@ -189,8 +195,9 @@ export function DashboardMobileNav({
               href={item.href}
               className={cn(
                 'flex-1 flex min-w-0 flex-col items-center justify-center py-3 gap-0.5 transition-colors',
-                active ? 'text-brand-lime' : 'text-text-secondary',
+                !active && 'text-text-secondary',
               )}
+              style={active ? { color: accentTextColor } : undefined}
             >
               <Icon size={20} strokeWidth={active ? 2.5 : 1.75} />
               <span className="text-[10px] font-medium">{item.label}</span>
@@ -205,8 +212,9 @@ export function DashboardMobileNav({
           onClick={() => setIsMenuOpen(true)}
           className={cn(
             'flex-1 flex min-w-0 flex-col items-center justify-center py-3 gap-0.5 transition-colors',
-            isMenuOpen ? 'text-brand-lime' : 'text-text-secondary',
+            !isMenuOpen && 'text-text-secondary',
           )}
+          style={isMenuOpen ? { color: accentTextColor } : undefined}
         >
           <MoreHorizontal size={20} strokeWidth={isMenuOpen ? 2.5 : 1.75} />
           <span className="text-[10px] font-medium">Menu</span>
