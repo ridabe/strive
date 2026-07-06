@@ -8,6 +8,9 @@ import {
 } from 'lucide-react'
 import { LogoVertical, LogoHorizontal } from '@/components/logo'
 import { MobileNav } from '@/components/landing/mobile-nav'
+import { Marquee } from '@/components/landing/marquee'
+import { ScrollReveal } from '@/components/landing/scroll-reveal'
+import { PlansPricing } from '@/components/landing/plans-pricing'
 import { createClient } from '@/lib/supabase/server'
 
 // ─── Data ────────────────────────────────────────────────────────────────────
@@ -130,11 +133,13 @@ const MODULES = [
   },
 ]
 
+// Valores `annual` = preço mensal com ~20% de desconto quando cobrado no ciclo
+// anual. Ajuste conforme a política comercial real do Strive.
 const PLANS = [
   {
     name: 'Gratuito',
-    price: 'R$ 0',
-    period: 'para sempre',
+    monthly: null,
+    annual: null,
     desc: 'Comece sem custo. Experimente tudo sem compromisso.',
     highlight: false,
     features: [
@@ -151,8 +156,8 @@ const PLANS = [
   },
   {
     name: 'Pro',
-    price: 'R$ 79',
-    period: '/mês',
+    monthly: 79,
+    annual: 63,
     desc: 'Para o personal que quer profissionalizar o negócio.',
     highlight: true,
     badge: 'MAIS POPULAR',
@@ -170,14 +175,14 @@ const PLANS = [
   },
   {
     name: 'Elite',
-    price: 'R$ 149',
-    period: '/mês',
+    monthly: 149,
+    annual: 119,
     desc: 'Para quem atende em escala e quer o máximo.',
     highlight: false,
     features: [
       'Tudo do Pro, mais',
       'Alunos Ilimitados',
-      'Criar e disponibilizar Desafios',      
+      'Criar e disponibilizar Desafios',
       'Acesso antecipado a novidades',
       'Implantação assistida',
       'Acesso ao Max, seu assistente de IA',
@@ -185,6 +190,16 @@ const PLANS = [
     cta: 'Criar conta Elite',
     href: '/register?plano=elite',
   },
+]
+
+// "Para quem é" — dores reais do personal, no padrão dor → agitação → solução.
+const PAINS = [
+  'Você perde horas montando ficha de treino no Word ou no caderno.',
+  'O aluno some da rotina e você só descobre quando ele já cancelou.',
+  'A cobrança vira uma novela — planilha, print de PIX, mensagem sem resposta.',
+  'A agenda vive bagunçada entre grupos de WhatsApp e conversa pessoal.',
+  'Você quer crescer, mas o dia não tem horas para atender mais alunos.',
+  'Falta previsibilidade: cada mês é uma incerteza de quanto vai entrar.',
 ]
 
 const STEPS = [
@@ -359,6 +374,9 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen bg-background text-text-primary">
 
+      {/* Anima seções ao entrarem na viewport (fade + slide-up, uma vez) */}
+      <ScrollReveal />
+
       {/* ── NAV ── */}
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-surface-border/60 bg-background/85 backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
@@ -519,6 +537,47 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ── PARA QUEM É (dores) ── */}
+      <section className="py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12" data-reveal>
+            <span className="inline-block bg-surface border border-surface-border text-text-secondary text-xs font-body font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-4">
+              Para quem é o Strive
+            </span>
+            <h2 className="font-display font-bold text-3xl sm:text-4xl text-text-primary uppercase tracking-tight leading-[0.9] mb-4">
+              Se a sua rotina é essa,<br />o Strive foi feito para você.
+            </h2>
+            <p className="font-body text-text-secondary text-base max-w-lg mx-auto leading-relaxed">
+              Criamos a plataforma vivendo a rotina de quem quer entregar o melhor
+              atendimento — sem passar o dia preso em tarefa operacional.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {PAINS.map((pain, i) => (
+              <div
+                key={pain}
+                data-reveal
+                style={{ '--reveal-delay': `${(i % 2) * 80}ms` } as React.CSSProperties}
+                className="flex items-start gap-4 bg-surface border border-surface-border/60 rounded-2xl p-5 hover:border-brand-lime/25 transition-colors"
+              >
+                <span className="flex-shrink-0 w-8 h-8 rounded-full border border-status-error/30 flex items-center justify-center text-status-error/70 text-sm mt-0.5">
+                  ✕
+                </span>
+                <p className="font-body text-sm text-text-secondary leading-relaxed">{pain}</p>
+              </div>
+            ))}
+          </div>
+
+          <p className="text-center font-body text-brand-lime text-sm font-semibold mt-8" data-reveal>
+            É exatamente isso que o Strive resolve. ↓
+          </p>
+        </div>
+      </section>
+
+      {/* ── MARQUEE ── */}
+      <Marquee />
+
       {/* ── MAX — ASSISTENTE DE IA ── */}
       <section id="max" className="relative pt-20 pb-12 px-6 overflow-hidden border-b border-surface-border">
         <div
@@ -625,7 +684,7 @@ export default async function HomePage() {
             <div className={`max-w-6xl mx-auto flex flex-col ${mod.side === 'left' ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-14 items-center`}>
 
               {/* Text side */}
-              <div className="flex-1 flex flex-col gap-6">
+              <div className="flex-1 flex flex-col gap-6" data-reveal>
                 <div className="inline-flex w-fit items-center gap-2 bg-surface border border-surface-border text-text-secondary text-xs font-body font-semibold px-4 py-1.5 rounded-full uppercase tracking-wider">
                   <mod.icon size={13} className="text-brand-lime" />
                   {mod.tag}
@@ -650,7 +709,7 @@ export default async function HomePage() {
               </div>
 
               {/* Screen side */}
-              <div className="flex-shrink-0 flex justify-center">
+              <div className="flex-shrink-0 flex justify-center" data-reveal style={{ '--reveal-delay': '120ms' } as React.CSSProperties}>
                 <PhoneMockup
                   src={mod.screen}
                   alt={mod.alt}
@@ -664,7 +723,7 @@ export default async function HomePage() {
 
       {/* ── ACESSO MULTIPLATAFORMA ── */}
       <section className="py-20 px-6 bg-surface/30 border-y border-surface-border">
-        <div className="max-w-5xl mx-auto text-center mb-14">
+        <div className="max-w-5xl mx-auto text-center mb-14" data-reveal>
           <h2 className="font-display font-bold text-3xl sm:text-4xl text-text-primary uppercase tracking-tight leading-[0.9] mb-4">
             Acesse de qualquer lugar: web, Android<br />e tela inicial do celular.
           </h2>
@@ -705,10 +764,13 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ── MARQUEE ── */}
+      <Marquee words={['Treine', 'Acompanhe', 'Fidelize', 'Fature']} />
+
       {/* ── BEFORE / AFTER ── */}
       <section className="py-6 px-6">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center mb-12" data-reveal>
             <h2 className="font-display font-bold text-3xl sm:text-4xl text-text-primary uppercase tracking-tight leading-[0.9]">
               Como era antes.<br />Como fica depois.
             </h2>
@@ -765,7 +827,7 @@ export default async function HomePage() {
       {/* ── HOW IT WORKS ── */}
       <section id="como-funciona" className="py-20 px-6 bg-surface/20 border-y border-surface-border">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-14">
+          <div className="text-center mb-14" data-reveal>
             <h2 className="font-display font-bold text-3xl sm:text-4xl text-text-primary uppercase tracking-tight leading-[0.9]">
               Três passos.<br />Você está rodando.
             </h2>
@@ -798,7 +860,7 @@ export default async function HomePage() {
       {/* ── PLANS ── */}
       <section id="planos" className="py-8 px-6">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-14">
+          <div className="text-center mb-12" data-reveal>
             <span className="inline-block bg-brand-lime/10 border border-brand-lime/20 text-brand-lime text-xs font-body font-semibold px-3 py-1 rounded-full mb-4">
               Planos
             </span>
@@ -810,64 +872,22 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {PLANS.map((plan) => (
-              <div
-                key={plan.name}
-                className={`relative flex flex-col rounded-2xl p-7 border transition-all duration-200 hover:-translate-y-1 ${
-                  plan.highlight
-                    ? 'bg-brand-lime text-text-inverse border-brand-lime hover:-translate-y-1.5'
-                    : 'bg-surface border-surface-border hover:border-brand-lime/30'
-                }`}
-              >
-                {plan.badge && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex items-center justify-center">
-                    <span className="absolute inset-0 rounded-full bg-brand-lime/40 animate-badge-pulse" />
-                    <span className="relative bg-background text-brand-lime text-[10px] font-body font-bold px-3 py-1 rounded-full border border-brand-lime/30 uppercase tracking-wider whitespace-nowrap">
-                      {plan.badge}
-                    </span>
-                  </div>
-                )}
+          <PlansPricing plans={PLANS} />
 
-                <div className="mb-5">
-                  <h3 className={`font-display font-bold text-xl uppercase tracking-tight mb-1 ${plan.highlight ? 'text-text-inverse' : 'text-text-primary'}`}>
-                    {plan.name}
-                  </h3>
-                  <p className={`text-xs font-body leading-relaxed ${plan.highlight ? 'text-text-inverse/70' : 'text-text-secondary'}`}>
-                    {plan.desc}
-                  </p>
-                </div>
-
-                <div className="mb-6">
-                  <span className={`font-display font-bold text-4xl ${plan.highlight ? 'text-text-inverse' : 'text-text-primary'}`}>
-                    {plan.price}
-                  </span>
-                  <span className={`text-sm font-body ml-1 ${plan.highlight ? 'text-text-inverse/60' : 'text-text-secondary'}`}>
-                    {plan.period}
-                  </span>
-                </div>
-
-                <ul className="space-y-2.5 flex-1 mb-7">
-                  {plan.features.map((f) => (
-                    <li key={f} className={`flex items-start gap-2.5 text-sm font-body ${plan.highlight ? 'text-text-inverse/90' : 'text-text-secondary'}`}>
-                      <CheckCircle size={14} className={`flex-shrink-0 mt-0.5 ${plan.highlight ? 'text-text-inverse' : 'text-text-secondary'}`} />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-
-                <Link
-                  href={plan.href}
-                  className={`w-full text-center font-body font-semibold text-sm py-3.5 rounded-full transition-all hover:scale-[1.03] active:scale-[0.97] ${
-                    plan.highlight
-                      ? 'bg-background text-brand-lime hover:bg-surface'
-                      : 'bg-brand-lime/10 border border-brand-lime/25 text-brand-lime hover:bg-brand-lime/20'
-                  }`}
-                >
-                  {plan.cta}
-                </Link>
-              </div>
-            ))}
+          {/* Selo de garantia — reduz o risco percebido antes do fechamento */}
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 bg-surface border border-surface-border rounded-2xl px-6 py-5 max-w-2xl mx-auto" data-reveal>
+            <div className="flex-shrink-0 w-12 h-12 rounded-full bg-brand-lime/10 border border-brand-lime/25 flex items-center justify-center">
+              <Shield size={22} className="text-brand-lime" />
+            </div>
+            <div className="text-center sm:text-left">
+              <p className="font-body font-semibold text-text-primary text-sm">
+                Garantia incondicional de 7 dias
+              </p>
+              <p className="font-body text-text-secondary text-sm leading-relaxed">
+                Teste o painel sem risco. Se não fizer sentido para o seu negócio,
+                é só não seguir com a assinatura.
+              </p>
+            </div>
           </div>
 
           <p className="text-center text-xs font-body text-text-secondary mt-6">
@@ -879,7 +899,7 @@ export default async function HomePage() {
       {/* ── FAQ ── */}
       <section id="faq" className="py-8 px-6 border-t border-surface-border">
         <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center mb-12" data-reveal>
             <h2 className="font-display font-bold text-3xl sm:text-4xl text-text-primary uppercase tracking-tight leading-[0.9] mb-2">
               Perguntas frequentes
             </h2>
@@ -897,6 +917,24 @@ export default async function HomePage() {
                 </p>
               </div>
             ))}
+          </div>
+
+          {/* Suporte humanizado — saída para quem ainda tem objeção */}
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 bg-surface border border-surface-border rounded-2xl px-6 py-5" data-reveal>
+            <div className="flex items-center gap-3 text-center sm:text-left">
+              <MessageSquare size={20} className="text-brand-lime flex-shrink-0" />
+              <div>
+                <p className="font-body font-semibold text-text-primary text-sm">Ainda com dúvidas?</p>
+                <p className="font-body text-text-secondary text-sm">Fale com a nossa equipe — respondemos rápido.</p>
+              </div>
+            </div>
+            <a
+              href="mailto:suporte@strivepersonal.com.br"
+              className="inline-flex items-center gap-2 font-body font-semibold text-sm border border-brand-lime/30 text-brand-lime px-5 py-3 rounded-full hover:bg-brand-lime/10 transition-colors whitespace-nowrap"
+            >
+              Falar com o suporte
+              <ArrowRight size={14} />
+            </a>
           </div>
         </div>
       </section>
