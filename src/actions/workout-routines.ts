@@ -4,7 +4,12 @@ import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { getCtx } from '@/lib/supabase/context'
 
-export async function createRoutine(planId: string, name: string, displayOrder: number) {
+export async function createRoutine(
+  planId: string,
+  name: string,
+  displayOrder: number,
+  daysOfWeek?: number[] | null,
+) {
   const ctx = await getCtx()
   if (!ctx) return { error: 'Não autenticado' }
   const { supabase, tenantId } = ctx
@@ -16,8 +21,9 @@ export async function createRoutine(planId: string, name: string, displayOrder: 
       tenant_id: tenantId,
       name,
       display_order: displayOrder,
+      days_of_week: daysOfWeek?.length ? daysOfWeek : null,
     })
-    .select('id, name, day_of_week, display_order, notes')
+    .select('id, name, days_of_week, display_order, notes')
     .single()
 
   if (error) return { error: error.message }
@@ -26,7 +32,7 @@ export async function createRoutine(planId: string, name: string, displayOrder: 
 
 export async function updateRoutine(
   routineId: string,
-  fields: { name?: string; day_of_week?: number | null; notes?: string | null }
+  fields: { name?: string; days_of_week?: number[] | null; notes?: string | null }
 ) {
   const supabase = await createClient()
   const { error } = await supabase

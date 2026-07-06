@@ -140,14 +140,14 @@
     "semantic_hash": "190606b74b882e2bf13cb2902fa5b26b"
   },
   "src/actions/workout-plans.ts": {
-    "mtime": 1783005898.4506712,
-    "ast_hash": "f42a7d0b470d33e35969358a340141a5",
-    "semantic_hash": "f42a7d0b470d33e35969358a340141a5"
+    "mtime": 1783346864.4289157,
+    "ast_hash": "634ed317f6e3617a22ddd38c33eff4d5",
+    "semantic_hash": ""
   },
   "src/actions/workout-routines.ts": {
-    "mtime": 1782865381.732886,
-    "ast_hash": "fe0b613be018b1745d7a41858e5b6162",
-    "semantic_hash": "fe0b613be018b1745d7a41858e5b6162"
+    "mtime": 1783346750.2267787,
+    "ast_hash": "7c42cc450cf5c4b2ba0a907af24a8a60",
+    "semantic_hash": ""
   },
   "src/actions/workout-sessions.ts": {
     "mtime": 1782566719.1970956,
@@ -380,9 +380,9 @@
     "semantic_hash": "1e62f15485e60ddef8433e18e455b1bf"
   },
   "src/app/(dashboard)/dashboard/alunos/[id]/treinos/[planId]/page.tsx": {
-    "mtime": 1781979019.2338135,
-    "ast_hash": "0f4d2aeb34b02c16bf2e56b42b377e41",
-    "semantic_hash": "0f4d2aeb34b02c16bf2e56b42b377e41"
+    "mtime": 1783346972.7986348,
+    "ast_hash": "b13ef54146e7ed7d8d8084f59c090a72",
+    "semantic_hash": ""
   },
   "src/app/(dashboard)/dashboard/alunos/[id]/treinos/_components/CombineModal.tsx": {
     "mtime": 1781980120.4776769,
@@ -395,9 +395,9 @@
     "semantic_hash": "42fd35e76b10453a8aeabbbe72324542"
   },
   "src/app/(dashboard)/dashboard/alunos/[id]/treinos/_components/RoutineCard.tsx": {
-    "mtime": 1782067909.4640222,
-    "ast_hash": "685851d78f3702380839d3940d43a2f8",
-    "semantic_hash": "685851d78f3702380839d3940d43a2f8"
+    "mtime": 1783346812.8782315,
+    "ast_hash": "1b253dd7878aeaa066afb0ff6da798f9",
+    "semantic_hash": ""
   },
   "src/app/(dashboard)/dashboard/alunos/[id]/treinos/_components/StudentPlanAssignPanel.tsx": {
     "mtime": 1782066380.6571267,
@@ -405,9 +405,9 @@
     "semantic_hash": "c0711291c92544116648688c84a25f6c"
   },
   "src/app/(dashboard)/dashboard/alunos/[id]/treinos/_components/WorkoutBuilder.tsx": {
-    "mtime": 1782068754.1551518,
-    "ast_hash": "424a299debcff5ffcd01c4fdbbb804c8",
-    "semantic_hash": "424a299debcff5ffcd01c4fdbbb804c8"
+    "mtime": 1783346819.116946,
+    "ast_hash": "f33890f324b2565a51ca924b3e55383e",
+    "semantic_hash": ""
   },
   "src/app/(dashboard)/dashboard/alunos/[id]/treinos/_components/WorkoutItemCard.tsx": {
     "mtime": 1782326165.0601425,
@@ -415,9 +415,9 @@
     "semantic_hash": "9adf6b002ebddbeb7cdd1b54240b7379"
   },
   "src/app/(dashboard)/dashboard/alunos/[id]/treinos/novo/page.tsx": {
-    "mtime": 1781979020.174005,
-    "ast_hash": "e09c3e990ea77be723a7839c0609b102",
-    "semantic_hash": "e09c3e990ea77be723a7839c0609b102"
+    "mtime": 1783346906.954549,
+    "ast_hash": "ca02999f99ebecc73d8d1c846cbd4997",
+    "semantic_hash": ""
   },
   "src/app/(dashboard)/dashboard/alunos/[id]/treinos/page.tsx": {
     "mtime": 1782066363.7510078,
@@ -560,9 +560,9 @@
     "semantic_hash": "c8dc474848aa20053ab0d77c39286bd9"
   },
   "src/app/(dashboard)/dashboard/treinos/[planId]/page.tsx": {
-    "mtime": 1783005916.169123,
-    "ast_hash": "02c00ab06344571bda42bded83906de0",
-    "semantic_hash": "02c00ab06344571bda42bded83906de0"
+    "mtime": 1783346985.1210964,
+    "ast_hash": "82a1b23fdfa88c9b0572a0da41d7fe81",
+    "semantic_hash": ""
   },
   "src/app/(dashboard)/dashboard/treinos/[planId]/plan-assign-panel.tsx": {
     "mtime": 1782066316.6247113,
@@ -570,9 +570,9 @@
     "semantic_hash": "39669f5b06f7543a9921494f67143329"
   },
   "src/app/(dashboard)/dashboard/treinos/novo/page.tsx": {
-    "mtime": 1782066272.799573,
-    "ast_hash": "745fe093d22687ef4d1a539454f2cf93",
-    "semantic_hash": "745fe093d22687ef4d1a539454f2cf93"
+    "mtime": 1783346919.8752925,
+    "ast_hash": "6950ebc73a6463a36eb3d6a6361e56c4",
+    "semantic_hash": ""
   },
   "src/app/(dashboard)/dashboard/treinos/page.tsx": {
     "mtime": 1782066337.545893,
@@ -745,9 +745,9 @@
     "semantic_hash": "c40ddf311551a9d289cf936f25675d6f"
   },
   "src/app/(student)/student/treinos/[planId]/plan-view-client.tsx": {
-    "mtime": 1782566751.9183495,
-    "ast_hash": "915f09c4d653498c1c0b8261984861e5",
-    "semantic_hash": "915f09c4d653498c1c0b8261984861e5"
+    "mtime": 1783347010.995754,
+    "ast_hash": "54b892958a7fda3ee8c6b301018de3e5",
+    "semantic_hash": ""
   },
   "src/app/(student)/student/treinos/page.tsx": {
     "mtime": 1783214179.7745838,
@@ -1155,8 +1155,8 @@
     "semantic_hash": "ea05d023d1d73438a811c3570ad890dd"
   },
   "src/types/database.ts": {
-    "mtime": 1783344259.1530423,
-    "ast_hash": "348a75d4696106a07e7d997276a95882",
+    "mtime": 1783346734.6782374,
+    "ast_hash": "250e7fe252ada1eefde7332b7bec096e",
     "semantic_hash": ""
   },
   "src/types/index.ts": {
@@ -2412,6 +2412,16 @@
   "supabase/migrations/20260706_tenants_on_primary_text_color.sql": {
     "mtime": 1783344216.96725,
     "ast_hash": "03c133b3fdc1e01fba5aa48185807e1b",
+    "semantic_hash": ""
+  },
+  "src/components/dashboard/plan-info-editor.tsx": {
+    "mtime": 1783346959.339431,
+    "ast_hash": "c0f0d08644e9bb301ffb4853c8bb4ea5",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260706_workout_routines_multi_day.sql": {
+    "mtime": 1783346708.447423,
+    "ast_hash": "172db31d456836a19ed4cd40173dc4a7",
     "semantic_hash": ""
   }
 }

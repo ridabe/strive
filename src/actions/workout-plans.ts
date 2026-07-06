@@ -18,7 +18,7 @@ export type WorkoutPlanWithRoutines = {
   workout_routines: {
     id: string
     name: string
-    day_of_week: number | null
+    days_of_week: number[] | null
     display_order: number
     notes: string | null
     workout_items: {
@@ -59,7 +59,7 @@ export async function getWorkoutPlan(planId: string): Promise<WorkoutPlanWithRou
       id, name, goal, description, status, start_date, end_date, student_id, tenant_id,
       students ( full_name, avatar_url ),
       workout_routines (
-        id, name, day_of_week, display_order, notes,
+        id, name, days_of_week, display_order, notes,
         workout_items (
           id, display_order, combo_group_id, combo_type,
           sets, reps, duration_secs, rest_seconds, load, count_type, notes, cadence,

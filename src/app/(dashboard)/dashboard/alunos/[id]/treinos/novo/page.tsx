@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound, redirect } from 'next/navigation'
 import { createWorkoutPlan } from '@/actions/workout-plans'
 import Link from 'next/link'
-import { ArrowLeft, Calendar, ClipboardList } from 'lucide-react'
+import { ArrowLeft, ClipboardList } from 'lucide-react'
 
 type Props = { params: Promise<{ id: string }> }
 
@@ -100,29 +100,6 @@ export default async function NovoPlanoPage({ params }: Props) {
               placeholder="Frequência semanal, progressão, restrições..."
               className="bg-background border border-surface-border rounded-xl px-4 py-3 text-sm text-text-primary placeholder:text-text-secondary/40 outline-none focus:border-brand-lime/50 transition-colors font-body resize-none"
             />
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div className="flex flex-col gap-1">
-              <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider flex items-center gap-1">
-                <Calendar size={11} /> Início
-              </label>
-              <input
-                name="start_date"
-                type="date"
-                className="bg-background border border-surface-border rounded-xl px-4 py-3 text-sm text-text-primary outline-none focus:border-brand-lime/50 transition-colors font-body"
-              />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider flex items-center gap-1">
-                <Calendar size={11} /> Término
-              </label>
-              <input
-                name="end_date"
-                type="date"
-                className="bg-background border border-surface-border rounded-xl px-4 py-3 text-sm text-text-primary outline-none focus:border-brand-lime/50 transition-colors font-body"
-              />
-            </div>
           </div>
         </div>
 

@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation'
 type Routine = {
   id: string
   name: string
-  day_of_week: number | null
+  days_of_week: number[] | null
   display_order: number
   notes: string | null
   workout_items: {

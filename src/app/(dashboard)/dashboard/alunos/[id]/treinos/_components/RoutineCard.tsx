@@ -9,7 +9,8 @@ import { addWorkoutItem } from '@/actions/workout-items'
 import { deleteRoutine, updateRoutine } from '@/actions/workout-routines'
 import { joinOne } from '@/lib/supabase/join'
 
-const DAY_LABELS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
+const DAY_LABELS  = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
+const DAY_LETTERS = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
 
 type Exercise = {
   id: string
@@ -29,7 +30,7 @@ type Exercise = {
 type Routine = {
   id: string
   name: string
-  day_of_week: number | null
+  days_of_week: number[] | null
   display_order: number
   notes: string | null
   workout_items: WorkoutItemData[]
@@ -45,6 +46,7 @@ type Props = {
 export function RoutineCard({ routine, studentId, planId, onDelete }: Props) {
   const [items, setItems]             = useState<WorkoutItemData[]>(routine.workout_items)
   const [name, setName]               = useState(routine.name)
+  const [days, setDays]               = useState<number[]>(routine.days_of_week ?? [])
   const [collapsed, setCollapsed]     = useState(false)
   const [drawerOpen, setDrawerOpen]   = useState(false)
   const [combineOpen, setCombineOpen] = useState(false)
@@ -92,6 +94,23 @@ export function RoutineCard({ routine, studentId, planId, onDelete }: Props) {
     }
   }
 
+  function toggleDay(day: number) {
+    const next = days.includes(day)
+      ? days.filter((d) => d !== day)
+      : [...days, day].sort((a, b) => a - b)
+    setDays(next)
+    startTransition(async () => {
+      await updateRoutine(routine.id, { days_of_week: next.length ? next : null })
+    })
+  }
+
+  function handleFreeDay() {
+    setDays([])
+    startTransition(async () => {
+      await updateRoutine(routine.id, { days_of_week: null })
+    })
+  }
+
   const comboLabel: Record<string, string> = { biset: 'BI-SET', triset: 'TRI-SET', circuit: 'CIRCUITO' }
 
   // Group items by combo for visual rendering
@@ -120,11 +139,34 @@ export function RoutineCard({ routine, studentId, planId, onDelete }: Props) {
               onBlur={handleNameBlur}
               className="bg-transparent font-display font-bold text-text-primary uppercase tracking-widest text-sm outline-none border-b border-transparent focus:border-brand-lime/50 transition-colors w-full"
             />
-            {routine.day_of_week != null && (
-              <p className="text-xs text-text-secondary mt-0.5">
-                {DAY_LABELS[routine.day_of_week]}
-              </p>
-            )}
+            <div className="flex items-center gap-1 mt-1">
+              {DAY_LETTERS.map((letter, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  title={DAY_LABELS[i]}
+                  onClick={() => toggleDay(i)}
+                  className={`w-5 h-5 rounded-full text-[10px] font-bold transition-colors ${
+                    days.includes(i)
+                      ? 'bg-brand-lime text-background'
+                      : 'bg-background border border-surface-border text-text-secondary hover:text-text-primary'
+                  }`}
+                >
+                  {letter}
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={handleFreeDay}
+                className={`ml-1 px-2 h-5 rounded-full text-[10px] font-medium transition-colors ${
+                  days.length === 0
+                    ? 'bg-brand-lime/10 border border-brand-lime/40 text-brand-lime'
+                    : 'bg-background border border-surface-border text-text-secondary hover:text-text-primary'
+                }`}
+              >
+                Dia livre
+              </button>
+            </div>
           </div>
           <span className="text-xs text-text-secondary bg-background border border-surface-border px-2 py-0.5 rounded-full">
             {items.length} exercício{items.length !== 1 ? 's' : ''}

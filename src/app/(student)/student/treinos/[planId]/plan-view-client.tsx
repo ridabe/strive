@@ -265,7 +265,10 @@ export function PlanViewClient({
                   </h2>
                   <p className="text-xs text-text-secondary mt-1">
                     {routine.workout_items.length} exercício{routine.workout_items.length !== 1 ? 's' : ''}
-                    {routine.day_of_week != null ? ` · ${DAY_LABELS[routine.day_of_week]}` : ''}
+                    {' · '}
+                    {routine.days_of_week?.length
+                      ? routine.days_of_week.map((d) => DAY_LABELS[d]).join(', ')
+                      : 'Dia livre'}
                   </p>
                 </div>
 

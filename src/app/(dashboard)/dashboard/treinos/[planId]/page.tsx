@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { ArrowLeft, ClipboardList, Calendar, Target } from 'lucide-react'
 import { PlanAssignPanel } from './plan-assign-panel'
 import { PlanDeleteButton } from './plan-delete-button'
+import { PlanInfoEditor } from '@/components/dashboard/plan-info-editor'
 
 type Props = { params: Promise<{ planId: string }> }
 
@@ -93,6 +94,15 @@ export default async function PlanoPage({ params }: Props) {
         {plan.description && (
           <p className="text-xs text-text-secondary leading-relaxed">{plan.description}</p>
         )}
+
+        <PlanInfoEditor
+          planId={plan.id}
+          name={plan.name}
+          goal={plan.goal}
+          description={plan.description}
+          startDate={plan.start_date}
+          endDate={plan.end_date}
+        />
       </div>
 
       {/* Atribuição de alunos */}
