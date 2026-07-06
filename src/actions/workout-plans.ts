@@ -161,8 +161,22 @@ export async function createWorkoutPlan(formData: FormData) {
 
   if (error) return { error: error.message }
 
+  // Criado a partir da ficha do aluno — já atribui o plano automaticamente,
+  // sem precisar do passo manual de atribuição.
+  if (studentId) {
+    await supabase.from('student_plan_assignments').insert({
+      tenant_id:  profile.tenant_id,
+      plan_id:    data.id,
+      student_id: studentId,
+      status:     'active',
+    })
+  }
+
   revalidatePath('/dashboard/treinos')
-  if (studentId) revalidatePath(`/dashboard/alunos/${studentId}`)
+  if (studentId) {
+    revalidatePath(`/dashboard/alunos/${studentId}`)
+    revalidatePath(`/dashboard/alunos/${studentId}/treinos`)
+  }
   return { planId: data.id }
 }
 

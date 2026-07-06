@@ -86,13 +86,22 @@ export default async function AlunoTreinosPage({ params }: Props) {
           </h1>
           <p className="text-sm text-text-secondary mt-0.5">{student.full_name}</p>
         </div>
-        <Link
-          href="/dashboard/treinos/novo"
-          className="flex items-center gap-2 border border-surface-border text-text-secondary font-body text-sm px-3 py-2 rounded-lg hover:text-text-primary hover:border-brand-lime/40 transition-colors flex-shrink-0"
-        >
-          <ClipboardList size={14} />
-          Gerenciar Planos
-        </Link>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <Link
+            href="/dashboard/treinos"
+            className="flex items-center gap-2 border border-surface-border text-text-secondary font-body text-sm px-3 py-2 rounded-lg hover:text-text-primary hover:border-brand-lime/40 transition-colors"
+          >
+            <ClipboardList size={14} />
+            Ver todos os planos
+          </Link>
+          <Link
+            href={`/dashboard/alunos/${studentId}/treinos/novo`}
+            className="flex items-center gap-2 bg-brand-lime text-background font-body font-semibold text-sm px-3 py-2 rounded-lg hover:bg-brand-lime/90 transition-colors"
+          >
+            <ClipboardList size={14} />
+            Criar Novo Plano
+          </Link>
+        </div>
       </div>
 
       {/* Planos atribuídos */}
@@ -102,7 +111,7 @@ export default async function AlunoTreinosPage({ params }: Props) {
           <p className="font-body font-medium text-text-primary">Nenhum plano atribuído</p>
           <p className="text-sm text-text-secondary">
             Atribua um plano existente ou{' '}
-            <Link href="/dashboard/treinos/novo" className="text-brand-lime hover:underline">
+            <Link href={`/dashboard/alunos/${studentId}/treinos/novo`} className="text-brand-lime hover:underline">
               crie um novo
             </Link>.
           </p>

@@ -140,8 +140,8 @@
     "semantic_hash": "190606b74b882e2bf13cb2902fa5b26b"
   },
   "src/actions/workout-plans.ts": {
-    "mtime": 1783346864.4289157,
-    "ast_hash": "634ed317f6e3617a22ddd38c33eff4d5",
+    "mtime": 1783348414.7936814,
+    "ast_hash": "c88d476c17d119e2115cf08c42534bec",
     "semantic_hash": ""
   },
   "src/actions/workout-routines.ts": {
@@ -420,9 +420,9 @@
     "semantic_hash": ""
   },
   "src/app/(dashboard)/dashboard/alunos/[id]/treinos/page.tsx": {
-    "mtime": 1782066363.7510078,
-    "ast_hash": "c1fcfdc3f600ac2442aba313a8902fd6",
-    "semantic_hash": "c1fcfdc3f600ac2442aba313a8902fd6"
+    "mtime": 1783348437.4202294,
+    "ast_hash": "97d04e886ce4591067a2790d8eda34f8",
+    "semantic_hash": ""
   },
   "src/app/(dashboard)/dashboard/alunos/novo/page.tsx": {
     "mtime": 1782566954.7794156,
