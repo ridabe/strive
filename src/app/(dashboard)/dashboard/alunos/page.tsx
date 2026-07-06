@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import { UserPlus, Search, Users, UserCheck, UserX } from 'lucide-react'
+import { UserPlus, Search, Users, UserCheck, UserX, KeyRound } from 'lucide-react'
 
 export default async function AlunosPage({
   searchParams,
@@ -16,13 +16,25 @@ export default async function AlunosPage({
   // Busca alunos do tenant (RLS garante isolamento)
   let query = supabase
     .from('students')
-    .select('id, full_name, email, phone, status, goal, created_at')
+    .select('id, full_name, email, phone, status, goal, created_at, user_id')
     .order('full_name')
 
   if (status !== 'all') query = query.eq('status', status)
   if (q) query = query.ilike('full_name', `%${q}%`)
 
   const { data: students } = await query
+
+  // Alunos com conta (user_id) que ainda precisam trocar a senha provisória
+  const userIds = (students ?? []).map((s) => s.user_id).filter(Boolean) as string[]
+  const mustChangePasswordIds = new Set<string>()
+  if (userIds.length > 0) {
+    const { data: profiles } = await supabase
+      .from('profiles')
+      .select('id, must_change_password')
+      .in('id', userIds)
+      .eq('must_change_password', true)
+    profiles?.forEach((p) => mustChangePasswordIds.add(p.id))
+  }
 
   const [{ count: activeCount }, { count: inactiveCount }] = await Promise.all([
     supabase.from('students').select('*', { count: 'exact', head: true }).eq('status', 'active'),
@@ -141,6 +153,12 @@ export default async function AlunosPage({
                   <p className="text-xs text-text-secondary truncate">
                     {student.email ?? student.phone ?? 'Sem contato cadastrado'}
                   </p>
+                  {student.user_id && mustChangePasswordIds.has(student.user_id) && (
+                    <p className="flex items-center gap-1 text-xs text-status-warning mt-0.5">
+                      <KeyRound size={11} />
+                      Deve alterar senha provisória
+                    </p>
+                  )}
                 </div>
 
                 {/* Goal */}

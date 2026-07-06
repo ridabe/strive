@@ -33,6 +33,17 @@ export default async function StudentDetailPage({ params }: Props) {
 
   if (!student) notFound()
 
+  // Status de senha provisória (só existe para alunos com conta/login)
+  let mustChangePassword = false
+  if (student.user_id) {
+    const { data: studentProfile } = await supabase
+      .from('profiles')
+      .select('must_change_password')
+      .eq('id', student.user_id)
+      .single()
+    mustChangePassword = studentProfile?.must_change_password ?? false
+  }
+
   // Check if Max Strive IA module is enabled for this tenant
   let hasMaxModule = false
   if (profile?.tenant_id) {
@@ -193,10 +204,18 @@ export default async function StudentDetailPage({ params }: Props) {
 
       {/* Senha do aluno */}
       {student.user_id && (
-        <div className="bg-surface border border-surface-border rounded-xl p-5 space-y-2">
-          <div className="flex items-center gap-2">
-            <KeyRound size={14} className="text-text-secondary" />
-            <p className="text-xs font-body font-semibold text-text-secondary uppercase tracking-widest">Acesso</p>
+        <div className="bg-surface border border-surface-border rounded-xl p-5 space-y-3">
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <div className="flex items-center gap-2">
+              <KeyRound size={14} className="text-text-secondary" />
+              <p className="text-xs font-body font-semibold text-text-secondary uppercase tracking-widest">Acesso</p>
+            </div>
+            {mustChangePassword && (
+              <span className="inline-flex items-center gap-1.5 text-xs font-medium text-status-warning bg-status-warning/10 border border-status-warning/20 rounded-full px-2.5 py-1">
+                <KeyRound size={11} />
+                Ainda não trocou a senha provisória
+              </span>
+            )}
           </div>
           <div className="pt-1 flex flex-wrap items-center gap-4">
             <ResetPasswordButton studentId={student.id} />
