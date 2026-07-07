@@ -80,9 +80,17 @@ export function canViewRevenue(role: string): boolean {
   return isManager(role)
 }
 
-/** Cobrança por aluno: quem está inadimplente + valor em aberto do aluno. */
-export function canViewBilling(role: string): boolean {
-  return isBackofficeStaff(role)
+/**
+ * Financeiro do aluno: ver cobranças/inadimplentes, gerenciar a recorrência e
+ * dar baixa manual. Espelha a função SQL `can_manage_billing()` (fonte da
+ * verdade é o RLS; esta função é só para gating de UI/action com mensagem
+ * amigável).
+ * - Tenant autônomo: sempre true — o personal é o dono do negócio.
+ * - Academia: só owner/admin/gerente/operador — personal (staff) nunca, nem
+ *   para o aluno atribuído a ele.
+ */
+export function canManageBilling(role: string, isAcademia: boolean): boolean {
+  return !isAcademia || isBackofficeStaff(role)
 }
 
 /** Branding, plano e limites da academia. */

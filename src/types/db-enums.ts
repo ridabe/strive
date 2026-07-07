@@ -13,3 +13,6 @@ export type ProfileStatus = Enums['profile_status']
 // nome em snake_case mantido por compatibilidade com os imports existentes
 export type audit_category = Enums['audit_category']
 export type ExtraWorkoutCategory = Enums['extra_workout_category']
+export type FinancialPlanStatus = Enums['financial_plan_status']
+export type PaymentMethod = Enums['payment_method']
+export type ReminderChannel = Enums['reminder_channel']
