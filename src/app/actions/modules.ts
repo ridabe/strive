@@ -7,6 +7,9 @@ import { logAdminAction, AuditActions } from '@/lib/admin/audit'
 type ModuleCategory = 'treinos' | 'acompanhamento' | 'financeiro' | 'comunicacao' | 'whitelabel' | 'futuro'
 type ModuleStatus   = 'active' | 'beta' | 'coming_soon'
 
+// Módulos que só fazem sentido (e só têm RLS permitindo) para tenants tipo 'academia'
+const ACADEMIA_ONLY_SLUGS = ['estoque']
+
 // ── Criar módulo no catálogo ──────────────────────────────────────
 export async function createModule(formData: FormData) {
   const admin = createAdminClient()
@@ -114,6 +117,19 @@ export async function toggleModuleAvailability(moduleId: string, available: bool
 export async function toggleTenantModule(tenantId: string, moduleId: string, enabled: boolean) {
   const admin = createAdminClient()
 
+  // Defesa em profundidade: nunca habilitar um módulo exclusivo de academia
+  // para um tenant autônomo, mesmo que a chamada não venha da UI (que já
+  // desabilita o toggle nesse caso).
+  if (enabled) {
+    const { data: mod } = await admin.from('system_modules').select('slug').eq('id', moduleId).single()
+    if (mod && ACADEMIA_ONLY_SLUGS.includes(mod.slug)) {
+      const { data: tenant } = await admin.from('tenants').select('tenant_type').eq('id', tenantId).single()
+      if (tenant?.tenant_type !== 'academia') {
+        return { error: 'Este módulo está disponível apenas para tenants do tipo academia.' }
+      }
+    }
+  }
+
   // upsert — cria o registro se não existir
   const { error } = await admin
     .from('tenant_modules')
@@ -144,10 +160,23 @@ export async function toggleTenantModule(tenantId: string, moduleId: string, ena
 export async function enableAllModulesForTenant(tenantId: string) {
   const admin = createAdminClient()
 
-  const { data: modules } = await admin
+  const { data: tenant } = await admin
+    .from('tenants')
+    .select('tenant_type, business_name')
+    .eq('id', tenantId)
+    .single()
+
+  const { data: allModules } = await admin
     .from('system_modules')
-    .select('id')
+    .select('id, slug')
     .eq('available', true)
+
+  // Módulos exclusivos de academia nunca são habilitados em massa para
+  // tenants autônomos — a RLS já bloqueia o acesso real, mas evita poluir
+  // tenant_modules com um estado que nunca terá efeito.
+  const modules = tenant?.tenant_type === 'academia'
+    ? allModules
+    : allModules?.filter((m) => !ACADEMIA_ONLY_SLUGS.includes(m.slug))
 
   if (!modules?.length) return { error: 'Nenhum módulo disponível.' }
 
@@ -163,8 +192,6 @@ export async function enableAllModulesForTenant(tenantId: string) {
     .upsert(rows, { onConflict: 'tenant_id,module_id' })
 
   if (error) return { error: error.message }
-
-  const { data: tenant } = await admin.from('tenants').select('business_name').eq('id', tenantId).single()
 
   await logAdminAction({
     action: AuditActions.SYSTEM_CONFIG_UPDATED,

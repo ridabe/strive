@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { requireAcademiaModuleAccess } from '@/lib/supabase/module-access'
 import Link from 'next/link'
 import { Plus, Search, Dumbbell, Globe, Lock } from 'lucide-react'
 import { muscleColor, loadEmoji, loadLabel, countLabel, MUSCLE_GROUPS } from '@/lib/exercise-config'
@@ -12,6 +13,7 @@ interface SearchParams { q?: string; muscle?: string; scope?: string; page?: str
 interface Props { searchParams: Promise<SearchParams> }
 
 export default async function BancoDeExerciciosPage({ searchParams }: Props) {
+  await requireAcademiaModuleAccess('banco-de-exercicios')
   const { q, muscle, scope, page } = await searchParams
   const pageNum = Math.max(1, parseInt(page ?? '1') || 1)
   const supabase = await createClient()

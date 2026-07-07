@@ -1,9 +1,11 @@
 import { createClient } from '@/lib/supabase/server'
+import { requireAcademiaModuleAccess } from '@/lib/supabase/module-access'
 import Link from 'next/link'
 import { joinOne } from '@/lib/supabase/join'
 import { TrendingUp, ArrowRight, StickyNote, ImageIcon } from 'lucide-react'
 
 export default async function ProgressoDashboardPage() {
+  await requireAcademiaModuleAccess('meu-progresso')
   const supabase = await createClient()
 
   const { data: entries } = await supabase

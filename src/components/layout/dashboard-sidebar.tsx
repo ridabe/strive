@@ -8,6 +8,7 @@ import { MODULE_ROUTES } from '@/lib/modules-config'
 import {
   LayoutDashboard,
   Users,
+  UsersRound,
   CreditCard,
   Settings,
   Dumbbell,
@@ -27,6 +28,7 @@ import {
   UtensilsCrossed,
   ChevronDown,
   Trophy,
+  Package,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -34,7 +36,7 @@ import {
 const ICON_MAP: Record<string, LucideIcon> = {
   Dumbbell, ClipboardList, Zap, Play, Ruler, FileHeart,
   TrendingUp, CalendarCheck, CalendarDays, MessageSquare, Receipt,
-  FolderOpen, Bell, Palette, UtensilsCrossed, Trophy,
+  FolderOpen, Bell, Palette, UtensilsCrossed, Trophy, Package,
 }
 
 export type EnabledModule = {
@@ -55,7 +57,7 @@ const MODULE_GROUPS: { label: string; slugs: string[] }[] = [
   },
   {
     label: 'Financeiro',
-    slugs: ['faturas'],
+    slugs: ['faturas', 'estoque'],
   },
   {
     label: 'Comunicação',
@@ -83,15 +85,30 @@ const CORE_BOTTOM: { label: string; href: string; icon: LucideIcon }[] = [
 interface Props {
   modules: EnabledModule[]
   accentTextColor?: string
+  // Exibe o link "Equipe" — só para owner/admin de tenant do tipo academia.
+  showEquipe?: boolean
+  // Oculta o link "Planos" — academia contrata um plano institucional
+  // diretamente com o admin global (tenants.plan), não assina planos de
+  // personal comum via self-service. Vale para qualquer papel dentro da
+  // academia (owner/admin/personal), já que a assinatura é do tenant.
+  isAcademia?: boolean
 }
 
-export function DashboardSidebarNav({ modules, accentTextColor = '#FFFFFF' }: Props) {
+export function DashboardSidebarNav({ modules, accentTextColor = '#FFFFFF', showEquipe = false, isAcademia = false }: Props) {
   const pathname = usePathname()
 
   const isActive = (href: string) =>
     href === '/dashboard'
       ? pathname === '/dashboard'
       : pathname === href || pathname.startsWith(href + '/')
+
+  const coreTop = showEquipe
+    ? [...CORE_TOP, { label: 'Equipe', href: '/dashboard/equipe', icon: UsersRound }]
+    : CORE_TOP
+
+  const coreBottom = isAcademia
+    ? CORE_BOTTOM.filter((item) => item.href !== '/dashboard/planos')
+    : CORE_BOTTOM
 
   // Módulos habilitados indexados por slug
   const enabledBySlug = new Map(modules.map(m => [m.slug, m]))
@@ -120,10 +137,12 @@ export function DashboardSidebarNav({ modules, accentTextColor = '#FFFFFF' }: Pr
         className={cn(
           'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-body font-medium transition-all',
           active
-            ? 'bg-brand-lime/10 border border-brand-lime/20'
+            // Academia (tema claro): texto em ink garantido — o accent aparece
+            // no fundo/borda. Personal (dark): texto no accent via style inline.
+            ? cn('bg-brand-lime/10 border border-brand-lime/20', isAcademia && 'text-text-primary')
             : 'text-text-secondary hover:text-text-primary hover:bg-surface-border/30',
         )}
-        style={active ? { color: accentTextColor } : undefined}
+        style={active && !isAcademia ? { color: accentTextColor } : undefined}
       >
         <Icon size={18} />
         {item.label}
@@ -134,7 +153,7 @@ export function DashboardSidebarNav({ modules, accentTextColor = '#FFFFFF' }: Pr
   return (
     <nav className="flex flex-col gap-1">
       {/* Itens fixos — topo */}
-      {CORE_TOP.map(navLink)}
+      {coreTop.map(navLink)}
 
       {/* Grupos de módulos */}
       {activeGroups.length > 0 && (
@@ -161,9 +180,15 @@ export function DashboardSidebarNav({ modules, accentTextColor = '#FFFFFF' }: Pr
                   onClick={() => toggle(group.label)}
                   className={cn(
                     'w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-body font-semibold uppercase tracking-widest transition-all select-none',
-                    !groupHasActive && 'text-text-secondary/60 hover:text-text-secondary',
+                    groupHasActive
+                      // Academia: cabeçalho ativo em ink; inativo em secundário
+                      // legível (sem /60, que sumia no fundo claro).
+                      ? (isAcademia ? 'text-text-primary' : '')
+                      : (isAcademia
+                          ? 'text-text-secondary hover:text-text-primary'
+                          : 'text-text-secondary/60 hover:text-text-secondary'),
                   )}
-                  style={groupHasActive ? { color: accentTextColor } : undefined}
+                  style={groupHasActive && !isAcademia ? { color: accentTextColor } : undefined}
                 >
                   {group.label}
                   <ChevronDown
@@ -196,10 +221,10 @@ export function DashboardSidebarNav({ modules, accentTextColor = '#FFFFFF' }: Pr
                             className={cn(
                               'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-body font-medium transition-all',
                               active
-                                ? 'bg-brand-lime/10 border border-brand-lime/20'
+                                ? cn('bg-brand-lime/10 border border-brand-lime/20', isAcademia && 'text-text-primary')
                                 : 'text-text-secondary hover:text-text-primary hover:bg-surface-border/30',
                             )}
-                            style={active ? { color: accentTextColor } : undefined}
+                            style={active && !isAcademia ? { color: accentTextColor } : undefined}
                           >
                             <Icon size={16} />
                             {route.label}
@@ -217,7 +242,7 @@ export function DashboardSidebarNav({ modules, accentTextColor = '#FFFFFF' }: Pr
 
       {/* Itens fixos — fundo */}
       <div className="mt-1 border-t border-surface-border/50 pt-1 space-y-0.5">
-        {CORE_BOTTOM.map(navLink)}
+        {coreBottom.map(navLink)}
       </div>
     </nav>
   )

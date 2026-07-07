@@ -12,6 +12,7 @@ export const MODULE_ROUTES: Record<string, { href: string; label: string }> = {
   'frequencia':          { href: '/dashboard/frequencia',          label: 'Frequência'          },
   'feedbacks':           { href: '/dashboard/feedbacks',           label: 'Feedbacks'           },
   'faturas':             { href: '/dashboard/financeiro',          label: 'Financeiro'          },
+  'estoque':             { href: '/dashboard/estoque',             label: 'Estoque'             },
   'arquivos':            { href: '/dashboard/arquivos',            label: 'Arquivos'            },
   'notificacoes':        { href: '/dashboard/notificacoes',        label: 'Notificações'        },
   'white-label':         { href: '/dashboard/ajustes',             label: 'Identidade Visual'   },
@@ -20,6 +21,38 @@ export const MODULE_ROUTES: Record<string, { href: string; label: string }> = {
   'assistente-ia':       { href: '/dashboard/alunos',              label: 'Max Strive IA'       },
   'desafios':            { href: '/dashboard/desafios',            label: 'Desafios'            },
 }
+
+// ─── Visibilidade de módulos por papel dentro de uma academia ────────────────
+// Numa academia, a instituição (owner/admin) não treina alunos — quem cria e
+// executa treino, faz avaliação física/plano alimentar e acompanha a
+// evolução individual é o personal, na relação 1:1 com o aluno dele. Por
+// isso esses módulos somem do menu do owner/admin, mesmo estando habilitados
+// para o tenant (habilitação é por tenant, visibilidade é por papel). Não
+// afeta tenants autônomos (o próprio personal é o dono).
+//
+// Anamnese, Feedbacks e o grupo Comunicação (Arquivos, Notificações, Minha
+// Agenda) ficam visíveis pro admin — não é ferramenta de criação de treino,
+// e sim de acompanhamento institucional: admin quer saber se o aluno
+// preencheu a ficha de anamnese, como anda a qualidade do feedback
+// aluno/personal, e usar a comunicação (inclusive a agenda) para
+// acompanhar marcações e falar com os personais da equipe.
+export const ACADEMIA_HIDDEN_FROM_ADMIN_SLUGS = [
+  'banco-de-exercicios',
+  'planos-de-treino',
+  'treinos-extras',
+  'execucao-do-treino',
+  'avaliacoes-fisicas',
+  'planos-alimentares',
+  'meu-progresso',
+  'assistente-ia',
+]
+
+// Faturas/Cobranças é o inverso: numa academia o financeiro é da instituição
+// (é ela quem cobra o aluno, não o personal individualmente) — some do menu
+// do personal, fica só com owner/admin.
+export const ACADEMIA_HIDDEN_FROM_PERSONAL_SLUGS = [
+  'faturas',
+]
 
 // Módulos principais para a grid do dashboard home (ícone SVG path inline)
 export const MODULE_CATEGORIES: Record<string, { label: string; color: string }> = {

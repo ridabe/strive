@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Menu, MoreHorizontal, Trophy, Users, X } from 'lucide-react'
+import { ArrowLeftRight, LayoutDashboard, Menu, MoreHorizontal, Trophy, Users, X } from 'lucide-react'
 import type { AppRole } from '@/types/database'
 import { cn } from '@/lib/utils'
 import type { EnabledModule } from '@/components/layout/dashboard-sidebar'
@@ -23,6 +23,10 @@ interface DashboardMobileNavProps {
   userRole: AppRole
   modules: EnabledModule[]
   notificationBell?: React.ReactNode
+  showEquipe?: boolean
+  isAcademia?: boolean
+  academiaName?: string | null
+  hasMultipleActiveTenants?: boolean
 }
 
 const QUICK_ITEMS = [
@@ -46,6 +50,10 @@ export function DashboardMobileNav({
   userRole,
   modules,
   notificationBell,
+  showEquipe = false,
+  isAcademia = false,
+  academiaName = null,
+  hasMultipleActiveTenants = false,
 }: DashboardMobileNavProps) {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -159,15 +167,25 @@ export function DashboardMobileNav({
           </div>
 
           <div className="flex-1 overflow-y-auto px-3 py-4">
-            <DashboardSidebarNav modules={modules} accentTextColor={accentTextColor} />
+            <DashboardSidebarNav modules={modules} accentTextColor={accentTextColor} showEquipe={showEquipe} isAcademia={isAcademia} />
           </div>
 
           <div className="border-t border-surface-border p-4">
             <div className="flex flex-col gap-3">
+              {hasMultipleActiveTenants && (
+                <Link
+                  href="/dashboard/trocar-organizacao"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-body font-medium text-text-secondary hover:text-[var(--accent-text)] hover:bg-brand-lime/10 transition-colors"
+                >
+                  <ArrowLeftRight size={15} />
+                  Trocar de organização
+                </Link>
+              )}
               <UserMenu
                 name={userName}
                 email={userEmail}
                 role={userRole}
+                academiaName={academiaName}
               />
               <div className="flex items-center justify-center gap-2 pt-1 opacity-40">
                 <span className="text-[0.55rem] text-text-secondary uppercase tracking-widest font-medium">

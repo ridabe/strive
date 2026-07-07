@@ -2,11 +2,13 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
+import { requireAcademiaModuleAccess } from '@/lib/supabase/module-access'
 import { MaxPanel } from '@/components/ai/MaxPanel'
 
 type Props = { params: Promise<{ id: string }> }
 
 export default async function AssistenteIaPage({ params }: Props) {
+  await requireAcademiaModuleAccess('assistente-ia')
   const { id: studentId } = await params
   const supabase = await createClient()
 

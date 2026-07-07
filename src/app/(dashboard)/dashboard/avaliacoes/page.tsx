@@ -1,9 +1,11 @@
 import { createClient } from '@/lib/supabase/server'
+import { requireAcademiaModuleAccess } from '@/lib/supabase/module-access'
 import Link from 'next/link'
 import { joinOne } from '@/lib/supabase/join'
 import { Ruler, TrendingUp, ArrowRight } from 'lucide-react'
 
 export default async function AvaliacoesPage() {
+  await requireAcademiaModuleAccess('avaliacoes-fisicas')
   const supabase = await createClient()
 
   const { data: assessments } = await supabase

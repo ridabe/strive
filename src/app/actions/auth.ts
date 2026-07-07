@@ -86,6 +86,23 @@ export async function signUpPersonal(formData: FormData) {
 
   if (profileError) redirect('/register?error=' + encodeURIComponent('Conta criada, mas erro ao vincular tenant.'))
 
+  // Vínculo em tenant_members (role owner) — mantém o tenant sempre representado
+  // em tenant_members desde a criação, para o seletor de organização (Fase 4)
+  // não depender de um backfill único. Best-effort: se falhar, não bloqueia o
+  // cadastro (o tenant autônomo continua funcionando 100% via profiles.tenant_id,
+  // como sempre funcionou).
+  const { error: memberError } = await supabase
+    .from('tenant_members')
+    .insert({
+      tenant_id: tenant!.id,
+      user_id: authData.user!.id,
+      role: 'owner',
+      status: 'active',
+      joined_at: new Date().toISOString(),
+    })
+
+  if (memberError) console.error('[signUpPersonal] Falha ao criar tenant_members:', memberError.message)
+
   redirect('/dashboard')
 }
 
@@ -113,4 +130,3 @@ export async function signOut() {
   await supabase.auth.signOut()
   redirect('/login')
 }
-

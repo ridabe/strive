@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils'
 import {
   LayoutDashboard,
   Building2,
+  Building,
   Users,
   BarChart2,
   ScrollText,
@@ -21,6 +22,7 @@ import {
 const NAV_ITEMS = [
   { label: 'Painel',       href: '/admin',                       icon: LayoutDashboard },
   { label: 'Clientes',     href: '/admin/clientes',              icon: Building2 },
+  { label: 'Academias',    href: '/admin/academias',             icon: Building },
   { label: 'Planos',       href: '/admin/planos',                icon: CreditCard },
   { label: 'Módulos',      href: '/admin/modulos',               icon: Puzzle },
   { label: 'Max Strive IA',href: '/admin/ia',                    icon: Zap },

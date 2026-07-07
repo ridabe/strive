@@ -11,23 +11,32 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: '#0E0E1A',
+        // Tokens de superfície/tipografia roteados por CSS var. O fallback é o
+        // valor dark original (tema personal autônomo), definido em :root no
+        // globals.css. O tema academia sobrescreve os mesmos vars sob
+        // [data-theme="academia"] — sem alterar nenhuma classe de componente.
+        background: 'var(--color-bg, #0E0E1A)',
         surface: {
-          DEFAULT: '#1A1A2E',
-          border: '#2A2A45',
+          DEFAULT: 'var(--color-surface, #1A1A2E)',
+          border: 'var(--color-surface-border, #2A2A45)',
+          // Segunda camada neutra (sidebar/painéis) — levemente distinta da
+          // superfície dos cards, para dar profundidade em vez de branco chapado.
+          2: 'var(--color-surface-2, #1A1A2E)',
         },
         brand: {
-          lime: '#E8FF47',
-          dark: '#C8E600',
+          // --brand-lime é injetado inline pelo layout = primary_color do tenant
+          // (default #E8FF47), então o accent passa a respeitar o white-label.
+          lime: 'var(--brand-lime, #E8FF47)',
+          dark: 'var(--brand-lime-deep, #C8E600)',
         },
         max: {
           DEFAULT: '#7C3AED',
           light: '#A78BFA',
         },
         text: {
-          primary: '#FFFFFF',
-          secondary: '#B0B0C3',
-          inverse: '#000000',
+          primary: 'var(--color-text-primary, #FFFFFF)',
+          secondary: 'var(--color-text-secondary, #B0B0C3)',
+          inverse: 'var(--color-text-inverse, #000000)',
         },
         status: {
           success: '#22C55E',

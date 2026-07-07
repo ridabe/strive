@@ -4,6 +4,39 @@
 
 /* Fonts loaded via next/font/google in layout.tsx */
 
+/* ────────────────────────────────────────────────────────────────────────
+   Tokens de tema (surface/texto). Defaults = tema "Performance Terminal"
+   (personal autônomo). O tema academia sobrescreve os mesmos vars sob
+   [data-theme="academia"] no layout do dashboard — mesmos componentes, tema
+   claro/BI. --brand-lime é injetado inline pelo layout (primary_color do
+   tenant); aqui só definimos o derivado de hover.
+   ──────────────────────────────────────────────────────────────────────── */
+:root {
+  --color-bg: #0E0E1A;
+  --color-surface: #1A1A2E;
+  --color-surface-2: #1A1A2E;
+  --color-surface-border: #2A2A45;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #B0B0C3;
+  --color-text-inverse: #000000;
+  --brand-lime-deep: #C8E600;
+  color-scheme: dark;
+}
+
+/* Tema Academia — neutro frio em camadas, accent do tenant (white-label).
+   Aplicado via data-theme="academia" na raiz do dashboard/aluno. */
+[data-theme="academia"] {
+  --color-bg: #E9ECF1;            /* canvas da página (cinza-azulado frio) */
+  --color-surface: #FFFFFF;       /* cards e painéis (destacam sobre o canvas) */
+  --color-surface-2: #F4F6FA;     /* sidebar/2ª camada: off-white frio, não branco chapado */
+  --color-surface-border: #E2E6EC;/* hairlines */
+  --color-text-primary: #0B1220;  /* ink */
+  --color-text-secondary: #5B6472;/* texto de apoio (passa AA) */
+  --color-text-inverse: #FFFFFF;  /* texto sobre o accent (fill) */
+  --brand-lime-deep: color-mix(in srgb, var(--brand-lime, #4F46E5) 84%, #000);
+  color-scheme: light;
+}
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -17,8 +50,8 @@ body {
 }
 
 body {
-  background-color: #0E0E1A;
-  color: #FFFFFF;
+  background-color: var(--color-bg, #0E0E1A);
+  color: var(--color-text-primary, #FFFFFF);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

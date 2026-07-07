@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { requireAcademiaModuleAccess } from '@/lib/supabase/module-access'
 import { joinOne } from '@/lib/supabase/join'
 import Link from 'next/link'
 import { ClipboardList, Plus, Target, Users, ChevronRight } from 'lucide-react'
@@ -13,6 +14,7 @@ const GOAL_COLOR: Record<string, string> = {
 }
 
 export default async function TreinosPage() {
+  await requireAcademiaModuleAccess('planos-de-treino')
   const supabase = await createClient()
 
   const { data: plans } = await supabase

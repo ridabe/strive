@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { requireAcademiaModuleAccess } from '@/lib/supabase/module-access'
 import Link from 'next/link'
 import { UtensilsCrossed, Plus, Target, Users, ChevronRight } from 'lucide-react'
 
@@ -12,6 +13,7 @@ const GOAL_COLOR: Record<string, string> = {
 }
 
 export default async function PlanosAlimentaresPage() {
+  await requireAcademiaModuleAccess('planos-alimentares')
   const supabase = await createClient()
 
   const { data: plans } = await supabase

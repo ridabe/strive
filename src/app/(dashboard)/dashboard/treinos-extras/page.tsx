@@ -1,4 +1,5 @@
 import { getTenantExtraWorkouts } from '@/actions/extra-workouts'
+import { requireAcademiaModuleAccess } from '@/lib/supabase/module-access'
 import Link from 'next/link'
 import { Dumbbell, Tag, Copy } from 'lucide-react'
 
@@ -23,6 +24,7 @@ const CATEGORY_COLOR: Record<string, string> = {
 }
 
 export default async function TreinosExtrasPage() {
+  await requireAcademiaModuleAccess('treinos-extras')
   const workouts = await getTenantExtraWorkouts()
   const templates = workouts.filter((w) => w.is_template)
   const assigned = workouts.filter((w) => !w.is_template)

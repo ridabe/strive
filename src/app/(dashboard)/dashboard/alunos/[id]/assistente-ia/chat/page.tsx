@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
+import { requireAcademiaModuleAccess } from '@/lib/supabase/module-access'
 import { joinOne } from '@/lib/supabase/join'
 import { MaxChatPanel } from '@/components/ai/MaxChatPanel'
 
@@ -11,6 +12,7 @@ type Props = {
 }
 
 export default async function AssistenteIaChatPage({ params, searchParams }: Props) {
+  await requireAcademiaModuleAccess('assistente-ia')
   const { id: studentId } = await params
   const { conv: conversationId = null } = await searchParams
   const supabase = await createClient()

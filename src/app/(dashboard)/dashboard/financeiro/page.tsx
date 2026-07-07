@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { requireAcademiaModuleAccess } from '@/lib/supabase/module-access'
 import { Receipt, CheckCircle2, Clock, AlertCircle } from 'lucide-react'
 import { joinOne } from '@/lib/supabase/join'
 
@@ -10,6 +11,7 @@ const STATUS_CONFIG: Record<string, { label: string; icon: typeof CheckCircle2; 
 }
 
 export default async function FinanceiroPage() {
+  await requireAcademiaModuleAccess('faturas')
   const supabase = await createClient()
 
   const { data: invoices } = await supabase

@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { requireAcademiaModuleAccess } from '@/lib/supabase/module-access'
 import Link from 'next/link'
 import { Play, Clock, Dumbbell, TrendingUp, CheckCircle2, Users } from 'lucide-react'
 import { joinOne } from '@/lib/supabase/join'
@@ -43,6 +44,7 @@ function intensityColor(v: string | null) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function ExecucaoPage() {
+  await requireAcademiaModuleAccess('execucao-do-treino')
   const supabase = await createClient()
 
   // Identifica o tenant do personal logado

@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { PlanUpgradeButton } from '@/components/dashboard/plan-upgrade-button'
 import { Check, AlertCircle, CheckCircle2, CreditCard, Zap } from 'lucide-react'
@@ -34,9 +35,16 @@ export default async function PlanosDashboardPage({
 
   const { data: tenant } = await supabase
     .from('tenants')
-    .select('plan, max_students, business_name')
+    .select('plan, max_students, business_name, tenant_type')
     .eq('id', profile!.tenant_id!)
     .single()
+
+  // Academia contrata um plano institucional diretamente com o admin global
+  // (tenants.plan é definido em /admin/academias) — não faz sentido expor o
+  // self-service de planos de personal comum (checkout, upgrade) para uma
+  // academia, que não é uma assinatura individual. Vale para qualquer papel
+  // (owner/admin/personal), já que o plano é do tenant, não do usuário.
+  if (tenant?.tenant_type === 'academia') redirect('/dashboard')
 
   // Todos os planos disponíveis
   const { data: plans } = await supabase

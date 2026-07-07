@@ -31,6 +31,9 @@ const CATEGORY_CONFIG: Record<string, { label: string; color: string }> = {
 
 const CATEGORY_ORDER = ['ia', 'treinos', 'acompanhamento', 'financeiro', 'comunicacao', 'whitelabel', 'futuro']
 
+// Módulos que só fazem sentido (e só têm RLS permitindo) para tenants tipo 'academia'
+const ACADEMIA_ONLY_SLUGS = ['estoque']
+
 export default async function ClientModulosPage({
   params,
 }: {
@@ -41,7 +44,7 @@ export default async function ClientModulosPage({
 
   const { data: tenant } = await supabase
     .from('tenants')
-    .select('id, business_name, logo_url, primary_color')
+    .select('id, business_name, logo_url, primary_color, tenant_type')
     .eq('id', id)
     .single()
 
@@ -139,11 +142,13 @@ export default async function ClientModulosPage({
                   const IconComp  = ICONS[mod.icon ?? ''] ?? Puzzle
                   const isEnabled = tenantModuleMap[mod.id] === true
                   const isLocked  = !mod.available // globalmente desativado
+                  const isAcademiaOnly     = ACADEMIA_ONLY_SLUGS.includes(mod.slug)
+                  const blockedByTenantType = isAcademiaOnly && tenant.tenant_type !== 'academia'
 
                   return (
                     <div
                       key={mod.id}
-                      className={`flex items-center gap-4 px-4 py-3.5 ${isLocked ? 'opacity-40' : ''}`}
+                      className={`flex items-center gap-4 px-4 py-3.5 ${(isLocked || blockedByTenantType) ? 'opacity-40' : ''}`}
                     >
                       {/* Ícone */}
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${catCfg.color} border`}>
@@ -169,6 +174,9 @@ export default async function ClientModulosPage({
                           {isLocked && (
                             <span className="text-xs text-text-secondary/60">• desativado globalmente</span>
                           )}
+                          {blockedByTenantType && (
+                            <span className="text-xs text-text-secondary/60">• somente para academias</span>
+                          )}
                         </div>
                         {mod.description && (
                           <p className="text-xs text-text-secondary mt-0.5 truncate">
@@ -182,7 +190,7 @@ export default async function ClientModulosPage({
                         tenantId={id}
                         moduleId={mod.id}
                         enabled={isEnabled}
-                        disabled={isLocked || mod.status === 'coming_soon'}
+                        disabled={isLocked || mod.status === 'coming_soon' || blockedByTenantType}
                       />
                     </div>
                   )

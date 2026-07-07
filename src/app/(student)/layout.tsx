@@ -36,14 +36,14 @@ export default async function StudentLayout({
   // em outro).
   const { data: activeRows } = await supabase
     .from('students')
-    .select('id, tenant_id, status')
+    .select('id, tenant_id, status, assigned_personal_id')
     .eq('user_id', user.id)
     .eq('status', 'active')
 
   const activeRelationships = activeRows ?? []
   const hasMultipleActiveTenants = activeRelationships.length > 1
 
-  let studentRow: { id: string; status: string } | null = null
+  let studentRow: { id: string; status: string; assigned_personal_id: string | null } | null = null
   let tenantId: string | null = null
 
   if (activeRelationships.length === 1) {
@@ -60,26 +60,45 @@ export default async function StudentLayout({
   }
 
   // Tenant branding + personal name
-  let tenantBranding: { logo_url: string | null; primary_color: string | null; accent_text_color: string | null; on_primary_text_color: string | null; business_name: string; cref?: string | null } | null = null
+  let tenantBranding: { logo_url: string | null; primary_color: string | null; accent_text_color: string | null; on_primary_text_color: string | null; business_name: string; cref?: string | null; tenant_type?: string } | null = null
   let personalName: string | null = null
 
   if (tenantId) {
-    const [{ data: tenant }, { data: personal }] = await Promise.all([
-      supabase
-        .from('tenants')
-        .select('logo_url, primary_color, accent_text_color, on_primary_text_color, business_name, cref')
-        .eq('id', tenantId)
-        .single(),
-      supabase
+    const { data: tenant } = await supabase
+      .from('tenants')
+      .select('logo_url, primary_color, accent_text_color, on_primary_text_color, business_name, cref, tenant_type')
+      .eq('id', tenantId)
+      .single()
+    tenantBranding = tenant
+
+    if (tenant?.tenant_type === 'academia') {
+      // Numa academia, vários profiles podem ter role='personal' no mesmo
+      // tenant_id (o papel real de cada um vive em tenant_members, não em
+      // profiles.role) — por isso não dá pra pegar "o personal" com um
+      // simples .limit(1) como no caso autônomo. Resolve o personal
+      // efetivamente responsável por ESTE aluno via assigned_personal_id.
+      if (studentRow?.assigned_personal_id) {
+        const { data: member } = await supabase
+          .from('tenant_members')
+          .select('profiles(full_name)')
+          .eq('id', studentRow.assigned_personal_id)
+          .maybeSingle()
+        personalName = joinOne<{ full_name: string | null }>(member?.profiles)?.full_name ?? null
+      }
+      // Aluno ainda não atribuído a um personal — sem fallback "adivinhado",
+      // fica null (a UI trata personalName nulo mostrando só a marca da academia).
+    } else {
+      // Autônomo — comportamento idêntico ao anterior a esta fase: existe
+      // exatamente 1 profile com role='personal' no tenant, então .limit(1) é seguro.
+      const { data: personal } = await supabase
         .from('profiles')
         .select('full_name')
         .eq('tenant_id', tenantId)
         .eq('role', 'personal')
         .limit(1)
-        .single(),
-    ])
-    tenantBranding = tenant
-    personalName = personal?.full_name ?? null
+        .single()
+      personalName = personal?.full_name ?? null
+    }
   }
 
   const primaryColor = tenantBranding?.primary_color ?? '#E8FF47'
