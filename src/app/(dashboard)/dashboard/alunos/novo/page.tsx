@@ -1,6 +1,9 @@
 import { createStudent } from '@/actions/students'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { ArrowLeft, UserPlus, Mail, Phone, Calendar, Target, FileText, Info } from 'lucide-react'
+import { getCtx } from '@/lib/supabase/context'
+import { isBackofficeStaff } from '@/lib/permissions'
 
 type Props = { searchParams: Promise<{ error?: string }> }
 
@@ -16,6 +19,19 @@ const GOAL_OPTIONS = [
 
 export default async function NovoAlunoPage({ searchParams }: Props) {
   const { error } = await searchParams
+
+  // Numa academia, só o backoffice cadastra alunos — personal é redirecionado.
+  const ctx = await getCtx()
+  if (ctx) {
+    const { data: t } = await ctx.supabase
+      .from('tenants')
+      .select('tenant_type')
+      .eq('id', ctx.tenantId)
+      .single()
+    if (t?.tenant_type === 'academia' && !isBackofficeStaff(ctx.role)) {
+      redirect('/dashboard/alunos')
+    }
+  }
 
   return (
     <div className="p-4 md:p-8 space-y-6 max-w-2xl">

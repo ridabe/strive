@@ -1,6 +1,11 @@
 import { redirect } from 'next/navigation'
 import { getCtx } from './context'
-import { ACADEMIA_HIDDEN_FROM_ADMIN_SLUGS, ACADEMIA_HIDDEN_FROM_PERSONAL_SLUGS } from '@/lib/modules-config'
+import {
+  ACADEMIA_HIDDEN_FROM_ADMIN_SLUGS,
+  ACADEMIA_HIDDEN_FROM_PERSONAL_SLUGS,
+  ACADEMIA_OPERATIONS_VISIBLE_SLUGS,
+} from '@/lib/modules-config'
+import { isOperations } from '@/lib/permissions'
 
 // ─── Bloqueio de página por papel dentro de uma academia ──────────────────────
 // Espelha, no lado servidor, a mesma regra que já esconde os itens do menu
@@ -24,6 +29,14 @@ export async function requireAcademiaModuleAccess(slug: string) {
     .single()
 
   if (tenant?.tenant_type !== 'academia') return
+
+  // Operação (operador/gerente): allowlist — qualquer slug fora dela é bloqueado.
+  if (isOperations(role)) {
+    if (!ACADEMIA_OPERATIONS_VISIBLE_SLUGS.includes(slug)) {
+      redirect('/dashboard')
+    }
+    return
+  }
 
   const isAdmin = role === 'owner' || role === 'admin'
 

@@ -28,13 +28,10 @@ export default async function AcademiaDetailPage({
   const { id }    = await params
   const supabase  = await createClient()
 
+  // '*' para incluir logo_light_url (coluna nova, ainda fora do database.ts).
   const { data: tenant } = await supabase
     .from('tenants')
-    .select(`
-      id, business_name, slug, plan, status, primary_color, logo_url,
-      max_students, max_personals, self_assign_enabled, abacatepay_customer_id,
-      contact_email, contact_phone, notes, tenant_type, created_at, updated_at
-    `)
+    .select('*')
     .eq('id', id)
     .eq('tenant_type', 'academia')
     .single()
@@ -176,6 +173,9 @@ export default async function AcademiaDetailPage({
           self_assign_enabled:    tenant.self_assign_enabled,
           abacatepay_customer_id: tenant.abacatepay_customer_id,
           notes:                  tenant.notes,
+          cnpj:                   (tenant as { cnpj?: string | null }).cnpj ?? null,
+          logo_url:               tenant.logo_url,
+          logo_light_url:         (tenant as { logo_light_url?: string | null }).logo_light_url ?? null,
         }}
       />
 

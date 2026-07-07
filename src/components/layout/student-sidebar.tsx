@@ -55,6 +55,7 @@ interface StudentSidebarNavProps {
   unreadMessageCount?: number
   hasChallenge?: boolean
   accentTextColor?: string
+  isAcademia?: boolean
 }
 
 /**
@@ -77,6 +78,7 @@ export function StudentSidebarNav({
   unreadMessageCount = 0,
   hasChallenge,
   accentTextColor = '#FFFFFF',
+  isAcademia = false,
 }: StudentSidebarNavProps) {
   const pathname = usePathname()
   const NAV_ITEMS = getStudentNavItems(gamificationActive, hasChallenge)
@@ -97,10 +99,11 @@ export function StudentSidebarNav({
               className={cn(
                 'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-body font-medium transition-all',
                 active
-                  ? 'bg-brand-lime/10 border border-brand-lime/20'
+                  // Academia (tema claro): texto em ink garantido; personal (dark): accent inline.
+                  ? cn('bg-brand-lime/10 border border-brand-lime/20', isAcademia && 'text-text-primary')
                   : 'text-text-secondary hover:text-text-primary hover:bg-surface-border/30 border border-transparent',
               )}
-              style={active ? { color: accentTextColor } : undefined}
+              style={active && !isAcademia ? { color: accentTextColor } : undefined}
             >
               <Icon size={16} />
               <span className="flex-1">{item.label}</span>

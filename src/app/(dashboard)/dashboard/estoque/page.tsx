@@ -2,9 +2,14 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Plus, Package, AlertTriangle, Archive } from 'lucide-react'
 import { getCtx } from '@/lib/supabase/context'
+import { requireAcademiaModuleAccess } from '@/lib/supabase/module-access'
 import { getInventoryItems } from '@/app/actions/estoque'
 
 export default async function EstoquePage() {
+  // Estoque é de backoffice/operação — bloqueia o personal de academia (o
+  // guard redireciona conforme o papel; operador/admin passam).
+  await requireAcademiaModuleAccess('estoque')
+
   const ctx = await getCtx()
   if (!ctx) redirect('/login')
 

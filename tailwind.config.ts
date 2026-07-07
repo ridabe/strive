@@ -15,18 +15,23 @@ const config: Config = {
         // valor dark original (tema personal autônomo), definido em :root no
         // globals.css. O tema academia sobrescreve os mesmos vars sob
         // [data-theme="academia"] — sem alterar nenhuma classe de componente.
-        background: 'var(--color-bg, #0E0E1A)',
+        // Tokens temáveis em formato de CANAIS "R G B" (rgb(var(--x) / <alpha-value>))
+        // — obrigatório para os modificadores de opacidade do Tailwind funcionarem
+        // (bg-brand-lime/10, text-text-secondary/60, etc.). As vars vivem em
+        // globals.css (:root = dark; [data-theme=academia] = claro).
+        background: 'rgb(var(--color-bg) / <alpha-value>)',
         surface: {
-          DEFAULT: 'var(--color-surface, #1A1A2E)',
-          border: 'var(--color-surface-border, #2A2A45)',
-          // Segunda camada neutra (sidebar/painéis) — levemente distinta da
-          // superfície dos cards, para dar profundidade em vez de branco chapado.
-          2: 'var(--color-surface-2, #1A1A2E)',
+          DEFAULT: 'rgb(var(--color-surface) / <alpha-value>)',
+          border: 'rgb(var(--color-surface-border) / <alpha-value>)',
+          // Segunda camada neutra (sidebar/painéis) — dá profundidade em vez de
+          // branco chapado.
+          2: 'rgb(var(--color-surface-2) / <alpha-value>)',
         },
         brand: {
-          // --brand-lime é injetado inline pelo layout = primary_color do tenant
-          // (default #E8FF47), então o accent passa a respeitar o white-label.
-          lime: 'var(--brand-lime, #E8FF47)',
+          // --brand-lime-rgb (canais) é injetado inline pelo layout = primary_color
+          // do tenant, então o accent respeita o white-label e aceita opacidade.
+          lime: 'rgb(var(--brand-lime-rgb) / <alpha-value>)',
+          // brand-dark é usado só sólido (sem opacidade) — mantém o hex/color-mix.
           dark: 'var(--brand-lime-deep, #C8E600)',
         },
         max: {
@@ -34,14 +39,16 @@ const config: Config = {
           light: '#A78BFA',
         },
         text: {
-          primary: 'var(--color-text-primary, #FFFFFF)',
-          secondary: 'var(--color-text-secondary, #B0B0C3)',
-          inverse: 'var(--color-text-inverse, #000000)',
+          primary: 'rgb(var(--color-text-primary) / <alpha-value>)',
+          secondary: 'rgb(var(--color-text-secondary) / <alpha-value>)',
+          inverse: 'rgb(var(--color-text-inverse) / <alpha-value>)',
         },
         status: {
-          success: '#22C55E',
-          error: '#EF4444',
-          warning: '#F59E0B',
+          // No tema academia (claro) usam tonalidades mais escuras da mesma cor
+          // para contraste AA em texto/ícone sobre tint.
+          success: 'rgb(var(--color-status-success) / <alpha-value>)',
+          error: 'rgb(var(--color-status-error) / <alpha-value>)',
+          warning: 'rgb(var(--color-status-warning) / <alpha-value>)',
         },
       },
       fontFamily: {

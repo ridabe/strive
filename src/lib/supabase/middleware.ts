@@ -1,6 +1,6 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
-import type { AppRole } from '@/types/database'
+import type { AppRole } from '@/types/db-enums'
 
 const PUBLIC_PATHS = [
   '/', '/login', '/register', '/forgot-password',

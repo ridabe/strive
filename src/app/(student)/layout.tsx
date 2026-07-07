@@ -4,6 +4,7 @@ import { UserX, ArrowLeftRight } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { signOut } from '@/app/actions/auth'
 import { joinOne } from '@/lib/supabase/join'
+import { hexToRgbChannels } from '@/lib/color-contrast'
 import { TenantLogoHeader } from '@/components/layout/tenant-logo-header'
 import { StudentSidebarNav } from '@/components/layout/student-sidebar'
 import { StudentMobileNav } from '@/components/layout/student-mobile-nav'
@@ -64,12 +65,13 @@ export default async function StudentLayout({
   let personalName: string | null = null
 
   if (tenantId) {
+    // '*' para incluir logo_light_url (coluna nova, ainda fora do database.ts).
     const { data: tenant } = await supabase
       .from('tenants')
-      .select('logo_url, primary_color, accent_text_color, on_primary_text_color, business_name, cref, tenant_type')
+      .select('*')
       .eq('id', tenantId)
       .single()
-    tenantBranding = tenant
+    tenantBranding = tenant as typeof tenantBranding
 
     if (tenant?.tenant_type === 'academia') {
       // Numa academia, vários profiles podem ter role='personal' no mesmo
@@ -101,9 +103,18 @@ export default async function StudentLayout({
     }
   }
 
-  const primaryColor = tenantBranding?.primary_color ?? '#E8FF47'
-  const accentTextColor = tenantBranding?.accent_text_color ?? '#FFFFFF'
+  // Aluno vinculado a uma academia recebe o mesmo tema claro/BI. accentTextColor
+  // na academia usa a própria cor de marca (evita branco invisível no claro);
+  // logoUrl prefere a versão para tema claro.
+  const isAcademia = tenantBranding?.tenant_type === 'academia'
+  const primaryColor = tenantBranding?.primary_color ?? (isAcademia ? '#4F46E5' : '#E8FF47')
+  const accentTextColor = isAcademia ? primaryColor : (tenantBranding?.accent_text_color ?? '#FFFFFF')
   const businessName = tenantBranding?.business_name ?? 'Strive Personal'
+  // Na academia preferimos o logo para tema claro; se não houver, usamos o
+  // logo padrão da academia. Só cai no lockup inicial + nome sem NENHUM logo.
+  const logoUrl = isAcademia
+    ? (tenantBranding?.logo_light_url ?? tenantBranding?.logo_url ?? null)
+    : (tenantBranding?.logo_url ?? null)
 
   // Slugs de módulos habilitados no tenant — filtram o loop de onboarding do aluno.
   // Se a RLS bloquear a leitura (retorno vazio), o popup usa a lista completa do perfil.
@@ -234,10 +245,11 @@ export default async function StudentLayout({
   return (
     <div
       className="bg-background"
-      style={{ '--brand-lime': primaryColor, '--accent-text': accentTextColor } as React.CSSProperties}
+      data-theme={isAcademia ? 'academia' : undefined}
+      style={{ '--brand-lime': primaryColor, '--brand-lime-rgb': hexToRgbChannels(primaryColor), '--accent-text': accentTextColor } as React.CSSProperties}
     >
       <StudentMobileNav
-        logoUrl={tenantBranding?.logo_url ?? null}
+        logoUrl={logoUrl}
         businessName={businessName}
         primaryColor={primaryColor}
         accentTextColor={accentTextColor}
@@ -253,13 +265,14 @@ export default async function StudentLayout({
       />
 
       {/* ── Desktop sidebar ───────────────────────────────────────── */}
-      <aside className="hidden md:flex flex-col w-60 fixed top-0 left-0 bottom-0 border-r border-surface-border bg-surface px-4 py-5 gap-6">
+      <aside className="hidden md:flex flex-col w-60 fixed top-0 left-0 bottom-0 border-r border-surface-border bg-surface-2 px-4 py-5 gap-6">
         <div>
           <TenantLogoHeader
-            logoUrl={tenantBranding?.logo_url ?? null}
+            logoUrl={logoUrl}
             businessName={businessName}
             primaryColor={primaryColor}
             onPrimaryTextColor={tenantBranding?.on_primary_text_color ?? null}
+            framed={isAcademia}
           />
           {tenantBranding?.cref && (
             <p className="text-[10px] text-text-secondary/60 font-body mt-1 px-1">
@@ -275,6 +288,7 @@ export default async function StudentLayout({
             unreadMessageCount={unreadMessageCount}
             hasChallenge={hasChallenge}
             accentTextColor={accentTextColor}
+            isAcademia={isAcademia}
           />
         </div>
 

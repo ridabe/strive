@@ -2,7 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
-import type { ExtraWorkoutCategory } from '@/types/database'
+import type { ExtraWorkoutCategory } from '@/types/db-enums'
 
 export type ExtraWorkoutWithItems = {
   id: string

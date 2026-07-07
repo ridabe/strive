@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { joinOne } from '@/lib/supabase/join'
+import { hexToRgbChannels } from '@/lib/color-contrast'
 import { DashboardSidebarNav, type EnabledModule } from '@/components/layout/dashboard-sidebar'
 import { DashboardMobileNav } from '@/components/layout/dashboard-mobile-nav'
 import { UserMenu } from '@/components/layout/user-menu'
@@ -11,7 +12,8 @@ import { ModuleOnboardingPopup } from '@/components/onboarding/ModuleOnboardingP
 import { TrainerNotificationBell } from '@/components/notifications/TrainerNotificationBell'
 import { getTrainerNotifications } from '@/app/actions/trainer-notifications'
 import { getCtx } from '@/lib/supabase/context'
-import { ACADEMIA_HIDDEN_FROM_ADMIN_SLUGS, ACADEMIA_HIDDEN_FROM_PERSONAL_SLUGS } from '@/lib/modules-config'
+import { ACADEMIA_HIDDEN_FROM_ADMIN_SLUGS, ACADEMIA_HIDDEN_FROM_PERSONAL_SLUGS, ACADEMIA_OPERATIONS_VISIBLE_SLUGS } from '@/lib/modules-config'
+import { isOperations, isBackofficeStaff, isManager } from '@/lib/permissions'
 import { ArrowLeftRight } from 'lucide-react'
 import Link from 'next/link'
 
@@ -53,23 +55,29 @@ export default async function DashboardLayout({
   // 0 ou 1 vínculo em tenant_members: comportamento idêntico ao anterior à
   // Fase 4 — nenhuma escrita ou redirecionamento extra.
 
-  // Busca branding do tenant
-  let tenantBranding: { logo_url: string | null; primary_color: string | null; accent_text_color: string | null; on_primary_text_color: string | null; business_name: string; tenant_type?: string } | null = null
+  // Busca branding do tenant. logo_light_url (logo para tema claro/academia)
+  // é lido via '*' + cast — a coluna é nova e ainda não está no database.ts
+  // gerado; regenerar os tipos é passo posterior (pnpm supabase gen types).
+  let tenantBranding: { logo_url: string | null; logo_light_url?: string | null; primary_color: string | null; accent_text_color: string | null; on_primary_text_color: string | null; business_name: string; tenant_type?: string } | null = null
 
   if (profile.tenant_id) {
     const { data: tenant } = await supabase
       .from('tenants')
-      .select('logo_url, primary_color, accent_text_color, on_primary_text_color, business_name, tenant_type')
+      .select('*')
       .eq('id', profile.tenant_id)
       .single()
-    tenantBranding = tenant
+    tenantBranding = tenant as typeof tenantBranding
   }
 
   // "Equipe" só aparece para owner/admin de tenant do tipo academia — o papel
   // efetivo (que pode diferir de profiles.role) vem de getCtx() via tenant_members.
   const ctx = await getCtx()
+  const role = ctx?.role ?? ''
   const isAcademia = tenantBranding?.tenant_type === 'academia'
-  const showEquipe = isAcademia && !!ctx && ['owner', 'admin'].includes(ctx.role)
+  const isOps = isAcademia && isOperations(role)
+  // Equipe aparece para gestão institucional (owner/admin) e para operação
+  // (operador/gerente), que cadastra personal.
+  const showEquipe = isAcademia && isBackofficeStaff(role)
 
   // Busca modulos habilitados para este tenant
   let enabledModules: EnabledModule[] = []
@@ -115,9 +123,15 @@ export default async function DashboardLayout({
     // ferramentas de treino 1:1 com aluno, e personal não precisa do
     // financeiro institucional (Faturas). Não afeta tenant autônomo.
     if (isAcademia) {
-      const hiddenSlugs = showEquipe ? ACADEMIA_HIDDEN_FROM_ADMIN_SLUGS : ACADEMIA_HIDDEN_FROM_PERSONAL_SLUGS
-      enabledModules = enabledModules.filter((mod) => !hiddenSlugs.includes(mod.slug))
-      onboardingSlugs = onboardingSlugs.filter((slug) => !hiddenSlugs.includes(slug))
+      if (isOps) {
+        // Operação: allowlist estrita (cobrança, estoque, agenda, anamnese).
+        enabledModules = enabledModules.filter((mod) => ACADEMIA_OPERATIONS_VISIBLE_SLUGS.includes(mod.slug))
+        onboardingSlugs = onboardingSlugs.filter((slug) => ACADEMIA_OPERATIONS_VISIBLE_SLUGS.includes(slug))
+      } else {
+        const hiddenSlugs = isManager(role) ? ACADEMIA_HIDDEN_FROM_ADMIN_SLUGS : ACADEMIA_HIDDEN_FROM_PERSONAL_SLUGS
+        enabledModules = enabledModules.filter((mod) => !hiddenSlugs.includes(mod.slug))
+        onboardingSlugs = onboardingSlugs.filter((slug) => !hiddenSlugs.includes(slug))
+      }
     }
   }
 
@@ -131,6 +145,15 @@ export default async function DashboardLayout({
   // tema dark — ficaria invisível no claro) e usamos a própria cor de marca,
   // que tem contraste sobre o tint de 10%.
   const accentTextColor = isAcademia ? primaryColor : (tenantBranding?.accent_text_color ?? '#FFFFFF')
+
+  // No tema academia (fundo claro) preferimos o logo para tema claro; se não
+  // houver, caímos no logo padrão. Fora da academia, sempre o logo padrão.
+  // Na academia preferimos o logo para tema claro; se não houver, usamos o
+  // logo padrão que a academia cadastrou. Só cai no lockup inicial + nome
+  // quando a academia não tem NENHUM logo.
+  const logoUrl = isAcademia
+    ? (tenantBranding?.logo_light_url ?? tenantBranding?.logo_url ?? null)
+    : (tenantBranding?.logo_url ?? null)
 
   // Conta solicitações de agendamento presencial pendentes dos alunos
   let pendingAgendaCount = 0
@@ -150,7 +173,7 @@ export default async function DashboardLayout({
     <div
       className="min-h-screen bg-background flex"
       data-theme={isAcademia ? 'academia' : undefined}
-      style={{ '--brand-lime': primaryColor, '--accent-text': accentTextColor } as React.CSSProperties}
+      style={{ '--brand-lime': primaryColor, '--brand-lime-rgb': hexToRgbChannels(primaryColor), '--accent-text': accentTextColor } as React.CSSProperties}
     >
       <DashboardMobileNav
         logoUrl={tenantBranding?.logo_url ?? null}
@@ -175,7 +198,7 @@ export default async function DashboardLayout({
 
         <div className="flex-shrink-0 flex items-center justify-between gap-2">
           <TenantLogoHeader
-            logoUrl={tenantBranding?.logo_url ?? null}
+            logoUrl={logoUrl}
             businessName={tenantBranding?.business_name ?? 'Strive Personal'}
             primaryColor={primaryColor}
             onPrimaryTextColor={tenantBranding?.on_primary_text_color ?? null}

@@ -117,6 +117,19 @@ export default async function NovaAcademiaPage({
           </div>
 
           <div className="space-y-1.5">
+            <label htmlFor="cnpj" className="block text-sm font-body font-medium text-text-secondary">
+              CNPJ <span className="text-text-secondary/50 font-normal">(opcional)</span>
+            </label>
+            <input
+              id="cnpj"
+              name="cnpj"
+              type="text"
+              placeholder="00.000.000/0000-00"
+              className="w-full bg-background border border-surface-border rounded-lg px-4 py-3 text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-lime/60 focus:ring-1 focus:ring-brand-lime/30 transition-colors"
+            />
+          </div>
+
+          <div className="space-y-1.5">
             <label htmlFor="notes" className="block text-sm font-body font-medium text-text-secondary">
               Observações internas
             </label>

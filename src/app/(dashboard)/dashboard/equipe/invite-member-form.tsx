@@ -4,7 +4,7 @@ import { useRef, useState, useTransition } from 'react'
 import { UserPlus } from 'lucide-react'
 import { createTenantMember } from '@/actions/tenant-members'
 
-export function InviteMemberForm() {
+export function InviteMemberForm({ canCreateStaff = false }: { canCreateStaff?: boolean }) {
   const formRef = useRef<HTMLFormElement>(null)
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
@@ -49,7 +49,13 @@ export function InviteMemberForm() {
           className="bg-background border border-surface-border rounded-lg px-3 py-2.5 text-sm text-text-primary focus:outline-none focus:border-brand-lime/60"
         >
           <option value="personal">Personal</option>
-          <option value="admin">Admin</option>
+          {canCreateStaff && (
+            <>
+              <option value="operador">Operador</option>
+              <option value="gerente">Gerente</option>
+              <option value="admin">Admin</option>
+            </>
+          )}
         </select>
       </div>
 

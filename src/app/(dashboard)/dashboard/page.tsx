@@ -11,6 +11,7 @@ import {
   Lock, type LucideIcon,
 } from 'lucide-react'
 import { MODULE_ROUTES } from '@/lib/modules-config'
+import { isOperations } from '@/lib/permissions'
 
 // ─── Ícones por nome (espelha system_modules.icon) ──────────────────────────
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -60,7 +61,7 @@ function AreaChart({ vals }: { vals: number[] }) {
   return (
     <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="w-full" style={{ height: 176 }} aria-hidden="true">
       {gridY.map((gy, i) => (
-        <line key={i} x1={padX} x2={W - padX} y1={gy} y2={gy} stroke="var(--color-surface-border)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+        <line key={i} x1={padX} x2={W - padX} y1={gy} y2={gy} stroke="rgb(var(--color-surface-border))" strokeWidth="1" vectorEffect="non-scaling-stroke" />
       ))}
       <path d={area} fill="var(--brand-lime)" opacity="0.10" />
       <path d={line} fill="none" stroke="var(--brand-lime)" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
@@ -103,12 +104,15 @@ export default async function DashboardPage() {
   const { data: tenant } = tenantId
     ? await supabase
         .from('tenants')
-        .select('tenant_type, business_name, logo_url, primary_color, on_primary_text_color')
+        .select('*')
         .eq('id', tenantId)
         .single()
     : { data: null }
 
   const isAcademia = tenant?.tenant_type === 'academia'
+  // Logo para tema claro (academia); cai no logo padrão se não houver.
+  // Lido via cast — logo_light_url é coluna nova, ainda fora do database.ts.
+  const academiaLogo = (tenant as { logo_light_url?: string | null } | null)?.logo_light_url ?? tenant?.logo_url ?? null
 
   let effectiveRole = 'personal'
   if (isAcademia && tenantId && user) {
@@ -123,6 +127,7 @@ export default async function DashboardPage() {
   }
 
   const isAcademiaAdmin = isAcademia && ['owner', 'admin'].includes(effectiveRole)
+  const isAcademiaOps   = isAcademia && isOperations(effectiveRole)
 
   // ── Stats rápidas ──────────────────────────────────────────────────────────
   const [{ count: studentCount }, { count: planCount }, { count: attendanceCount }, { count: teamCount }] = await Promise.all([
@@ -133,6 +138,23 @@ export default async function DashboardPage() {
       ? supabase.from('tenant_members').select('*', { count: 'exact', head: true }).eq('tenant_id', tenantId).eq('status', 'active')
       : Promise.resolve({ count: null } as { count: number | null }),
   ])
+
+  // ── Dados da visão de operação (operador/gerente) ──────────────────────────
+  // Sem valores agregados de receita — só contagens operacionais: personais na
+  // equipe, alunos inadimplentes (quantidade, sem valor) e anamneses preenchidas.
+  let personalCount = 0
+  let overdueCount = 0
+  let anamneseDone = 0
+  if (isAcademiaOps && tenantId) {
+    const [{ count: pc }, { count: oc }, { count: ad }] = await Promise.all([
+      supabase.from('tenant_members').select('id', { count: 'exact', head: true }).eq('tenant_id', tenantId).eq('status', 'active').eq('role', 'personal'),
+      supabase.from('financial_plans').select('id', { count: 'exact', head: true }).eq('status', 'overdue'),
+      supabase.from('anamnese_responses').select('id', { count: 'exact', head: true }).not('completed_at', 'is', null),
+    ])
+    personalCount = pc ?? 0
+    overdueCount = oc ?? 0
+    anamneseDone = ad ?? 0
+  }
 
   // ── Módulos do tenant ──────────────────────────────────────────────────────
   const { data: tenantModuleRows } = tenantId
@@ -170,6 +192,13 @@ export default async function DashboardPage() {
         { label: 'Personal na equipe', value: teamCount ?? 0,         icon: UsersRound,    color: 'text-blue-400',       href: '/dashboard/equipe' },
         { label: 'Fichas de treino',   value: planCount ?? 0,         icon: Dumbbell,      color: 'text-purple-400',     href: null },
         { label: 'Check-ins',          value: attendanceCount ?? 0,   icon: CalendarCheck, color: 'text-status-success', href: null },
+      ]
+    : isAcademiaOps
+    ? [
+        { label: 'Alunos ativos', value: studentCount ?? 0, icon: Users,      color: 'text-brand-lime',     href: '/dashboard/alunos' },
+        { label: 'Personais',     value: personalCount,      icon: UsersRound,  color: 'text-blue-400',       href: '/dashboard/equipe' },
+        { label: 'Inadimplentes', value: overdueCount,       icon: Receipt,     color: 'text-status-error',   href: '/dashboard/financeiro' },
+        { label: 'Anamneses OK',  value: anamneseDone,       icon: FileHeart,   color: 'text-status-success', href: null },
       ]
     : [
         { label: 'Alunos ativos',    value: studentCount  ?? 0, icon: Users,     color: 'text-brand-lime',     href: '/dashboard/alunos' },
@@ -223,12 +252,12 @@ export default async function DashboardPage() {
           Syncopate da identidade Strive. */}
       {isAcademia ? (
         <div className="bg-surface border border-surface-border rounded-xl px-5 py-4 flex items-center gap-4">
-          {tenant?.logo_url ? (
+          {academiaLogo ? (
             <>
               <div className="relative h-14 w-[200px] max-w-[45vw] flex-shrink-0">
                 <Image
-                  src={tenant.logo_url}
-                  alt={tenant.business_name ?? 'Academia'}
+                  src={academiaLogo}
+                  alt={tenant?.business_name ?? 'Academia'}
                   fill
                   className="object-contain object-left"
                   sizes="200px"
@@ -403,6 +432,49 @@ export default async function DashboardPage() {
                 Nenhum aluno cadastrado ainda.
               </div>
             )}
+          </section>
+        </div>
+      ) : isAcademiaOps ? (
+        /* Visão de operação (operador/gerente): atalhos + alerta de
+           inadimplência (quantidade, sem valores). Sem grade de módulos. */
+        <div className="space-y-4">
+          {overdueCount > 0 && (
+            <div className="bg-status-error/5 border border-status-error/20 rounded-xl p-4 flex items-center gap-3">
+              <Receipt size={16} className="text-status-error flex-shrink-0" />
+              <p className="text-sm text-text-primary">
+                <span className="font-semibold text-status-error">{overdueCount}</span> aluno{overdueCount !== 1 ? 's' : ''} inadimplente{overdueCount !== 1 ? 's' : ''} — veja os detalhes em Cobrança.
+              </p>
+              <Link href="/dashboard/financeiro" className="ml-auto flex-shrink-0 text-xs font-medium text-brand-lime hover:opacity-80 transition-opacity">
+                Abrir
+              </Link>
+            </div>
+          )}
+          <section className="space-y-3">
+            <h2 className="text-sm font-semibold text-text-primary">Atalhos</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+              {[
+                { label: 'Alunos',   href: '/dashboard/alunos',     icon: Users },
+                { label: 'Cobrança', href: '/dashboard/financeiro', icon: Receipt },
+                { label: 'Estoque',  href: '/dashboard/estoque',    icon: Package },
+                { label: 'Agenda',   href: '/dashboard/agenda',     icon: CalendarDays },
+                { label: 'Equipe',   href: '/dashboard/equipe',     icon: UsersRound },
+                { label: 'Anamnese', href: '/dashboard/anamnese',   icon: FileHeart },
+              ].map((s) => {
+                const Icon = s.icon
+                return (
+                  <Link
+                    key={s.href}
+                    href={s.href}
+                    className="group bg-surface border border-surface-border rounded-xl p-4 flex flex-col gap-3 hover:border-brand-lime/40 transition-colors"
+                  >
+                    <div className="w-9 h-9 rounded-lg flex items-center justify-center border border-surface-border bg-background text-text-secondary group-hover:text-brand-lime transition-colors">
+                      <Icon size={16} />
+                    </div>
+                    <p className="text-sm font-medium text-text-primary leading-tight">{s.label}</p>
+                  </Link>
+                )
+              })}
+            </div>
           </section>
         </div>
       ) : (

@@ -1,5 +1,5 @@
 import { createAdminClient } from '@/lib/supabase/admin'
-import type { AppRole, ProfileStatus } from '@/types/database'
+import type { AppRole, ProfileStatus } from '@/types/db-enums'
 import { Users, ShieldCheck, Dumbbell, GraduationCap } from 'lucide-react'
 import { UsersTable } from '@/components/admin/users-table'
 import { CreateAdminDialog } from '@/components/admin/create-admin-dialog'

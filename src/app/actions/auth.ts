@@ -4,7 +4,7 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { logAdminAction, AuditActions } from '@/lib/admin/audit'
-import type { AppRole } from '@/types/database'
+import type { AppRole } from '@/types/db-enums'
 
 function redirectByRole(role: AppRole): never {
   if (role === 'global_admin') redirect('/admin')

@@ -2,7 +2,7 @@
 
 import { signOut } from '@/app/actions/auth'
 import { LogOut, User } from 'lucide-react'
-import type { AppRole } from '@/types/database'
+import type { AppRole } from '@/types/db-enums'
 
 const ROLE_LABELS: Record<AppRole, string> = {
   global_admin: 'Admin Global',

@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useTransition } from 'react'
-import { Pencil, X, Loader2, Check } from 'lucide-react'
+import { useState, useRef, useTransition } from 'react'
+import { Pencil, X, Loader2, Check, Upload, Trash2 } from 'lucide-react'
+import Image from 'next/image'
 import { updateAcademiaTenant } from '@/actions/admin-academias'
 
 interface Tenant {
@@ -13,6 +14,9 @@ interface Tenant {
   self_assign_enabled: boolean
   abacatepay_customer_id: string | null
   notes: string | null
+  cnpj: string | null
+  logo_url: string | null
+  logo_light_url: string | null
 }
 
 interface Props {
@@ -52,6 +56,7 @@ export function AcademiaEditForm({ tenant }: Props) {
 
         <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
           <Field label="Nome da academia" value={tenant.business_name} span />
+          <Field label="CNPJ" value={tenant.cnpj ?? '—'} />
           <Field label="Plano" value={PLAN_LABELS[tenant.plan]} />
           <Field label="Máx. personais/admins" value={String(tenant.max_personals)} />
           <Field label="Máx. alunos" value={String(tenant.max_students)} />
@@ -83,7 +88,17 @@ export function AcademiaEditForm({ tenant }: Props) {
 
       <div className="p-6 space-y-5">
 
-        <EditField label="Nome da academia" name="business_name" defaultValue={tenant.business_name} required span />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <EditField label="Nome da academia" name="business_name" defaultValue={tenant.business_name} required />
+          <EditField label="CNPJ" name="cnpj" defaultValue={tenant.cnpj ?? ''} />
+        </div>
+
+        {/* Logos — padrão (fundo escuro) e para tema claro (painel da academia).
+            O preview mostra cada um sobre o fundo em que será usado. */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <LogoField label="Logo — fundo escuro" name="logo" removeName="remove_logo" current={tenant.logo_url} previewBg="bg-[#1A1A2E]" />
+          <LogoField label="Logo — fundo claro (painel)" name="logo_light" removeName="remove_logo_light" current={tenant.logo_light_url} previewBg="bg-[#F4F6FA]" />
+        </div>
 
         <div className="space-y-2">
           <p className="text-sm font-body font-medium text-text-secondary">Plano</p>
@@ -174,6 +189,64 @@ export function AcademiaEditForm({ tenant }: Props) {
         </div>
       </div>
     </form>
+  )
+}
+
+// Campo de upload de logo com preview sobre o fundo-alvo. Gerencia troca e
+// remoção; ao remover, envia um hidden `${removeName}=1` para a action.
+function LogoField({
+  label, name, removeName, current, previewBg,
+}: {
+  label: string; name: string; removeName: string; current: string | null; previewBg: string
+}) {
+  const [preview, setPreview] = useState<string | null>(null)
+  const [removed, setRemoved] = useState(false)
+  const ref = useRef<HTMLInputElement>(null)
+  const shown = removed ? null : (preview ?? current)
+
+  return (
+    <div className="space-y-2">
+      <p className="text-sm font-body font-medium text-text-secondary">{label}</p>
+      <div className="flex items-center gap-3">
+        <div className={`w-16 h-16 rounded-xl border border-surface-border flex items-center justify-center overflow-hidden flex-shrink-0 ${previewBg}`}>
+          {shown ? (
+            <Image src={shown} alt={label} width={64} height={64} className="object-contain p-1.5 w-full h-full" />
+          ) : (
+            <span className="text-[10px] text-text-secondary/50 text-center px-1">sem logo</span>
+          )}
+        </div>
+        <input
+          ref={ref}
+          type="file"
+          name={name}
+          accept="image/png,image/jpeg,image/webp,image/svg+xml"
+          className="hidden"
+          onChange={(e) => {
+            const f = e.target.files?.[0]
+            if (f) { setPreview(URL.createObjectURL(f)); setRemoved(false) }
+          }}
+        />
+        <div className="flex flex-col gap-1.5">
+          <button
+            type="button"
+            onClick={() => ref.current?.click()}
+            className="inline-flex items-center gap-2 px-3 py-1.5 text-xs border border-surface-border rounded-lg text-text-secondary hover:text-text-primary hover:border-brand-lime/40 transition-colors"
+          >
+            <Upload size={12} /> Trocar
+          </button>
+          {shown && (
+            <button
+              type="button"
+              onClick={() => { setRemoved(true); setPreview(null); if (ref.current) ref.current.value = '' }}
+              className="inline-flex items-center gap-2 px-3 py-1.5 text-xs text-status-error hover:text-red-400 transition-colors"
+            >
+              <Trash2 size={12} /> Remover
+            </button>
+          )}
+        </div>
+      </div>
+      {removed && <input type="hidden" name={removeName} value="1" />}
+    </div>
   )
 }
 

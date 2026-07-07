@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { UserPlus, Search, Users, UserCheck, UserX, KeyRound } from 'lucide-react'
 import { getCtx } from '@/lib/supabase/context'
+import { canManagePersonal, canCreateStudents } from '@/lib/permissions'
 import { listTenantMembers } from '@/actions/tenant-members'
 import { AssignPersonalSelect } from './assign-personal-select'
 
@@ -30,7 +31,9 @@ export default async function AlunosPage({
     .single()
 
   const isAcademia = tenant?.tenant_type === 'academia'
-  const canAssign  = isAcademia && ['owner', 'admin'].includes(role)
+  const canAssign  = isAcademia && canManagePersonal(role)
+  // Personal de academia não cadastra alunos (só backoffice); autônomo cadastra.
+  const canAddStudents = canCreateStudents(role, isAcademia)
 
   const memberOptions = canAssign
     ? (await listTenantMembers())
@@ -75,20 +78,28 @@ export default async function AlunosPage({
       {/* Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold text-text-primary uppercase tracking-widest">
+          <h1
+            className={
+              isAcademia
+                ? 'text-xl md:text-2xl font-semibold text-text-primary tracking-tight'
+                : 'font-display text-2xl font-bold text-text-primary uppercase tracking-widest'
+            }
+          >
             Alunos
           </h1>
           <p className="text-text-secondary text-sm mt-1">
             {total} aluno{total !== 1 ? 's' : ''} cadastrado{total !== 1 ? 's' : ''}
           </p>
         </div>
-        <Link
-          href="/dashboard/alunos/novo"
-          className="flex w-full items-center justify-center gap-2 bg-brand-lime text-background font-body font-semibold text-sm px-4 py-3 rounded-lg hover:bg-brand-lime/90 transition-colors flex-shrink-0 sm:w-auto"
-        >
-          <UserPlus size={16} />
-          Novo aluno
-        </Link>
+        {canAddStudents && (
+          <Link
+            href="/dashboard/alunos/novo"
+            className="flex w-full items-center justify-center gap-2 bg-brand-lime text-background font-body font-semibold text-sm px-4 py-3 rounded-lg hover:bg-brand-lime/90 transition-colors flex-shrink-0 sm:w-auto"
+          >
+            <UserPlus size={16} />
+            Novo aluno
+          </Link>
+        )}
       </div>
 
       {/* Stats rápidas */}
@@ -103,7 +114,7 @@ export default async function AlunosPage({
             <div key={s.label} className="bg-surface border border-surface-border rounded-xl p-4 flex items-center gap-3">
               <Icon size={18} className={s.color} />
               <div>
-                <p className="font-body font-bold text-xl text-text-primary">{s.value}</p>
+                <p className="font-body font-bold text-xl text-text-primary tabular-nums">{s.value}</p>
                 <p className="text-xs text-text-secondary">{s.label}</p>
               </div>
             </div>

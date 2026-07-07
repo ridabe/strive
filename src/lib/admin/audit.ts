@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import type { audit_category } from '@/types/database'
+import type { audit_category } from '@/types/db-enums'
 
 export interface AuditLogEntry {
   action: string

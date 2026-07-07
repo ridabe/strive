@@ -29,7 +29,10 @@ export async function updateProfile(formData: FormData) {
     const contactEmail  = (formData.get('contact_email') as string)?.trim() || null
     const contactPhone  = (formData.get('contact_phone') as string)?.trim() || null
     const primaryColor  = (formData.get('primary_color') as string) || '#E8FF47'
+    // CREF é do personal (profissional); CNPJ é da empresa (academia). Cada
+    // formulário exibe só o campo pertinente — o outro chega ausente/null.
     const cref          = (formData.get('cref') as string)?.trim() || null
+    const cnpj          = (formData.get('cnpj') as string)?.trim() || null
 
     if (!businessName) {
       redirect('/dashboard/ajustes?error=' + encodeURIComponent('Nome do negócio é obrigatório.'))
@@ -40,7 +43,7 @@ export async function updateProfile(formData: FormData) {
     const { error } = await adminSupabase
       .from('tenants')
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .update({ business_name: businessName, contact_email: contactEmail, contact_phone: contactPhone, primary_color: primaryColor, cref } as any)
+      .update({ business_name: businessName, contact_email: contactEmail, contact_phone: contactPhone, primary_color: primaryColor, cref, cnpj } as any)
       .eq('id', tenantId)
 
     if (error) {

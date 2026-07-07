@@ -4,7 +4,7 @@ import { useState, useRef, useTransition } from 'react'
 import Image from 'next/image'
 import { Upload, Trash2, Loader2, Check, Palette, ImageIcon } from 'lucide-react'
 import { saveBranding } from '@/app/actions/branding'
-import { resolveTextColor } from '@/lib/color-contrast'
+import { resolveTextColor, hexToRgbChannels } from '@/lib/color-contrast'
 
 interface Props {
   initialLogoUrl: string | null
@@ -106,7 +106,7 @@ export function BrandingForm({ initialLogoUrl, initialColor, initialTextColor, i
         <div className="flex gap-4 items-start">
           <div
             className="w-44 bg-surface border border-surface-border rounded-xl p-3 space-y-2 flex-shrink-0"
-            style={{ '--brand-lime': color } as React.CSSProperties}
+            style={{ '--brand-lime': color, '--brand-lime-rgb': hexToRgbChannels(color) } as React.CSSProperties}
           >
             <div className="flex items-center gap-2 min-h-[36px]">
               {previewLogo ? (

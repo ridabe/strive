@@ -52,6 +52,18 @@ export const ACADEMIA_HIDDEN_FROM_ADMIN_SLUGS = [
 // do personal, fica só com owner/admin.
 export const ACADEMIA_HIDDEN_FROM_PERSONAL_SLUGS = [
   'faturas',
+  'estoque',
+]
+
+// Operador/Gerente (staff de operação): allowlist — só veem estes módulos.
+// Operação cuida de cobrança, estoque, agenda (datas de pagamento) e checa a
+// anamnese do aluno. Não veem nenhum módulo de estratégia/treino. Alunos e
+// Equipe (para cadastrar personal) são itens fixos do menu, não módulos.
+export const ACADEMIA_OPERATIONS_VISIBLE_SLUGS = [
+  'faturas',
+  'estoque',
+  'minha-agenda',
+  'anamnese',
 ]
 
 // Módulos principais para a grid do dashboard home (ícone SVG path inline)

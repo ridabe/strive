@@ -4,6 +4,8 @@ import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient, generateTempPassword } from '@/lib/supabase/admin'
+import { getCtx } from '@/lib/supabase/context'
+import { isBackofficeStaff } from '@/lib/permissions'
 
 // ── Criar aluno + auth user + e-mail de boas-vindas ──────────────────────────
 export async function createStudent(formData: FormData) {
@@ -29,12 +31,22 @@ export async function createStudent(formData: FormData) {
   // ── 2. Dados do tenant (branding + limite) ──────────────────────────────
   const { data: tenant } = await supabase
     .from('tenants')
-    .select('business_name, logo_url, primary_color, max_students')
+    .select('business_name, logo_url, primary_color, max_students, tenant_type')
     .eq('id', tenantId)
     .single()
 
   if (!tenant) {
     redirect('/dashboard/alunos/novo?error=' + encodeURIComponent('Studio não encontrado.'))
+  }
+
+  // Regra: numa academia, apenas o backoffice (owner/admin/gerente/operador)
+  // cadastra alunos. O personal de academia não cadastra — ele atende os
+  // alunos atribuídos e pega os que ainda estão sem personal.
+  if (tenant.tenant_type === 'academia') {
+    const ctx = await getCtx()
+    if (!ctx || !isBackofficeStaff(ctx.role)) {
+      redirect('/dashboard/alunos?error=' + encodeURIComponent('O cadastro de alunos é feito pela administração da academia.'))
+    }
   }
 
   // ── 3. Campos do formulário ─────────────────────────────────────────────

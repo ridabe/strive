@@ -24,10 +24,14 @@ export default async function AjustesPage({
   const { data: tenant } = profile?.tenant_id
     ? await supabase
         .from('tenants')
-        .select('business_name, contact_email, contact_phone, primary_color, accent_text_color, on_primary_text_color, logo_url, plan, cref')
+        // '*' inclui cnpj (coluna nova) e tenant_type.
+        .select('*')
         .eq('id', profile.tenant_id)
         .single()
     : { data: null }
+
+  // Academia (empresa) usa CNPJ; personal autônomo (profissional) usa CREF.
+  const isAcademia = (tenant as { tenant_type?: string } | null)?.tenant_type === 'academia'
 
   return (
     <div className="p-6 md:p-8 space-y-6 max-w-2xl">
@@ -104,18 +108,33 @@ export default async function AjustesPage({
             </div>
           </div>
 
-          <div className="space-y-1.5">
-            <label className="block text-xs font-body font-medium text-text-secondary uppercase tracking-wide">
-              Nº de Registro (CREF)
-            </label>
-            <input
-              name="cref"
-              defaultValue={(tenant as { cref?: string } | null)?.cref ?? ''}
-              placeholder="Ex: 012345-G/SP"
-              className="w-full bg-background border border-surface-border rounded-lg px-4 py-3 text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-lime/60 focus:ring-1 focus:ring-brand-lime/30 transition-colors"
-            />
-            <p className="text-xs text-text-secondary/60">Exibido abaixo do nome do studio no portal dos alunos.</p>
-          </div>
+          {isAcademia ? (
+            <div className="space-y-1.5">
+              <label className="block text-xs font-body font-medium text-text-secondary uppercase tracking-wide">
+                CNPJ <span className="text-text-secondary/50 normal-case">(opcional)</span>
+              </label>
+              <input
+                name="cnpj"
+                defaultValue={(tenant as { cnpj?: string } | null)?.cnpj ?? ''}
+                placeholder="00.000.000/0000-00"
+                className="w-full bg-background border border-surface-border rounded-lg px-4 py-3 text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-lime/60 focus:ring-1 focus:ring-brand-lime/30 transition-colors"
+              />
+              <p className="text-xs text-text-secondary/60">Dado da empresa. O CREF é individual de cada personal, não da academia.</p>
+            </div>
+          ) : (
+            <div className="space-y-1.5">
+              <label className="block text-xs font-body font-medium text-text-secondary uppercase tracking-wide">
+                Nº de Registro (CREF)
+              </label>
+              <input
+                name="cref"
+                defaultValue={(tenant as { cref?: string } | null)?.cref ?? ''}
+                placeholder="Ex: 012345-G/SP"
+                className="w-full bg-background border border-surface-border rounded-lg px-4 py-3 text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-lime/60 focus:ring-1 focus:ring-brand-lime/30 transition-colors"
+              />
+              <p className="text-xs text-text-secondary/60">Exibido abaixo do nome do studio no portal dos alunos.</p>
+            </div>
+          )}
 
           <div className="pt-2">
             <AuthSubmitButton label="Salvar alteracoes" loadingLabel="Salvando..." />

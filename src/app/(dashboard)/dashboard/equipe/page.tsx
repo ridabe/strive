@@ -1,13 +1,17 @@
 import { redirect } from 'next/navigation'
 import { Shield, Users } from 'lucide-react'
 import { getCtx } from '@/lib/supabase/context'
+import { isBackofficeStaff, canManageTeam } from '@/lib/permissions'
 import { listTenantMembers } from '@/actions/tenant-members'
 import { InviteMemberForm } from './invite-member-form'
 import { RemoveMemberButton } from './remove-member-button'
+import { ResendPasswordButton } from './resend-password-button'
 
 const ROLE_LABEL: Record<string, string> = {
   owner: 'Dono(a)',
   admin: 'Admin',
+  gerente: 'Gerente',
+  operador: 'Operador',
   personal: 'Personal',
 }
 
@@ -23,11 +27,14 @@ export default async function EquipePage() {
     .eq('id', tenantId)
     .single()
 
-  // Só faz sentido para academias, e só owner/admin gerenciam a equipe.
-  if (!tenant || tenant.tenant_type !== 'academia' || !['owner', 'admin'].includes(role)) {
+  // Academia: backoffice (owner/admin/gerente/operador) acessa a Equipe. Só
+  // owner/admin gerenciam de fato (criar staff, remover); operação apenas
+  // cadastra personal — o form e os botões respeitam isso via canManage.
+  if (!tenant || tenant.tenant_type !== 'academia' || !isBackofficeStaff(role)) {
     redirect('/dashboard')
   }
 
+  const canManage = canManageTeam(role)
   const members = await listTenantMembers()
 
   return (
@@ -42,7 +49,7 @@ export default async function EquipePage() {
         </p>
       </div>
 
-      <InviteMemberForm />
+      <InviteMemberForm canCreateStaff={canManage} />
 
       <div className="bg-surface border border-surface-border rounded-xl overflow-hidden">
         {members.length === 0 ? (
@@ -66,8 +73,11 @@ export default async function EquipePage() {
                     {m.role === 'owner' && <Shield size={11} />}
                     {ROLE_LABEL[m.role] ?? m.role}
                   </span>
-                  {m.role !== 'owner' && (
-                    <RemoveMemberButton tenantMemberId={m.id} memberName={m.full_name ?? m.email ?? 'este membro'} />
+                  {canManage && m.role !== 'owner' && (
+                    <>
+                      <ResendPasswordButton tenantMemberId={m.id} memberName={m.full_name ?? m.email ?? 'este membro'} />
+                      <RemoveMemberButton tenantMemberId={m.id} memberName={m.full_name ?? m.email ?? 'este membro'} />
+                    </>
                   )}
                 </div>
               </div>

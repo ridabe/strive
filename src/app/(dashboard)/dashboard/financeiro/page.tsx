@@ -14,6 +14,16 @@ export default async function FinanceiroPage() {
   await requireAcademiaModuleAccess('faturas')
   const supabase = await createClient()
 
+  // Tema academia usa tipografia neutra (sentence case, números tabulares).
+  const { data: { user } } = await supabase.auth.getUser()
+  const { data: prof } = user
+    ? await supabase.from('profiles').select('tenant_id').eq('id', user.id).single()
+    : { data: null }
+  const { data: tnt } = prof?.tenant_id
+    ? await supabase.from('tenants').select('tenant_type').eq('id', prof.tenant_id).single()
+    : { data: null }
+  const isAcademia = tnt?.tenant_type === 'academia'
+
   const { data: invoices } = await supabase
     .from('financial_plans')
     .select(`
@@ -35,7 +45,13 @@ export default async function FinanceiroPage() {
   return (
     <div className="p-6 md:p-8 space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold text-text-primary uppercase tracking-widest">
+        <h1
+          className={
+            isAcademia
+              ? 'text-xl md:text-2xl font-semibold text-text-primary tracking-tight'
+              : 'font-display text-2xl font-bold text-text-primary uppercase tracking-widest'
+          }
+        >
           Financeiro
         </h1>
         <p className="text-text-secondary text-sm mt-1">
@@ -52,7 +68,7 @@ export default async function FinanceiroPage() {
           { label: 'Atrasados',  value: overdue, color: 'text-status-error'   },
         ].map((k) => (
           <div key={k.label} className="bg-surface border border-surface-border rounded-xl p-4">
-            <p className={`font-display font-bold text-2xl ${k.color}`}>{k.value}</p>
+            <p className={`text-2xl ${isAcademia ? 'font-semibold tabular-nums' : 'font-display font-bold'} ${k.color}`}>{k.value}</p>
             <p className="text-xs text-text-secondary mt-0.5">{k.label}</p>
           </div>
         ))}

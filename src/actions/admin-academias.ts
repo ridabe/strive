@@ -26,6 +26,7 @@ export async function createAcademiaTenant(formData: FormData) {
   const selfAssignEnabled     = formData.get('self_assign_enabled') === 'on'
   const abacatepayCustomerId  = (formData.get('abacatepay_customer_id') as string)?.trim() || null
   const notes                 = (formData.get('notes') as string)?.trim() || null
+  const cnpj                  = (formData.get('cnpj') as string)?.trim() || null
 
   if (!businessName) redirect('/admin/academias/nova?error=' + encodeURIComponent('Nome da academia é obrigatório.'))
   if (!accessEmail)  redirect('/admin/academias/nova?error=' + encodeURIComponent('E-mail de acesso do dono é obrigatório.'))
@@ -67,7 +68,8 @@ export async function createAcademiaTenant(formData: FormData) {
       contact_phone: contactPhone,
       abacatepay_customer_id: abacatepayCustomerId,
       notes,
-    })
+      cnpj,
+    } as never)
     .select('id, business_name')
     .single()
 
@@ -181,6 +183,7 @@ export async function updateAcademiaTenant(tenantId: string, formData: FormData)
   const selfAssignEnabled     = formData.get('self_assign_enabled') === 'on'
   const abacatepayCustomerId  = (formData.get('abacatepay_customer_id') as string)?.trim() || null
   const notes                 = (formData.get('notes') as string)?.trim() || null
+  const cnpj                  = (formData.get('cnpj') as string)?.trim() || null
 
   if (!businessName) return { error: 'Nome da academia é obrigatório.' }
   if (!maxPersonals || maxPersonals < 1) return { error: 'Limite de personais deve ser pelo menos 1.' }
@@ -197,6 +200,39 @@ export async function updateAcademiaTenant(tenantId: string, formData: FormData)
     return { error: `A academia já tem ${activeCount} personal(is)/admin(s) ativo(s) — não é possível reduzir o limite abaixo disso.` }
   }
 
+  // ── Logos (padrão + tema claro) ────────────────────────────────────────────
+  // logo_url é usado sobre fundo escuro; logo_light_url sobre fundo claro (o
+  // painel da academia). Bucket compartilhado 'client-logos'.
+  const logoUpdates: Record<string, string | null> = {}
+  const ALLOWED_EXT = ['png', 'jpg', 'jpeg', 'svg', 'webp']
+
+  async function handleLogo(field: string, removeField: string, column: string, fileBase: string): Promise<string | null> {
+    if (formData.get(removeField) === '1') {
+      await adminSupabase.storage.from('client-logos').remove([`${tenantId}/${fileBase}`])
+      logoUpdates[column] = null
+      return null
+    }
+    const file = formData.get(field) as File | null
+    if (file && file.size > 0) {
+      if (file.size > 2 * 1024 * 1024) return 'Logo deve ter no máximo 2 MB.'
+      const ext = file.name.split('.').pop()?.toLowerCase() ?? 'png'
+      if (!ALLOWED_EXT.includes(ext)) return 'Formato de imagem não suportado. Use PNG, JPG, SVG ou WebP.'
+      const path = `${tenantId}/${fileBase}.${ext}`
+      const { error: upErr } = await adminSupabase.storage
+        .from('client-logos')
+        .upload(path, await file.arrayBuffer(), { contentType: file.type, upsert: true })
+      if (upErr) return `Erro ao subir logo: ${upErr.message}`
+      const { data: { publicUrl } } = adminSupabase.storage.from('client-logos').getPublicUrl(path)
+      logoUpdates[column] = `${publicUrl}?v=${Date.now()}`
+    }
+    return null
+  }
+
+  const logoErr = await handleLogo('logo', 'remove_logo', 'logo_url', 'logo')
+  if (logoErr) return { error: logoErr }
+  const logoLightErr = await handleLogo('logo_light', 'remove_logo_light', 'logo_light_url', 'logo-light')
+  if (logoLightErr) return { error: logoLightErr }
+
   const { error } = await adminSupabase
     .from('tenants')
     .update({
@@ -207,7 +243,9 @@ export async function updateAcademiaTenant(tenantId: string, formData: FormData)
       self_assign_enabled: selfAssignEnabled,
       abacatepay_customer_id: abacatepayCustomerId,
       notes,
-    })
+      cnpj,
+      ...logoUpdates,
+    } as never)
     .eq('id', tenantId)
     .eq('tenant_type', 'academia')
 
