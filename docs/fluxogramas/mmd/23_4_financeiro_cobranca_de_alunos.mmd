@@ -1,0 +1,6 @@
+flowchart TD
+    A[Administração configura valor e dia de vencimento] --> B[Todo mês a cobrança nasce sozinha]
+    B --> C[No dia do vencimento, aluno recebe lembrete por e-mail]
+    C --> D[Administração confere quem pagou]
+    D -->|Pagou| E[Confirma o recebimento manualmente]
+    D -->|Não pagou| F[Entra na lista de inadimplentes]

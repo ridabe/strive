@@ -3,12 +3,11 @@ import type { StudentContext } from '../retrieval/student-context.ts';
 import { fetchWorkoutLoadHistory, formatLoadHistoryForPrompt } from '../retrieval/workout-context.ts';
 import { recordAiUsage, type AiTrackingContext } from '../usage.ts';
 import { ANTHROPIC_EFFICIENT_MODEL } from '../models.ts';
-import { extractSsePayloads } from '../streaming.ts';
 
 const MODEL         = ANTHROPIC_EFFICIENT_MODEL;
 const MAX_TOKENS    = 640;
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
-const STREAM_IDLE_AFTER_TEXT_MS = 2500;
+const KEEPALIVE_MS  = 3000;
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -116,7 +115,6 @@ function buildSseResponse(
   let outputTokens = 0;
   let modelName = MODEL;
   let streamError: string | null = null;
-  let messageCompleted = false;
 
   const body = new ReadableStream<Uint8Array>({
     async start(controller) {
@@ -124,86 +122,41 @@ function buildSseResponse(
       const decoder = new TextDecoder();
       let buffer    = '';
 
-      /**
-       * Encerra o stream quando o provider some apos entregar o texto,
-       * evitando aguardar o fechamento tardio do socket.
-       */
-      const readWithIdleTimeout = async (): Promise<ReadableStreamReadResult<Uint8Array> | null> => {
-        if (!fullText.trim()) return reader.read();
-
-        let timeoutId: ReturnType<typeof setTimeout> | null = null;
-        try {
-          return await Promise.race([
-            reader.read(),
-            new Promise<null>((resolve) => {
-              timeoutId = setTimeout(() => resolve(null), STREAM_IDLE_AFTER_TEXT_MS);
-            }),
-          ]);
-        } finally {
-          if (timeoutId) clearTimeout(timeoutId);
-        }
-      };
-
-      const processRawEvent = (raw: string): boolean => {
-        if (!raw || raw === '[DONE]') {
-          messageCompleted = true;
-          return true;
-        }
-
-        try {
-          const ev = JSON.parse(raw);
-          if (ev.type === 'message_start') {
-            modelName = ev.message?.model ?? modelName;
-            inputTokens = ev.message?.usage?.input_tokens ?? inputTokens;
-            outputTokens = ev.message?.usage?.output_tokens ?? outputTokens;
-          }
-          if (ev.type === 'message_delta' && typeof ev.usage?.output_tokens === 'number') {
-            outputTokens = ev.usage.output_tokens;
-          }
-          if (ev.type === 'content_block_stop' && fullText.trim()) {
-            messageCompleted = true;
-            return true;
-          }
-          if (ev.type === 'content_block_delta' && ev.delta?.type === 'text_delta') {
-            fullText += ev.delta.text;
-            controller.enqueue(
-              encoder.encode(`data: ${JSON.stringify({ text: ev.delta.text })}\n\n`),
-            );
-          }
-          if (ev.type === 'message_stop') {
-            messageCompleted = true;
-            return true;
-          }
-        } catch { /* ignore parse errors */ }
-
-        return false;
-      };
+      const keepAlive = setInterval(() => {
+        try { controller.enqueue(encoder.encode(': keep-alive\n\n')); } catch { /* stream já fechado */ }
+      }, KEEPALIVE_MS);
 
       try {
-        outer: while (true) {
-          const chunk = await readWithIdleTimeout();
-          if (chunk === null) {
-            messageCompleted = true;
-            reader.cancel('idle-timeout-after-text').catch(() => {});
-            break;
-          }
-
-          const { done, value } = chunk;
+        while (true) {
+          const { done, value } = await reader.read();
           if (done) break;
 
           buffer += decoder.decode(value, { stream: true });
-          const parsed = extractSsePayloads(buffer);
-          buffer = parsed.rest;
+          const lines = buffer.split('\n');
+          buffer = lines.pop() ?? '';
 
-          for (const raw of parsed.payloads) {
-            if (processRawEvent(raw)) break outer;
-          }
-        }
+          for (const line of lines) {
+            if (!line.startsWith('data: ')) continue;
+            const raw = line.slice(6).trim();
+            if (!raw || raw === '[DONE]') continue;
 
-        if (!messageCompleted && buffer.trim()) {
-          const parsed = extractSsePayloads(buffer, true);
-          for (const raw of parsed.payloads) {
-            if (processRawEvent(raw)) break;
+            try {
+              const ev = JSON.parse(raw);
+              if (ev.type === 'message_start') {
+                modelName = ev.message?.model ?? modelName;
+                inputTokens = ev.message?.usage?.input_tokens ?? inputTokens;
+                outputTokens = ev.message?.usage?.output_tokens ?? outputTokens;
+              }
+              if (ev.type === 'message_delta' && typeof ev.usage?.output_tokens === 'number') {
+                outputTokens = ev.usage.output_tokens;
+              }
+              if (ev.type === 'content_block_delta' && ev.delta?.type === 'text_delta') {
+                fullText += ev.delta.text;
+                controller.enqueue(
+                  encoder.encode(`data: ${JSON.stringify({ text: ev.delta.text })}\n\n`),
+                );
+              }
+            } catch { /* ignore parse errors */ }
           }
         }
       } catch (err) {
@@ -212,6 +165,8 @@ function buildSseResponse(
         try {
           controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: msg })}\n\n`));
         } catch { /* ignore */ }
+      } finally {
+        clearInterval(keepAlive);
       }
 
       // Persiste resposta antes de fechar o stream

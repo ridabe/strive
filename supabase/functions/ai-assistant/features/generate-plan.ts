@@ -8,7 +8,7 @@ const MODEL      = ANTHROPIC_SMART_MODEL;
 const MAX_TOKENS = 3072;
 const EXERCISES_PER_GROUP = 8;
 
-interface PlanItem {
+export interface PlanItem {
   exercise_id: string;
   exercise_name: string;
   sets: number;
@@ -18,13 +18,13 @@ interface PlanItem {
   count_type?: string;
 }
 
-interface PlanRoutine {
+export interface PlanRoutine {
   name: string;
-  day_of_week?: number;
+  days_of_week?: number[];
   items: PlanItem[];
 }
 
-interface GeneratedPlan {
+export interface GeneratedPlan {
   name: string;
   goal: string;
   description?: string;
@@ -37,6 +37,13 @@ interface ExerciseRow {
   muscle_group: string;
   count_type?: string | null;
   load_type?: string | null;
+}
+
+export interface PlanPreferences {
+  workoutType?: string;
+  goal?: string;
+  daysCount?: number;
+  notes?: string;
 }
 
 const CORS_HEADERS = {
@@ -52,6 +59,7 @@ export async function handleGeneratePlan(
   tenantId: string,
   conversationId: string,
   tracking: AiTrackingContext,
+  preferences?: PlanPreferences,
 ): Promise<Response> {
   const anthropic = new Anthropic({ apiKey: Deno.env.get('ANTHROPIC_API_KEY')! });
   const startedAt = Date.now();
@@ -61,19 +69,7 @@ export async function handleGeneratePlan(
     const exercises = await fetchAvailableExercises(supabase, tenantId);
     const exerciseListText = formatExerciseList(exercises);
 
-    const userPrompt = `
-Objetivo do aluno: ${ctx.student.goal ?? 'nao definido'}.
-Monte um plano completo usando somente os exercicios listados.
-Inclua sempre o exercise_id exato.
-
-${exerciseListText}
-
-Regras:
-- crie entre 3 e 5 rotinas
-- cada rotina deve ter exercicios coerentes com o objetivo
-- para cada exercicio inclua series, repeticoes, carga inicial sugerida e descanso em segundos
-- nao invente exercise_id
-`.trim();
+    const userPrompt = buildUserPrompt(ctx, exerciseListText, preferences);
 
     // 2. Chama Claude com tool use para forçar JSON estruturado
     const response = await anthropic.messages.create({
@@ -155,7 +151,55 @@ Regras:
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
-async function fetchAvailableExercises(supabase: SupabaseClient, tenantId: string) {
+function buildUserPrompt(
+  ctx: StudentContext,
+  exerciseListText: string,
+  preferences?: PlanPreferences,
+): string {
+  const hasPreferences = !!(preferences?.workoutType || preferences?.goal || preferences?.daysCount || preferences?.notes);
+
+  if (!hasPreferences) {
+    return `
+Objetivo do aluno: ${ctx.student.goal ?? 'nao definido'}.
+Monte um plano completo usando somente os exercicios listados.
+Inclua sempre o exercise_id exato.
+
+${exerciseListText}
+
+Regras:
+- crie entre 3 e 5 rotinas
+- cada rotina deve ter exercicios coerentes com o objetivo
+- para cada exercicio inclua series, repeticoes, carga inicial sugerida e descanso em segundos
+- nao invente exercise_id
+`.trim();
+  }
+
+  const daysCount = preferences?.daysCount && preferences.daysCount > 0 ? preferences.daysCount : null;
+
+  return `
+Objetivo geral do aluno (perfil): ${ctx.student.goal ?? 'nao definido'}.
+O Personal especificou as preferencias abaixo para ESTE treino especificamente — siga-as
+rigorosamente, mesmo que difiram do objetivo geral do perfil:
+
+${preferences?.workoutType ? `- Tipo de treino: ${preferences.workoutType}` : ''}
+${preferences?.goal ? `- Objetivo deste treino: ${preferences.goal}` : ''}
+${daysCount ? `- Quantidade de rotinas (dias): exatamente ${daysCount}` : ''}
+${preferences?.notes ? `- Observacoes do Personal: ${preferences.notes}` : ''}
+
+Monte um plano completo usando somente os exercicios listados abaixo.
+Inclua sempre o exercise_id exato.
+
+${exerciseListText}
+
+Regras:
+${daysCount ? `- crie exatamente ${daysCount} rotinas` : '- crie entre 3 e 5 rotinas'}
+- cada rotina deve ter exercicios coerentes com o tipo de treino e observacoes do Personal
+- para cada exercicio inclua series, repeticoes, carga inicial sugerida e descanso em segundos
+- nao invente exercise_id
+`.trim();
+}
+
+export async function fetchAvailableExercises(supabase: SupabaseClient, tenantId: string) {
   // Limita a base enviada ao modelo para reduzir tokens sem perder variedade.
   const { data } = await supabase
     .from('exercises')
@@ -175,7 +219,7 @@ async function fetchAvailableExercises(supabase: SupabaseClient, tenantId: strin
   return [...grouped.values()].flat();
 }
 
-function formatExerciseList(exercises: ExerciseRow[]): string {
+export function formatExerciseList(exercises: ExerciseRow[]): string {
   const grouped = new Map<string, ExerciseRow[]>();
   for (const ex of exercises) {
     const list = grouped.get(ex.muscle_group) ?? [];
@@ -193,7 +237,7 @@ function formatExerciseList(exercises: ExerciseRow[]): string {
   return lines.join('\n');
 }
 
-function buildPlanTool(): Anthropic.Tool {
+export function buildPlanTool(): Anthropic.Tool {
   return {
     name: 'create_workout_plan',
     description: 'Cria um plano de treino estruturado com rotinas e exercícios',
@@ -209,7 +253,11 @@ function buildPlanTool(): Anthropic.Tool {
             type: 'object' as const,
             properties: {
               name:        { type: 'string' },
-              day_of_week: { type: 'number', description: '0=Dom, 1=Seg ... 6=Sab' },
+              days_of_week: {
+                type: 'array',
+                items: { type: 'number' },
+                description: '0=Dom, 1=Seg ... 6=Sab. Pode ter mais de um dia. Omita ou deixe vazio para rotina de dia livre (sem dia fixo).',
+              },
               items: {
                 type: 'array',
                 items: {
@@ -236,7 +284,7 @@ function buildPlanTool(): Anthropic.Tool {
   };
 }
 
-async function insertPlan(
+export async function insertPlan(
   supabase: SupabaseClient,
   plan: GeneratedPlan,
   studentId: string,
@@ -260,17 +308,17 @@ async function insertPlan(
 
   const planId = planRow.id;
 
-  // Insere rotinas e itens
-  for (let ri = 0; ri < plan.routines.length; ri++) {
-    const routine = plan.routines[ri];
-
+  // Insere rotinas (e os itens de cada uma) em paralelo — são independentes
+  // entre si, então não há motivo para serializar esses round-trips e
+  // prolongar o silêncio na resposta ao cliente.
+  await Promise.all(plan.routines.map(async (routine, ri) => {
     const { data: routineRow, error: routineErr } = await supabase
       .from('workout_routines')
       .insert({
         workout_plan_id: planId,
         tenant_id:       tenantId,
         name:            routine.name,
-        day_of_week:     routine.day_of_week ?? null,
+        days_of_week:    routine.days_of_week?.length ? routine.days_of_week : null,
         display_order:   ri,
       })
       .select('id')
@@ -294,12 +342,12 @@ async function insertPlan(
 
     const { error: itemsErr } = await supabase.from('workout_items').insert(itemsToInsert);
     if (itemsErr) throw new Error(itemsErr.message);
-  }
+  }));
 
   return planId;
 }
 
-function buildPlanSummary(plan: GeneratedPlan, planId: string): string {
+export function buildPlanSummary(plan: GeneratedPlan, planId: string): string {
   const lines = [
     `✅ Plano **"${plan.name}"** criado com sucesso!`,
     ``,
@@ -310,7 +358,7 @@ function buildPlanSummary(plan: GeneratedPlan, planId: string): string {
   ];
 
   for (const r of plan.routines) {
-    const day = r.day_of_week != null ? `(dia ${r.day_of_week})` : '';
+    const day = r.days_of_week?.length ? `(dias ${r.days_of_week.join(', ')})` : '(dia livre)';
     lines.push(`• ${r.name} ${day} — ${r.items.length} exercícios`);
   }
 

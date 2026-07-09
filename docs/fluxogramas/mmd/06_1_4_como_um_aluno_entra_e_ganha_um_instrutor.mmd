@@ -1,0 +1,8 @@
+flowchart TD
+    A[Cadastro de aluno] --> B{Quem está cadastrando?}
+    B -->|Personal autônomo| C[Cadastra direto]
+    C --> D[Já vira aluno dele, automático]
+    B -->|Academia| E[Só a administração cadastra]
+    E --> F[Fica na fila, sem instrutor ainda]
+    F --> G[Administração atribui um instrutor]
+    F --> H[Auto-atribuição, se habilitado]

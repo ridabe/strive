@@ -72,36 +72,17 @@ export async function signUpPersonal(formData: FormData) {
   if (authError) redirect('/register?error=' + encodeURIComponent(authError.message))
   if (!authData.user) redirect('/register?error=' + encodeURIComponent('Erro ao criar conta. Tente novamente.'))
 
-  const { data: tenant, error: tenantError } = await supabase
-    .from('tenants')
-    .insert({ business_name: businessName, slug: email.split('@')[0], plan: 'free', max_students: 5 })
-    .select('id')
-    .single()
+  // Tenant + vínculo em profiles.tenant_id + tenant_members são criados de forma
+  // atômica via RPC SECURITY DEFINER, pois public.tenants não tem policy de RLS
+  // de INSERT para o usuário comum (só global_admin) — um insert direto aqui
+  // sempre falhava silenciosamente e deixava a conta órfã (profile 'personal'
+  // sem tenant, sem aparecer em Clientes).
+  const { error: tenantError } = await supabase.rpc('create_own_tenant', {
+    p_business_name: businessName,
+    p_slug: email.split('@')[0],
+  })
 
   if (tenantError) redirect('/register?error=' + encodeURIComponent('Conta criada, mas erro ao configurar tenant.'))
-
-  const { error: profileError } = await supabase    .from('profiles')
-    .update({ tenant_id: tenant!.id })
-    .eq('id', authData.user!.id)
-
-  if (profileError) redirect('/register?error=' + encodeURIComponent('Conta criada, mas erro ao vincular tenant.'))
-
-  // Vínculo em tenant_members (role owner) — mantém o tenant sempre representado
-  // em tenant_members desde a criação, para o seletor de organização (Fase 4)
-  // não depender de um backfill único. Best-effort: se falhar, não bloqueia o
-  // cadastro (o tenant autônomo continua funcionando 100% via profiles.tenant_id,
-  // como sempre funcionou).
-  const { error: memberError } = await supabase
-    .from('tenant_members')
-    .insert({
-      tenant_id: tenant!.id,
-      user_id: authData.user!.id,
-      role: 'owner',
-      status: 'active',
-      joined_at: new Date().toISOString(),
-    })
-
-  if (memberError) console.error('[signUpPersonal] Falha ao criar tenant_members:', memberError.message)
 
   redirect('/dashboard')
 }

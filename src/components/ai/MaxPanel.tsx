@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Send, Zap, TrendingUp, Dumbbell, Heart, MessageSquare, Loader2, X, ChevronRight } from 'lucide-react'
 import { useMaxStream, type MaxFeature } from '@/hooks/useMaxStream'
 import { createClient } from '@/lib/supabase/client'
+import { CriarTreinoWizardModal, type PlanPreferences } from './CriarTreinoWizardModal'
 
 const MAX_COLOR = '#7C3AED'
 
@@ -61,6 +62,7 @@ export function MaxPanel({ studentId, studentName, tenantId }: Props) {
   const [activeFeature, setActiveFeature] = useState<MaxFeature | null>(null)
   const [isSendingMessage, setIsSendingMessage] = useState(false)
   const [sendFeedback, setSendFeedback] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const [wizardOpen, setWizardOpen] = useState(false)
 
   const displayText = text.replace(/\nplan_id:[a-f0-9-]{36}$/, '').trim()
   const canSendToStudent = useMemo(
@@ -89,9 +91,27 @@ export function MaxPanel({ studentId, studentName, tenantId }: Props) {
    * Dispara a feature selecionada limpando feedbacks de envio anteriores.
    */
   async function handleAction(feature: MaxFeature) {
+    if (feature === 'generate_plan') {
+      setWizardOpen(true)
+      return
+    }
     setSendFeedback(null)
     setActiveFeature(feature)
     await trigger({ feature, studentId })
+  }
+
+  async function handleWizardSkip() {
+    setWizardOpen(false)
+    setSendFeedback(null)
+    setActiveFeature('generate_plan')
+    await trigger({ feature: 'generate_plan', studentId })
+  }
+
+  async function handleWizardSubmit(preferences: PlanPreferences) {
+    setWizardOpen(false)
+    setSendFeedback(null)
+    setActiveFeature('generate_plan')
+    await trigger({ feature: 'generate_plan', studentId, planPreferences: preferences })
   }
 
   /**
@@ -280,6 +300,13 @@ export function MaxPanel({ studentId, studentName, tenantId }: Props) {
         </div>
         <ChevronRight size={14} className="text-text-secondary" />
       </Link>
+
+      <CriarTreinoWizardModal
+        open={wizardOpen}
+        onClose={() => setWizardOpen(false)}
+        onSkip={handleWizardSkip}
+        onSubmit={handleWizardSubmit}
+      />
     </div>
   )
 }

@@ -39,13 +39,12 @@ export function MaxChatPanel({ studentId, initialConversationId, initialMessages
   const prevIsStreamingRef = useRef(false)
   useEffect(() => {
     if (prevIsStreamingRef.current && !isStreaming && text) {
-      const cleanText = text.replace(/\nplan_id:[a-f0-9-]{36}$/, '').trim()
       setMessages((prev) => [
         ...prev,
         {
           id: `local-${Date.now()}`,
           role: 'assistant',
-          content: cleanText,
+          content: text.trim(),
           created_at: new Date().toISOString(),
         },
       ])
@@ -118,7 +117,7 @@ export function MaxChatPanel({ studentId, initialConversationId, initialMessages
             <div className="max-w-[80%] bg-surface border border-surface-border rounded-2xl px-4 py-2.5 text-sm text-text-primary leading-relaxed">
               {text ? (
                 <>
-                  {text.replace(/\nplan_id:[a-f0-9-]{36}$/, '')}
+                  {text}
                   <span className="inline-block w-0.5 h-4 ml-0.5 bg-violet-400 animate-pulse align-middle" />
                 </>
               ) : (

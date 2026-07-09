@@ -1,7 +1,7 @@
 import { createClient }         from 'https://esm.sh/@supabase/supabase-js@2';
 import { fetchStudentContext }   from './retrieval/student-context.ts';
 import { buildMaxSystemPrompt }  from './prompts/max-system-prompt.ts';
-import { handleGeneratePlan }    from './features/generate-plan.ts';
+import { handleGeneratePlan, type PlanPreferences } from './features/generate-plan.ts';
 import { handleAnalyzeProgress } from './features/analyze-progress.ts';
 import { handleSuggestLoad }     from './features/suggest-load.ts';
 import { handleMotivation }      from './features/motivation.ts';
@@ -30,6 +30,12 @@ interface RequestBody {
   period_days?: number;
   exercise_id?: string;
   client_platform?: string;
+  plan_preferences?: {
+    workout_type?: string;
+    goal?: string;
+    days_count?: number;
+    notes?: string;
+  };
 }
 
 // ── Entry point ─────────────────────────────────────────────────────────────
@@ -63,7 +69,7 @@ Deno.serve(async (req) => {
 
     if (profileErr || !profile?.tenant_id) return errorResponse('Profile not found', 403);
 
-    const ALLOWED_ROLES = ['personal', 'global_admin'];
+    const ALLOWED_ROLES = ['personal', 'tenant_admin', 'global_admin'];
     if (!ALLOWED_ROLES.includes(profile.role)) {
       return errorResponse('Apenas personal trainers podem utilizar o Assistente IA.', 403);
     }
@@ -107,6 +113,7 @@ Deno.serve(async (req) => {
       period_days,
       exercise_id,
       client_platform,
+      plan_preferences,
     } = body;
 
     if (!feature)    return errorResponse('Campo "feature" é obrigatório', 400);
@@ -141,8 +148,15 @@ Deno.serve(async (req) => {
 
     // 9. Rota para o handler dedicado de cada feature
     switch (feature) {
-      case 'generate_plan':
-        return await handleGeneratePlan(supabase, ctx, systemPrompt, student_id, tenantId, convId, tracking);
+      case 'generate_plan': {
+        const preferences: PlanPreferences | undefined = plan_preferences ? {
+          workoutType: plan_preferences.workout_type,
+          goal:        plan_preferences.goal,
+          daysCount:   plan_preferences.days_count,
+          notes:       plan_preferences.notes,
+        } : undefined;
+        return await handleGeneratePlan(supabase, ctx, systemPrompt, student_id, tenantId, convId, tracking, preferences);
+      }
 
       case 'analyze_progress':
         return await handleAnalyzeProgress(supabase, ctx, systemPrompt, student_id, convId, period_days ?? 30, tracking);

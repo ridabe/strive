@@ -1,0 +1,10 @@
+flowchart TD
+    A[Página de equipe] --> B{Quem pode convidar quem?}
+    B -->|Dono/gerência| C[Convida qualquer papel da equipe]
+    B -->|Operação| D[Convida só instrutor]
+    C --> E{Já existe conta com esse e-mail?}
+    D --> E
+    E -->|Sim| F[Reaproveita a conta]
+    E -->|Não| G[Cria conta nova]
+    F --> H[Convite enviado por e-mail]
+    G --> H

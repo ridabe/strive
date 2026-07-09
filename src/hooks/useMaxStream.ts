@@ -5,6 +5,13 @@ import { createClient } from '@/lib/supabase/client'
 
 export type MaxFeature = 'chat' | 'generate_plan' | 'analyze_progress' | 'suggest_load' | 'motivation'
 
+export interface PlanPreferencesParams {
+  workoutType?: string
+  goal?: string
+  daysCount?: number
+  notes?: string
+}
+
 export interface MaxStreamParams {
   feature: MaxFeature
   studentId: string
@@ -12,6 +19,7 @@ export interface MaxStreamParams {
   conversationId?: string
   periodDays?: number
   exerciseId?: string
+  planPreferences?: PlanPreferencesParams
 }
 
 export interface UseMaxStreamResult {
@@ -23,8 +31,6 @@ export interface UseMaxStreamResult {
   trigger: (params: MaxStreamParams) => Promise<void>
   reset: () => void
 }
-
-const CLIENT_STREAM_IDLE_AFTER_TEXT_MS = 2500
 
 export function useMaxStream(): UseMaxStreamResult {
   const [text, setText] = useState('')
@@ -52,8 +58,6 @@ export function useMaxStream(): UseMaxStreamResult {
     const controller = new AbortController()
     abortRef.current = controller
     let accumulated = ''
-    const traceId = `${params.feature}-${Date.now()}`
-    const debugRunId = 'post-fix'
 
     setText('')
     setError(null)
@@ -65,10 +69,6 @@ export function useMaxStream(): UseMaxStreamResult {
       const { data: sessionData } = await supabase.auth.getSession()
       const token = sessionData.session?.access_token
       if (!token) throw new Error('Sessão inválida. Faça login novamente.')
-
-      // #region debug-point A:trigger-start
-      fetch('http://127.0.0.1:7777/event', { method: 'POST', body: JSON.stringify({ sessionId: 'suggest-load-spinner', runId: debugRunId, hypothesisId: 'A', traceId, location: 'useMaxStream.ts:trigger:start', msg: '[DEBUG] trigger start', data: { feature: params.feature, studentId: params.studentId, hasConversationId: Boolean(params.conversationId ?? conversationId), hasExerciseId: Boolean(params.exerciseId) }, ts: Date.now() }) }).catch(() => {})
-      // #endregion
 
       const baseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
       const response = await fetch(`${baseUrl}/functions/v1/ai-assistant`, {
@@ -85,13 +85,15 @@ export function useMaxStream(): UseMaxStreamResult {
           period_days:     params.periodDays,
           exercise_id:     params.exerciseId,
           client_platform: 'web',
+          plan_preferences: params.planPreferences ? {
+            workout_type: params.planPreferences.workoutType,
+            goal:         params.planPreferences.goal,
+            days_count:   params.planPreferences.daysCount,
+            notes:        params.planPreferences.notes,
+          } : undefined,
         }),
         signal: controller.signal,
       })
-
-      // #region debug-point B:http-response
-      fetch('http://127.0.0.1:7777/event', { method: 'POST', body: JSON.stringify({ sessionId: 'suggest-load-spinner', runId: debugRunId, hypothesisId: 'B', traceId, location: 'useMaxStream.ts:trigger:response', msg: '[DEBUG] function response received', data: { ok: response.ok, status: response.status, hasBody: Boolean(response.body), conversationHeader: response.headers.get('X-Conversation-Id') }, ts: Date.now() }) }).catch(() => {})
-      // #endregion
 
       if (!response.ok) {
         const errBody = await response.json().catch(() => ({ error: 'Erro desconhecido' }))
@@ -101,49 +103,14 @@ export function useMaxStream(): UseMaxStreamResult {
       const convId = response.headers.get('X-Conversation-Id')
       if (convId) setConversationId(convId)
 
-      // #region debug-point C:stream-open
-      fetch('http://127.0.0.1:7777/event', { method: 'POST', body: JSON.stringify({ sessionId: 'suggest-load-spinner', runId: debugRunId, hypothesisId: 'C', traceId, location: 'useMaxStream.ts:trigger:stream-open', msg: '[DEBUG] stream open', data: { convId }, ts: Date.now() }) }).catch(() => {})
-      // #endregion
-
       const reader = response.body?.getReader()
       if (!reader) throw new Error('Stream não suportado neste navegador.')
 
       const decoder = new TextDecoder()
       let buffer = ''
-      let chunkCount = 0
 
-      /**
-       * Encerra o spinner local quando a resposta ja apareceu e o stream
-       * fica ocioso por alguns segundos sem novos chunks.
-       */
-      const readWithIdleTimeout = async (): Promise<ReadableStreamReadResult<Uint8Array> | null> => {
-        if (!accumulated.trim()) return reader.read()
-
-        let timeoutId: ReturnType<typeof setTimeout> | null = null
-        try {
-          return await Promise.race([
-            reader.read(),
-            new Promise<null>((resolve) => {
-              timeoutId = setTimeout(() => resolve(null), CLIENT_STREAM_IDLE_AFTER_TEXT_MS)
-            }),
-          ])
-        } finally {
-          if (timeoutId) clearTimeout(timeoutId)
-        }
-      }
-
-      outer: while (true) {
-        const chunk = await readWithIdleTimeout()
-        if (chunk === null) {
-          controller.abort()
-          break
-        }
-
-        const { done, value } = chunk
-        chunkCount += 1
-        // #region debug-point D:reader-read
-        fetch('http://127.0.0.1:7777/event', { method: 'POST', body: JSON.stringify({ sessionId: 'suggest-load-spinner', runId: debugRunId, hypothesisId: 'D', traceId, location: 'useMaxStream.ts:trigger:reader-read', msg: '[DEBUG] reader.read result', data: { done, chunkCount, valueSize: value?.length ?? 0, accumulatedLength: accumulated.length }, ts: Date.now() }) }).catch(() => {})
-        // #endregion
+      while (true) {
+        const { done, value } = await reader.read()
         if (done) break
 
         buffer += decoder.decode(value, { stream: true })
@@ -153,28 +120,14 @@ export function useMaxStream(): UseMaxStreamResult {
         for (const line of lines) {
           if (!line.startsWith('data: ')) continue
           const payload = line.slice(6).trim()
-          if (payload === '[DONE]') {
-            // #region debug-point E:done-marker
-            fetch('http://127.0.0.1:7777/event', { method: 'POST', body: JSON.stringify({ sessionId: 'suggest-load-spinner', runId: debugRunId, hypothesisId: 'E', traceId, location: 'useMaxStream.ts:trigger:done', msg: '[DEBUG] done marker received', data: { chunkCount, accumulatedLength: accumulated.length }, ts: Date.now() }) }).catch(() => {})
-            // #endregion
-            break outer
-          }
+          if (payload === '[DONE]') continue
 
           try {
             const parsed = JSON.parse(payload)
             if (parsed.error) throw new Error(parsed.error)
-            if (parsed.debug) {
-              // #region debug-point J:upstream-debug
-              fetch('http://127.0.0.1:7777/event', { method: 'POST', body: JSON.stringify({ sessionId: 'suggest-load-spinner', runId: debugRunId, hypothesisId: 'J', traceId, location: 'useMaxStream.ts:trigger:upstream-debug', msg: '[DEBUG] upstream debug event', data: parsed.debug, ts: Date.now() }) }).catch(() => {})
-              // #endregion
-              continue
-            }
             if (parsed.text) {
               accumulated += parsed.text
               setText(accumulated)
-              // #region debug-point F:text-chunk
-              fetch('http://127.0.0.1:7777/event', { method: 'POST', body: JSON.stringify({ sessionId: 'suggest-load-spinner', runId: debugRunId, hypothesisId: 'F', traceId, location: 'useMaxStream.ts:trigger:text', msg: '[DEBUG] text chunk appended', data: { chunkCount, appendedLength: parsed.text.length, accumulatedLength: accumulated.length }, ts: Date.now() }) }).catch(() => {})
-              // #endregion
             }
           } catch (parseErr: unknown) {
             const msg = parseErr instanceof Error ? parseErr.message : ''
@@ -183,25 +136,15 @@ export function useMaxStream(): UseMaxStreamResult {
         }
       }
 
-      // #region debug-point G:loop-end
-      fetch('http://127.0.0.1:7777/event', { method: 'POST', body: JSON.stringify({ sessionId: 'suggest-load-spinner', runId: debugRunId, hypothesisId: 'G', traceId, location: 'useMaxStream.ts:trigger:loop-end', msg: '[DEBUG] stream loop ended', data: { chunkCount, bufferLength: buffer.length, accumulatedLength: accumulated.length }, ts: Date.now() }) }).catch(() => {})
-      // #endregion
-
       const match = accumulated.match(/plan_id:([a-f0-9-]{36})/)
       if (match) setPlanId(match[1])
     } catch (err: unknown) {
       if (err instanceof Error && err.name !== 'AbortError') {
-        // #region debug-point H:catch
-        fetch('http://127.0.0.1:7777/event', { method: 'POST', body: JSON.stringify({ sessionId: 'suggest-load-spinner', runId: debugRunId, hypothesisId: 'H', traceId, location: 'useMaxStream.ts:trigger:catch', msg: '[DEBUG] trigger catch', data: { name: err.name, message: err.message, accumulatedLength: accumulated.length }, ts: Date.now() }) }).catch(() => {})
-        // #endregion
         if (!accumulated.trim()) {
           setError(err.message ?? 'Erro desconhecido')
         }
       }
     } finally {
-      // #region debug-point I:finally
-      fetch('http://127.0.0.1:7777/event', { method: 'POST', body: JSON.stringify({ sessionId: 'suggest-load-spinner', runId: debugRunId, hypothesisId: 'I', traceId, location: 'useMaxStream.ts:trigger:finally', msg: '[DEBUG] trigger finally', data: { accumulatedLength: accumulated.length }, ts: Date.now() }) }).catch(() => {})
-      // #endregion
       if (abortRef.current === controller) {
         abortRef.current = null
       }

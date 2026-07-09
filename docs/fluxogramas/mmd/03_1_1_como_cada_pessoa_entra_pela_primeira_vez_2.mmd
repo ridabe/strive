@@ -1,0 +1,9 @@
+flowchart TD
+    subgraph Convidado["Aluno ou colega de equipe é convidado"]
+        B1[Alguém cadastra a pessoa] --> B2[Senha temporária gerada]
+        B2 --> B3[E-mail de boas-vindas com essa senha]
+        B3 --> B4[Primeiro login com e-mail e senha temporária]
+        B4 --> B5[Sistema pede senha nova, obrigatório]
+        B5 --> B6[Define senha própria]
+        B6 --> B7[Próxima vez: acesso normal]
+    end

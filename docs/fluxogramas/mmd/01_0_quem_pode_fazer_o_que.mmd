@@ -1,0 +1,9 @@
+flowchart TD
+    A[Pessoa entra no sistema] --> B{Que tipo de negócio?}
+    B -->|personal sozinho| C[Personal autônomo: é o dono do negócio]
+    C --> D[Vê e controla tudo]
+    B -->|academia| E{Qual o papel na academia?}
+    E --> F[Dono / gerência: acesso total]
+    F --> G[Operação: só financeiro e estoque]
+    E --> H[Instrutor da equipe]
+    H --> I[Só os alunos dele, nunca vê financeiro]
