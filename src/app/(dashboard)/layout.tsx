@@ -58,7 +58,8 @@ export default async function DashboardLayout({
   // Busca branding do tenant. logo_light_url (logo para tema claro/academia)
   // é lido via '*' + cast — a coluna é nova e ainda não está no database.ts
   // gerado; regenerar os tipos é passo posterior (pnpm supabase gen types).
-  let tenantBranding: { logo_url: string | null; logo_light_url?: string | null; primary_color: string | null; accent_text_color: string | null; on_primary_text_color: string | null; business_name: string; tenant_type?: string } | null = null
+  type TenantBranding = { logo_url: string | null; logo_light_url?: string | null; primary_color: string | null; accent_text_color: string | null; on_primary_text_color: string | null; business_name: string; tenant_type?: string } | null
+  let tenantBranding: TenantBranding = null
 
   if (profile.tenant_id) {
     const { data: tenant } = await supabase
@@ -66,7 +67,7 @@ export default async function DashboardLayout({
       .select('*')
       .eq('id', profile.tenant_id)
       .single()
-    tenantBranding = tenant as typeof tenantBranding
+    tenantBranding = tenant as TenantBranding
   }
 
   // "Equipe" só aparece para owner/admin de tenant do tipo academia — o papel

@@ -61,7 +61,8 @@ export default async function StudentLayout({
   }
 
   // Tenant branding + personal name
-  let tenantBranding: { logo_url: string | null; primary_color: string | null; accent_text_color: string | null; on_primary_text_color: string | null; business_name: string; cref?: string | null; tenant_type?: string } | null = null
+  type TenantBranding = { logo_url: string | null; logo_light_url?: string | null; primary_color: string | null; accent_text_color: string | null; on_primary_text_color: string | null; business_name: string; cref?: string | null; tenant_type?: string } | null
+  let tenantBranding: TenantBranding = null
   let personalName: string | null = null
 
   if (tenantId) {
@@ -71,7 +72,7 @@ export default async function StudentLayout({
       .select('*')
       .eq('id', tenantId)
       .single()
-    tenantBranding = tenant as typeof tenantBranding
+    tenantBranding = tenant as TenantBranding
 
     if (tenant?.tenant_type === 'academia') {
       // Numa academia, vários profiles podem ter role='personal' no mesmo
