@@ -1,13 +1,15 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { Plus, Trash2, ChevronDown, ChevronUp, Link2 } from 'lucide-react'
+import { Plus, Trash2, ChevronDown, ChevronUp, Link2, Repeat } from 'lucide-react'
 import { WorkoutItemCard, type WorkoutItemData } from './WorkoutItemCard'
 import { ExerciseSearchDrawer } from './ExerciseSearchDrawer'
 import { CombineModal } from './CombineModal'
-import { addWorkoutItem } from '@/actions/workout-items'
+import { addWorkoutItem, groupWorkoutItems, ungroupWorkoutItems } from '@/actions/workout-items'
 import { deleteRoutine, updateRoutine } from '@/actions/workout-routines'
 import { joinOne } from '@/lib/supabase/join'
+
+type ComboType = 'biset' | 'triset' | 'circuit'
 
 const DAY_LABELS  = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 const DAY_LETTERS = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
@@ -51,6 +53,7 @@ export function RoutineCard({ routine, studentId, planId, onDelete }: Props) {
   const [drawerOpen, setDrawerOpen]   = useState(false)
   const [combineOpen, setCombineOpen] = useState(false)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [editingGroupId, setEditingGroupId] = useState<string | null>(null)
   const [adding, setAdding]           = useState(false)
   const [isPending, startTransition]  = useTransition()
 
@@ -65,18 +68,51 @@ export function RoutineCard({ routine, studentId, planId, onDelete }: Props) {
     setSelectedIds((prev) => prev.filter((x) => x !== id))
   }
 
-  async function handleAddExercise(ex: Exercise) {
+  async function handleAddExercises(exs: Exercise[]) {
     setAdding(true)
-    const result = await addWorkoutItem(routine.id, ex.id, items.length)
-    setAdding(false)
-    if (result.item) {
-      const raw = result.item as Record<string, unknown>
-      const normalized: WorkoutItemData = {
-        ...(raw as Omit<WorkoutItemData, 'exercises'>),
-        exercises: joinOne(raw.exercises),
+    let nextOrder = items.length
+    for (const ex of exs) {
+      const result = await addWorkoutItem(routine.id, ex.id, nextOrder)
+      if (result.item) {
+        const raw = result.item as Record<string, unknown>
+        const normalized: WorkoutItemData = {
+          ...(raw as Omit<WorkoutItemData, 'exercises'>),
+          exercises: joinOne(raw.exercises),
+        }
+        setItems((prev) => [...prev, normalized])
+        nextOrder++
       }
-      setItems((prev) => [...prev, normalized])
     }
+    setAdding(false)
+  }
+
+  function handleRecombine(comboGroupId: string, memberIds: string[]) {
+    setEditingGroupId(comboGroupId)
+    setSelectedIds(memberIds)
+    setCombineOpen(true)
+  }
+
+  async function handleGroupConfirm(ids: string[], type: ComboType) {
+    if (editingGroupId) {
+      const res = await ungroupWorkoutItems(editingGroupId)
+      if (res.error) return res
+    }
+    return groupWorkoutItems(ids, type)
+  }
+
+  function handleCombineSuccess(type: ComboType, comboGroupId?: string) {
+    const staleGroupId = editingGroupId
+    setItems((prev) => prev.map((it) => {
+      if (selectedIds.includes(it.id)) {
+        return comboGroupId ? { ...it, combo_group_id: comboGroupId, combo_type: type } : it
+      }
+      if (staleGroupId && it.combo_group_id === staleGroupId) {
+        return { ...it, combo_group_id: null, combo_type: null }
+      }
+      return it
+    }))
+    setSelectedIds([])
+    setEditingGroupId(null)
   }
 
   function handleDelete() {
@@ -234,8 +270,15 @@ export function RoutineCard({ routine, studentId, planId, onDelete }: Props) {
                   <div className="flex items-center gap-2 px-1">
                     <div className="w-1 h-4 bg-brand-lime rounded-full" />
                     <span className="text-[10px] font-bold text-brand-lime tracking-widest">
-                      {comboLabel[block.comboType] ?? block.comboType.toUpperCase()}
+                      {comboLabel[block.comboType] ?? block.comboType.toUpperCase()} · {block.items.length} exercícios
                     </span>
+                    <button
+                      onClick={() => handleRecombine(block.comboGroupId, block.items.map((it) => it.id))}
+                      className="ml-auto flex items-center gap-1 text-[10px] font-medium text-text-secondary hover:text-brand-lime transition-colors"
+                    >
+                      <Repeat size={10} />
+                      Recombinar
+                    </button>
                   </div>
                   {block.items.map((item, idx) => (
                     <WorkoutItemCard
@@ -266,15 +309,17 @@ export function RoutineCard({ routine, studentId, planId, onDelete }: Props) {
       <ExerciseSearchDrawer
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-        onSelect={(ex) => { handleAddExercise(ex); setDrawerOpen(false) }}
+        multiSelect
+        onConfirm={(exs) => { handleAddExercises(exs); setDrawerOpen(false) }}
         adding={adding}
       />
 
       <CombineModal
         open={combineOpen}
         selectedIds={selectedIds}
-        onClose={() => setCombineOpen(false)}
-        onSuccess={() => setSelectedIds([])}
+        onClose={() => { setCombineOpen(false); setEditingGroupId(null) }}
+        onGroup={handleGroupConfirm}
+        onSuccess={handleCombineSuccess}
       />
     </>
   )

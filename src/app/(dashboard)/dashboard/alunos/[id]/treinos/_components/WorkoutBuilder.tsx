@@ -1,11 +1,13 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { Plus, CheckCircle, Loader2 } from 'lucide-react'
+import { Plus, CheckCircle, Loader2, HelpCircle } from 'lucide-react'
 import { RoutineCard } from './RoutineCard'
 import { createRoutine } from '@/actions/workout-routines'
 import { publishWorkoutPlan } from '@/actions/workout-plans'
 import { useRouter } from 'next/navigation'
+import { useGuide } from '@/hooks/useGuide'
+import { GuideModal } from '@/components/guides/GuideModal'
 
 type Routine = {
   id: string
@@ -50,6 +52,7 @@ export function WorkoutBuilder({ planId, studentId, initialRoutines, status }: P
   const [routines, setRoutines] = useState<Routine[]>(initialRoutines)
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
+  const guide = useGuide('routine_builder')
 
   function handleAddRoutine() {
     const label = String.fromCharCode(65 + routines.length) // A, B, C...
@@ -81,6 +84,15 @@ export function WorkoutBuilder({ planId, studentId, initialRoutines, status }: P
 
   return (
     <div className="space-y-4">
+      {/* Link para reabrir o guia */}
+      <button
+        onClick={guide.openGuide}
+        className="flex items-center gap-1.5 text-xs text-text-secondary hover:text-brand-lime transition-colors"
+      >
+        <HelpCircle size={12} />
+        Como montar?
+      </button>
+
       {/* Rotinas */}
       {routines.map((routine) => (
         <RoutineCard
@@ -133,6 +145,13 @@ export function WorkoutBuilder({ planId, studentId, initialRoutines, status }: P
           </p>
         </div>
       )}
+
+      <GuideModal
+        guideKey="routine_builder"
+        open={guide.open}
+        onClose={guide.close}
+        onDismissForever={guide.dismissForever}
+      />
     </div>
   )
 }

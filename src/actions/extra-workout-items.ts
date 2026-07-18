@@ -82,7 +82,7 @@ export async function removeExtraWorkoutItem(id: string): Promise<{ error?: stri
 export async function groupExtraWorkoutItems(
   itemIds: string[],
   comboType: 'biset' | 'triset' | 'circuit'
-): Promise<{ error?: string }> {
+): Promise<{ error?: string; comboGroupId?: string }> {
   const supabase = await createClient()
   const comboGroupId = crypto.randomUUID()
   const { error } = await supabase
@@ -90,7 +90,7 @@ export async function groupExtraWorkoutItems(
     .update({ combo_group_id: comboGroupId, combo_type: comboType })
     .in('id', itemIds)
   if (error) return { error: error.message }
-  return {}
+  return { comboGroupId }
 }
 
 export async function ungroupExtraWorkoutItems(comboGroupId: string): Promise<{ error?: string }> {

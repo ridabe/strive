@@ -167,8 +167,22 @@ export function WorkoutExecutionClient({
         })
       }
     }
-    // auto-start rest timer
     const item = items.find((i) => i.id === itemId)
+
+    // Item em combo: avança direto para o próximo membro do grupo, sem
+    // descanso — só descansa quando o último membro do grupo é concluído.
+    if (item?.combo_group_id) {
+      const groupItems = items.filter((i) => i.combo_group_id === item.combo_group_id)
+      const nextMember = groupItems.find((i) => i.id !== itemId && !exState[i.id]?.completed)
+      if (nextMember) {
+        stopRest()
+        const nextIdx = items.findIndex((i) => i.id === nextMember.id)
+        if (nextIdx >= 0) setCurrentIdx(nextIdx)
+        return
+      }
+    }
+
+    // auto-start rest timer
     if (item?.rest_seconds && item.rest_seconds > 0) {
       startRest(item.rest_seconds)
     }
@@ -450,6 +464,10 @@ export function WorkoutExecutionClient({
             <Link2 size={12} className="text-brand-lime" />
             <span className="text-[10px] font-bold text-brand-lime tracking-widest">
               {currentItem.combo_type?.toUpperCase() ?? 'COMBO'}
+              {' · Exercício '}
+              {(comboLetters[currentItem.id]?.charCodeAt(0) ?? 65) - 64}
+              {' de '}
+              {items.filter((i) => i.combo_group_id === currentItem.combo_group_id).length}
             </span>
             {currentComboLetter && (
               <span className="w-5 h-5 rounded-full bg-brand-lime text-background text-[10px] font-bold flex items-center justify-center">

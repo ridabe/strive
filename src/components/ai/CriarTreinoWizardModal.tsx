@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { X, Sparkles, Zap } from 'lucide-react'
+import { X, Sparkles, Zap, Link2 } from 'lucide-react'
 
 const MAX_COLOR = '#7C3AED'
 
@@ -10,6 +10,8 @@ export interface PlanPreferences {
   goal?: string
   daysCount?: number
   notes?: string
+  wantsCombos?: boolean
+  comboNotes?: string
 }
 
 interface Props {
@@ -35,6 +37,11 @@ const NOTES_TIPS = [
   'Treino em casa, sem equipamentos',
   'Evitar exercícios de impacto (joelho)',
 ]
+const COMBO_TIPS = [
+  'Combinar peito e costas',
+  'Bi-séries de antagonistas',
+  'Tri-série para membros superiores',
+]
 
 /**
  * Wizard de perguntas opcionais para personalizar o treino gerado pelo Max —
@@ -44,6 +51,8 @@ export function CriarTreinoWizardModal({ open, onClose, onSkip, onSubmit }: Prop
   const [workoutType, setWorkoutType] = useState('')
   const [daysCount, setDaysCount] = useState<number | null>(null)
   const [notes, setNotes] = useState('')
+  const [wantsCombos, setWantsCombos] = useState(false)
+  const [comboNotes, setComboNotes] = useState('')
 
   if (!open) return null
 
@@ -51,6 +60,8 @@ export function CriarTreinoWizardModal({ open, onClose, onSkip, onSubmit }: Prop
     setWorkoutType('')
     setDaysCount(null)
     setNotes('')
+    setWantsCombos(false)
+    setComboNotes('')
   }
 
   function handleClose() {
@@ -68,6 +79,8 @@ export function CriarTreinoWizardModal({ open, onClose, onSkip, onSubmit }: Prop
       workoutType: workoutType || undefined,
       daysCount:   daysCount ?? undefined,
       notes:       notes.trim() || undefined,
+      wantsCombos: wantsCombos || undefined,
+      comboNotes:  wantsCombos ? (comboNotes.trim() || undefined) : undefined,
     })
     reset()
   }
@@ -150,6 +163,53 @@ export function CriarTreinoWizardModal({ open, onClose, onSkip, onSubmit }: Prop
             </button>
           ))}
         </div>
+
+        <button
+          type="button"
+          onClick={() => setWantsCombos((v) => !v)}
+          className="mb-2 flex w-full items-center justify-between rounded-xl border px-3.5 py-3 transition-all"
+          style={wantsCombos
+            ? { borderColor: MAX_COLOR, backgroundColor: `${MAX_COLOR}18` }
+            : { borderColor: 'var(--surface-border)' }}
+        >
+          <span className="flex items-center gap-2 text-sm font-medium text-text-primary">
+            <Link2 size={14} style={{ color: wantsCombos ? MAX_COLOR : undefined }} />
+            Incluir bi-séries/tri-séries
+          </span>
+          <span
+            className="flex h-5 w-9 items-center rounded-full px-0.5 transition-colors"
+            style={{ background: wantsCombos ? MAX_COLOR : 'var(--surface-border)' }}
+          >
+            <span
+              className="h-4 w-4 rounded-full bg-white transition-transform"
+              style={{ transform: wantsCombos ? 'translateX(16px)' : 'translateX(0)' }}
+            />
+          </span>
+        </button>
+
+        {wantsCombos && (
+          <div className="mb-5">
+            <textarea
+              value={comboNotes}
+              onChange={(e) => setComboNotes(e.target.value)}
+              placeholder="Ex: combinar peito e costas (opcional)"
+              rows={2}
+              className="w-full resize-none rounded-xl border border-surface-border bg-background px-3.5 py-2.5 text-sm text-text-primary placeholder-text-secondary/50 focus:border-violet-400/50 focus:outline-none"
+            />
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {COMBO_TIPS.map((tip) => (
+                <button
+                  key={tip}
+                  type="button"
+                  onClick={() => setComboNotes(tip)}
+                  className="rounded-full border border-surface-border bg-background px-2.5 py-1.5 text-xs text-text-secondary transition-colors hover:text-text-primary"
+                >
+                  {tip}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         <button
           type="button"

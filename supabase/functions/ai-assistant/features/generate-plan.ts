@@ -16,6 +16,8 @@ export interface PlanItem {
   load?: string;
   rest_seconds?: number;
   count_type?: string;
+  /** Tag livre (ex: "A", "B") — itens com a mesma tag na mesma rotina formam um combo (bi-série/tri-série/circuito). */
+  combo_group?: string;
 }
 
 export interface PlanRoutine {
@@ -44,6 +46,15 @@ export interface PlanPreferences {
   goal?: string;
   daysCount?: number;
   notes?: string;
+  wantsCombos?: boolean;
+  comboNotes?: string;
+}
+
+/** Mesma convenção usada no app (combo_group_id/combo_type): 2 exercícios = biset, 3 = triset, 4+ = circuit. */
+function comboTypeKey(count: number): 'biset' | 'triset' | 'circuit' {
+  if (count <= 2) return 'biset';
+  if (count === 3) return 'triset';
+  return 'circuit';
 }
 
 const CORS_HEADERS = {
@@ -175,6 +186,12 @@ Regras:
   }
 
   const daysCount = preferences?.daysCount && preferences.daysCount > 0 ? preferences.daysCount : null;
+  const comboInstructions = preferences?.wantsCombos ? `
+- o Personal pediu para incluir bi-series/tri-series/circuitos neste treino
+- para agrupar exercicios da MESMA rotina em um combo, preencha o campo combo_group com uma tag curta (ex: "A", "B") igual para todos os itens desse grupo — 2 itens com a mesma tag = bi-serie, 3 = tri-serie, 4+ = circuito
+- so agrupe exercicios que fazem sentido serem executados em sequencia, sem descanso entre eles
+- itens sem combo_group ficam soltos (normal)
+${preferences.comboNotes ? `- preferencia do Personal sobre quais combinar: ${preferences.comboNotes}` : ''}` : '';
 
   return `
 Objetivo geral do aluno (perfil): ${ctx.student.goal ?? 'nao definido'}.
@@ -185,6 +202,7 @@ ${preferences?.workoutType ? `- Tipo de treino: ${preferences.workoutType}` : ''
 ${preferences?.goal ? `- Objetivo deste treino: ${preferences.goal}` : ''}
 ${daysCount ? `- Quantidade de rotinas (dias): exatamente ${daysCount}` : ''}
 ${preferences?.notes ? `- Observacoes do Personal: ${preferences.notes}` : ''}
+${comboInstructions}
 
 Monte um plano completo usando somente os exercicios listados abaixo.
 Inclua sempre o exercise_id exato.
@@ -270,6 +288,7 @@ export function buildPlanTool(): Anthropic.Tool {
                     load:          { type: 'string', description: 'Ex: "20kg", "40% RM"' },
                     rest_seconds:  { type: 'number' },
                     count_type:    { type: 'string', enum: ['reps', 'time'] },
+                    combo_group:   { type: 'string', description: 'Tag curta (ex: "A") — itens com a mesma tag na mesma rotina formam um combo (bi-serie/tri-serie/circuito). Omita se o exercicio for solo.' },
                   },
                   required: ['exercise_id', 'exercise_name', 'sets', 'reps'],
                 },
@@ -340,8 +359,40 @@ export async function insertPlan(
       display_order: idx,
     }));
 
-    const { error: itemsErr } = await supabase.from('workout_items').insert(itemsToInsert);
+    const { data: insertedItems, error: itemsErr } = await supabase
+      .from('workout_items')
+      .insert(itemsToInsert)
+      .select('id')
+      .order('display_order', { ascending: true });
     if (itemsErr) throw new Error(itemsErr.message);
+
+    // Pos-processamento: agrupa itens que o modelo marcou com o mesmo combo_group
+    // em bi-serie/tri-serie/circuito, setando combo_group_id/combo_type.
+    // Nunca inventar valores fora de biset/triset/circuit (constraint do banco),
+    // e sempre checar o erro do update em lote — falha silenciosa aqui deixaria
+    // o combo pela metade sem avisar ninguem.
+    if (insertedItems?.length === routine.items.length) {
+      const tagGroups = new Map<string, string[]>();
+      routine.items.forEach((item, idx) => {
+        if (!item.combo_group) return;
+        const itemId = insertedItems[idx]?.id;
+        if (!itemId) return;
+        const list = tagGroups.get(item.combo_group) ?? [];
+        list.push(itemId);
+        tagGroups.set(item.combo_group, list);
+      });
+
+      for (const itemIds of tagGroups.values()) {
+        if (itemIds.length < 2) continue; // combo precisa de ao menos 2 exercicios
+        const comboGroupId = crypto.randomUUID();
+        const comboType = comboTypeKey(itemIds.length);
+        const { error: groupErr } = await supabase
+          .from('workout_items')
+          .update({ combo_group_id: comboGroupId, combo_type: comboType })
+          .in('id', itemIds);
+        if (groupErr) throw new Error(`Falha ao agrupar combo: ${groupErr.message}`);
+      }
+    }
   }));
 
   return planId;
@@ -359,7 +410,9 @@ export function buildPlanSummary(plan: GeneratedPlan, planId: string): string {
 
   for (const r of plan.routines) {
     const day = r.days_of_week?.length ? `(dias ${r.days_of_week.join(', ')})` : '(dia livre)';
-    lines.push(`• ${r.name} ${day} — ${r.items.length} exercícios`);
+    const comboTags = new Set(r.items.filter((i) => i.combo_group).map((i) => i.combo_group));
+    const comboSuffix = comboTags.size > 0 ? ` (${comboTags.size} combinado${comboTags.size > 1 ? 's' : ''})` : '';
+    lines.push(`• ${r.name} ${day} — ${r.items.length} exercícios${comboSuffix}`);
   }
 
   lines.push(``, `O plano está **inativo** aguardando revisão. Ative-o no painel para liberar ao aluno.`);

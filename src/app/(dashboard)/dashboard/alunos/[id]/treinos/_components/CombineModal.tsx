@@ -10,8 +10,8 @@ type Props = {
   open: boolean
   selectedIds: string[]
   onClose: () => void
-  onSuccess: () => void
-  onGroup?: (ids: string[], type: ComboType) => Promise<{ error?: string }>
+  onSuccess: (type: ComboType, comboGroupId?: string) => void
+  onGroup?: (ids: string[], type: ComboType) => Promise<{ error?: string; comboGroupId?: string }>
 }
 
 const COMBO_OPTIONS: { value: ComboType; label: string; desc: string }[] = [
@@ -28,7 +28,7 @@ export function CombineModal({ open, selectedIds, onClose, onSuccess, onGroup }:
       const fn = onGroup ?? ((ids: string[], t: ComboType) => groupWorkoutItems(ids, t))
       const result = await fn(selectedIds, type)
       if (!result.error) {
-        onSuccess()
+        onSuccess(type, result.comboGroupId)
         onClose()
       }
     })
