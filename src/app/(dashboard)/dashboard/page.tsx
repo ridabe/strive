@@ -70,16 +70,9 @@ function AreaChart({ vals }: { vals: number[] }) {
   )
 }
 
-// Data relativa curta em pt-BR (para lista de alunos recentes).
-function relativeDay(iso: string): string {
-  const d = new Date(iso); d.setHours(0, 0, 0, 0)
-  const today = new Date(); today.setHours(0, 0, 0, 0)
-  const diff = Math.round((today.getTime() - d.getTime()) / 86400000)
-  if (diff <= 0) return 'hoje'
-  if (diff === 1) return 'ontem'
-  if (diff < 7) return `há ${diff} dias`
-  if (diff < 30) return `há ${Math.floor(diff / 7)} sem`
-  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })
+// Horário local pt-BR (para lista de frequência do dia).
+function timeLabel(iso: string): string {
+  return new Date(iso).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
 }
 
 export default async function DashboardPage() {
@@ -208,14 +201,21 @@ export default async function DashboardPage() {
       ]
 
   // ── Dados de BI da academia (só visão institucional owner/admin) ──────────
-  // Série de check-ins dos últimos 14 dias (bucket por dia) + alunos recentes.
+  // Série de check-ins dos últimos 14 dias (bucket por dia) + frequência de hoje.
   let checkinSeries: number[] = []
-  let recentStudents: { id: string; full_name: string; status: string; avatar_url: string | null; created_at: string }[] = []
+  let todayAttendance: { student_id: string; full_name: string; avatar_url: string | null; attended_at: string }[] = []
   if (isAcademiaAdmin && tenantId) {
     const base = new Date(); base.setHours(0, 0, 0, 0); base.setDate(base.getDate() - 13)
-    const [{ data: att }, { data: rs }] = await Promise.all([
+    const dayStart = new Date(); dayStart.setHours(0, 0, 0, 0)
+    const dayEnd = new Date(dayStart); dayEnd.setDate(dayEnd.getDate() + 1)
+    const [{ data: att }, { data: todayRows }] = await Promise.all([
       supabase.from('attendance').select('attended_at').eq('tenant_id', tenantId).gte('attended_at', base.toISOString()),
-      supabase.from('students').select('id, full_name, status, avatar_url, created_at').eq('tenant_id', tenantId).order('created_at', { ascending: false }).limit(6),
+      supabase.from('attendance')
+        .select('student_id, attended_at, students(full_name, avatar_url)')
+        .eq('tenant_id', tenantId)
+        .gte('attended_at', dayStart.toISOString())
+        .lt('attended_at', dayEnd.toISOString())
+        .order('attended_at', { ascending: false }),
     ])
     const buckets = new Array(14).fill(0)
     for (const r of att ?? []) {
@@ -224,7 +224,20 @@ export default async function DashboardPage() {
       if (idx >= 0 && idx < 14) buckets[idx]++
     }
     checkinSeries = buckets
-    recentStudents = rs ?? []
+
+    // Um aluno pode ter mais de um registro no dia (ex: combos); mantém só o mais recente.
+    const seen = new Set<string>()
+    for (const row of todayRows ?? []) {
+      if (seen.has(row.student_id)) continue
+      seen.add(row.student_id)
+      const student = joinOne<{ full_name: string; avatar_url: string | null }>(row.students)
+      todayAttendance.push({
+        student_id: row.student_id,
+        full_name: student?.full_name ?? '—',
+        avatar_url: student?.avatar_url ?? null,
+        attended_at: row.attended_at,
+      })
+    }
   }
   const checkinTotal = checkinSeries.reduce((a, b) => a + b, 0)
 
@@ -398,38 +411,35 @@ export default async function DashboardPage() {
             </div>
           </section>
 
-          {/* Alunos recentes */}
+          {/* Frequência de hoje */}
           <section className="bg-surface border border-surface-border rounded-xl overflow-hidden flex flex-col">
             <div className="flex items-center justify-between px-5 py-4 border-b border-surface-border">
-              <h2 className="text-sm font-semibold text-text-primary">Alunos recentes</h2>
-              <Link href="/dashboard/alunos" className="text-xs font-medium text-brand-lime hover:opacity-80 transition-opacity">
-                Ver todos
+              <h2 className="text-sm font-semibold text-text-primary">Frequência de hoje</h2>
+              <Link href="/dashboard/frequencia" className="text-xs font-medium text-brand-lime hover:opacity-80 transition-opacity">
+                Ver histórico
               </Link>
             </div>
-            {recentStudents.length > 0 ? (
+            {todayAttendance.length > 0 ? (
               <ul className="flex-1 divide-y divide-surface-border">
-                {recentStudents.map((s) => {
-                  const initials = s.full_name.split(' ').slice(0, 2).map((n) => n.charAt(0)).join('').toUpperCase()
-                  const active = s.status === 'active'
+                {todayAttendance.map((a) => {
+                  const initials = a.full_name.split(' ').slice(0, 2).map((n) => n.charAt(0)).join('').toUpperCase()
                   return (
-                    <li key={s.id} className="flex items-center gap-3 px-5 py-2.5">
+                    <li key={a.student_id} className="flex items-center gap-3 px-5 py-2.5">
                       <div className="w-8 h-8 rounded-full bg-background border border-surface-border flex items-center justify-center text-[11px] font-semibold text-text-secondary flex-shrink-0 overflow-hidden">
-                        {s.avatar_url
-                          ? <Image src={s.avatar_url} alt="" width={32} height={32} className="object-cover w-full h-full" />
+                        {a.avatar_url
+                          ? <Image src={a.avatar_url} alt="" width={32} height={32} className="object-cover w-full h-full" />
                           : initials}
                       </div>
-                      <span className="text-sm text-text-primary truncate flex-1 min-w-0">{s.full_name}</span>
-                      <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full flex-shrink-0 ${active ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-600'}`}>
-                        {active ? 'ativo' : 'inativo'}
-                      </span>
-                      <span className="text-xs text-text-secondary tabular-nums flex-shrink-0 w-14 text-right">{relativeDay(s.created_at)}</span>
+                      <span className="text-sm text-text-primary truncate flex-1 min-w-0">{a.full_name}</span>
+                      <CalendarCheck size={12} className="text-status-success flex-shrink-0" />
+                      <span className="text-xs text-text-secondary tabular-nums flex-shrink-0 w-12 text-right">{timeLabel(a.attended_at)}</span>
                     </li>
                   )
                 })}
               </ul>
             ) : (
               <div className="flex-1 flex items-center justify-center px-5 py-10 text-sm text-text-secondary text-center">
-                Nenhum aluno cadastrado ainda.
+                Nenhum aluno treinou hoje ainda.
               </div>
             )}
           </section>
