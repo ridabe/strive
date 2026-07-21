@@ -203,7 +203,7 @@ export default async function DashboardPage() {
   // ── Dados de BI da academia (só visão institucional owner/admin) ──────────
   // Série de check-ins dos últimos 14 dias (bucket por dia) + frequência de hoje.
   let checkinSeries: number[] = []
-  let todayAttendance: { student_id: string; full_name: string; avatar_url: string | null; attended_at: string }[] = []
+  const todayAttendance: { student_id: string; full_name: string; avatar_url: string | null; attended_at: string }[] = []
   if (isAcademiaAdmin && tenantId) {
     const base = new Date(); base.setHours(0, 0, 0, 0); base.setDate(base.getDate() - 13)
     const dayStart = new Date(); dayStart.setHours(0, 0, 0, 0)
