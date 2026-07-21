@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { signIn } from '@/app/actions/auth'
 import { LogoVertical } from '@/components/logo'
 import { AuthSubmitButton } from '@/components/auth/submit-button'
+import { PasswordInput } from '@/components/auth/password-input'
 
 export default async function LoginPage({
   searchParams,
@@ -75,14 +76,12 @@ export default async function LoginPage({
                   Esqueci minha senha
                 </Link>
               </div>
-              <input
+              <PasswordInput
                 id="password"
                 name="password"
-                type="password"
                 autoComplete="current-password"
                 required
                 placeholder="••••••••"
-                className="w-full bg-background border border-surface-border rounded-lg px-4 py-3 text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-lime/60 focus:ring-1 focus:ring-brand-lime/30 transition-colors"
               />
             </div>
 

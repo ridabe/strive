@@ -1,11 +1,11 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { Plus, Trash2, ChevronDown, ChevronUp, Link2, Repeat } from 'lucide-react'
+import { Plus, Trash2, ChevronDown, ChevronUp, Link2, Repeat, ArrowUp, ArrowDown } from 'lucide-react'
 import { WorkoutItemCard, type WorkoutItemData } from './WorkoutItemCard'
 import { ExerciseSearchDrawer } from './ExerciseSearchDrawer'
 import { CombineModal } from './CombineModal'
-import { addWorkoutItem, groupWorkoutItems, ungroupWorkoutItems } from '@/actions/workout-items'
+import { addWorkoutItem, groupWorkoutItems, ungroupWorkoutItems, reorderWorkoutItems } from '@/actions/workout-items'
 import { deleteRoutine, updateRoutine } from '@/actions/workout-routines'
 import { joinOne } from '@/lib/supabase/join'
 
@@ -163,6 +163,40 @@ export function RoutineCard({ routine, studentId, planId, onDelete }: Props) {
     }
   }
 
+  // Persiste uma nova ordem de blocos: achata em uma lista de itens e renumera display_order.
+  function persistReorder(newBlocks: Block[]) {
+    const flat = newBlocks.flatMap((b) => (b.type === 'single' ? [b.item] : b.items))
+    setItems(flat.map((it, idx) => ({ ...it, display_order: idx })))
+    startTransition(async () => {
+      await reorderWorkoutItems(routine.id, flat.map((it) => it.id))
+    })
+  }
+
+  // Move um bloco inteiro (exercício solto OU combo/bi-série/tri-série completo) para cima/baixo,
+  // permitindo posicionar uma combinação antes, entre ou depois de exercícios individuais.
+  function moveBlock(blockIdx: number, direction: 'up' | 'down') {
+    const swapIdx = direction === 'up' ? blockIdx - 1 : blockIdx + 1
+    if (swapIdx < 0 || swapIdx >= blocks.length) return
+    const newBlocks = [...blocks]
+    ;[newBlocks[blockIdx], newBlocks[swapIdx]] = [newBlocks[swapIdx], newBlocks[blockIdx]]
+    persistReorder(newBlocks)
+  }
+
+  // Move um exercício para cima/baixo dentro do seu próprio combo (quem executa primeiro/depois).
+  function moveMember(comboGroupId: string, itemId: string, direction: 'up' | 'down') {
+    const block = blocks.find((b) => b.type === 'combo' && b.comboGroupId === comboGroupId)
+    if (!block || block.type !== 'combo') return
+    const idx = block.items.findIndex((it) => it.id === itemId)
+    const swapIdx = direction === 'up' ? idx - 1 : idx + 1
+    if (idx === -1 || swapIdx < 0 || swapIdx >= block.items.length) return
+    const newMembers = [...block.items]
+    ;[newMembers[idx], newMembers[swapIdx]] = [newMembers[swapIdx], newMembers[idx]]
+    const newBlocks = blocks.map((b) =>
+      b.type === 'combo' && b.comboGroupId === comboGroupId ? { ...b, items: newMembers } : b
+    )
+    persistReorder(newBlocks)
+  }
+
   return (
     <>
       <div className="bg-surface border border-surface-border rounded-2xl overflow-hidden">
@@ -253,7 +287,10 @@ export function RoutineCard({ routine, studentId, planId, onDelete }: Props) {
               </p>
             )}
 
-            {blocks.map((block) => {
+            {blocks.map((block, blockIdx) => {
+              const canBlockUp = blockIdx > 0
+              const canBlockDown = blockIdx < blocks.length - 1
+
               if (block.type === 'single') {
                 return (
                   <WorkoutItemCard
@@ -262,12 +299,34 @@ export function RoutineCard({ routine, studentId, planId, onDelete }: Props) {
                     selected={selectedIds.includes(block.item.id)}
                     onToggleSelect={toggleSelect}
                     onRemove={handleRemoveItem}
+                    onMoveUp={() => moveBlock(blockIdx, 'up')}
+                    onMoveDown={() => moveBlock(blockIdx, 'down')}
+                    canMoveUp={canBlockUp}
+                    canMoveDown={canBlockDown}
                   />
                 )
               }
               return (
                 <div key={block.comboGroupId} className="space-y-1">
                   <div className="flex items-center gap-2 px-1">
+                    <div className="flex flex-col flex-shrink-0">
+                      <button
+                        onClick={() => moveBlock(blockIdx, 'up')}
+                        disabled={!canBlockUp}
+                        title="Mover combinação para cima"
+                        className="text-text-secondary/60 hover:text-brand-lime disabled:opacity-20 disabled:hover:text-text-secondary/60 transition-colors"
+                      >
+                        <ArrowUp size={11} />
+                      </button>
+                      <button
+                        onClick={() => moveBlock(blockIdx, 'down')}
+                        disabled={!canBlockDown}
+                        title="Mover combinação para baixo"
+                        className="text-text-secondary/60 hover:text-brand-lime disabled:opacity-20 disabled:hover:text-text-secondary/60 transition-colors"
+                      >
+                        <ArrowDown size={11} />
+                      </button>
+                    </div>
                     <div className="w-1 h-4 bg-brand-lime rounded-full" />
                     <span className="text-[10px] font-bold text-brand-lime tracking-widest">
                       {comboLabel[block.comboType] ?? block.comboType.toUpperCase()} · {block.items.length} exercícios
@@ -288,6 +347,10 @@ export function RoutineCard({ routine, studentId, planId, onDelete }: Props) {
                       selected={selectedIds.includes(item.id)}
                       onToggleSelect={toggleSelect}
                       onRemove={handleRemoveItem}
+                      onMoveUp={() => moveMember(block.comboGroupId, item.id, 'up')}
+                      onMoveDown={() => moveMember(block.comboGroupId, item.id, 'down')}
+                      canMoveUp={idx > 0}
+                      canMoveDown={idx < block.items.length - 1}
                     />
                   ))}
                 </div>

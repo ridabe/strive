@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { changePassword } from '@/app/actions/password'
 import { LogoVertical } from '@/components/logo'
+import { PasswordInput } from '@/components/auth/password-input'
 import { ShieldCheck, ArrowLeft } from 'lucide-react'
 
 export default async function AlterarSenhaPage({
@@ -83,14 +84,12 @@ export default async function AlterarSenhaPage({
               <label htmlFor="new_password" className="block text-sm font-body font-medium text-text-secondary">
                 Nova senha
               </label>
-              <input
+              <PasswordInput
                 id="new_password"
                 name="new_password"
-                type="password"
                 required
                 minLength={8}
                 placeholder="Mínimo 8 caracteres"
-                className="w-full bg-background border border-surface-border rounded-lg px-4 py-3 text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-lime/60 focus:ring-1 focus:ring-brand-lime/30 transition-colors"
               />
             </div>
 
@@ -98,14 +97,12 @@ export default async function AlterarSenhaPage({
               <label htmlFor="confirm_password" className="block text-sm font-body font-medium text-text-secondary">
                 Confirmar nova senha
               </label>
-              <input
+              <PasswordInput
                 id="confirm_password"
                 name="confirm_password"
-                type="password"
                 required
                 minLength={8}
                 placeholder="••••••••"
-                className="mt-1 w-full bg-background border border-surface-border rounded-lg px-3 py-2.5 text-sm text-text-primary focus:outline-none focus:border-brand-lime/50 transition-colors"
               />
             </div>
 

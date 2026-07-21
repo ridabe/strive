@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { signUpPersonal } from '@/app/actions/auth'
 import { LogoVertical } from '@/components/logo'
 import { AuthSubmitButton } from '@/components/auth/submit-button'
+import { PasswordInput } from '@/components/auth/password-input'
 
 export default async function RegisterPage({
   searchParams,
@@ -95,15 +96,13 @@ export default async function RegisterPage({
               >
                 Senha
               </label>
-              <input
+              <PasswordInput
                 id="password"
                 name="password"
-                type="password"
                 autoComplete="new-password"
                 required
                 minLength={8}
                 placeholder="Mínimo 8 caracteres"
-                className="w-full bg-background border border-surface-border rounded-lg px-4 py-3 text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-lime/60 focus:ring-1 focus:ring-brand-lime/30 transition-colors"
               />
             </div>
 

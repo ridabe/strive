@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { Trash2, GripVertical, Unlink, ChevronDown, ChevronUp, Dumbbell } from 'lucide-react'
+import { Trash2, GripVertical, Unlink, ChevronDown, ChevronUp, Dumbbell, ArrowUp, ArrowDown } from 'lucide-react'
 import { updateWorkoutItem, removeWorkoutItem, ungroupWorkoutItems } from '@/actions/workout-items'
 import { muscleColor } from '@/lib/exercise-config'
 
@@ -44,9 +44,16 @@ type Props = {
   dragHandleProps?: React.HTMLAttributes<HTMLDivElement>
   actions?: ItemActions
   comboLetter?: string
+  onMoveUp?: () => void
+  onMoveDown?: () => void
+  canMoveUp?: boolean
+  canMoveDown?: boolean
 }
 
-export function WorkoutItemCard({ item, selected, onToggleSelect, onRemove, dragHandleProps, actions, comboLetter }: Props) {
+export function WorkoutItemCard({
+  item, selected, onToggleSelect, onRemove, dragHandleProps, actions, comboLetter,
+  onMoveUp, onMoveDown, canMoveUp, canMoveDown,
+}: Props) {
   const [isPending, startTransition] = useTransition()
   const [expanded, setExpanded] = useState(false)
   const [fields, setFields] = useState({
@@ -117,10 +124,32 @@ export function WorkoutItemCard({ item, selected, onToggleSelect, onRemove, drag
           }`}
         />
 
-        {/* Drag handle */}
-        <div {...dragHandleProps} className="cursor-grab text-text-secondary/40 hover:text-text-secondary flex-shrink-0">
-          <GripVertical size={14} />
-        </div>
+        {/* Drag handle (reservado para drag-and-drop futuro) */}
+        {dragHandleProps && (
+          <div {...dragHandleProps} className="cursor-grab text-text-secondary/40 hover:text-text-secondary flex-shrink-0">
+            <GripVertical size={14} />
+          </div>
+        )}
+
+        {/* Mover para cima/baixo */}
+        {(onMoveUp || onMoveDown) && (
+          <div className="flex flex-col flex-shrink-0">
+            <button
+              onClick={onMoveUp}
+              disabled={!canMoveUp}
+              className="text-text-secondary/60 hover:text-brand-lime disabled:opacity-20 disabled:hover:text-text-secondary/60 transition-colors"
+            >
+              <ArrowUp size={12} />
+            </button>
+            <button
+              onClick={onMoveDown}
+              disabled={!canMoveDown}
+              className="text-text-secondary/60 hover:text-brand-lime disabled:opacity-20 disabled:hover:text-text-secondary/60 transition-colors"
+            >
+              <ArrowDown size={12} />
+            </button>
+          </div>
+        )}
 
         {/* Thumbnail */}
         {ex?.video_url ? (
