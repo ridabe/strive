@@ -3,7 +3,7 @@
 import { useRef, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { Plus, X, Loader2, Search } from 'lucide-react'
-import { createChallengeDayItem, type ChallengeItemType } from '@/app/actions/challenges'
+import { createChallengeDayItems, type ChallengeItemType } from '@/app/actions/challenges'
 import { searchExercises } from '@/actions/workout-items'
 
 interface Props {
@@ -28,7 +28,7 @@ export function AddDayItemButton({ dayId, challengeId }: Props) {
 
   const [exerciseQuery, setExerciseQuery] = useState('')
   const [exerciseResults, setExerciseResults] = useState<{ id: string; name: string }[]>([])
-  const [selectedExercise, setSelectedExercise] = useState<{ id: string; name: string } | null>(null)
+  const [selectedExercises, setSelectedExercises] = useState<{ id: string; name: string }[]>([])
   const [searching, setSearching] = useState(false)
 
   function handleClose() {
@@ -36,14 +36,13 @@ export function AddDayItemButton({ dayId, challengeId }: Props) {
     setError('')
     setExerciseQuery('')
     setExerciseResults([])
-    setSelectedExercise(null)
+    setSelectedExercises([])
     setItemType('exercise')
     formRef.current?.reset()
   }
 
   function handleExerciseSearch(value: string) {
     setExerciseQuery(value)
-    setSelectedExercise(null)
     if (value.trim().length < 2) { setExerciseResults([]); return }
     setSearching(true)
     startTransition(async () => {
@@ -53,26 +52,46 @@ export function AddDayItemButton({ dayId, challengeId }: Props) {
     })
   }
 
+  function addExercise(ex: { id: string; name: string }) {
+    setSelectedExercises((prev) => (prev.some((e) => e.id === ex.id) ? prev : [...prev, ex]))
+    setExerciseQuery('')
+    setExerciseResults([])
+  }
+
+  function removeExercise(id: string) {
+    setSelectedExercises((prev) => prev.filter((e) => e.id !== id))
+  }
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setError('')
 
-    if (itemType === 'exercise' && !selectedExercise) {
-      setError('Busque e selecione um exercício.')
+    if (itemType === 'exercise' && selectedExercises.length === 0) {
+      setError('Busque e selecione ao menos um exercício.')
       return
     }
 
     const fd = new FormData(e.currentTarget)
+    const content = String(fd.get('content') ?? '') || null
+
+    const inputs = itemType === 'exercise'
+      ? selectedExercises.map((ex) => ({
+          item_type: itemType,
+          title: ex.name,
+          content,
+          exercise_id: ex.id,
+          file_url: null,
+        }))
+      : [{
+          item_type: itemType,
+          title: String(fd.get('title') ?? ''),
+          content,
+          exercise_id: null,
+          file_url: itemType === 'file' ? String(fd.get('file_url') ?? '') || null : null,
+        }]
 
     startTransition(async () => {
-      const result = await createChallengeDayItem(dayId, challengeId, {
-        item_type: itemType,
-        title: itemType === 'exercise' ? selectedExercise!.name : String(fd.get('title') ?? ''),
-        content: String(fd.get('content') ?? '') || null,
-        exercise_id: itemType === 'exercise' ? selectedExercise!.id : null,
-        file_url: itemType === 'file' ? String(fd.get('file_url') ?? '') || null : null,
-      })
-
+      const result = await createChallengeDayItems(dayId, challengeId, inputs)
       if (result.error) { setError(result.error); return }
       handleClose()
       router.refresh()
@@ -123,7 +142,7 @@ export function AddDayItemButton({ dayId, challengeId }: Props) {
               {itemType === 'exercise' ? (
                 <div className="space-y-1.5">
                   <label className="text-xs font-body font-medium text-text-secondary uppercase tracking-widest">
-                    Buscar exercício
+                    Buscar exercícios
                   </label>
                   <div className="relative">
                     <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" />
@@ -134,29 +153,44 @@ export function AddDayItemButton({ dayId, challengeId }: Props) {
                       className="w-full bg-background border border-surface-border rounded-lg pl-8 pr-3 py-2.5 text-sm text-text-primary focus:outline-none focus:border-brand-lime transition-colors"
                     />
                   </div>
-                  {selectedExercise ? (
-                    <div className="flex items-center justify-between bg-brand-lime/10 border border-brand-lime/20 rounded-lg px-3 py-2 mt-1">
-                      <span className="text-sm text-brand-lime">{selectedExercise.name}</span>
-                      <button type="button" onClick={() => setSelectedExercise(null)} className="text-brand-lime/70 hover:text-brand-lime">
-                        <X size={13} />
-                      </button>
-                    </div>
-                  ) : exerciseResults.length > 0 ? (
-                    <div className="border border-surface-border rounded-lg overflow-hidden mt-1 max-h-40 overflow-y-auto">
-                      {exerciseResults.map((ex) => (
-                        <button
+
+                  {selectedExercises.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mt-1">
+                      {selectedExercises.map((ex) => (
+                        <span
                           key={ex.id}
-                          type="button"
-                          onClick={() => { setSelectedExercise(ex); setExerciseResults([]) }}
-                          className="w-full text-left px-3 py-2 text-sm text-text-primary hover:bg-surface-border/30 transition-colors border-b border-surface-border last:border-0"
+                          className="flex items-center gap-1.5 bg-brand-lime/10 border border-brand-lime/20 rounded-lg px-2.5 py-1.5"
                         >
-                          {ex.name}
-                        </button>
+                          <span className="text-sm text-brand-lime">{ex.name}</span>
+                          <button type="button" onClick={() => removeExercise(ex.id)} className="text-brand-lime/70 hover:text-brand-lime">
+                            <X size={12} />
+                          </button>
+                        </span>
                       ))}
+                    </div>
+                  )}
+
+                  {exerciseResults.length > 0 ? (
+                    <div className="border border-surface-border rounded-lg overflow-hidden mt-1 max-h-40 overflow-y-auto">
+                      {exerciseResults
+                        .filter((ex) => !selectedExercises.some((s) => s.id === ex.id))
+                        .map((ex) => (
+                          <button
+                            key={ex.id}
+                            type="button"
+                            onClick={() => addExercise(ex)}
+                            className="w-full text-left px-3 py-2 text-sm text-text-primary hover:bg-surface-border/30 transition-colors border-b border-surface-border last:border-0"
+                          >
+                            {ex.name}
+                          </button>
+                        ))}
                     </div>
                   ) : searching ? (
                     <p className="text-xs text-text-secondary">Buscando...</p>
                   ) : null}
+                  <p className="text-[11px] text-text-secondary/60">
+                    Selecione um ou mais exercícios — depois é possível combiná-los em Bi-Série/Tri-Série/Circuito.
+                  </p>
                 </div>
               ) : (
                 <div className="space-y-1.5">

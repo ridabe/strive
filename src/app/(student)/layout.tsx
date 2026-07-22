@@ -10,6 +10,7 @@ import { StudentSidebarNav } from '@/components/layout/student-sidebar'
 import { StudentMobileNav } from '@/components/layout/student-mobile-nav'
 import { UserMenu } from '@/components/layout/user-menu'
 import { StudentAgendaBanner } from '@/components/agenda/StudentAgendaBanner'
+import { StudentBillingReminderBanner } from '@/components/student/StudentBillingReminderBanner'
 import { StudentMessagesBanner } from '@/components/student/StudentMessagesBanner'
 import { AnamnesePendingBanner } from '@/components/student/AnamnesePendingBanner'
 import { ModuleOnboardingPopup } from '@/components/onboarding/ModuleOnboardingPopup'
@@ -145,6 +146,9 @@ export default async function StudentLayout({
   let latestMessageTitle: string | null = null
   let anamneseHasTemplates = false
   let anamneseCompleted = false
+  let billingPendingCount = 0
+  let billingOverdueCount = 0
+  let billingTotalOpen = 0
 
   // Sem vínculo ativo com nenhum personal — não renderiza o dashboard normal.
   if (!studentRow) {
@@ -251,6 +255,22 @@ export default async function StudentLayout({
     latestMessageTitle = unreadMessages?.[0]?.title ?? null
     anamneseHasTemplates = (templateCount ?? 0) > 0
     anamneseCompleted = !!anamneseResponse?.completed_at
+
+    // Lembrete de cobrança pendente — só busca se o módulo "faturas" estiver
+    // habilitado (mesma lista já calculada para o onboarding); onboardingSlugs
+    // nulo (RLS bloqueou) não bloqueia a busca, já que financial_plans tem sua
+    // própria policy de SELECT para o aluno.
+    if (onboardingSlugs === null || onboardingSlugs.includes('faturas')) {
+      const { data: openCharges } = await supabase
+        .from('financial_plans')
+        .select('status, amount')
+        .eq('student_id', studentRow.id)
+        .in('status', ['pending', 'overdue'])
+
+      billingPendingCount = (openCharges ?? []).filter((c) => c.status === 'pending').length
+      billingOverdueCount = (openCharges ?? []).filter((c) => c.status === 'overdue').length
+      billingTotalOpen = (openCharges ?? []).reduce((acc, c) => acc + c.amount, 0)
+    }
   }
 
   return (
@@ -327,6 +347,11 @@ export default async function StudentLayout({
           rejectedCount={rejectedAgendaCount}
           confirmedCount={confirmedAgendaCount}
           latestNoticeAt={latestAgendaNoticeAt}
+        />
+        <StudentBillingReminderBanner
+          pendingCount={billingPendingCount}
+          overdueCount={billingOverdueCount}
+          totalOpen={billingTotalOpen}
         />
         <AnamnesePendingBanner
           hasTemplates={anamneseHasTemplates}

@@ -4,6 +4,10 @@ import { Receipt, ArrowLeft, CheckCircle2, Clock, AlertCircle } from 'lucide-rea
 import { createClient } from '@/lib/supabase/server'
 import { getActiveStudentRow } from '@/lib/supabase/student-context'
 
+// Sempre busca dados novos — evita o aluno ver status desatualizado (ex.: uma
+// baixa que o personal acabou de dar) por causa do Client Router Cache do Next.
+export const dynamic = 'force-dynamic'
+
 // due_date vem como "YYYY-MM-DD" (sem hora) — formata direto da string, sem
 // passar por Date/TZ (mesmo cuidado do financeiro do personal).
 function formatDateBR(dateStr: string): string {

@@ -6,6 +6,12 @@ import { joinOne } from '@/lib/supabase/join'
 import { generateMonthlyCharges, markOverdueCharges } from '@/actions/student-billing'
 import { PaymentActions } from './payment-actions'
 import { NewSubscriptionForm, SubscriptionRow } from './subscription-form'
+import { FinanceiroGuide } from './financeiro-guide'
+
+// Garante que toda troca de aba/filtro (?aba=...) sempre busque dados novos —
+// sem isso, o Client Router Cache do Next 15 pode reaproveitar uma renderização
+// anterior da mesma rota e mostrar KPIs/cobranças desatualizados.
+export const dynamic = 'force-dynamic'
 
 // due_date vem como "YYYY-MM-DD" (sem hora) — usar `new Date(str)` interpreta
 // como UTC meia-noite e pode exibir o dia anterior conforme o fuso do
@@ -81,7 +87,7 @@ export default async function FinanceiroPage({
   // ── Assinaturas (mensalidade recorrente ou pacote de N meses) ───────────
   const { data: subscriptions } = await supabase
     .from('student_billing_subscriptions')
-    .select('id, student_id, plan_name, amount, due_day, active, billing_type, total_installments, students ( full_name )')
+    .select('id, student_id, plan_name, amount, due_day, active, billing_type, total_installments, sync_to_agenda, students ( full_name )')
     .eq('active', true)
     .order('due_day')
 
@@ -116,20 +122,27 @@ export default async function FinanceiroPage({
 
   return (
     <div className="p-6 md:p-8 space-y-6">
-      <div>
-        <h1
-          className={
-            isAcademia
-              ? 'text-xl md:text-2xl font-semibold text-text-primary tracking-tight'
-              : 'font-display text-2xl font-bold text-text-primary uppercase tracking-widest'
-          }
-        >
-          Financeiro
-        </h1>
-        <p className="text-text-secondary text-sm mt-1">
-          Mensalidades e cobranças dos seus alunos.
-        </p>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h1
+            className={
+              isAcademia
+                ? 'text-xl md:text-2xl font-semibold text-text-primary tracking-tight'
+                : 'font-display text-2xl font-bold text-text-primary uppercase tracking-widest'
+            }
+          >
+            Financeiro
+          </h1>
+          <p className="text-text-secondary text-sm mt-1">
+            Mensalidades e cobranças dos seus alunos.
+          </p>
+        </div>
+        <FinanceiroGuide />
       </div>
+
+      {/* Ação principal — sempre visível, em qualquer aba, para não ficar
+          escondida atrás da aba "Mensalidades". */}
+      <NewSubscriptionForm students={studentsWithoutSubscription} />
 
       {/* KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -165,8 +178,6 @@ export default async function FinanceiroPage({
 
       {tab === 'assinaturas' ? (
         <div className="space-y-4">
-          <NewSubscriptionForm students={studentsWithoutSubscription} />
-
           {!subscriptions?.length ? (
             <div className="bg-surface border border-surface-border rounded-xl p-10 text-center space-y-3">
               <Wallet size={32} className="text-text-secondary/40 mx-auto" />

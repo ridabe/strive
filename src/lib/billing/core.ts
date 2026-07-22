@@ -13,7 +13,7 @@ export async function generateMonthlyChargesFor(
 ): Promise<{ error?: string; created?: number }> {
   const { data: subscriptions, error: subsError } = await supabase
     .from('student_billing_subscriptions')
-    .select('id, student_id, plan_name, amount, due_day')
+    .select('id, student_id, plan_name, amount, due_day, sync_to_agenda')
     .eq('tenant_id', tenantId)
     .eq('active', true)
     // pacote: todas as parcelas já foram geradas de uma vez na criação
@@ -58,10 +58,52 @@ export async function generateMonthlyChargesFor(
     status:          'pending' as const,
   }))
 
-  const { error: insertError } = await supabase.from('financial_plans').insert(rows)
+  const { data: inserted, error: insertError } = await supabase
+    .from('financial_plans')
+    .insert(rows)
+    .select('id, subscription_id, student_id, plan_name, amount, due_date')
   if (insertError) return { error: insertError.message }
 
+  const syncSubscriptionIds = new Set(pending.filter((s) => s.sync_to_agenda).map((s) => s.id))
+  const toSync = (inserted ?? []).filter((c) => c.subscription_id && syncSubscriptionIds.has(c.subscription_id))
+  if (toSync.length) await createAgendaEventsForCharges(supabase, tenantId, toSync)
+
   return { created: rows.length }
+}
+
+// ── Cria eventos de agenda (type=pagamento_a_receber) para cobranças cuja
+// assinatura tem sync_to_agenda=true. Idempotente via índice único em
+// agenda_events.financial_plan_id — reprocessamentos são ignorados (23505).
+export async function createAgendaEventsForCharges(
+  supabase: TypedClient,
+  tenantId: string,
+  charges: { id: string; student_id: string; plan_name: string; amount: number; due_date: string }[]
+) {
+  const studentIds = [...new Set(charges.map((c) => c.student_id))]
+  const { data: students } = await supabase
+    .from('students')
+    .select('id, full_name')
+    .in('id', studentIds)
+  const nameById = new Map((students ?? []).map((s) => [s.id, s.full_name]))
+
+  const events = charges.map((c) => ({
+    tenant_id:         tenantId,
+    type:              'pagamento_a_receber',
+    title:             c.plan_name,
+    event_date:        c.due_date,
+    student_id:        c.student_id,
+    student_name:      nameById.get(c.student_id) ?? null,
+    amount:            c.amount,
+    status:            'scheduled',
+    origin:            'personal' as const,
+    financial_plan_id: c.id,
+  }))
+
+  const { error } = await supabase.from('agenda_events').insert(events)
+  // 23505 = unique_violation (financial_plan_id já tem evento) — ignora.
+  if (error && (error as { code?: string }).code !== '23505') {
+    console.error('[billing] falha ao criar eventos de agenda para cobranças:', error.message)
+  }
 }
 
 // ── Marca como atrasada toda cobrança pendente de um tenant cujo vencimento

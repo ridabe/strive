@@ -663,6 +663,8 @@ export interface ChallengeDayItem {
   exercise_id: string | null
   file_url: string | null
   sort_order: number
+  combo_group_id: string | null
+  combo_type: 'biset' | 'triset' | 'circuit' | null
   created_at: string
   updated_at: string
 }
@@ -838,6 +840,128 @@ export async function createChallengeDayItem(
 
   revalidatePath(`/dashboard/desafios/${challengeId}`)
   return { id: data.id }
+}
+
+// ─── Criar vários itens de um dia de uma vez (ex: múltiplos exercícios) ────────
+export async function createChallengeDayItems(
+  dayId: string,
+  challengeId: string,
+  inputs: CreateChallengeDayItemInput[]
+): Promise<{ error?: string }> {
+  const ctx = await requirePersonalCtx()
+  if (!ctx) return { error: 'Acesso negado' }
+  const { supabase, tenantId } = ctx
+
+  if (inputs.length === 0) return {}
+  for (const input of inputs) {
+    if (!input.title?.trim()) return { error: 'Título do item é obrigatório.' }
+    if (input.item_type === 'exercise' && !input.exercise_id) {
+      return { error: 'Selecione um exercício para itens do tipo exercício.' }
+    }
+  }
+
+  const { count } = await supabase
+    .from('challenge_day_items')
+    .select('id', { count: 'exact', head: true })
+    .eq('challenge_day_id', dayId)
+
+  const startOrder = count ?? 0
+
+  const rows = inputs.map((input, idx) => ({
+    tenant_id: tenantId,
+    challenge_day_id: dayId,
+    item_type: input.item_type,
+    title: input.title.trim(),
+    content: input.content?.trim() || null,
+    exercise_id: input.item_type === 'exercise' ? input.exercise_id : null,
+    file_url: input.item_type === 'file' ? (input.file_url ?? null) : null,
+    sort_order: startOrder + idx,
+  }))
+
+  const { error } = await supabase.from('challenge_day_items').insert(rows)
+  if (error) return { error: error.message }
+
+  revalidatePath(`/dashboard/desafios/${challengeId}`)
+  return {}
+}
+
+// ─── Reordenar itens de um dia ──────────────────────────────────────────────────
+export async function reorderChallengeDayItems(
+  dayId: string,
+  orderedIds: string[],
+  challengeId: string
+): Promise<{ error?: string }> {
+  const ctx = await requirePersonalCtx()
+  if (!ctx) return { error: 'Acesso negado' }
+  const { supabase } = ctx
+
+  const updates = orderedIds.map((id, index) =>
+    supabase
+      .from('challenge_day_items')
+      .update({ sort_order: index })
+      .eq('id', id)
+      .eq('challenge_day_id', dayId)
+  )
+  const results = await Promise.all(updates)
+  const failed = results.find((r) => r.error)
+  if (failed?.error) return { error: failed.error.message }
+
+  revalidatePath(`/dashboard/desafios/${challengeId}`)
+  return {}
+}
+
+// ─── Combinar itens de exercício em Bi-Série/Tri-Série/Circuito ────────────────
+export async function groupChallengeDayItems(
+  itemIds: string[],
+  comboType: 'biset' | 'triset' | 'circuit',
+  challengeId: string
+): Promise<{ comboGroupId?: string; error?: string }> {
+  if (itemIds.length < 2) return { error: 'Selecione ao menos 2 exercícios para combinar' }
+  const ctx = await requirePersonalCtx()
+  if (!ctx) return { error: 'Acesso negado' }
+  const { supabase } = ctx
+
+  const { data: items } = await supabase
+    .from('challenge_day_items')
+    .select('id, item_type')
+    .in('id', itemIds)
+
+  if ((items ?? []).some((i) => i.item_type !== 'exercise')) {
+    return { error: 'Só é possível combinar itens do tipo exercício.' }
+  }
+
+  const comboGroupId = crypto.randomUUID()
+  const updates = itemIds.map((id) =>
+    supabase
+      .from('challenge_day_items')
+      .update({ combo_group_id: comboGroupId, combo_type: comboType })
+      .eq('id', id)
+  )
+  const results = await Promise.all(updates)
+  const failed = results.find((r) => r.error)
+  if (failed?.error) return { error: failed.error.message }
+
+  revalidatePath(`/dashboard/desafios/${challengeId}`)
+  return { comboGroupId }
+}
+
+// ─── Desfazer combinação de itens ───────────────────────────────────────────────
+export async function ungroupChallengeDayItems(
+  comboGroupId: string,
+  challengeId: string
+): Promise<{ error?: string }> {
+  const ctx = await requirePersonalCtx()
+  if (!ctx) return { error: 'Acesso negado' }
+  const { supabase } = ctx
+
+  const { error } = await supabase
+    .from('challenge_day_items')
+    .update({ combo_group_id: null, combo_type: null })
+    .eq('combo_group_id', comboGroupId)
+
+  if (error) return { error: error.message }
+  revalidatePath(`/dashboard/desafios/${challengeId}`)
+  return {}
 }
 
 // ─── Atualizar item de um dia ───────────────────────────────────────────────────
@@ -1106,75 +1230,25 @@ export async function getStudentActiveChallenge(): Promise<StudentActiveChalleng
 }
 
 // ─── Aluno marca um item como concluído ────────────────────────────────────────
+// A lógica de progresso/pontuação/histórico vive inteiramente na RPC
+// mark_challenge_item_complete (banco), a mesma usada pelo app mobile — isso
+// garante que web e mobile tenham exatamente o mesmo comportamento (progresso,
+// ranking em monthly_points e registro no Histórico via workout_sessions
+// sintética para itens de exercício). Ver supabase/migrations/
+// 20260722_challenge_exercise_ranking_history.sql.
 export async function markItemComplete(itemId: string): Promise<{ error?: string }> {
   const ctx = await requireStudentCtx()
   if (!ctx) return { error: 'Acesso negado' }
-  const { supabase, tenantId } = ctx
+  const { supabase } = ctx
 
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: 'Não autenticado' }
+  const { data, error } = await supabase.rpc('mark_challenge_item_complete', { p_item_id: itemId })
 
-  const { data: student } = await supabase
-    .from('students')
-    .select('id')
-    .eq('user_id', user.id)
-    .single()
-
-  if (!student) return { error: 'Aluno não encontrado' }
-
-  const { data: item } = await supabase
-    .from('challenge_day_items')
-    .select('item_type, challenge_days!inner(challenge_id)')
-    .eq('id', itemId)
-    .single()
-
-  if (!item) return { error: 'Item não encontrado ou ainda não liberado.' }
-
-  const challengeId = (item as unknown as { challenge_days: { challenge_id: string } }).challenge_days.challenge_id
-
-  const { data: participant } = await supabase
-    .from('challenge_participants')
-    .select('id')
-    .eq('challenge_id', challengeId)
-    .eq('student_id', student.id)
-    .single()
-
-  if (!participant) return { error: 'Você não participa deste desafio.' }
-
-  const { error } = await supabase.from('challenge_item_progress').insert({
-    tenant_id: tenantId,
-    challenge_day_item_id: itemId,
-    participant_id: participant.id,
-  })
-
-  if (error) {
-    if (error.code === '23505') {
-      revalidatePath('/student/desafios')
-      return {}
-    }
-    return { error: error.message }
-  }
-
-  // Só itens de exercício pontuam no ranking global do sistema
-  if (item.item_type === 'exercise') {
-    const { data: settings } = await supabase
-      .from('gamification_settings')
-      .select('is_active, pts_exercise_completed')
-      .single()
-
-    if (settings?.is_active) {
-      const now = new Date()
-      await supabase.from('gamification_events').insert({
-        student_id: student.id,
-        session_id: null,
-        event_type: 'challenge_task_completed',
-        points: settings.pts_exercise_completed,
-        metadata: { challenge_id: challengeId, item_id: itemId },
-        event_month: now.getMonth() + 1,
-        event_year: now.getFullYear(),
-      })
-    }
-  }
+  if (error) return { error: error.message }
+  const result = data as { error?: string; already_completed?: boolean; completed?: boolean } | null
+  if (result?.error === 'item_not_found') return { error: 'Item não encontrado ou ainda não liberado.' }
+  if (result?.error === 'day_not_published') return { error: 'Este dia ainda não foi liberado.' }
+  if (result?.error === 'not_a_participant') return { error: 'Você não participa deste desafio.' }
+  if (result?.error) return { error: result.error }
 
   revalidatePath('/student/desafios')
   return {}

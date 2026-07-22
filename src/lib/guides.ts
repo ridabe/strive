@@ -35,6 +35,28 @@ export const GUIDES = {
       },
     ],
   },
+  faturas_cobranca: {
+    title: 'Como cobrar seus alunos',
+    intro: 'Sem gateway de pagamento — o aluno paga da forma que voces combinarem (PIX, dinheiro, cartão) e você dá baixa manualmente. Existem dois jeitos de cobrar, escolha o que fizer mais sentido pra cada aluno.',
+    sections: [
+      {
+        heading: 'Mensalidade recorrente',
+        body: 'Ideal pra aluno que paga todo mês, sem prazo definido. Defina o valor e o dia do vencimento uma vez, e a cobrança do mês é gerada sozinha, sempre que você abre o Financeiro.',
+      },
+      {
+        heading: 'Pacote de meses',
+        body: 'Ideal pra aluno que já fechou um período fixo (ex: 6 meses de plano). Todas as parcelas são geradas de uma vez, na hora. Você dá baixa mês a mês normalmente, e só é avisado para renovar quando o pacote inteiro for quitado.',
+      },
+      {
+        heading: 'Dando baixa',
+        body: 'Na lista de cobranças, toque em "Dar baixa" e escolha a forma de pagamento. Se marcar por engano, use "Desfazer" a qualquer momento.',
+      },
+      {
+        heading: 'Adicionar na agenda',
+        body: 'Ao criar a cobrança, marque "Adicionar vencimentos na agenda" para que cada mês apareça também na sua agenda e na do aluno — é opcional, fica desmarcado por padrão.',
+      },
+    ],
+  },
 } as const satisfies Record<string, GuideContent>
 
 export type GuideKey = keyof typeof GUIDES

@@ -510,8 +510,8 @@
     "semantic_hash": "c160ac00848a15c71a004bca21ca7773"
   },
   "src/app/(dashboard)/dashboard/financeiro/page.tsx": {
-    "mtime": 1784731398.006363,
-    "ast_hash": "13d1e4ba718bc2fc63bdaf0492b71566",
+    "mtime": 1784734925.51583,
+    "ast_hash": "dfb5c6d2be6b67b55e643f82cfe9a61e",
     "semantic_hash": ""
   },
   "src/app/(dashboard)/dashboard/frequencia/page.tsx": {
@@ -595,8 +595,8 @@
     "semantic_hash": "db53040e5fed1136157eae095222ab93"
   },
   "src/app/(student)/layout.tsx": {
-    "mtime": 1784729797.5596898,
-    "ast_hash": "fbe03f27b7df94b383e2d91b21e50574",
+    "mtime": 1784734194.6782842,
+    "ast_hash": "abced73de5af27c9339760d37f3e400f",
     "semantic_hash": ""
   },
   "src/app/(student)/student/agenda/AgendaRequestForm.tsx": {
@@ -650,8 +650,8 @@
     "semantic_hash": "85d826201fe3dc8e744bc96421e015a2"
   },
   "src/app/(student)/student/financeiro/page.tsx": {
-    "mtime": 1784731438.9741046,
-    "ast_hash": "607a865cbb7c95cd844171d817ed17ec",
+    "mtime": 1784733571.5101545,
+    "ast_hash": "0189d2659c2357a5d28c9d9069344467",
     "semantic_hash": ""
   },
   "src/app/(student)/student/frequencia/frequencia-client.tsx": {
@@ -1155,8 +1155,8 @@
     "semantic_hash": ""
   },
   "src/types/database.ts": {
-    "mtime": 1784731217.4433408,
-    "ast_hash": "4368777cfd045ddef256c222c629fed6",
+    "mtime": 1784739039.5103228,
+    "ast_hash": "19ddd9c7fad8ccacaa33885bf5055023",
     "semantic_hash": ""
   },
   "src/types/index.ts": {
@@ -2200,9 +2200,9 @@
     "semantic_hash": "bac501895a04c1bd5083a5807851bf8b"
   },
   "src/app/(dashboard)/dashboard/desafios/[id]/AddDayItemButton.tsx": {
-    "mtime": 1783089078.994574,
-    "ast_hash": "ba5ef8553eb1903a6cb56b41fcca06d8",
-    "semantic_hash": "ba5ef8553eb1903a6cb56b41fcca06d8"
+    "mtime": 1784738791.6940212,
+    "ast_hash": "c29a089c687b340f77b979ddc39892db",
+    "semantic_hash": ""
   },
   "src/app/(dashboard)/dashboard/desafios/[id]/AddParticipantButton.tsx": {
     "mtime": 1783088171.7904856,
@@ -2215,9 +2215,9 @@
     "semantic_hash": "3c92a0cd7038deecb5a4c90eab42809a"
   },
   "src/app/(dashboard)/dashboard/desafios/[id]/ChallengeDaysSection.tsx": {
-    "mtime": 1783089123.938128,
-    "ast_hash": "f371dd1872a5e404d89209b727b9de58",
-    "semantic_hash": "f371dd1872a5e404d89209b727b9de58"
+    "mtime": 1784738755.232488,
+    "ast_hash": "ee36b01c30727f35a861535d4ce2d22d",
+    "semantic_hash": ""
   },
   "src/app/(dashboard)/dashboard/desafios/[id]/ChallengeDetailClient.tsx": {
     "mtime": 1783093711.083732,
@@ -2295,9 +2295,9 @@
     "semantic_hash": "1488b9e1f4fd283ae0486ec4dd677e55"
   },
   "src/app/actions/challenges.ts": {
-    "mtime": 1783092748.7948492,
-    "ast_hash": "7d2e6a3e043ec43ed3c775bd9a76ad48",
-    "semantic_hash": "7d2e6a3e043ec43ed3c775bd9a76ad48"
+    "mtime": 1784738636.776571,
+    "ast_hash": "7f9bc978edeb1c244d086ff3e0d4c1d6",
+    "semantic_hash": ""
   },
   "src/lib/challenge-constants.ts": {
     "mtime": 1783090062.797205,
@@ -2625,8 +2625,8 @@
     "semantic_hash": ""
   },
   "src/actions/student-billing.ts": {
-    "mtime": 1784731268.9155135,
-    "ast_hash": "b9e3c8a11e0b0cefc0068e1ae48b504a",
+    "mtime": 1784733915.267414,
+    "ast_hash": "888989eae6160abc3c9f1c909f41bcf6",
     "semantic_hash": ""
   },
   "src/app/(dashboard)/dashboard/financeiro/payment-actions.tsx": {
@@ -2635,8 +2635,8 @@
     "semantic_hash": ""
   },
   "src/app/(dashboard)/dashboard/financeiro/subscription-form.tsx": {
-    "mtime": 1784731380.586995,
-    "ast_hash": "66bbd262af9e030b4e207f81e518ed34",
+    "mtime": 1784734008.185136,
+    "ast_hash": "f9514ae82fda58ee3a406dbc1a91212b",
     "semantic_hash": ""
   },
   "src/app/api/cron/billing-reminders/route.ts": {
@@ -2660,8 +2660,8 @@
     "semantic_hash": ""
   },
   "src/lib/billing/core.ts": {
-    "mtime": 1784731235.5259395,
-    "ast_hash": "a522c147d831c79d834da9e48438e3cd",
+    "mtime": 1784733872.3933465,
+    "ast_hash": "b097478185b1ad27220e20c94fa89219",
     "semantic_hash": ""
   },
   "src/lib/billing/reminder-channels.ts": {
@@ -2670,8 +2670,8 @@
     "semantic_hash": ""
   },
   "src/lib/guides.ts": {
-    "mtime": 1784397785.6337433,
-    "ast_hash": "4dbc031f685fae6d22a94818877f8c79",
+    "mtime": 1784735010.8859763,
+    "ast_hash": "b6e572d7c17e43c3e3d6b16c796ba730",
     "semantic_hash": ""
   },
   "supabase/functions/send-payment-reminder/index.ts": {
@@ -2830,8 +2830,38 @@
     "semantic_hash": ""
   },
   "docs/modulos/faturas.md": {
-    "mtime": 1784731582.6423273,
-    "ast_hash": "d2a7efbe34b6cdb19264d50aa36511df",
+    "mtime": 1784735075.3379898,
+    "ast_hash": "57679e69f27400a773ea691bad91a89b",
+    "semantic_hash": ""
+  },
+  "src/app/(dashboard)/dashboard/desafios/[id]/ChallengeDayItems.tsx": {
+    "mtime": 1784738723.5743937,
+    "ast_hash": "a0050c39b645233a4cfba2edbdbf1351",
+    "semantic_hash": ""
+  },
+  "src/app/(dashboard)/dashboard/financeiro/financeiro-guide.tsx": {
+    "mtime": 1784734907.905308,
+    "ast_hash": "5328722aee17636b8196855d6442313c",
+    "semantic_hash": ""
+  },
+  "src/components/student/StudentBillingReminderBanner.tsx": {
+    "mtime": 1784734173.372755,
+    "ast_hash": "5e1bbcb3c8b6cbca69df172ca6904704",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260722_billing_agenda_sync.sql": {
+    "mtime": 1784733811.9523764,
+    "ast_hash": "c5d8207a1c21aa5f6736c6f65f8a550f",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260722_challenge_day_items_combo.sql": {
+    "mtime": 1784738589.8205414,
+    "ast_hash": "b59ac938f750608c27347067ce4c9108",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260722_challenge_exercise_ranking_history.sql": {
+    "mtime": 1784736573.4714704,
+    "ast_hash": "cee895d9d112a5f58f292ece90e7b6f8",
     "semantic_hash": ""
   }
 }

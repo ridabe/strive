@@ -21,6 +21,7 @@ type Subscription = {
   active: boolean
   billing_type: BillingType
   total_installments: number | null
+  sync_to_agenda: boolean
   paidInstallments?: number
 }
 
@@ -127,6 +128,11 @@ export function NewSubscriptionForm({ students }: { students: StudentOption[] })
         </p>
       )}
 
+      <label className="flex items-center gap-2 text-sm text-text-secondary cursor-pointer w-fit">
+        <input type="checkbox" name="sync_to_agenda" className="accent-brand-lime" />
+        Adicionar vencimentos na agenda
+      </label>
+
       <div className="flex items-center gap-3">
         <button
           type="submit"
@@ -201,6 +207,10 @@ export function SubscriptionRow({ subscription, studentName }: { subscription: S
               required
               className="bg-background border border-surface-border rounded-lg px-2.5 py-1.5 text-sm text-text-primary w-20"
             />
+            <label className="flex items-center gap-1.5 text-xs text-text-secondary cursor-pointer">
+              <input type="checkbox" name="sync_to_agenda" defaultChecked={subscription.sync_to_agenda} className="accent-brand-lime" />
+              Agenda
+            </label>
             <button type="submit" disabled={isPending} className="text-xs font-semibold text-brand-lime disabled:opacity-50">
               {isPending ? '...' : 'Salvar'}
             </button>

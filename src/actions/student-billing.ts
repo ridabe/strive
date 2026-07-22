@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { getCtx } from '@/lib/supabase/context'
 import { canManageBilling } from '@/lib/permissions'
-import { generateMonthlyChargesFor, markOverdueChargesFor } from '@/lib/billing/core'
+import { generateMonthlyChargesFor, markOverdueChargesFor, createAgendaEventsForCharges } from '@/lib/billing/core'
 import type { PaymentMethod } from '@/types/db-enums'
 
 const BILLING_PATH = '/dashboard/financeiro'
@@ -38,6 +38,7 @@ export async function upsertStudentSubscription(formData: FormData): Promise<{ e
   const amountRaw = formData.get('amount') as string
   const dueDayRaw = formData.get('due_day') as string
   const planName  = (formData.get('plan_name') as string)?.trim() || 'Mensalidade'
+  const syncToAgenda = formData.get('sync_to_agenda') === 'on'
 
   const amount = Number(amountRaw)
   const dueDay = Number(dueDayRaw)
@@ -51,7 +52,10 @@ export async function upsertStudentSubscription(formData: FormData): Promise<{ e
   const { error } = await supabase
     .from('student_billing_subscriptions')
     .upsert(
-      { tenant_id: tenantId, student_id: studentId, plan_name: planName, amount, due_day: dueDay, active: true },
+      {
+        tenant_id: tenantId, student_id: studentId, plan_name: planName, amount, due_day: dueDay,
+        active: true, sync_to_agenda: syncToAgenda,
+      },
       { onConflict: 'student_id' }
     )
 
@@ -77,6 +81,7 @@ export async function createPackageSubscription(formData: FormData): Promise<{ e
   const dueDayRaw  = formData.get('due_day') as string
   const planName   = (formData.get('plan_name') as string)?.trim() || 'Mensalidade'
   const totalRaw   = formData.get('total_installments') as string
+  const syncToAgenda = formData.get('sync_to_agenda') === 'on'
 
   const amount = Number(amountRaw)
   const dueDay = Number(dueDayRaw)
@@ -103,6 +108,7 @@ export async function createPackageSubscription(formData: FormData): Promise<{ e
         active: true,
         billing_type: 'pacote',
         total_installments: totalInstallments,
+        sync_to_agenda: syncToAgenda,
       },
       { onConflict: 'student_id' }
     )
@@ -131,10 +137,17 @@ export async function createPackageSubscription(formData: FormData): Promise<{ e
     }
   })
 
-  const { error: insertError } = await supabase.from('financial_plans').insert(rows)
+  const { data: inserted, error: insertError } = await supabase
+    .from('financial_plans')
+    .insert(rows)
+    .select('id, student_id, plan_name, amount, due_date')
   // 23505 = unique_violation — parcela do mês já existe (reenvio do form ou
   // pacote recriado); não é um erro fatal, só ignora as que já existem.
   if (insertError && insertError.code !== '23505') return { error: insertError.message }
+
+  if (syncToAgenda && inserted?.length) {
+    await createAgendaEventsForCharges(supabase, tenantId, inserted)
+  }
 
   revalidatePath(BILLING_PATH)
   revalidatePath(`/dashboard/alunos/${studentId}`)
@@ -204,6 +217,10 @@ export async function registerPayment(formData: FormData): Promise<{ error?: str
 
   if (error) return { error: error.message }
 
+  // Se essa cobrança tiver um evento de agenda vinculado (sync_to_agenda),
+  // marca como concluído — não é erro fatal se não existir nenhum.
+  await supabase.from('agenda_events').update({ status: 'completed' }).eq('financial_plan_id', chargeId)
+
   revalidatePath(BILLING_PATH)
   return {}
 }
@@ -232,6 +249,8 @@ export async function undoPayment(chargeId: string): Promise<{ error?: string }>
 
   if (error) return { error: error.message }
 
+  await supabase.from('agenda_events').update({ status: 'scheduled' }).eq('financial_plan_id', chargeId)
+
   revalidatePath(BILLING_PATH)
   return {}
 }
@@ -248,6 +267,8 @@ export async function cancelCharge(chargeId: string): Promise<{ error?: string }
     .eq('id', chargeId)
 
   if (error) return { error: error.message }
+
+  await supabase.from('agenda_events').update({ status: 'cancelled' }).eq('financial_plan_id', chargeId)
 
   revalidatePath(BILLING_PATH)
   return {}
