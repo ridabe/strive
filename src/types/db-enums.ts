@@ -10,6 +10,7 @@ type Enums = Database['public']['Enums']
 
 export type AppRole = Enums['app_role']
 export type ProfileStatus = Enums['profile_status']
+export type BillingType = Enums['billing_type']
 // nome em snake_case mantido por compatibilidade com os imports existentes
 export type audit_category = Enums['audit_category']
 export type ExtraWorkoutCategory = Enums['extra_workout_category']

@@ -102,7 +102,15 @@ export function TrainerNotificationBell({ tenantId, initialNotifications }: Prop
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-body font-medium text-text-primary">{n.title}</p>
                       <p className="text-xs text-text-secondary mt-0.5">{n.message}</p>
-                      {n.student_id && (
+                      {n.type === 'agenda_pending' ? (
+                        <Link
+                          href="/dashboard/agenda"
+                          onClick={() => setIsOpen(false)}
+                          className="mt-1 inline-block text-xs text-brand-lime hover:underline"
+                        >
+                          Ver agenda →
+                        </Link>
+                      ) : n.student_id && (
                         <Link
                           href={`/dashboard/alunos/${n.student_id}/anamnese`}
                           onClick={() => setIsOpen(false)}

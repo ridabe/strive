@@ -136,9 +136,10 @@ export default async function StudentLayout({
     }
   }
 
-  // Conta solicitações de agendamento pendentes/recusadas para o aluno
-  let pendingAgendaCount  = 0
-  let rejectedAgendaCount = 0
+  // Conta solicitações de agendamento pendentes/recusadas/confirmadas para o aluno
+  let pendingAgendaCount   = 0
+  let rejectedAgendaCount  = 0
+  let confirmedAgendaCount = 0
   let latestAgendaNoticeAt: string | null = null
   let unreadMessageCount = 0
   let latestMessageTitle: string | null = null
@@ -188,6 +189,7 @@ export default async function StudentLayout({
     const [
       { count: pending },
       { count: rejected },
+      { count: confirmed },
       { data: latestNoticeRow },
       { data: unreadMessages },
       { count: templateCount },
@@ -208,10 +210,17 @@ export default async function StudentLayout({
         .gte('event_date', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]),
       supabase
         .from('agenda_events')
+        .select('id', { count: 'exact', head: true })
+        .eq('student_id', studentRow.id)
+        .eq('status', 'scheduled')
+        .eq('origin', 'student')
+        .gte('event_date', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]),
+      supabase
+        .from('agenda_events')
         .select('updated_at')
         .eq('student_id', studentRow.id)
         .eq('origin', 'student')
-        .in('status', ['pending_confirmation', 'rejected'])
+        .in('status', ['pending_confirmation', 'rejected', 'scheduled'])
         .order('updated_at', { ascending: false })
         .limit(1)
         .maybeSingle(),
@@ -234,8 +243,9 @@ export default async function StudentLayout({
         .eq('user_id', user.id)
         .maybeSingle(),
     ])
-    pendingAgendaCount  = pending  ?? 0
-    rejectedAgendaCount = rejected ?? 0
+    pendingAgendaCount   = pending   ?? 0
+    rejectedAgendaCount  = rejected  ?? 0
+    confirmedAgendaCount = confirmed ?? 0
     latestAgendaNoticeAt = latestNoticeRow?.updated_at ?? null
     unreadMessageCount = unreadMessages?.length ?? 0
     latestMessageTitle = unreadMessages?.[0]?.title ?? null
@@ -315,6 +325,7 @@ export default async function StudentLayout({
         <StudentAgendaBanner
           pendingCount={pendingAgendaCount}
           rejectedCount={rejectedAgendaCount}
+          confirmedCount={confirmedAgendaCount}
           latestNoticeAt={latestAgendaNoticeAt}
         />
         <AnamnesePendingBanner

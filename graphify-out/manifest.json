@@ -265,19 +265,19 @@
     "semantic_hash": "7dba2edd37959fbd3ff1e5d2dbe3c750"
   },
   "src/app/(auth)/alterar-senha/page.tsx": {
-    "mtime": 1781965427.479822,
-    "ast_hash": "925a8c97eb7a9be96b536bc45351261c",
-    "semantic_hash": "925a8c97eb7a9be96b536bc45351261c"
+    "mtime": 1784645198.1288188,
+    "ast_hash": "20fb5af09e774c29146bfe1f3bbe2a3e",
+    "semantic_hash": ""
   },
   "src/app/(auth)/login/page.tsx": {
-    "mtime": 1781888969.8078365,
-    "ast_hash": "cc2d2a09328ea7f4451eaa940fed3d73",
-    "semantic_hash": "cc2d2a09328ea7f4451eaa940fed3d73"
+    "mtime": 1784645092.9815626,
+    "ast_hash": "b26fed0e2c319708f78e1cba4d783000",
+    "semantic_hash": ""
   },
   "src/app/(auth)/register/page.tsx": {
-    "mtime": 1781888974.5912364,
-    "ast_hash": "40d6f61e1564c17376141bc1a79ef9ab",
-    "semantic_hash": "40d6f61e1564c17376141bc1a79ef9ab"
+    "mtime": 1784645184.0115938,
+    "ast_hash": "ee3768002b6221b7747c25e1e8a846ac",
+    "semantic_hash": ""
   },
   "src/app/(dashboard)/dashboard/agenda/AgendaCalendarView.tsx": {
     "mtime": 1782567315.944445,
@@ -395,8 +395,8 @@
     "semantic_hash": ""
   },
   "src/app/(dashboard)/dashboard/alunos/[id]/treinos/_components/RoutineCard.tsx": {
-    "mtime": 1784397658.667225,
-    "ast_hash": "3c9dd563a9e4dd2b7cbd2e328821277c",
+    "mtime": 1784644588.8551269,
+    "ast_hash": "9eb33d8037572e25a1dd11bfb6814314",
     "semantic_hash": ""
   },
   "src/app/(dashboard)/dashboard/alunos/[id]/treinos/_components/StudentPlanAssignPanel.tsx": {
@@ -410,9 +410,9 @@
     "semantic_hash": ""
   },
   "src/app/(dashboard)/dashboard/alunos/[id]/treinos/_components/WorkoutItemCard.tsx": {
-    "mtime": 1782326165.0601425,
-    "ast_hash": "9adf6b002ebddbeb7cdd1b54240b7379",
-    "semantic_hash": "9adf6b002ebddbeb7cdd1b54240b7379"
+    "mtime": 1784644551.9945283,
+    "ast_hash": "91d0b032fd29a88c7dfc6c6b469f8589",
+    "semantic_hash": ""
   },
   "src/app/(dashboard)/dashboard/alunos/[id]/treinos/novo/page.tsx": {
     "mtime": 1783346906.954549,
@@ -510,8 +510,8 @@
     "semantic_hash": "c160ac00848a15c71a004bca21ca7773"
   },
   "src/app/(dashboard)/dashboard/financeiro/page.tsx": {
-    "mtime": 1783461194.8893433,
-    "ast_hash": "434361c469c09c84a53fc122de6854a4",
+    "mtime": 1784731398.006363,
+    "ast_hash": "13d1e4ba718bc2fc63bdaf0492b71566",
     "semantic_hash": ""
   },
   "src/app/(dashboard)/dashboard/frequencia/page.tsx": {
@@ -520,8 +520,8 @@
     "semantic_hash": "e2da16a4a00dd6ae24b97a683908e93b"
   },
   "src/app/(dashboard)/dashboard/page.tsx": {
-    "mtime": 1783448829.3118966,
-    "ast_hash": "7c572a3c93abbd04ab1939c2861c5859",
+    "mtime": 1784649535.0043616,
+    "ast_hash": "0521577c562367941118c57545ed6275",
     "semantic_hash": ""
   },
   "src/app/(dashboard)/dashboard/planos-alimentares/[id]/page.tsx": {
@@ -595,8 +595,8 @@
     "semantic_hash": "db53040e5fed1136157eae095222ab93"
   },
   "src/app/(student)/layout.tsx": {
-    "mtime": 1783614939.5982325,
-    "ast_hash": "d152d372dcdd69281bd1bddb2ff791c5",
+    "mtime": 1784729797.5596898,
+    "ast_hash": "fbe03f27b7df94b383e2d91b21e50574",
     "semantic_hash": ""
   },
   "src/app/(student)/student/agenda/AgendaRequestForm.tsx": {
@@ -650,9 +650,9 @@
     "semantic_hash": "85d826201fe3dc8e744bc96421e015a2"
   },
   "src/app/(student)/student/financeiro/page.tsx": {
-    "mtime": 1781993069.3290312,
-    "ast_hash": "da9764e629326d3806cc7a907cc1edb6",
-    "semantic_hash": "da9764e629326d3806cc7a907cc1edb6"
+    "mtime": 1784731438.9741046,
+    "ast_hash": "607a865cbb7c95cd844171d817ed17ec",
+    "semantic_hash": ""
   },
   "src/app/(student)/student/frequencia/frequencia-client.tsx": {
     "mtime": 1781991787.605828,
@@ -950,9 +950,9 @@
     "semantic_hash": "52d6e1a1621933c20b23aa5699ca2298"
   },
   "src/components/agenda/StudentAgendaBanner.tsx": {
-    "mtime": 1782567410.1038334,
-    "ast_hash": "c458430af979fc2483bfd7717d8ebe46",
-    "semantic_hash": "c458430af979fc2483bfd7717d8ebe46"
+    "mtime": 1784729769.8374364,
+    "ast_hash": "792f6325d1042c4d26f9663c94ea4c07",
+    "semantic_hash": ""
   },
   "src/components/ai/MaxChatPanel.tsx": {
     "mtime": 1783609646.8719654,
@@ -1155,8 +1155,8 @@
     "semantic_hash": ""
   },
   "src/types/database.ts": {
-    "mtime": 1783461811.773283,
-    "ast_hash": "d53f2a892cc2bc44d96c6be08403cd86",
+    "mtime": 1784731217.4433408,
+    "ast_hash": "4368777cfd045ddef256c222c629fed6",
     "semantic_hash": ""
   },
   "src/types/index.ts": {
@@ -2320,9 +2320,9 @@
     "semantic_hash": "1bebc2be76acdc3eb2c38d4e49bda268"
   },
   "src/components/notifications/TrainerNotificationBell.tsx": {
-    "mtime": 1783179826.8538082,
-    "ast_hash": "437d55e3953c463153886551940fb4d7",
-    "semantic_hash": "437d55e3953c463153886551940fb4d7"
+    "mtime": 1784729736.433944,
+    "ast_hash": "bb20e90e5a5847c5d2870eb98bfa968a",
+    "semantic_hash": ""
   },
   "src/components/student/AnamnesePendingBanner.tsx": {
     "mtime": 1783178328.774154,
@@ -2615,8 +2615,8 @@
     "semantic_hash": ""
   },
   "src/types/db-enums.ts": {
-    "mtime": 1783461818.7801938,
-    "ast_hash": "c5424898ede650b21cb358ffa32e6873",
+    "mtime": 1784731222.7726223,
+    "ast_hash": "0b22465f8e5e9acfd810af83ee90bb7d",
     "semantic_hash": ""
   },
   "supabase/migrations/20260707_student_billing_subscriptions.sql": {
@@ -2625,8 +2625,8 @@
     "semantic_hash": ""
   },
   "src/actions/student-billing.ts": {
-    "mtime": 1783461852.7268429,
-    "ast_hash": "1b1eb75b21a915d1b953ceb851f4a096",
+    "mtime": 1784731268.9155135,
+    "ast_hash": "b9e3c8a11e0b0cefc0068e1ae48b504a",
     "semantic_hash": ""
   },
   "src/app/(dashboard)/dashboard/financeiro/payment-actions.tsx": {
@@ -2635,8 +2635,8 @@
     "semantic_hash": ""
   },
   "src/app/(dashboard)/dashboard/financeiro/subscription-form.tsx": {
-    "mtime": 1783451807.4778485,
-    "ast_hash": "85a6e114a58cca48f6789411faaf1d7d",
+    "mtime": 1784731380.586995,
+    "ast_hash": "66bbd262af9e030b4e207f81e518ed34",
     "semantic_hash": ""
   },
   "src/app/api/cron/billing-reminders/route.ts": {
@@ -2660,8 +2660,8 @@
     "semantic_hash": ""
   },
   "src/lib/billing/core.ts": {
-    "mtime": 1783461836.0208218,
-    "ast_hash": "6ab3122a8891e64b9f321a3e2594df43",
+    "mtime": 1784731235.5259395,
+    "ast_hash": "a522c147d831c79d834da9e48438e3cd",
     "semantic_hash": ""
   },
   "src/lib/billing/reminder-channels.ts": {
@@ -2822,6 +2822,16 @@
   "docs/fluxogramas/png/26_7_admin_global_visao_geral.png": {
     "mtime": 1783466657.3685732,
     "ast_hash": "2133365c582de0795effe73eb9b46986",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260722_billing_package_installments.sql": {
+    "mtime": 1784730801.1871746,
+    "ast_hash": "47152405a1ec34cd9869e6ef15c0efd8",
+    "semantic_hash": ""
+  },
+  "docs/modulos/faturas.md": {
+    "mtime": 1784731582.6423273,
+    "ast_hash": "d2a7efbe34b6cdb19264d50aa36511df",
     "semantic_hash": ""
   }
 }

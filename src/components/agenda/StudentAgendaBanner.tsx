@@ -3,11 +3,12 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { CalendarClock, X, XCircle } from 'lucide-react'
+import { CalendarClock, X, XCircle, CalendarCheck } from 'lucide-react'
 
 interface Props {
-  pendingCount:  number
-  rejectedCount: number
+  pendingCount:   number
+  rejectedCount:  number
+  confirmedCount: number
   latestNoticeAt: string | null
 }
 
@@ -25,14 +26,14 @@ function markAgendaNoticeAsSeen(value: string | null) {
  * Exibe o banner superior da agenda apenas enquanto houver atualizacao
  * ainda nao visualizada pelo aluno.
  */
-export function StudentAgendaBanner({ pendingCount, rejectedCount, latestNoticeAt }: Props) {
+export function StudentAgendaBanner({ pendingCount, rejectedCount, confirmedCount, latestNoticeAt }: Props) {
   const pathname = usePathname()
   const [dismissed, setDismissed] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
     setDismissed(false)
-    if (pendingCount === 0 && rejectedCount === 0) {
+    if (pendingCount === 0 && rejectedCount === 0 && confirmedCount === 0) {
       setIsVisible(false)
       return
     }
@@ -44,7 +45,7 @@ export function StudentAgendaBanner({ pendingCount, rejectedCount, latestNoticeA
 
     const lastSeen = window.localStorage.getItem(STORAGE_KEY)
     setIsVisible(!lastSeen || lastSeen < latestNoticeAt)
-  }, [latestNoticeAt, pendingCount, rejectedCount])
+  }, [latestNoticeAt, pendingCount, rejectedCount, confirmedCount])
 
   useEffect(() => {
     if (pathname !== '/student/agenda' || !latestNoticeAt) return
@@ -53,10 +54,42 @@ export function StudentAgendaBanner({ pendingCount, rejectedCount, latestNoticeA
     setDismissed(true)
   }, [latestNoticeAt, pathname])
 
-  if ((pendingCount === 0 && rejectedCount === 0) || !isVisible || dismissed) return null
+  if ((pendingCount === 0 && rejectedCount === 0 && confirmedCount === 0) || !isVisible || dismissed) return null
 
   return (
     <div>
+      {confirmedCount > 0 && (
+        <div className="bg-emerald-500/10 border-b border-emerald-500/20 px-4 py-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-2 min-w-0">
+            <CalendarCheck size={15} className="text-emerald-400 flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-emerald-300">
+              {confirmedCount === 1
+                ? '1 solicitação de aula foi confirmada pelo seu personal.'
+                : `${confirmedCount} solicitações foram confirmadas pelo seu personal.`}
+            </p>
+          </div>
+          <div className="flex items-center gap-2 self-end sm:self-auto">
+            <Link
+              href="/student/agenda"
+              onClick={() => markAgendaNoticeAsSeen(latestNoticeAt)}
+              className="text-xs font-medium text-emerald-400 hover:text-emerald-300 transition-colors whitespace-nowrap border border-emerald-500/30 rounded-lg px-2.5 py-1 flex-shrink-0"
+            >
+              Ver Agenda →
+            </Link>
+            <button
+              type="button"
+              aria-label="Fechar aviso"
+              onClick={() => {
+                markAgendaNoticeAsSeen(latestNoticeAt)
+                setDismissed(true)
+              }}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-emerald-500/20 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 transition-colors"
+            >
+              <X size={14} />
+            </button>
+          </div>
+        </div>
+      )}
       {pendingCount > 0 && (
         <div className="bg-amber-500/10 border-b border-amber-500/20 px-4 py-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-2 min-w-0">

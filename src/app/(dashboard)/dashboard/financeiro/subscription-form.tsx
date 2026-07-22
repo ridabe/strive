@@ -3,7 +3,12 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { Plus } from 'lucide-react'
-import { upsertStudentSubscription, deactivateStudentSubscription } from '@/actions/student-billing'
+import {
+  upsertStudentSubscription,
+  createPackageSubscription,
+  deactivateStudentSubscription,
+} from '@/actions/student-billing'
+import type { BillingType } from '@/types/db-enums'
 
 type StudentOption = { id: string; full_name: string }
 
@@ -14,11 +19,15 @@ type Subscription = {
   amount: number
   due_day: number
   active: boolean
+  billing_type: BillingType
+  total_installments: number | null
+  paidInstallments?: number
 }
 
-// ── Criar nova assinatura recorrente (aluno ainda sem uma) ───────────────────
+// ── Criar nova cobrança (aluno ainda sem uma): recorrente ou pacote de N meses
 export function NewSubscriptionForm({ students }: { students: StudentOption[] }) {
   const [open, setOpen] = useState(false)
+  const [billingType, setBillingType] = useState<BillingType>('recorrente')
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
 
@@ -31,14 +40,17 @@ export function NewSubscriptionForm({ students }: { students: StudentOption[] })
         className="inline-flex items-center gap-2 bg-brand-lime text-background font-body font-semibold text-sm px-4 py-2.5 rounded-lg hover:bg-brand-lime/90 transition-colors"
       >
         <Plus size={15} />
-        Nova mensalidade
+        Nova cobrança
       </button>
     )
   }
 
   function handleSubmit(formData: FormData) {
     startTransition(async () => {
-      const result = await upsertStudentSubscription(formData)
+      const result =
+        billingType === 'pacote'
+          ? await createPackageSubscription(formData)
+          : await upsertStudentSubscription(formData)
       if (result?.error) { alert(result.error); return }
       setOpen(false)
       router.refresh()
@@ -47,7 +59,27 @@ export function NewSubscriptionForm({ students }: { students: StudentOption[] })
 
   return (
     <form action={handleSubmit} className="bg-surface border border-surface-border rounded-xl p-4 space-y-3">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="flex items-center gap-1 bg-background border border-surface-border rounded-lg p-1 w-fit">
+        {([
+          { value: 'recorrente' as const, label: 'Mensalidade recorrente' },
+          { value: 'pacote' as const,     label: 'Pacote de meses' },
+        ]).map((opt) => (
+          <button
+            key={opt.value}
+            type="button"
+            onClick={() => setBillingType(opt.value)}
+            className={`px-3 py-1.5 rounded-md text-xs font-body font-medium transition-colors ${
+              billingType === opt.value
+                ? 'bg-brand-lime/10 text-brand-lime'
+                : 'text-text-secondary hover:text-text-primary'
+            }`}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+
+      <div className={`grid grid-cols-1 gap-3 ${billingType === 'pacote' ? 'sm:grid-cols-4' : 'sm:grid-cols-3'}`}>
         <select
           name="student_id"
           required
@@ -64,7 +96,7 @@ export function NewSubscriptionForm({ students }: { students: StudentOption[] })
           step="0.01"
           min="0.01"
           required
-          placeholder="Valor (R$)"
+          placeholder={billingType === 'pacote' ? 'Valor por mês (R$)' : 'Valor (R$)'}
           className="bg-background border border-surface-border rounded-lg px-3 py-2.5 text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-lime/60"
         />
         <input
@@ -76,7 +108,25 @@ export function NewSubscriptionForm({ students }: { students: StudentOption[] })
           placeholder="Dia do vencimento (1-28)"
           className="bg-background border border-surface-border rounded-lg px-3 py-2.5 text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-lime/60"
         />
+        {billingType === 'pacote' && (
+          <input
+            name="total_installments"
+            type="number"
+            min="1"
+            max="24"
+            required
+            placeholder="Nº de meses (ex: 6)"
+            className="bg-background border border-surface-border rounded-lg px-3 py-2.5 text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-lime/60"
+          />
+        )}
       </div>
+
+      {billingType === 'pacote' && (
+        <p className="text-xs text-text-secondary">
+          Gera todas as parcelas do pacote de uma vez. Cada mês é dado baixa individualmente; você é avisado para renovar só quando o pacote inteiro for quitado.
+        </p>
+      )}
+
       <div className="flex items-center gap-3">
         <button
           type="submit"
@@ -163,10 +213,28 @@ export function SubscriptionRow({ subscription, studentName }: { subscription: S
     )
   }
 
+  const isPacote = subscription.billing_type === 'pacote'
+  const total = subscription.total_installments ?? 0
+  const paid = subscription.paidInstallments ?? 0
+  const packageDone = isPacote && total > 0 && paid >= total
+
   return (
     <tr className="hover:bg-surface-border/10">
       <td className="px-5 py-3.5 text-text-primary font-medium truncate max-w-[160px]">{studentName}</td>
-      <td className="px-5 py-3.5 text-text-secondary hidden sm:table-cell">{subscription.plan_name}</td>
+      <td className="px-5 py-3.5 text-text-secondary hidden sm:table-cell">
+        {subscription.plan_name}
+        {isPacote && (
+          <span
+            className={`ml-2 inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full border ${
+              packageDone
+                ? 'text-status-warning bg-status-warning/10 border-status-warning/20'
+                : 'text-text-secondary bg-background border-surface-border'
+            }`}
+          >
+            Pacote {paid}/{total}{packageDone ? ' · renovar' : ''}
+          </span>
+        )}
+      </td>
       <td className="px-5 py-3.5 text-right text-text-primary font-medium">
         R$ {subscription.amount.toFixed(2).replace('.', ',')} <span className="text-text-secondary font-normal">/ dia {subscription.due_day}</span>
       </td>

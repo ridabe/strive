@@ -78,12 +78,32 @@ export default async function FinanceiroPage({
     tab === 'atrasados' ? overdue :
     allCharges ?? []
 
-  // ── Assinaturas (mensalidade recorrente) ────────────────────────────────
+  // ── Assinaturas (mensalidade recorrente ou pacote de N meses) ───────────
   const { data: subscriptions } = await supabase
     .from('student_billing_subscriptions')
-    .select('id, student_id, plan_name, amount, due_day, active, students ( full_name )')
+    .select('id, student_id, plan_name, amount, due_day, active, billing_type, total_installments, students ( full_name )')
     .eq('active', true)
     .order('due_day')
+
+  // Progresso dos pacotes: conta quantas parcelas de cada assinatura-pacote
+  // já foram pagas (para exibir "3/6" e avisar quando quitar o pacote inteiro).
+  const packageSubscriptionIds = (subscriptions ?? [])
+    .filter((s) => s.billing_type === 'pacote')
+    .map((s) => s.id)
+
+  const paidCountBySubscription = new Map<string, number>()
+  if (packageSubscriptionIds.length) {
+    const { data: packageCharges } = await supabase
+      .from('financial_plans')
+      .select('subscription_id, status')
+      .in('subscription_id', packageSubscriptionIds)
+
+    for (const c of packageCharges ?? []) {
+      if (c.status === 'paid' && c.subscription_id) {
+        paidCountBySubscription.set(c.subscription_id, (paidCountBySubscription.get(c.subscription_id) ?? 0) + 1)
+      }
+    }
+  }
 
   const { data: activeStudents } = await supabase
     .from('students')
@@ -151,9 +171,9 @@ export default async function FinanceiroPage({
             <div className="bg-surface border border-surface-border rounded-xl p-10 text-center space-y-3">
               <Wallet size={32} className="text-text-secondary/40 mx-auto" />
               <div>
-                <p className="font-body font-medium text-text-primary">Nenhuma mensalidade configurada</p>
+                <p className="font-body font-medium text-text-primary">Nenhuma cobrança configurada</p>
                 <p className="text-sm text-text-secondary mt-1">
-                  Cadastre a mensalidade recorrente de um aluno para gerar as cobranças automaticamente todo mês.
+                  Cadastre uma mensalidade recorrente ou um pacote fechado de meses para começar a cobrar seus alunos.
                 </p>
               </div>
             </div>
@@ -174,7 +194,7 @@ export default async function FinanceiroPage({
                     return (
                       <SubscriptionRow
                         key={s.id}
-                        subscription={s}
+                        subscription={{ ...s, paidInstallments: paidCountBySubscription.get(s.id) ?? 0 }}
                         studentName={student?.full_name ?? '—'}
                       />
                     )

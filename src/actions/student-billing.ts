@@ -62,6 +62,85 @@ export async function upsertStudentSubscription(formData: FormData): Promise<{ e
   return {}
 }
 
+// ── Criar um pacote fechado de N meses (gera todas as parcelas de uma vez) ───
+// Diferente de upsertStudentSubscription: aqui as parcelas (financial_plans)
+// não esperam o cron/geração mensal — são todas criadas já na hora, com
+// vencimento mensal a partir do mês corrente. A baixa de cada mês continua
+// usando registerPayment normalmente.
+export async function createPackageSubscription(formData: FormData): Promise<{ error?: string; created?: number }> {
+  const ctx = await getBillingCtx()
+  if ('error' in ctx) return { error: ctx.error }
+  const { supabase, tenantId } = ctx
+
+  const studentId  = formData.get('student_id') as string
+  const amountRaw  = formData.get('amount') as string
+  const dueDayRaw  = formData.get('due_day') as string
+  const planName   = (formData.get('plan_name') as string)?.trim() || 'Mensalidade'
+  const totalRaw   = formData.get('total_installments') as string
+
+  const amount = Number(amountRaw)
+  const dueDay = Number(dueDayRaw)
+  const totalInstallments = Number(totalRaw)
+
+  if (!studentId) return { error: 'Aluno não informado.' }
+  if (!Number.isFinite(amount) || amount <= 0) return { error: 'Valor inválido.' }
+  if (!Number.isInteger(dueDay) || dueDay < 1 || dueDay > 28) {
+    return { error: 'Dia de vencimento deve ser entre 1 e 28.' }
+  }
+  if (!Number.isInteger(totalInstallments) || totalInstallments < 1 || totalInstallments > 24) {
+    return { error: 'Número de meses deve ser entre 1 e 24.' }
+  }
+
+  const { data: subscription, error: subError } = await supabase
+    .from('student_billing_subscriptions')
+    .upsert(
+      {
+        tenant_id: tenantId,
+        student_id: studentId,
+        plan_name: planName,
+        amount,
+        due_day: dueDay,
+        active: true,
+        billing_type: 'pacote',
+        total_installments: totalInstallments,
+      },
+      { onConflict: 'student_id' }
+    )
+    .select('id')
+    .single()
+
+  if (subError) return { error: subError.message }
+
+  // Ano/mês em UTC — mesmo cuidado de generateMonthlyChargesFor (evita rolar
+  // pro dia/mês errado conforme o fuso do servidor).
+  const now = new Date()
+  const year = now.getUTCFullYear()
+  const month = now.getUTCMonth() // 0-indexed
+  const pad = (n: number) => String(n).padStart(2, '0')
+
+  const rows = Array.from({ length: totalInstallments }, (_, i) => {
+    const d = new Date(Date.UTC(year, month + i, 1))
+    return {
+      tenant_id:       tenantId,
+      student_id:      studentId,
+      subscription_id: subscription.id,
+      plan_name:       planName,
+      amount,
+      due_date:        `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(dueDay)}`,
+      status:          'pending' as const,
+    }
+  })
+
+  const { error: insertError } = await supabase.from('financial_plans').insert(rows)
+  // 23505 = unique_violation — parcela do mês já existe (reenvio do form ou
+  // pacote recriado); não é um erro fatal, só ignora as que já existem.
+  if (insertError && insertError.code !== '23505') return { error: insertError.message }
+
+  revalidatePath(BILLING_PATH)
+  revalidatePath(`/dashboard/alunos/${studentId}`)
+  return { created: rows.length }
+}
+
 // ── Desativar a recorrência de um aluno (não cancela cobranças já geradas) ───
 export async function deactivateStudentSubscription(subscriptionId: string): Promise<{ error?: string }> {
   const ctx = await getBillingCtx()

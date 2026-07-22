@@ -16,6 +16,9 @@ export async function generateMonthlyChargesFor(
     .select('id, student_id, plan_name, amount, due_day')
     .eq('tenant_id', tenantId)
     .eq('active', true)
+    // pacote: todas as parcelas já foram geradas de uma vez na criação
+    // (ver createPackageSubscription) — não entra na geração mensal automática.
+    .eq('billing_type', 'recorrente')
 
   if (subsError) return { error: subsError.message }
   if (!subscriptions?.length) return { created: 0 }
