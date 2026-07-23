@@ -153,7 +153,11 @@ export default async function AdminBibliotecaPage({ searchParams }: Props) {
                 </tr>
               </thead>
               <tbody className="divide-y divide-surface-border">
-                {items.map((it: any) => (
+                {items.map((it) => {
+                  const category = Array.isArray(it.content_library_categories)
+                    ? (it.content_library_categories[0] ?? null)
+                    : it.content_library_categories
+                  return (
                   <tr key={it.id} className="hover:bg-surface-border/10 group">
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
@@ -169,7 +173,7 @@ export default async function AdminBibliotecaPage({ searchParams }: Props) {
                       </div>
                     </td>
                     <td className="px-4 py-3.5 text-text-secondary text-xs hidden md:table-cell">
-                      {it.content_library_categories?.name ?? '—'}
+                      {category?.name ?? '—'}
                     </td>
                     <td className="px-4 py-3.5 text-text-secondary text-xs hidden lg:table-cell">
                       {PLAN_LABEL[it.min_plan] ?? it.min_plan}
@@ -190,7 +194,8 @@ export default async function AdminBibliotecaPage({ searchParams }: Props) {
                       </div>
                     </td>
                   </tr>
-                ))}
+                  )
+                })}
               </tbody>
             </table>
           </div>

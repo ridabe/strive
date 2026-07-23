@@ -37,7 +37,7 @@ export default async function AdminEditarItemBibliotecaPage({ params }: Props) {
         <DeleteItemButton id={item.id} title={item.title} thumbnailUrl={item.thumbnail_url} fileUrl={item.file_url} />
       </div>
 
-      <ContentLibraryItemForm categories={categories ?? []} item={item as any} redirectTo="/admin/biblioteca" />
+      <ContentLibraryItemForm categories={categories ?? []} item={item} redirectTo="/admin/biblioteca" />
     </div>
   )
 }

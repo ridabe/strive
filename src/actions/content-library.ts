@@ -220,7 +220,24 @@ export async function getContentLibraryItems(filters?: { kind?: string; category
 
   const savedIds = new Set((saves ?? []).map(s => s.item_id))
 
-  return items.map((it: any) => ({ ...it, saved: savedIds.has(it.id) }))
+  return items.map((it): ContentLibraryItemSummary => ({
+    id: it.id,
+    category_id: it.category_id,
+    title: it.title,
+    description: it.description,
+    kind: it.kind,
+    format: it.format,
+    thumbnail_url: it.thumbnail_url,
+    canva_template_url: it.canva_template_url,
+    file_url: it.file_url,
+    suggested_caption: it.suggested_caption,
+    tags: it.tags,
+    min_plan: it.min_plan,
+    content_library_categories: Array.isArray(it.content_library_categories)
+      ? (it.content_library_categories[0] ?? null)
+      : it.content_library_categories,
+    saved: savedIds.has(it.id),
+  }))
 }
 
 export async function trackContentLibraryItemUsage(itemId: string, event: 'canva_open' | 'download') {

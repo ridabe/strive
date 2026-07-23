@@ -19,10 +19,13 @@ export default async function AdminBibliotecaMetricasPage() {
   ;(saves ?? []).forEach(s => savesByItem.set(s.item_id, (savesByItem.get(s.item_id) ?? 0) + 1))
 
   const ranked = (items ?? [])
-    .map((it: any) => {
+    .map((it) => {
       const savesCount = savesByItem.get(it.id) ?? 0
       const total = it.canva_open_count + it.download_count + savesCount
-      return { ...it, savesCount, total }
+      const category = Array.isArray(it.content_library_categories)
+        ? (it.content_library_categories[0] ?? null)
+        : it.content_library_categories
+      return { ...it, content_library_categories: category, savesCount, total }
     })
     .sort((a, b) => b.total - a.total)
 

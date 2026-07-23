@@ -121,8 +121,8 @@ export function ContentLibraryItemForm({ categories, item, redirectTo }: Props) 
       if (result.error) { setError(result.error); return }
       router.push(redirectTo)
       router.refresh()
-    } catch (e: any) {
-      setError(e.message ?? 'Erro ao salvar item.')
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Erro ao salvar item.')
     } finally {
       setIsPending(false)
     }
