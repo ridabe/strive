@@ -20,6 +20,7 @@ export const MODULE_ROUTES: Record<string, { href: string; label: string }> = {
   'planos-alimentares':  { href: '/dashboard/planos-alimentares',  label: 'Planos Alimentares'  },
   'assistente-ia':       { href: '/dashboard/alunos',              label: 'Max Strive IA'       },
   'desafios':            { href: '/dashboard/desafios',            label: 'Desafios'            },
+  'biblioteca_conteudo': { href: '/dashboard/biblioteca',          label: 'Biblioteca'          },
 }
 
 // ─── Visibilidade de módulos por papel dentro de uma academia ────────────────

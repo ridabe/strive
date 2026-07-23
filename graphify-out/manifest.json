@@ -1000,8 +1000,8 @@
     "semantic_hash": ""
   },
   "src/components/layout/admin-sidebar.tsx": {
-    "mtime": 1783376005.8051457,
-    "ast_hash": "8835d2b5f2e471ef4f4c289624adaaa5",
+    "mtime": 1784816979.5391161,
+    "ast_hash": "03d3d50f81ebde7ab8d866a3eae794f8",
     "semantic_hash": ""
   },
   "src/components/layout/dashboard-mobile-nav.tsx": {
@@ -1010,8 +1010,8 @@
     "semantic_hash": ""
   },
   "src/components/layout/dashboard-sidebar.tsx": {
-    "mtime": 1783386105.796352,
-    "ast_hash": "16fb2a4998c7cfca98ec321501c1d1f6",
+    "mtime": 1784822058.449899,
+    "ast_hash": "6bd39fe9cf76a5bb7570cb99ceef8329",
     "semantic_hash": ""
   },
   "src/components/layout/sidebar-nav.tsx": {
@@ -1115,8 +1115,8 @@
     "semantic_hash": "9ba8da6679c7d2483e48c1e3f5e5a5cd"
   },
   "src/lib/modules-config.ts": {
-    "mtime": 1783449700.5138118,
-    "ast_hash": "a454460f56b556bae1736b0449a2a808",
+    "mtime": 1784822044.003316,
+    "ast_hash": "517cbb641b2b0051b7e3ed79f7f57c8e",
     "semantic_hash": ""
   },
   "src/lib/supabase/admin.ts": {
@@ -1155,8 +1155,8 @@
     "semantic_hash": ""
   },
   "src/types/database.ts": {
-    "mtime": 1784739039.5103228,
-    "ast_hash": "19ddd9c7fad8ccacaa33885bf5055023",
+    "mtime": 1784823695.1861823,
+    "ast_hash": "64a0aa8e76d191b69f6c86f606f4ac89",
     "semantic_hash": ""
   },
   "src/types/index.ts": {
@@ -2670,8 +2670,8 @@
     "semantic_hash": ""
   },
   "src/lib/guides.ts": {
-    "mtime": 1784735010.8859763,
-    "ast_hash": "b6e572d7c17e43c3e3d6b16c796ba730",
+    "mtime": 1784822130.8028545,
+    "ast_hash": "b169b2aa8d2ad676b55daa29ae52cb8b",
     "semantic_hash": ""
   },
   "supabase/functions/send-payment-reminder/index.ts": {
@@ -2862,6 +2862,101 @@
   "supabase/migrations/20260722_challenge_exercise_ranking_history.sql": {
     "mtime": 1784736573.4714704,
     "ast_hash": "cee895d9d112a5f58f292ece90e7b6f8",
+    "semantic_hash": ""
+  },
+  "src/actions/content-library.ts": {
+    "mtime": 1784823723.9053197,
+    "ast_hash": "05ba53e256964d057d981a11c08558d5",
+    "semantic_hash": ""
+  },
+  "src/app/(admin)/admin/biblioteca/[id]/page.tsx": {
+    "mtime": 1784816781.123799,
+    "ast_hash": "999c6550c66dfdae87030440ec6fc685",
+    "semantic_hash": ""
+  },
+  "src/app/(admin)/admin/biblioteca/categorias/category-form.tsx": {
+    "mtime": 1784816678.3266413,
+    "ast_hash": "cfbba0f26a3998ad1c8cdc29adbae97d",
+    "semantic_hash": ""
+  },
+  "src/app/(admin)/admin/biblioteca/categorias/delete-category-button.tsx": {
+    "mtime": 1784816667.8846035,
+    "ast_hash": "3b65c6acf855c0e9642a1daea4b29b77",
+    "semantic_hash": ""
+  },
+  "src/app/(admin)/admin/biblioteca/categorias/page.tsx": {
+    "mtime": 1784816659.4534829,
+    "ast_hash": "3e70c9d7e0fff3ffb58eb9f4ed950e24",
+    "semantic_hash": ""
+  },
+  "src/app/(admin)/admin/biblioteca/delete-item-button.tsx": {
+    "mtime": 1784816736.427799,
+    "ast_hash": "6c4f280bbee28fdea66353aa5ce5f4b7",
+    "semantic_hash": ""
+  },
+  "src/app/(admin)/admin/biblioteca/metricas/page.tsx": {
+    "mtime": 1784823780.1423445,
+    "ast_hash": "ce4b13b1feff1569e4c9997da7411db1",
+    "semantic_hash": ""
+  },
+  "src/app/(admin)/admin/biblioteca/novo/page.tsx": {
+    "mtime": 1784816774.2530568,
+    "ast_hash": "0661df8395b0cd3dd89f6d3d9eca6c5e",
+    "semantic_hash": ""
+  },
+  "src/app/(admin)/admin/biblioteca/page.tsx": {
+    "mtime": 1784823790.8612602,
+    "ast_hash": "640c48d084082e11d2ca5bd111361bc1",
+    "semantic_hash": ""
+  },
+  "src/app/(dashboard)/dashboard/biblioteca/biblioteca-guide.tsx": {
+    "mtime": 1784822135.5693872,
+    "ast_hash": "f6d5735ed9209f87d2463a818c09a7f0",
+    "semantic_hash": ""
+  },
+  "src/app/(dashboard)/dashboard/biblioteca/page.tsx": {
+    "mtime": 1784823741.9565146,
+    "ast_hash": "34ec384cd8056d0900f74ad46d5c6698",
+    "semantic_hash": ""
+  },
+  "src/app/(dashboard)/dashboard/biblioteca/save-item-button.tsx": {
+    "mtime": 1784822085.9367037,
+    "ast_hash": "133075a5c1b7ee3457cf01662a5cdda7",
+    "semantic_hash": ""
+  },
+  "src/app/(dashboard)/dashboard/biblioteca/tracked-link.tsx": {
+    "mtime": 1784823728.2523966,
+    "ast_hash": "17ff05bbba2b82d18535c2ec4324a368",
+    "semantic_hash": ""
+  },
+  "src/components/content-library/content-library-item-form.tsx": {
+    "mtime": 1784816724.4232163,
+    "ast_hash": "aeedfa3dd408791c61804d15af2642c6",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260723_challenge_covers_storage_policies.sql": {
+    "mtime": 1784814617.6641643,
+    "ast_hash": "ddf05f74c3e04ee9bc030ef8080f4727",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260723_content_library.sql": {
+    "mtime": 1784816079.7390404,
+    "ast_hash": "5b51c3538f14afbee188d326f945fca1",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260723_content_library_storage.sql": {
+    "mtime": 1784816120.016639,
+    "ast_hash": "feb72589c74646dd801e226bedcdc0b4",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260723_content_library_usage_metrics.sql": {
+    "mtime": 1784823667.6847875,
+    "ast_hash": "f5c21ce4d3c43630e94628322d857064",
+    "semantic_hash": ""
+  },
+  "docs/modulos/biblioteca-conteudo-planejamento.md": {
+    "mtime": 1784823887.001141,
+    "ast_hash": "f8bde0d883fc19ab5feb25afc2a722e5",
     "semantic_hash": ""
   }
 }

@@ -57,6 +57,28 @@ export const GUIDES = {
       },
     ],
   },
+  biblioteca_conteudo: {
+    title: 'Como usar a Biblioteca de Conteúdo',
+    intro: 'Um catálogo pronto de artes para redes sociais, materiais de apoio e estudos, mantido pela equipe Strive — você só escolhe, edita e usa.',
+    sections: [
+      {
+        heading: 'Usar no Canva',
+        body: 'Toque em "Usar no Canva" para abrir o design no seu próprio Canva. Ele entra como uma cópia independente na sua conta — edite textos, cores e imagens à vontade, sem afetar o modelo original.',
+      },
+      {
+        heading: 'Baixar direto',
+        body: 'Materiais de apoio e estudos costumam vir prontos em PDF ou planilha — é só tocar em "Baixar" para salvar no seu dispositivo.',
+      },
+      {
+        heading: 'Salvar para depois',
+        body: 'Use o ícone de marcador no canto do item para guardá-lo nos seus salvos e encontrar mais rápido depois.',
+      },
+      {
+        heading: 'Itens bloqueados',
+        body: 'Alguns itens são exclusivos de planos superiores. Se aparecer o cadeado, dá pra ver uma prévia borrada e assinar o plano necessário para desbloquear.',
+      },
+    ],
+  },
 } as const satisfies Record<string, GuideContent>
 
 export type GuideKey = keyof typeof GUIDES

@@ -17,6 +17,7 @@ import {
   Trophy,
   Zap,
   Youtube,
+  Images,
 } from 'lucide-react'
 
 const NAV_ITEMS = [
@@ -27,6 +28,7 @@ const NAV_ITEMS = [
   { label: 'Módulos',      href: '/admin/modulos',               icon: Puzzle },
   { label: 'Max Strive IA',href: '/admin/ia',                    icon: Zap },
   { label: 'Exercícios',   href: '/admin/banco-de-exercicios',   icon: Dumbbell },
+  { label: 'Biblioteca',   href: '/admin/biblioteca',            icon: Images },
   { label: 'Ranking',      href: '/admin/ranking',               icon: Trophy },
   { label: 'Usuários',     href: '/admin/usuarios',              icon: Users },
   { label: 'Versão App',   href: '/admin/app-versao',            icon: Smartphone },

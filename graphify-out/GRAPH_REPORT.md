@@ -1,16 +1,16 @@
-# Graph Report - strivePersonal  (2026-07-22)
+# Graph Report - strivePersonal  (2026-07-23)
 
 ## Corpus Check
-- 497 files · ~2,378,514 words
+- 516 files · ~2,387,313 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 4960 nodes · 9592 edges · 321 communities (258 shown, 63 thin omitted)
+- 5035 nodes · 9736 edges · 333 communities (270 shown, 63 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 92 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3d31fcae`
+- Built from commit: `2816c6bc`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -321,12 +321,24 @@
 - [[_COMMUNITY_Community 317|Community 317]]
 - [[_COMMUNITY_Community 318|Community 318]]
 - [[_COMMUNITY_Community 319|Community 319]]
+- [[_COMMUNITY_Community 320|Community 320]]
+- [[_COMMUNITY_Community 321|Community 321]]
 - [[_COMMUNITY_Community 322|Community 322]]
+- [[_COMMUNITY_Community 323|Community 323]]
+- [[_COMMUNITY_Community 324|Community 324]]
+- [[_COMMUNITY_Community 325|Community 325]]
+- [[_COMMUNITY_Community 326|Community 326]]
+- [[_COMMUNITY_Community 327|Community 327]]
+- [[_COMMUNITY_Community 328|Community 328]]
+- [[_COMMUNITY_Community 329|Community 329]]
+- [[_COMMUNITY_Community 330|Community 330]]
+- [[_COMMUNITY_Community 331|Community 331]]
+- [[_COMMUNITY_Community 332|Community 332]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `createClient()` - 265 edges
+1. `createClient()` - 282 edges
 2. `getCtx()` - 84 edges
-3. `createAdminClient()` - 64 edges
+3. `createAdminClient()` - 66 edges
 4. `logAdminAction()` - 39 edges
 5. `requirePersonalCtx()` - 33 edges
 6. `runHook()` - 30 edges
@@ -350,7 +362,7 @@
 ## Import Cycles
 - 3-file cycle: `src/app/(admin)/admin/usuarios/page.tsx -> src/components/admin/users-table.tsx -> src/components/admin/user-actions-dropdown.tsx -> src/app/(admin)/admin/usuarios/page.tsx`
 
-## Communities (321 total, 63 thin omitted)
+## Communities (333 total, 63 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.03
@@ -366,19 +378,19 @@ Nodes (86): abortSvelteComponentInjection(), applyEditing(), applySavedSessionMe
 
 ### Community 3 - "Community 3"
 Cohesion: 0.05
-Nodes (95): borderColorsFromStyle(), borderWidthsFromStyle(), checkClippedOverflow(), checkColors(), checkCreamPalette(), checkElementAIPaletteDOM(), checkElementClippedOverflow(), checkElementClippedOverflowDOM() (+87 more)
+Nodes (78): isNeutralBorderColor(), borderColorsFromStyle(), borderWidthsFromStyle(), checkBorders(), checkClippedOverflow(), checkCreamPalette(), checkElementBorders(), checkElementBordersDOM() (+70 more)
 
 ### Community 4 - "Community 4"
 Cohesion: 0.06
 Nodes (65): addBrowserFindings(), addVisualContrastFindings(), addVisualContrastResult(), analyzeVisualContrast(), analyzeVisualContrastCandidate(), blendRgba(), browserDesignSystemConfig(), browserFindingsFromMap() (+57 more)
 
 ### Community 5 - "Community 5"
-Cohesion: 0.07
-Nodes (43): DeleteGlobalExerciseButton(), Props, AdminEditExercicioPage(), Props, AdminBancoExerciciosPage(), Props, SearchParams, DeleteExerciseButton() (+35 more)
+Cohesion: 0.11
+Nodes (27): DeleteGlobalExerciseButton(), Props, AdminEditExercicioPage(), Props, AdminBancoExerciciosPage(), Props, SearchParams, ExercicioPage() (+19 more)
 
 ### Community 6 - "Student Create/Deactivate Actions"
 Cohesion: 0.11
-Nodes (22): buildUserRows(), filterUserRows(), getPageSize(), PAGE_SIZE_OPTIONS, ProfileRecord, ROLE_FILTER_OPTIONS, STATUS_FILTER_OPTIONS, StudentRecord (+14 more)
+Nodes (23): buildUserRows(), filterUserRows(), getPageSize(), PAGE_SIZE_OPTIONS, ProfileRecord, ROLE_FILTER_OPTIONS, STATUS_FILTER_OPTIONS, StudentRecord (+15 more)
 
 ### Community 7 - "Community 7"
 Cohesion: 0.11
@@ -386,11 +398,11 @@ Nodes (53): ae(), be(), bt(), Ce(), Ct(), de(), dt(), _e() (+45 more)
 
 ### Community 8 - "Community 8"
 Cohesion: 0.09
-Nodes (51): addColorObject(), addDesignColor(), addRoundedScale(), addRoundedToken(), addSidecarColors(), addSidecarRadii(), addTypographyFonts(), canonicalDesignFindingKey() (+43 more)
+Nodes (52): addColorObject(), addDesignColor(), addRoundedScale(), addRoundedToken(), addSidecarColors(), addSidecarRadii(), addTypographyFonts(), canonicalDesignFindingKey() (+44 more)
 
 ### Community 9 - "Community 9"
-Cohesion: 0.09
-Nodes (39): mergeDesignSystemFindings(), detectUrl(), runVisualContrastFallback(), serializeDesignSystemForBrowser(), CSS_IN_JS_EXTENSIONS, detectText(), extFromFilePath(), extractCSSinJS() (+31 more)
+Cohesion: 0.10
+Nodes (38): detectUrl(), runVisualContrastFallback(), serializeDesignSystemForBrowser(), CSS_IN_JS_EXTENSIONS, detectText(), extFromFilePath(), extractCSSinJS(), extractStyleBlocks() (+30 more)
 
 ### Community 10 - "Community 10"
 Cohesion: 0.07
@@ -409,20 +421,20 @@ Cohesion: 0.07
 Nodes (36): assembleLiveBrowserScript(), assertLiveBrowserScriptParts(), LIVE_BROWSER_SCRIPT_PARTS, readLiveBrowserScriptParts(), resolveLiveBrowserScriptParts(), summarizeManualApplyFailures(), acknowledgePendingEvent(), agentPollingConnected() (+28 more)
 
 ### Community 14 - "Community 14"
-Cohesion: 0.07
-Nodes (36): buildSelectorSegment(), checkBorders(), checkBrowserDesignSystemSources(), checkClippedOverflow(), checkElementBorders(), checkElementBordersDOM(), checkElementClippedOverflow(), checkElementClippedOverflowDOM() (+28 more)
+Cohesion: 0.06
+Nodes (41): buildSelectorSegment(), checkBorders(), checkBrowserDesignSystemSources(), checkClippedOverflow(), checkElementBorders(), checkElementBordersDOM(), checkElementClippedOverflow(), checkElementClippedOverflowDOM() (+33 more)
 
 ### Community 15 - "Community 15"
 Cohesion: 0.10
 Nodes (43): applyLegacyDeferredAcceptsOnStartup(), appendCssToSvelteStyle(), appendSanitizedCssRule(), applyDeferredSvelteComponentAccepts(), bakeParamValuesInCss(), buildInsertVariantStub(), buildPropContract(), buildPropsScript() (+35 more)
 
 ### Community 16 - "Community 16"
-Cohesion: 0.15
-Nodes (17): finishWorkoutSession(), getExerciseLoadHistory(), getStudentCtx(), getStudentWorkoutCount(), getStudentWorkoutHistory(), saveSessionExercise(), startWorkoutSession(), HistoricoPage() (+9 more)
+Cohesion: 0.12
+Nodes (21): finishWorkoutSession(), getExerciseLoadHistory(), getStudentCompletedRoutineIds(), getStudentCtx(), getStudentWorkoutCount(), getStudentWorkoutHistory(), saveSessionExercise(), startWorkoutSession() (+13 more)
 
 ### Community 17 - "Community 17"
-Cohesion: 0.07
-Nodes (32): assignTemplateToStudent(), createExtraWorkout(), deleteExtraWorkout(), ExtraWorkoutWithItems, getStudentExtraWorkouts(), updateExtraWorkout(), createExercise(), createGlobalExercise() (+24 more)
+Cohesion: 0.06
+Nodes (45): assignTemplateToStudent(), createExtraWorkout(), deleteExtraWorkout(), ExtraWorkoutWithItems, getStudentExtraWorkouts(), updateExtraWorkout(), createExercise(), createGlobalExercise() (+37 more)
 
 ### Community 18 - "Community 18"
 Cohesion: 0.09
@@ -449,8 +461,8 @@ Cohesion: 0.05
 Nodes (40): API Route do Aluno, Arquivos Criados/Modificados, Banco de Dados, Banco de Dados (alterações diretas), Banner de Eventos do Dia no Dashboard (`/dashboard`), Banner no Layout do Aluno (`(student)/layout.tsx`), Banner no Layout do Personal (`(dashboard)/layout.tsx`), Banners de Notificação no App Mobile (+32 more)
 
 ### Community 24 - "Community 24"
-Cohesion: 0.10
-Nodes (26): GET(), createAgendaEventsForCharges(), generateMonthlyChargesFor(), markOverdueChargesFor(), TypedClient, pickReminderChannel(), ReminderPayload, ReminderResult (+18 more)
+Cohesion: 0.24
+Nodes (9): ReminderPayload, ReminderResult, sendEmailReminder(), sendReminder(), sendWhatsappReminder(), Enums, FinancialPlanStatus, PaymentMethod (+1 more)
 
 ### Community 25 - "Community 25"
 Cohesion: 0.08
@@ -466,15 +478,15 @@ Nodes (36): appendOriginToDirective(), buildTagBlock(), commentClose(), commentO
 
 ### Community 28 - "Community 28"
 Cohesion: 0.08
-Nodes (30): addWorkoutItem(), ExerciseRow, groupWorkoutItems(), removeWorkoutItem(), reorderWorkoutItems(), ungroupWorkoutItems(), updateWorkoutItem(), createRoutine() (+22 more)
+Nodes (28): addWorkoutItem(), ExerciseRow, groupWorkoutItems(), removeWorkoutItem(), reorderWorkoutItems(), ungroupWorkoutItems(), updateWorkoutItem(), createRoutine() (+20 more)
 
 ### Community 29 - "Community 29"
 Cohesion: 0.10
 Nodes (34): detectCli(), formatFindings(), formatFindingSummary(), handleStdin(), printUsage(), createBrowserDetector(), buildImportGraph(), detectFrameworkConfig() (+26 more)
 
 ### Community 30 - "Community 30"
-Cohesion: 0.15
-Nodes (21): cancelCharge(), createPackageSubscription(), deactivateStudentSubscription(), generateMonthlyCharges(), getBillingCtx(), markOverdueCharges(), registerPayment(), undoPayment() (+13 more)
+Cohesion: 0.12
+Nodes (27): cancelCharge(), createPackageSubscription(), deactivateStudentSubscription(), generateMonthlyCharges(), getBillingCtx(), markOverdueCharges(), registerPayment(), undoPayment() (+19 more)
 
 ### Community 31 - "Community 31"
 Cohesion: 0.09
@@ -505,12 +517,12 @@ Cohesion: 0.12
 Nodes (33): armPageChatForTyping(), attachSteerFocusDebug(), clearSteerAwaitTimer(), collapsePageChat(), expandPageChat(), focusConfigureInput(), focusPageChatInput(), focusSteerChat() (+25 more)
 
 ### Community 38 - "Community 38"
-Cohesion: 0.12
-Nodes (16): Avoid Redundant Copy, Confirmation Dialogs: Use Sparingly, Consistency: The Terminology Problem, Don't Blame the User, Empty States Are Opportunities, Error Message Templates, Error Messages: The Formula, Form Instructions (+8 more)
+Cohesion: 0.06
+Nodes (31): Apply Clarity Principles, Assess Current Copy, Avoid Redundant Copy, Button & CTA Text, Confirmation Dialogs, Confirmation Dialogs: Use Sparingly, Consistency: The Terminology Problem, Don't Blame the User (+23 more)
 
 ### Community 39 - "Community 39"
-Cohesion: 0.12
-Nodes (32): analyzeVisualContrast(), analyzeVisualContrastCandidate(), checkColors(), checkElementAIPaletteDOM(), checkElementColors(), checkElementColorsDOM(), checkElementGlow(), checkElementGlowDOM() (+24 more)
+Cohesion: 0.13
+Nodes (30): analyzeVisualContrast(), analyzeVisualContrastCandidate(), checkColors(), checkElementAIPaletteDOM(), checkElementColors(), checkElementColorsDOM(), checkElementGlow(), checkElementGlowDOM() (+22 more)
 
 ### Community 40 - "Community 40"
 Cohesion: 0.13
@@ -521,8 +533,8 @@ Cohesion: 0.13
 Nodes (22): ALLOWED_ROLES, createInventoryItem(), getInventoryItems(), getInventoryMovements(), InventoryItem, InventoryMovement, registerInventoryMovement(), requireAcademiaCtx() (+14 more)
 
 ### Community 42 - "Community 42"
-Cohesion: 0.12
-Nodes (15): Apply Clarity Principles, Assess Current Copy, Button & CTA Text, Confirmation Dialogs, Empty States, Error Messages, Form Labels & Instructions, Help Text & Tooltips (+7 more)
+Cohesion: 0.20
+Nodes (22): checkColors(), checkElementAIPaletteDOM(), checkElementColors(), checkElementColorsDOM(), checkElementGlow(), checkElementGlowDOM(), checkElementIconTile(), checkElementIconTileDOM() (+14 more)
 
 ### Community 43 - "Community 43"
 Cohesion: 0.10
@@ -533,8 +545,8 @@ Cohesion: 0.12
 Nodes (24): submitStudentAssessment(), createAssessment(), deleteAssessment(), Assessment, AssessmentCard(), CalcPreview(), CIRCUM_FIELDS, GENERAL_FIELDS (+16 more)
 
 ### Community 45 - "Community 45"
-Cohesion: 0.13
-Nodes (15): createWorkoutPlan(), deactivateWorkoutPlan(), deleteWorkoutPlan(), getStudentWorkoutPlans(), getWorkoutPlan(), updateWorkoutPlan(), PlanoTreinoPage(), Props (+7 more)
+Cohesion: 0.10
+Nodes (19): createWorkoutPlan(), deactivateWorkoutPlan(), deleteWorkoutPlan(), getStudentWorkoutPlans(), getWorkoutPlan(), updateWorkoutPlan(), WorkoutPlanWithRoutines, WorkoutBuilder() (+11 more)
 
 ### Community 46 - "Community 46"
 Cohesion: 0.11
@@ -545,28 +557,28 @@ Cohesion: 0.07
 Nodes (29): dependencies, class-variance-authority, clsx, date-fns, @hookform/resolvers, lucide-react, next, qrcode (+21 more)
 
 ### Community 48 - "Community 48"
-Cohesion: 0.05
-Nodes (37): AgendaEvent, AgendaEventOrigin, AgendaEventStatus, AgendaEventType, confirmAgendaEvent(), createAgendaEvent(), CreateAgendaEventInput, createStudentPresencialRequest() (+29 more)
+Cohesion: 0.08
+Nodes (28): AgendaEvent, AgendaEventOrigin, AgendaEventStatus, AgendaEventType, confirmAgendaEvent(), createAgendaEvent(), CreateAgendaEventInput, deleteAgendaEvent() (+20 more)
 
 ### Community 49 - "Community 49"
 Cohesion: 0.10
-Nodes (22): ChallengeMessage, deleteChallenge(), finishChallenge(), ParticipantTracking, publishChallengeResults(), removeParticipant(), sendChallengeMessage(), DayWithItems (+14 more)
+Nodes (23): Challenge, ChallengeMessage, finishChallenge(), ParticipantTracking, publishChallengeResults(), sendChallengeMessage(), updateChallenge(), Props (+15 more)
 
 ### Community 50 - "Community 50"
-Cohesion: 0.06
-Nodes (65): buildMissingTargetDirective(), buildResolvedContextDirective(), buildTargetSelectionDirective(), buildUpdateDirective(), cli(), compareSemver(), computeUpdateDirective(), contextSourcePath() (+57 more)
+Cohesion: 0.12
+Nodes (25): buildUpdateDirective(), compareSemver(), computeUpdateDirective(), DESIGN_NAMES, FALLBACK_DIRS, fetchLatestSkillVersion(), hasFallbackWorkspaceChildren(), isMonorepoRoot() (+17 more)
 
 ### Community 51 - "Community 51"
-Cohesion: 0.09
-Nodes (23): DashboardMobileNav(), DashboardMobileNavProps, QUICK_ITEMS, CORE_BOTTOM, CORE_TOP, DashboardSidebarNav(), EnabledModule, ICON_MAP (+15 more)
+Cohesion: 0.13
+Nodes (20): AdminLayout(), AdminMobileNav(), AdminMobileNavProps, QUICK_ITEMS, AdminSidebarNav(), NAV_ITEMS, DashboardMobileNav(), DashboardMobileNavProps (+12 more)
 
 ### Community 52 - "Community 52"
 Cohesion: 0.08
 Nodes (25): Assess Adaptation Challenge, Breakpoints: Content-Driven, Content Adaptation, Desktop Adaptation (Mobile → Desktop), Detect Input Method, Not Just Screen Size, Email Adaptation (Web → Email), Implement Adaptations, Layout Adaptation Patterns (+17 more)
 
 ### Community 53 - "Community 53"
-Cohesion: 0.14
-Nodes (13): Cleanup, Exit, Handle `accept`, Handle `discard`, Handle `manual_edit_apply`, Handle `prefetch`, Handle `steer`, Poll loop (+5 more)
+Cohesion: 0.08
+Nodes (25): append-arrays, append-string, Cleanup, Consent prompt template, CSP detection (first-time only), Drift-heal warning, Exit, First-time setup (config missing or invalid) (+17 more)
 
 ### Community 54 - "Community 54"
 Cohesion: 0.17
@@ -574,15 +586,15 @@ Nodes (24): completionAckForAcceptResult(), completionTypeForAcceptResult(), aug
 
 ### Community 55 - "Community 55"
 Cohesion: 0.14
-Nodes (25): analyzeSourceHint(), buildCandidatesForOp(), buildContextHintsByRef(), buildManualEditEvidence(), collectSearchFiles(), countOps(), escapeRegExp(), findContextMatches() (+17 more)
+Nodes (24): analyzeSourceHint(), buildCandidatesForOp(), buildContextHintsByRef(), collectSearchFiles(), countOps(), escapeRegExp(), findContextMatches(), findLiteralMatches() (+16 more)
 
 ### Community 56 - "Community 56"
 Cohesion: 0.08
 Nodes (25): Animatic HTML — Strive Personal 60s Ad, CENA 10 — 0:38–0:43 · MAx IA analisando evolução, CENA 11 — 0:43–0:49 · Alunos treinando felizes + ranking/gamificação, CENA 12 — 0:49–0:52 · Gráficos de crescimento, CENA 13 — 0:52–0:55 · O personal no controle, CENA 14 — 0:55–0:60 · Logo + CTA final, CENA 1 — 0:00–0:05 · O personal sobrecarregado, CENA 2 — 0:05–0:10 · A papelada engolindo (+17 more)
 
 ### Community 57 - "Community 57"
-Cohesion: 0.16
-Nodes (13): AdminLayout(), metadata, AdminMobileNav(), AdminMobileNavProps, QUICK_ITEMS, AdminSidebarNav(), NAV_ITEMS, StudentMobileNavProps (+5 more)
+Cohesion: 0.18
+Nodes (5): metadata, metadata, LogoHorizontal(), LogoIconProps, LogoProps
 
 ### Community 58 - "Community 58"
 Cohesion: 0.08
@@ -590,31 +602,31 @@ Nodes (24): Component translation rules, Narrative mapping, Pitfalls, Scan mode 
 
 ### Community 59 - "Community 59"
 Cohesion: 0.18
-Nodes (19): args, buffer, cwd, pageUrlFilter, remaining, summarizeManualDiagnostics(), createManualEditRoutes(), sendJson() (+11 more)
+Nodes (20): args, buffer, cwd, pageUrlFilter, remaining, summarizeManualDiagnostics(), buildManualEditEvidence(), createManualEditRoutes() (+12 more)
 
 ### Community 60 - "Community 60"
-Cohesion: 0.08
-Nodes (23): FORBIDDEN_MANUAL_EDIT_TEXT_CHARS, INSERT_POSITIONS, isValidId(), isValidVariantId(), validateAnnotationFields(), validateEvent(), validateInsertGenerate(), validateManualEditEvent() (+15 more)
+Cohesion: 0.11
+Nodes (11): canCreateInsert(), clampPlaceholderSize(), computeInsertPosition(), groupSiblingRows(), hitSiblingInsertGap(), horizontalOverlap(), insertCreateDisabledReason(), insertLineCoords() (+3 more)
 
 ### Community 61 - "Community 61"
 Cohesion: 0.09
 Nodes (22): Assess Onboarding Needs, Context Over Ceremony, Contextual Help, Design Onboarding Experiences, Documentation & Help, Empty State Design, Feature Discovery & Adoption, Guided Tours & Walkthroughs (+14 more)
 
 ### Community 62 - "Community 62"
-Cohesion: 0.09
-Nodes (36): assignStudentToPersonal(), createTenantMember(), listTenantMembers(), removeTenantMember(), requireBackofficeCtx(), requireOwnerOrAdminCtx(), TenantMemberRow, AssignPersonalSelect() (+28 more)
+Cohesion: 0.08
+Nodes (39): assignStudentToPersonal(), createTenantMember(), listTenantMembers(), removeTenantMember(), requireBackofficeCtx(), requireOwnerOrAdminCtx(), TenantMemberRow, AssignPersonalSelect() (+31 more)
 
 ### Community 63 - "Community 63"
 Cohesion: 0.14
 Nodes (23): acceptedDomAlreadyClean(), applyOriginalAttrsToSvelteAnchor(), commitAcceptedSvelteComponentToDom(), elementMatchesOriginalMarkup(), ensureAcceptedDomClean(), findAcceptedRuntimeWrappers(), findLiveElementForOriginalMarkup(), findLiveElementForSvelteManifest() (+15 more)
 
 ### Community 64 - "Community 64"
-Cohesion: 0.07
-Nodes (22): Constraints, Failure modes, Flow, $impeccable hooks, Intentional findings, Routing, Assess Current Typography, Establish Hierarchy (+14 more)
+Cohesion: 0.10
+Nodes (18): Extract Flow, Step 1: Discover the Design System, Step 2: Identify Patterns, Step 3: Plan Extraction, Step 4: Extract & Enrich, Step 5: Migrate, Step 6: Document, Constraints (+10 more)
 
 ### Community 65 - "Community 65"
-Cohesion: 0.13
-Nodes (22): browserHasDirectText(), browserPrimaryFont(), browserRadiusTokens(), browserSampleText(), checkElementDesignSystemDOM(), checkElementQuality(), checkElementQualityDOM(), checkQuality() (+14 more)
+Cohesion: 0.11
+Nodes (24): browserHasDirectText(), browserPrimaryFont(), browserRadiusTokens(), browserSampleText(), checkElementDesignSystemDOM(), checkElementQuality(), checkElementQualityDOM(), checkQuality() (+16 more)
 
 ### Community 66 - "Community 66"
 Cohesion: 0.14
@@ -681,12 +693,12 @@ Cohesion: 0.11
 Nodes (18): Edge Functions, Estado Atual (baseline), ✅ Etapa 1 — Cadastro de Aluno + E-mail de Convite, ✅ Etapa 2 — Layout Mobile-First + Home do Aluno, ✅ Etapa 3 — Anamnese (Formulário do Aluno), ✅ Etapa 4 — Avaliação Física (Formulário do Aluno), ✅ Etapa 5 — Meu Progresso (refinamento + fotos), ✅ Etapa 6 — Frequência (Calendário + Streaks) (+10 more)
 
 ### Community 82 - "Community 82"
-Cohesion: 0.12
-Nodes (17): searchExercises(), ChallengeItemType, createChallengeDayItems(), deleteChallengeDayItem(), groupChallengeDayItems(), reorderChallengeDayItems(), ungroupChallengeDayItems(), AddDayItemButton() (+9 more)
+Cohesion: 0.11
+Nodes (18): searchExercises(), ChallengeItemType, createChallengeDayItems(), deleteChallengeDayItem(), groupChallengeDayItems(), reorderChallengeDayItems(), ungroupChallengeDayItems(), CombineModal() (+10 more)
 
 ### Community 83 - "Community 83"
-Cohesion: 0.16
-Nodes (10): addFeedback(), deleteFeedback(), AddFeedbackButton(), Props, Student, WorkoutPlan, FeedbacksPage(), Props (+2 more)
+Cohesion: 0.20
+Nodes (8): AddFeedbackButton(), Props, Student, WorkoutPlan, FeedbacksPage(), Props, RATING_LABELS, SearchParams
 
 ### Community 84 - "Community 84"
 Cohesion: 0.13
@@ -721,56 +733,56 @@ Cohesion: 0.38
 Nodes (5): PUBLIC_PATHS, ROLE_ROUTES, updateSession(), config, middleware()
 
 ### Community 92 - "Community 92"
-Cohesion: 0.18
-Nodes (11): 1. Read the screenshot (if present), 2. Wrap the element, 3. Load the action's reference, 5. Apply the freeform prompt (if present), 6. Write all variants in a single edit, 7. Parameters (composition-sized, 0–4 per variant), 8. Signal done, Aborting an in-flight session (+3 more)
+Cohesion: 0.12
+Nodes (16): 1. Read the screenshot (if present), 2. Wrap the element, 3. Load the action's reference, 4. Plan three variants: identity first, then mode, then axes, 5. Apply the freeform prompt (if present), 6. Write all variants in a single edit, 7. Parameters (composition-sized, 0–4 per variant), 8. Signal done (+8 more)
 
 ### Community 93 - "Community 93"
-Cohesion: 0.11
-Nodes (8): AlterarSenhaPage(), metadata, LogoUpload(), AuthSubmitButton(), AuthSubmitButtonProps, LogoIconProps, LogoProps, LogoVertical()
+Cohesion: 0.15
+Nodes (9): getClientIp(), redirectByRole(), signIn(), signOut(), signUpPersonal(), LogoUpload(), AuthSubmitButton(), AuthSubmitButtonProps (+1 more)
 
 ### Community 94 - "Community 94"
 Cohesion: 0.12
 Nodes (16): Accessibility Considerations, Anti-reflexes worth defending against, Classic Typography Principles, Fluid Type, Font Selection & Pairing, Modern Web Typography, Modular Scale & Hierarchy, OpenType Features (+8 more)
 
 ### Community 95 - "Community 95"
-Cohesion: 0.11
-Nodes (18): addCustomField(), saveAnamneseResponse(), toggleCustomField(), AnamneseField, AnamneseForm(), FieldInput(), FieldType, normalizeValue() (+10 more)
+Cohesion: 0.13
+Nodes (16): addCustomField(), saveAnamneseResponse(), toggleCustomField(), AnamneseField, AnamneseForm(), FieldInput(), FieldType, normalizeValue() (+8 more)
 
 ### Community 96 - "Community 96"
-Cohesion: 0.11
-Nodes (11): AlunoProgressoPage(), Props, Badge, BADGE_META, MonthlyPoints, ProgressEntry, ProgressoAlunoClient(), Props (+3 more)
+Cohesion: 0.12
+Nodes (8): Badge, BADGE_META, MonthlyPoints, ProgressEntry, Props, Session, SessionExercise, Tab
 
 ### Community 97 - "Community 97"
 Cohesion: 0.13
 Nodes (14): 1. Accessibility (A11y), 2. Performance, 3. Theming, 4. Responsive Design, 5. Anti-Patterns (CRITICAL), Anti-Patterns Verdict, Audit Health Score, Detailed Findings by Severity (+6 more)
 
 ### Community 98 - "Community 98"
-Cohesion: 0.25
-Nodes (7): Init Flow, Step 1: Load current state, Step 2: Explore the codebase, Step 4: Write PRODUCT.md, Step 5: Decide on DESIGN.md, Step 6: Configure live mode (when code exists), Step 7: Recommend starting points, then wrap up
+Cohesion: 0.13
+Nodes (14): Accessibility & Inclusion, Brand & Personality, Init Flow, Interview mode, not confirmation mode, Minimum viable interview, Register (ask first; it shapes everything below), Step 1: Load current state, Step 2: Explore the codebase (+6 more)
 
 ### Community 99 - "Community 99"
-Cohesion: 0.20
-Nodes (15): blendRgba(), clampByte(), firstCssUrl(), getLayerValue(), loadVisualContrastImage(), parseObjectPosition(), parsePositionPair(), parsePositionToken() (+7 more)
+Cohesion: 0.17
+Nodes (17): blendRgba(), clampByte(), contrastRatio(), firstCssUrl(), getLayerValue(), loadVisualContrastImage(), parseObjectPosition(), parsePositionPair() (+9 more)
 
 ### Community 100 - "Community 100"
 Cohesion: 0.15
 Nodes (15): browserDesignSystemConfig(), browserFindingsFromMap(), checkCreamPalette(), checkElementOversizedH1(), checkElementOversizedH1DOM(), checkHtmlPatterns(), checkOversizedH1(), checkPageQualityDOM() (+7 more)
 
 ### Community 101 - "Community 101"
-Cohesion: 0.19
-Nodes (11): publishWorkoutPlan(), Props, Routine, WorkoutBuilder(), FinanceiroGuide(), GuideModal(), Props, useGuide() (+3 more)
+Cohesion: 0.18
+Nodes (12): publishWorkoutPlan(), RoutineCard(), Props, Routine, BibliotecaGuide(), FinanceiroGuide(), GuideModal(), Props (+4 more)
 
 ### Community 102 - "Community 102"
-Cohesion: 0.22
-Nodes (13): createChallengeDayItem(), getChallenge(), getChallengeDays(), getChallengeMessages(), getChallengeTracking(), requirePersonalCtx(), startChallenge(), updateChallengeDay() (+5 more)
+Cohesion: 0.20
+Nodes (14): createChallengeDayItem(), getChallenge(), getChallengeDays(), getChallengeMessages(), getChallengeTracking(), removeParticipant(), requirePersonalCtx(), startChallenge() (+6 more)
 
 ### Community 103 - "Community 103"
-Cohesion: 0.07
-Nodes (49): createFoodItem(), deleteFoodItem(), FoodItem, getFoodItems(), updateFoodItem(), addMeal(), addMealFood(), assignMealPlanToStudents() (+41 more)
+Cohesion: 0.08
+Nodes (42): createFoodItem(), deleteFoodItem(), FoodItem, getFoodItems(), updateFoodItem(), addMeal(), addMealFood(), assignMealPlanToStudents() (+34 more)
 
 ### Community 104 - "Community 104"
-Cohesion: 0.25
-Nodes (7): ClientesPage(), PLAN_COLORS, PLAN_LABELS, STATUS_COLORS, STATUS_LABELS, ClientActions(), ClientActionsProps
+Cohesion: 0.13
+Nodes (12): AcademiasPage(), PLAN_COLORS, PLAN_LABELS, STATUS_COLORS, STATUS_LABELS, ClientesPage(), PLAN_COLORS, PLAN_LABELS (+4 more)
 
 ### Community 105 - "Community 105"
 Cohesion: 0.21
@@ -781,8 +793,8 @@ Cohesion: 0.14
 Nodes (14): Brand bans (on top of the shared absolute bans), Brand permissions, Brand register, Color, Font selection procedure, Imagery, Layout, Motion (+6 more)
 
 ### Community 107 - "Community 107"
-Cohesion: 0.08
-Nodes (26): getClientIp(), redirectByRole(), signIn(), signOut(), signUpPersonal(), hasVisibleStudentChallenge(), CATEGORY_COLOR, DashboardPage() (+18 more)
+Cohesion: 0.14
+Nodes (14): CATEGORY_COLOR, DashboardPage(), ICON_MAP, BrandingForm(), PRESET_COLORS, PrimaryTextMode, Props, TEXT_PRESET_COLORS (+6 more)
 
 ### Community 108 - "Community 108"
 Cohesion: 0.14
@@ -793,8 +805,8 @@ Cohesion: 0.23
 Nodes (11): extractRegister(), cli(), COMMON_DEV_PORTS, devServerSignals(), gatherSignals(), gitSignals(), hasCode(), latestCritique() (+3 more)
 
 ### Community 111 - "Community 111"
-Cohesion: 0.14
-Nodes (13): Assess Current Layout, Break Card Grid Monotony, Choose the Right Layout Tool, Create Visual Rhythm, Establish a Spacing System, Improve Layout Systematically, Live-mode signature params, Manage Depth & Elevation (+5 more)
+Cohesion: 0.08
+Nodes (22): After This File, Codex: Visual Direction & Asset Production, Four stop points before code, Step A: Explore Directions with the User, Step B: Generate the Brand Palette First, Step C: Generate 1-3 Visual Mocks Against the Palette, Step D: Approval Loop, Step E: Mock Fidelity Inventory (+14 more)
 
 ### Community 112 - "Community 112"
 Cohesion: 0.14
@@ -805,8 +817,8 @@ Cohesion: 0.22
 Nodes (11): registerAttendance(), removeAttendance(), AttendanceCalendar(), AttendanceRecord, MONTHS_PT, RegisterAttendanceForm(), WEEKDAYS, computeStreaks() (+3 more)
 
 ### Community 114 - "Community 114"
-Cohesion: 0.15
-Nodes (11): WorkoutPlanWithRoutines, getStudentCompletedRoutineIds(), Props, StudentPlanPage(), COMBO_LABEL, DAY_LABELS, GOAL_COLOR, ItemBlock (+3 more)
+Cohesion: 0.22
+Nodes (6): COMBO_LABEL, DAY_LABELS, GOAL_COLOR, ItemBlock, WorkoutItem, VideoModal()
 
 ### Community 115 - "Community 115"
 Cohesion: 0.24
@@ -829,8 +841,8 @@ Cohesion: 0.16
 Nodes (8): makeStaticStyle(), StaticDocument, checkRepeatedSectionKickers(), checkRepeatedSectionKickersDOM(), cleanInlineText(), collectRepeatedSectionKickerCandidates(), isRepeatedKickerCandidate(), isRepeatedKickerCardContext()
 
 ### Community 120 - "Community 120"
-Cohesion: 0.19
-Nodes (14): loadContext(), safeRead(), parseTargetOptions(), parseTargetPath(), TargetArgError, __dirname, ensureServerRunning(), resolveFiles() (+6 more)
+Cohesion: 0.28
+Nodes (11): loadContext(), resolveTargetSelection(), safeRead(), __dirname, ensureServerRunning(), resolveFiles(), liveCli(), missingLiveContext() (+3 more)
 
 ### Community 121 - "Community 121"
 Cohesion: 0.31
@@ -845,8 +857,8 @@ Cohesion: 0.15
 Nodes (12): background_color, categories, description, display, icons, lang, name, orientation (+4 more)
 
 ### Community 124 - "Community 124"
-Cohesion: 0.20
-Nodes (8): Challenge, createChallenge(), ReleaseMode, updateChallenge(), Props, EditChallengeButton(), Props, NovoDesafioForm()
+Cohesion: 0.40
+Nodes (3): createChallenge(), ReleaseMode, NovoDesafioForm()
 
 ### Community 125 - "Community 125"
 Cohesion: 0.27
@@ -869,8 +881,8 @@ Cohesion: 0.17
 Nodes (11): 1. Introdução, 2. Arquitetura e Stack, 3. Estrutura de Diretórios (Proposta), 4.1. Autenticação, 4.2. Acesso a Dados e RLS, 4.3. Upload de Arquivos (Storage), 4. Integração com Supabase, 5. Implementação do Design System (+3 more)
 
 ### Community 130 - "Community 130"
-Cohesion: 0.08
-Nodes (26): StudentMessageItem, StudentMessagesClient(), StudentMessagesClientProps, COMBO_TIPS, CriarTreinoWizardModal(), DAYS_OPTIONS, GOAL_COLORS, NOTES_TIPS (+18 more)
+Cohesion: 0.18
+Nodes (12): COMBO_TIPS, CriarTreinoWizardModal(), DAYS_OPTIONS, GOAL_COLORS, NOTES_TIPS, PlanPreferences, Props, WORKOUT_TYPES (+4 more)
 
 ### Community 131 - "Community 131"
 Cohesion: 0.18
@@ -913,12 +925,12 @@ Cohesion: 0.18
 Nodes (10): 1. Visão Geral do Produto, 2. Objetivos, 3.1. Autenticação e White-label, 3.2. Navegação Principal (Bottom Navigation), 3.3. Módulos do Aluno, 3. Escopo Funcional, 4. Design System e Interface, 5. Regras de Negócio e Restrições (+2 more)
 
 ### Community 141 - "Community 141"
-Cohesion: 0.23
-Nodes (14): assignPlanToAllStudents(), assignPlanToStudents(), getActiveStudentsForTenant(), getAssignmentsForPlan(), getPersonalCtx(), getUnassignedPlansForStudent(), removePlanAssignment(), GOAL_COLOR (+6 more)
+Cohesion: 0.14
+Nodes (20): assignPlanToAllStudents(), assignPlanToStudents(), getActiveStudentsForTenant(), getAssignmentsForPlan(), getPersonalCtx(), getUnassignedPlansForStudent(), removePlanAssignment(), GOAL_COLOR (+12 more)
 
 ### Community 142 - "Community 142"
-Cohesion: 0.10
-Nodes (22): dismissTrainerNotification(), getTrainerNotifications(), TrainerNotification, PendingAgendaBanner(), Props, MaxOnboardingModal(), Props, STEPS (+14 more)
+Cohesion: 0.14
+Nodes (15): PendingAgendaBanner(), Props, MaxOnboardingModal(), Props, STEPS, CORE_BOTTOM, CORE_TOP, DashboardSidebarNav() (+7 more)
 
 ### Community 143 - "Community 143"
 Cohesion: 0.12
@@ -949,8 +961,8 @@ Cohesion: 0.24
 Nodes (5): updateAppVersion(), AppVersion, AppVersionForm(), Props, AppVersaoPage()
 
 ### Community 150 - "Community 150"
-Cohesion: 0.06
-Nodes (37): addExtraWorkoutItem(), groupExtraWorkoutItems(), removeExtraWorkoutItem(), reorderExtraWorkoutItems(), ungroupExtraWorkoutItems(), updateExtraWorkoutItem(), ExtraWorkoutItemData, getTenantExtraWorkouts() (+29 more)
+Cohesion: 0.05
+Nodes (41): addExtraWorkoutItem(), groupExtraWorkoutItems(), removeExtraWorkoutItem(), reorderExtraWorkoutItems(), ungroupExtraWorkoutItems(), updateExtraWorkoutItem(), ExtraWorkoutItemData, getExtraWorkout() (+33 more)
 
 ### Community 151 - "Community 151"
 Cohesion: 0.15
@@ -1017,8 +1029,8 @@ Cohesion: 0.25
 Nodes (8): 1. Impatient Power User: "Alex", 2. Confused First-Timer: "Jordan", 3. Accessibility-Dependent User: "Sam", 4. Deliberate Stress Tester: "Riley", 5. Distracted Mobile User: "Casey", Persona-Based Design Testing, Project-Specific Personas, Selecting Personas
 
 ### Community 167 - "Community 167"
-Cohesion: 0.25
-Nodes (7): Extract Flow, Step 1: Discover the Design System, Step 2: Identify Patterns, Step 3: Plan Extraction, Step 4: Extract & Enrich, Step 5: Migrate, Step 6: Document
+Cohesion: 0.12
+Nodes (16): hasVisibleStudentChallenge(), StudentLayout(), Props, StudentAgendaBanner(), BASE_NAV_ITEMS, CHALLENGES_ITEM, getStudentNavItems(), RANKING_ITEM (+8 more)
 
 ### Community 168 - "Community 168"
 Cohesion: 0.20
@@ -1049,20 +1061,20 @@ Cohesion: 0.08
 Nodes (31): applyPlaceholderDimensions(), applyPlaceholderSizingStyles(), beginEditPin(), buildPlaceholderResizeHandles(), cancelEditingPin(), clampPlaceholderSize(), createInsertPlaceholder(), cursorForPlaceholderEdge() (+23 more)
 
 ### Community 175 - "Community 175"
-Cohesion: 0.12
-Nodes (12): updateClient(), ClientDetailPage(), PLAN_COLORS, PLAN_LABELS, STATUS_CONFIG, ClientDetailActions(), ClientEditForm(), PLAN_LABELS (+4 more)
+Cohesion: 0.13
+Nodes (11): ClientDetailPage(), PLAN_COLORS, PLAN_LABELS, STATUS_CONFIG, ClientDetailActions(), ClientEditForm(), PLAN_LABELS, PrimaryTextMode (+3 more)
 
 ### Community 176 - "Community 176"
 Cohesion: 0.12
 Nodes (15): Anti-Goals, Brief Structure, Constraints, Content & Data, Design Direction, How to use the probes, Important limits, Interview cadence (+7 more)
 
 ### Community 177 - "Community 177"
-Cohesion: 0.11
-Nodes (40): createAcademiaTenant(), resendAcademiaOwnerEmail(), updateAcademiaTenant(), resendStudentInvite(), resendMemberPassword(), saveBranding(), inviteNewParticipant(), activateClient() (+32 more)
+Cohesion: 0.08
+Nodes (52): createAcademiaTenant(), resendAcademiaOwnerEmail(), updateAcademiaTenant(), createStudent(), resendStudentInvite(), resendMemberPassword(), saveBranding(), activateClient() (+44 more)
 
 ### Community 178 - "Community 178"
-Cohesion: 0.29
-Nodes (6): GOAL_COLOR, Plan, StudentPlanAssignPanel(), AlunoTreinosPage(), GOAL_COLOR, Props
+Cohesion: 0.12
+Nodes (16): DeleteExerciseButton(), Props, BancoDeExerciciosPage(), Props, SearchParams, CATEGORY_COLOR, CATEGORY_LABEL, COMBO_LABEL (+8 more)
 
 ### Community 179 - "Community 179"
 Cohesion: 0.29
@@ -1085,8 +1097,8 @@ Cohesion: 0.38
 Nodes (7): borderColorsFromStyle(), borderWidthsFromStyle(), checkElementGptBorderShadow(), checkElementGptBorderShadowDOM(), checkGptThinBorderWideShadow(), shadowLayerAlpha(), shadowMaxBlurPx()
 
 ### Community 184 - "Community 184"
-Cohesion: 0.29
-Nodes (7): Accessibility & Inclusion, Brand & Personality, Interview mode, not confirmation mode, Minimum viable interview, Register (ask first; it shapes everything below), Step 3: Ask strategic questions (for PRODUCT.md), Users & Purpose
+Cohesion: 0.13
+Nodes (18): contextSourcePath(), contextSourceStatus(), findMonorepoRoot(), firstExisting(), hasGitBoundary(), isCandidateProjectRoot(), isExcludedByWorkspacePattern(), isPathInside() (+10 more)
 
 ### Community 185 - "Community 185"
 Cohesion: 0.33
@@ -1109,12 +1121,12 @@ Cohesion: 0.29
 Nodes (4): OUTPUT_DIR, require, { Resvg }, SPLASH_SIZES
 
 ### Community 190 - "Community 190"
-Cohesion: 0.29
-Nodes (7): append-arrays, append-string, Consent prompt template, CSP detection (first-time only), Drift-heal warning, First-time setup (config missing or invalid), Troubleshooting
+Cohesion: 0.16
+Nodes (12): getContentLibraryCategories(), trackContentLibraryItemUsage(), BibliotecaPage(), KIND_LABEL, PLAN_LABEL, PLAN_ORDER, Props, SearchParams (+4 more)
 
 ### Community 191 - "Community 191"
-Cohesion: 0.33
-Nodes (6): getExtraWorkout(), ExtraWorkoutBuilder(), CATEGORY_COLOR, CATEGORY_LABEL, Props, TreinoExtraPage()
+Cohesion: 0.14
+Nodes (10): createStudentPresencialRequest(), AgendaRequestForm(), ViaCepResult, AgendaEvent, EventStatus, EventType, MONTHS, Props (+2 more)
 
 ### Community 192 - "Community 192"
 Cohesion: 0.33
@@ -1137,12 +1149,12 @@ Cohesion: 0.33
 Nodes (4): encodedPassword, env, forwardedArgs, hasDbUrl
 
 ### Community 197 - "Community 197"
-Cohesion: 0.08
-Nodes (28): ACADEMIA_ONLY_SLUGS, createModule(), disableAllModulesForTenant(), enableAllModulesForTenant(), ModuleCategory, ModuleStatus, toggleModuleAvailability(), toggleTenantModule() (+20 more)
+Cohesion: 0.18
+Nodes (10): CATEGORY_CONFIG, CATEGORY_ORDER, ICONS, ModulosPage(), STATUS_CONFIG, CATEGORIES, CreateModuleDialog(), STATUSES (+2 more)
 
 ### Community 198 - "Community 198"
-Cohesion: 0.29
-Nodes (7): checkLayout(), checkPageLayout(), isCardLike(), isCardLikeDOM(), isCardLikeFromProps(), parseRadiusToPx(), resolveBorderRadiusPx()
+Cohesion: 0.25
+Nodes (12): FORBIDDEN_MANUAL_EDIT_TEXT_CHARS, INSERT_POSITIONS, isValidId(), isValidVariantId(), validateAnnotationFields(), validateEvent(), validateInsertGenerate(), validateManualEditEvent() (+4 more)
 
 ### Community 199 - "Community 199"
 Cohesion: 0.47
@@ -1253,12 +1265,12 @@ Cohesion: 0.50
 Nodes (4): Alimentos Globais vs. do Tenant, Cálculo de Macronutrientes, Lógica de Negócio, Status do Plano
 
 ### Community 226 - "Community 226"
-Cohesion: 0.17
-Nodes (10): createStudent(), updateStudent(), Props, StudentDetailPage(), ResetPasswordButton(), Props, StudentStatusButton(), GOAL_OPTIONS (+2 more)
+Cohesion: 0.28
+Nodes (6): updateStudent(), Props, StudentDetailPage(), ResetPasswordButton(), Props, StudentStatusButton()
 
 ### Community 227 - "Community 227"
-Cohesion: 0.29
-Nodes (5): addExistingStudentAsParticipant(), AddParticipantButton(), Mode, Props, StudentOption
+Cohesion: 0.25
+Nodes (6): addExistingStudentAsParticipant(), inviteNewParticipant(), AddParticipantButton(), Mode, Props, StudentOption
 
 ### Community 228 - "Community 228"
 Cohesion: 0.22
@@ -1281,8 +1293,8 @@ Cohesion: 0.25
 Nodes (8): 2.1 Banco de Exercícios, 2.2 Planos de Treino, 2.3 Treinos Extras, 2.4 Execução do Treino, 2.5 Avaliações Físicas, 2.6 Anamnese, 2.7 Planos Alimentares, 2. Módulos de Treino (personal ↔ aluno, 1:1)
 
 ### Community 237 - "Community 237"
-Cohesion: 0.29
-Nodes (6): AcademiasPage(), PLAN_COLORS, PLAN_LABELS, STATUS_COLORS, STATUS_LABELS, AcademiaActions()
+Cohesion: 0.18
+Nodes (8): Category, FORMAT_OPTIONS, Item, PLAN_OPTIONS, Props, StudentMessagesBanner(), StudentMessagesBannerProps, createClient()
 
 ### Community 242 - "Community 242"
 Cohesion: 0.12
@@ -1294,27 +1306,27 @@ Nodes (4): PLAN_ACCENT, PlanosPage(), EditPlanDialog(), Plan
 
 ### Community 245 - "Community 245"
 Cohesion: 0.05
-Nodes (39): saveAnamnese(), markAttendanceToday(), submitFeedback(), formatPhone(), StudentAgendaPage(), AnamneseField, AnamneseForm(), CATEGORIES (+31 more)
+Nodes (39): saveAnamnese(), MealPlanWithMeals, formatPhone(), StudentAgendaPage(), StudentAgendaCalendarView(), AnamneseField, AnamneseForm(), CATEGORIES (+31 more)
 
 ### Community 248 - "Community 248"
-Cohesion: 0.22
-Nodes (9): After This File, Codex: Visual Direction & Asset Production, Four stop points before code, Step A: Explore Directions with the User, Step B: Generate the Brand Palette First, Step C: Generate 1-3 Visual Mocks Against the Palette, Step D: Approval Loop, Step E: Mock Fidelity Inventory (+1 more)
+Cohesion: 0.15
+Nodes (11): Assess Current Typography, Establish Hierarchy, Fix Readability, Font Selection, Improve Typography Systematically, Live-mode signature params, Plan Typography Improvements, Refine Details (+3 more)
 
 ### Community 249 - "Community 249"
 Cohesion: 0.25
 Nodes (7): getStudentSessionsForPersonal(), INTENSITY_COLOR, INTENSITY_LABEL, Props, Session, SessionExercise, StudentHistoricoPage()
 
 ### Community 276 - "Community 276"
-Cohesion: 0.40
-Nodes (5): 4. Plan three variants: identity first, then mode, then axes, Phase A: Extract the identity (non-skippable), Phase B: Pick mode (default vs departure), Phase C: Plan three variants, Phase D: Squint test
+Cohesion: 0.22
+Nodes (13): directChildDirs(), discoverRootsForPattern(), discoverTargetCandidates(), escapeRegExp(), expandSimplePattern(), isIgnoredWorkspaceDiscoveryDir(), nearestPackageRootBetween(), normalizeWorkspacePattern() (+5 more)
 
 ### Community 316 - "Community 316"
-Cohesion: 0.40
-Nodes (5): Handle fallback, Step 1: Identify where the element actually lives, Step 2: Show three variants in the DOM for preview, Step 3: On accept, write to true source, Step 4: On discard, clean up the served file
+Cohesion: 0.18
+Nodes (8): submitFeedback(), Feedback, FeedbackClient(), LABEL_COLORS, LABELS, Props, WorkoutPlan, FeedbackPage()
 
 ### Community 317 - "Community 317"
-Cohesion: 0.40
-Nodes (5): isNeutralBorderColor(), checkBorders(), checkElementBorders(), checkElementBordersDOM(), isNeutralColor()
+Cohesion: 0.21
+Nodes (7): markAttendanceToday(), FrequenciaClient(), MONTHS, Props, WEEKDAYS, currentStreak(), FrequenciaPage()
 
 ### Community 318 - "Community 318"
 Cohesion: 0.38
@@ -1324,12 +1336,60 @@ Nodes (6): buildHtml(), corsHeaders, formatAmount(), formatDateBR(), PaymentRemi
 Cohesion: 0.33
 Nodes (6): 4.1 Configurar mensalidade recorrente, 4.2 Geração automática das cobranças, 4.3 Baixa manual e auditoria, 4.4 Inadimplência, 4.5 Lembrete automático de vencimento (cron diário), 4. Financeiro (Cobrança de Alunos) — implementado nesta sessão
 
+### Community 320 - "Community 320"
+Cohesion: 0.29
+Nodes (11): ContentLibraryCategorySummary, ContentLibraryItemSummary, createContentLibraryItem(), deleteContentLibraryCategory(), deleteContentLibraryItem(), extractItemFields(), getContentLibraryItems(), requireAuthenticated() (+3 more)
+
+### Community 321 - "Community 321"
+Cohesion: 0.18
+Nodes (10): 1. Referências de mercado, 2. Conceito do módulo, 3. Fluxo do Admin Global (web), 4. Fluxo do Personal (web + mobile), 5. Instruções contextuais (padrão "Guia do Max"), 6. Fases de desenvolvimento, 7. Critério de conteúdo mínimo para lançamento, 8. Decisões já confirmadas (+2 more)
+
 ### Community 322 - "Community 322"
 Cohesion: 0.67
 Nodes (4): postSerializedFindings(), renderBrowserFindings(), scanResultMeta(), serializeFindings()
 
+### Community 323 - "Community 323"
+Cohesion: 0.20
+Nodes (8): DeleteItemButton(), Props, AdminBibliotecaPage(), KIND_LABEL, PLAN_LABEL, Props, SearchParams, STATUS_LABEL
+
+### Community 324 - "Community 324"
+Cohesion: 0.27
+Nodes (7): Props, CATEGORY_LABELS, getOnboardingModules(), ModuleOnboardingItem, OnboardingRole, PERSONAL_ONBOARDING_MODULES, STUDENT_ONBOARDING_MODULES
+
+### Community 325 - "Community 325"
+Cohesion: 0.22
+Nodes (8): ACADEMIA_ONLY_SLUGS, CATEGORY_CONFIG, CATEGORY_ORDER, ClientModulosPage(), ICONS, Props, TenantModuleToggle(), TenantModulesBulkActions()
+
+### Community 326 - "Community 326"
+Cohesion: 0.28
+Nodes (6): createContentLibraryCategory(), CategoryForm(), KIND_OPTIONS, DeleteCategoryButton(), AdminBibliotecaCategoriasPage(), KIND_LABEL
+
+### Community 327 - "Community 327"
+Cohesion: 0.28
+Nodes (7): MaxChatPanel(), Message, Props, MaxStreamParams, PlanPreferencesParams, useMaxStream(), UseMaxStreamResult
+
+### Community 328 - "Community 328"
+Cohesion: 0.29
+Nodes (8): buildMissingTargetDirective(), buildResolvedContextDirective(), buildTargetSelectionDirective(), cli(), hasTargetOption(), parseCliOptions(), pathExistsForTarget(), shouldWarnMissingTarget()
+
+### Community 329 - "Community 329"
+Cohesion: 0.29
+Nodes (6): Meal, MealFood, fmt(), MEAL_TYPE_LABELS, Props, StudentMealPlanView()
+
+### Community 330 - "Community 330"
+Cohesion: 0.43
+Nodes (4): parseTargetOptions(), parseTargetPath(), TargetArgError, resolveLiveTarget()
+
+### Community 331 - "Community 331"
+Cohesion: 0.43
+Nodes (5): dismissTrainerNotification(), getTrainerNotifications(), TrainerNotification, Props, TrainerNotificationBell()
+
+### Community 332 - "Community 332"
+Cohesion: 0.50
+Nodes (3): deleteChallenge(), DeleteChallengeButton(), Props
+
 ## Knowledge Gaps
-- **1659 isolated node(s):** `COMMON_DEV_PORTS`, `SCANNABLE_EXT`, `SOURCE_DIRS`, `PRODUCT_NAMES`, `DESIGN_NAMES` (+1654 more)
+- **1692 isolated node(s):** `COMMON_DEV_PORTS`, `SCANNABLE_EXT`, `SOURCE_DIRS`, `PRODUCT_NAMES`, `DESIGN_NAMES` (+1687 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **63 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -1337,13 +1397,13 @@ Nodes (4): postSerializedFindings(), renderBrowserFindings(), scanResultMeta(), 
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `recordProfileEvent()` connect `Community 9` to `Community 46`, `Community 175`?**
-  _High betweenness centrality (0.212) - this node is a cross-community bridge._
+  _High betweenness centrality (0.213) - this node is a cross-community bridge._
 - **Why does `Profile` connect `Community 175` to `Community 9`?**
-  _High betweenness centrality (0.211) - this node is a cross-community bridge._
+  _High betweenness centrality (0.212) - this node is a cross-community bridge._
 - **Why does `confirm()` connect `Community 35` to `Community 29`?**
   _High betweenness centrality (0.195) - this node is a cross-community bridge._
 - **What connects `COMMON_DEV_PORTS`, `SCANNABLE_EXT`, `SOURCE_DIRS` to the rest of the system?**
-  _1671 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _1704 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.028051181102362203 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**

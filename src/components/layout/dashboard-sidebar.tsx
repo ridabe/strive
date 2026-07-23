@@ -29,6 +29,7 @@ import {
   ChevronDown,
   Trophy,
   Package,
+  Images,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -36,7 +37,7 @@ import {
 const ICON_MAP: Record<string, LucideIcon> = {
   Dumbbell, ClipboardList, Zap, Play, Ruler, FileHeart,
   TrendingUp, CalendarCheck, CalendarDays, MessageSquare, Receipt,
-  FolderOpen, Bell, Palette, UtensilsCrossed, Trophy, Package,
+  FolderOpen, Bell, Palette, UtensilsCrossed, Trophy, Package, Images,
 }
 
 export type EnabledModule = {
@@ -66,6 +67,10 @@ const MODULE_GROUPS: { label: string; slugs: string[] }[] = [
   {
     label: 'IA',
     slugs: ['assistente-ia'],
+  },
+  {
+    label: 'Conteúdo',
+    slugs: ['biblioteca_conteudo'],
   },
 ]
 
